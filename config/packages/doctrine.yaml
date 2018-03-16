@@ -1,0 +1,20 @@
+parameters:
+    # Adds a fallback DATABASE_URL if the env var is not set.
+    env(DATABASE_URL): 'pgsql://postgres:pass@db/docker'
+
+doctrine:
+    dbal:
+        driver: pdo_pgsql
+        server_version: 9.4
+        charset:  UTF8
+        url: '%env(resolve:DATABASE_URL)%'
+    orm:
+        auto_generate_proxy_classes: '%kernel.debug%'
+        naming_strategy: doctrine.orm.naming_strategy.underscore
+        auto_mapping: true
+        mappings:
+            App:
+                type: yml
+                dir: '%kernel.project_dir%/config/doctrine'
+                is_bundle: false
+                prefix: 'App\Entity'

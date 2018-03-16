@@ -1,0 +1,8 @@
+parameters:
+    # Adds a fallback MAILER_URL if the env var is not set.
+    env(MAILER_URL): 'null://localhost'
+
+swiftmailer:
+    url: '%env(MAILER_URL)%'
+    spool:
+        type: 'memory'

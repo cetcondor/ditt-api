@@ -1,0 +1,64 @@
+<?php
+
+/**
+ * Inherited Methods
+ * @method void wantToTest($text)
+ * @method void wantTo($text)
+ * @method void execute($callable)
+ * @method void expectTo($prediction)
+ * @method void expect($prediction)
+ * @method void amGoingTo($argumentation)
+ * @method void am($role)
+ * @method void lookForwardTo($achieveValue)
+ * @method void comment($description)
+ * @method \Codeception\Lib\Friend haveFriend($name, $actorClass = NULL)
+ *
+ * @SuppressWarnings(PHPMD)
+*/
+class ApiTester extends \Codeception\Actor
+{
+    use _generated\ApiTesterActions;
+
+    public function createConfig(array $params = [])
+    {
+        $config = $this->populateEntity(new \App\Entity\Config(), [
+            'title' => 'Config title',
+            'description' => 'Config description',
+        ], $params);
+
+        $this->persistEntity($config);
+
+        return $this->grabEntityFromRepository(\App\Entity\Config::class, [
+            'title' => $config->getTitle(),
+        ]);
+    }
+
+    /**
+     * @param object $entity
+     * @param array $defaultData
+     * @param array $params
+     * @return object
+     */
+    private function populateEntity($entity, array $defaultData, array $params)
+    {
+        foreach ($defaultData as $property => $value) {
+            if (isset($params[$property])) {
+                if ($params[$property] instanceof Closure) {
+                    $newValue = call_user_func($params[$property]);
+                } else {
+                    $newValue = $params[$property];
+                }
+            } else {
+                if ($value instanceof Closure) {
+                    $newValue = call_user_func($value);
+                } else {
+                    $newValue = $value;
+                }
+            }
+
+            $entity->{'set' . ucfirst($property)}($newValue);
+        }
+
+        return $entity;
+    }
+}

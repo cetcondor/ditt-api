@@ -1,0 +1,25 @@
+/var/*
+!/var/cache
+/var/cache/*
+!/var/log
+/var/log/*
+!/var/sessions
+/var/sessions/*
+/tests/_output/*
+/tests/_support/_generated/*
+
+###> symfony/framework-bundle ###
+.env
+/public/bundles/
+/var/
+/vendor/
+###< symfony/framework-bundle ###
+
+###> symfony/phpunit-bridge ###
+/phpunit.xml
+###< symfony/phpunit-bridge ###
+
+/.docker-sync/
+/.idea/
+!.gitkeep
+!.gitignore

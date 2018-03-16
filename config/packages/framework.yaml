@@ -1,0 +1,16 @@
+framework:
+    secret: '%env(APP_SECRET)%'
+    session:
+        handler_id: ~
+    php_errors:
+        log: true
+    serializer:
+        enabled: true
+        mapping:
+            paths:
+                - '%kernel.project_dir%/config/serialization/'
+    validation:
+        enabled: true
+        mapping:
+            paths:
+                - '%kernel.project_dir%/config/validation/'

@@ -1,0 +1,11 @@
+App\Entity\Config:
+    constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: title
+
+    properties:
+            title:
+                - NotBlank: ~
+                - Length:
+                    max: 100
+            description:
+                - NotBlank: ~

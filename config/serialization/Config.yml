@@ -1,0 +1,16 @@
+App\Entity\Config:
+    attributes:
+        id:
+            groups:
+                - config_out_list
+                - config_out_detail
+        title:
+            groups:
+                - config_out_list
+                - config_out_detail
+                - config_in
+        description:
+            groups:
+                - config_out_list
+                - config_out_detail
+                - config_in

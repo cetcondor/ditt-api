@@ -1,0 +1,50 @@
+version: '2'
+
+volumes:
+    sync.ditt_api_root:
+        external: true
+
+services:
+    apache:
+        build: docker/Apache
+        volumes:
+            - sync.ditt_api_root:/www
+        links:
+            - php
+        ports:
+            - 80:80
+
+    php:
+        build: docker/PHP
+        volumes:
+            - sync.ditt_api_root:/www
+        working_dir: /www
+        links:
+            - db
+            - mail
+
+    tools:
+        build: docker/Tools
+        volumes:
+            - sync.ditt_api_root:/www
+        working_dir: /www
+        links:
+            - db
+
+    db:
+        image: postgres:9.4
+        environment:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: pass
+
+    adminer:
+        image: clue/adminer
+        links:
+            - db
+        ports:
+            - 81:80
+
+    mail:
+        image: mailhog/mailhog
+        ports:
+            - 82:8025
