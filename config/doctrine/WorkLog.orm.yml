@@ -1,0 +1,13 @@
+App\Entity\WorkLog:
+    type: entity
+
+    id:
+        id:
+            type: integer
+            generator: { strategy: IDENTITY }
+
+    fields:
+        startTime:
+            type: datetime_immutable
+        endTime:
+            type: datetime_immutable

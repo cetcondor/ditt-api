@@ -1,0 +1,24 @@
+App\Entity\WorkLog:
+    attributes:
+        filters:
+            - search_filter.work_log
+    collectionOperations:
+        get:
+            method: 'GET'
+            normalization_context:
+                groups:
+                    - work_log_out_list
+        post:
+            method: 'POST'
+            normalization_context:
+                groups:
+                    - work_log_out_detail
+            denormalization_context:
+                groups:
+                    - work_log_in
+    itemOperations:
+        get:
+            method: 'GET'
+            normalization_context:
+                groups:
+                    - work_log_out_detail

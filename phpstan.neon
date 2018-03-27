@@ -1,6 +1,7 @@
 parameters:
 	bootstrap: null
-	excludes_analyse: []
+	excludes_analyse:
+		- src/DQL/OverlapsFunction.php
 	autoload_directories:
 		- "tests"
 	autoload_files:

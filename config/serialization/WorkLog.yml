@@ -1,0 +1,16 @@
+App\Entity\WorkLog:
+    attributes:
+        id:
+            groups:
+                - work_log_out_list
+                - work_log_out_detail
+        startTime:
+            groups:
+                - work_log_out_list
+                - work_log_out_detail
+                - work_log_in
+        endTime:
+            groups:
+                - work_log_out_list
+                - work_log_out_detail
+                - work_log_in

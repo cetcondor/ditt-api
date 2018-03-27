@@ -1,0 +1,14 @@
+App\Entity\WorkLog:
+    constraints:
+        - App\Validator\Constraints\TimeIntervalNotOverlaps: ~
+
+    properties:
+        startTime:
+            - NotBlank: ~
+            - DateTime: ~
+
+        endTime:
+            - NotBlank: ~
+            - DateTime: ~
+            - GreaterThan:
+                propertyPath: startTime

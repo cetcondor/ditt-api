@@ -33,6 +33,20 @@ class ApiTester extends \Codeception\Actor
         ]);
     }
 
+    public function createWorkLog(array $params = [])
+    {
+        $workLog = $this->populateEntity(new \App\Entity\WorkLog(), [
+            'startTime' => (new DateTimeImmutable()),
+            'endTime' => (new DateTimeImmutable())->add(new DateInterval('PT1S')),
+        ], $params);
+
+        $this->persistEntity($workLog);
+
+        return $this->grabEntityFromRepository(\App\Entity\WorkLog::class, [
+            'id' => $workLog->getId(),
+        ]);
+    }
+
     /**
      * @param object $entity
      * @param array $defaultData

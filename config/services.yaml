@@ -22,7 +22,8 @@ services:
     # as action arguments even if you don't extend any base controller class
     App\Controller\:
         resource: '../src/Controller'
-        tags: ['controller.service_arguments']
+        tags:
+            - controller.service_arguments
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
@@ -30,7 +31,16 @@ services:
     GuzzleHttp\Client:
       class: GuzzleHttp\Client
 
-    app.serializer.get_set_method_normalizer:
-        class: Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer
+    # API Filters
+    app.search_filter.work_log:
+        parent:    'api_platform.doctrine.orm.date_filter'
+        arguments:
+            -
+                $startTime: ~
+                $endTime: ~
+        tags:
+            $name: 'api_platform.filter'
+            $id: 'search_filter.work_log'
+        autowire: false
+        autoconfigure: false
         public: false
-        tags: [serializer.normalizer]

@@ -18,3 +18,6 @@ doctrine:
                 dir: '%kernel.project_dir%/config/doctrine'
                 is_bundle: false
                 prefix: 'App\Entity'
+        dql:
+            string_functions:
+                overlaps: App\DQL\OverlapsFunction
