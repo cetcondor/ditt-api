@@ -5,31 +5,15 @@ volumes:
         external: true
 
 services:
-    apache:
-        build: docker/Apache
-        volumes:
-            - sync.ditt_api_root:/www
-        links:
-            - php
-        ports:
-            - 80:80
-
-    php:
-        build: docker/PHP
-        volumes:
-            - sync.ditt_api_root:/www
-        working_dir: /www
+    web:
+        image: visionappscz/apache-php
         links:
             - db
             - mail
-
-    tools:
-        build: docker/Tools
+        ports:
+            - 80:80
         volumes:
             - sync.ditt_api_root:/www
-        working_dir: /www
-        links:
-            - db
 
     db:
         image: postgres:9.4

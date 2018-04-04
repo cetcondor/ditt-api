@@ -1,29 +1,12 @@
-apache:
-    build: docker/Apache
-    volumes:
-        - .:/www
-    links:
-        - php
-    ports:
-        - 80:80
-
-php:
-    build: docker/PHP
-    volumes:
-        - .:/www
-    working_dir: /www
+web:
+    image: visionappscz/apache-php
     links:
         - db
         - mail
-
-tools:
-    build: docker/Tools
+    ports:
+        - 80:80
     volumes:
         - .:/www
-    working_dir: /www
-    links:
-        - db
-
 db:
     image: postgres:9.4
     environment:
