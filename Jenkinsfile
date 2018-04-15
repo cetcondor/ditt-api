@@ -141,18 +141,9 @@ def deploy(deployBranch, targetFolder, deployTar, deployFolder, backupFolder) {
 def createDeployTar(deployTar) {
     sh """tar \
         -zcf ${deployTar} \
-        --add-file=bin \
-        --add-file=config \
-        --add-file=public \
-        --add-file=src \
-        --add-file=templates \
-        --add-file=var \
         --exclude=var/log/* \
         --exclude=var/cache/* \
         --exclude=var/sessions/* \
-        --add-file=vendor \
-        --add-file=composer.json \
-        --add=RoboFile.php \
         bin config public src templates var vendor RoboFile.php"""
 }
 
