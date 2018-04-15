@@ -152,7 +152,8 @@ def createDeployTar(deployTar) {
         --exclude=var/sessions/* \
         --add-file=vendor \
         --add-file=composer.json \
-        --add=RoboFile.php"""
+        --add=RoboFile.php \
+        bin config public src templates var vendor RoboFile.php"""
 }
 
 def notifyOfDeploy(deployBranches, currentBranch) {
