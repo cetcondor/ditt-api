@@ -40,15 +40,13 @@ node {
 
         stage('Prepare docker containers') {
             timeout(20) {
-                sh 'docker-compose up -d db'
-                sleep 10
-                sh 'docker run -d -it --link $(docker-compose ps -q db | head -1):db --volume ${PWD}:/www --name=web visionappscz/apache-php bash'
+                sh 'docker-compose -f docker-compose-build.yml up -d'
             }
         }
 
         stage('Build app and run tests') {
             timeout(20) {
-                sh 'docker-compose run web bash -c "sh /root/init-container.sh /www && su www-data -c \'composer install && vendor/bin/robo install\'"'
+                sh 'docker-compose -f docker-compose-build.yml run --no-deps web bash -c "sh /root/init-container.sh /www && su www-data -c \'composer install && vendor/bin/robo install\'"'
             }
         }
 
@@ -79,10 +77,8 @@ node {
     } finally {
         stage('Cleanup') {
             timeout(5) {
-                sh 'docker stop web'
-                sh 'docker rm --force web'
-                sh 'docker-compose stop'
-                sh 'docker-compose rm --all --force'
+                sh 'docker-compose -f docker-compose-build.yml stop'
+                sh 'docker-compose -f docker-compose-build.yml rm --all --force'
             }
         }
     }

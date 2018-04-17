@@ -1,0 +1,11 @@
+web:
+    image: visionappscz/apache-php
+    links:
+        - db
+    volumes:
+        - .:/www
+db:
+    image: postgres:9.4
+    environment:
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: pass
