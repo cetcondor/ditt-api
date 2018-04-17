@@ -123,7 +123,7 @@ def deploy(deployBranch, targetFolder, deployTar, deployFolder, backupFolder) {
             chmod 744 bin/console
 
             echo 'Running post upload Robo tasks'
-            vendor/bin/robo deploy:finalize /usr/local/bin/php70
+            vendor/bin/robo deploy:finalize /usr/local/bin/php71
 
             echo 'Backing up old deploy'
             cp public/static/503.php ${targetFolder}/${deployBranch.folder}/public/index.php
@@ -144,7 +144,7 @@ def createDeployTar(deployTar) {
         --exclude=var/log/* \
         --exclude=var/cache/* \
         --exclude=var/sessions/* \
-        bin config public src templates var vendor RoboFile.php"""
+        bin config public src templates var vendor composer.json RoboFile.php"""
 }
 
 def notifyOfDeploy(deployBranches, currentBranch) {
