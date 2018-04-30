@@ -17,6 +17,8 @@ App\Entity\WorkLog:
                 groups:
                     - work_log_in
     itemOperations:
+        delete:
+            method: 'DELETE'
         get:
             method: 'GET'
             normalization_context:
