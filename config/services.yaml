@@ -31,6 +31,11 @@ services:
     GuzzleHttp\Client:
       class: GuzzleHttp\Client
 
+    app.security.voter.resource:
+        class: App\Security\ResourceVoter
+        public: false
+        tags: [ { name: security.voter } ]
+
     # API Filters
     app.search_filter.work_log:
         parent:    'api_platform.doctrine.orm.date_filter'
@@ -44,3 +49,11 @@ services:
         autowire: false
         autoconfigure: false
         public: false
+
+    app.event.jwt_created_listener:
+        class: App\Listener\JWTCreatedListener
+        tags:
+            -
+                name: kernel.event_listener
+                event: lexik_jwt_authentication.on_jwt_created
+                method: onJWTCreated

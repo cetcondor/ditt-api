@@ -4,10 +4,24 @@ namespace api\Config;
 
 use App\Entity\WorkLog;
 use Doctrine\ORM\NoResultException;
+use Prophecy\Prophet;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class CreateWorkLogCest
 {
+    public function _before(\ApiTester $I)
+    {
+        $prophet = new Prophet();
+        $user = $I->createUser();
+        $token = $prophet->prophesize(TokenInterface::class);
+        $token->getUser()->willReturn($user);
+        $tokenStorage = $prophet->prophesize(TokenStorageInterface::class);
+        $tokenStorage->getToken()->willReturn($token->reveal());
+        $I->getContainer()->set(TokenStorageInterface::class, $tokenStorage->reveal());
+    }
+
     public function testCreateWithValidData(\ApiTester $I)
     {
         $startTime = (new \DateTimeImmutable());

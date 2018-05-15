@@ -17,6 +17,11 @@ class WorkLog
      */
     private $endTime;
 
+    /**
+     * @var User
+     */
+    private $user;
+
     public function __construct()
     {
         $this->startTime = new \DateTimeImmutable();
@@ -76,6 +81,25 @@ class WorkLog
     public function setEndTime(\DateTimeImmutable $endTime): WorkLog
     {
         $this->endTime = $endTime;
+
+        return $this;
+    }
+
+    /**
+     * @return User
+     */
+    public function getUser(): User
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param User $user
+     * @return WorkLog
+     */
+    public function setUser(User $user): WorkLog
+    {
+        $this->user = $user;
 
         return $this;
     }

@@ -102,6 +102,7 @@ def deploy(deployBranch, targetFolder, deployTar, deployFolder, backupFolder) {
             cp php.ini ${deployFolder}/php.ini
             cp .htaccess ${deployFolder}/.htaccess
             cp .htpasswd ${deployFolder}/.htpasswd 2>/dev/null || :
+            cp config/jwt ${deployFolder}/config/jwt
 
             echo 'Moving deploy folder to targetFolder'
             rm -rf ${targetFolder}/${deployBranch.folder}.deploy
@@ -126,7 +127,7 @@ def deploy(deployBranch, targetFolder, deployTar, deployFolder, backupFolder) {
             pg_dump ${deployBranch.dbName} > ${targetFolder}/${deployBranch.folder}/db_dump.sql
             rm -rf ${backupFolder}/${deployBranch.folder}
             mv ${targetFolder}/${deployBranch.folder} ${backupFolder}/${deployBranch.folder}
-            
+
             echo 'Switching to new deploy'
             mv ${targetFolder}/${deployBranch.folder}.deploy ${targetFolder}/${deployBranch.folder}
             rm -f ${targetFolder}/${deployBranch.folder}/${deployTar}

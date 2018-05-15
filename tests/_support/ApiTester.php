@@ -36,6 +36,9 @@ class ApiTester extends \Codeception\Actor
     public function createWorkLog(array $params = [])
     {
         $workLog = $this->populateEntity(new \App\Entity\WorkLog(), [
+            'user' => function () {
+                return $this->createUser();
+            },
             'startTime' => (new DateTimeImmutable()),
             'endTime' => (new DateTimeImmutable())->add(new DateInterval('PT1S')),
         ], $params);
@@ -44,6 +47,21 @@ class ApiTester extends \Codeception\Actor
 
         return $this->grabEntityFromRepository(\App\Entity\WorkLog::class, [
             'id' => $workLog->getId(),
+        ]);
+    }
+
+    public function createUser(array $params = [])
+    {
+        $user = $this->populateEntity(new \App\Entity\User(), [
+            'email' => 'user@example.com',
+            'firstName' => 'Jan',
+            'lastName' => 'Novák',
+        ], $params);
+
+        $this->persistEntity($user);
+
+        return $this->grabEntityFromRepository(\App\Entity\User::class, [
+            'id' => $user->getId(),
         ]);
     }
 

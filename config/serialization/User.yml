@@ -1,0 +1,30 @@
+App\Entity\User:
+    attributes:
+        id:
+            groups:
+                - user_out_list
+                - user_out_detail
+                - work_log_out_list
+                - work_log_out_detail
+        email:
+            groups:
+                - user_out_list
+                - user_out_detail
+                - user_in
+        firstName:
+            groups:
+                - user_out_list
+                - user_out_detail
+                - user_in
+        lastName:
+            groups:
+                - user_out_list
+                - user_out_detail
+                - user_in
+        plainPassword:
+            groups:
+                - user_in
+        roles:
+            groups:
+                - user_out_list
+                - user_out_detail

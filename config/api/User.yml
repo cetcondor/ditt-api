@@ -1,0 +1,64 @@
+App\Entity\User:
+    properties:
+        workLogs:
+            subresource:
+                resourceClass: 'App\Entity\WorkLog'
+                collection: true
+    collectionOperations:
+        get:
+            method: 'GET'
+            normalization_context:
+                groups:
+                    - user_out_list
+        post:
+            method: 'POST'
+            normalization_context:
+                groups:
+                    - user_out_detail
+            denormalization_context:
+                groups:
+                    - user_in
+    itemOperations:
+        get:
+            method: 'GET'
+            normalization_context:
+                groups:
+                    - user_out_detail
+        login:
+            method: 'POST'
+            route_name: 'api_login'
+            swagger_context:
+                summary: 'Authenticate user.'
+                responses:
+                    200:
+                        description: 'User was logged in.'
+                    401:
+                        description: 'Bad Credentials.'
+                    400:
+                        description: 'Invalid request.'
+                parameters:
+                    - name: username
+                      description: 'Email of the user'
+                      example: 'username=user@example.com'
+                      type: string
+                      in: body
+                      required: true
+                    - name: password
+                      description: 'Password'
+                      example: 'password=password'
+                      type: string
+                      in: body
+                      required: true
+        logout:
+            method: 'POST'
+            route_name: 'api_logout'
+            swagger_context:
+                summary: 'Log out user.'
+                responses:
+                    200:
+                        description: 'User was logged out.'
+                    401:
+                        description: 'Bad Credentials.'
+                    400:
+                        description: 'Invalid request.'
+                parameters: ~

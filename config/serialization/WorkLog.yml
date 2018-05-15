@@ -14,3 +14,7 @@ App\Entity\WorkLog:
                 - work_log_out_list
                 - work_log_out_detail
                 - work_log_in
+        user:
+            groups:
+                - work_log_out_list
+                - work_log_out_detail

@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\WorkLog;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 
 class WorkLogRepository
 {
@@ -24,17 +25,23 @@ class WorkLogRepository
     }
 
     /**
-     * @param \App\Entity\WorkLog $workLog
-     * @return int
+     * @param WorkLog $workLog
+     * @return bool
      */
-    public function getOverlaps(WorkLog $workLog): int
+    public function getOverlaps(WorkLog $workLog): bool
     {
-        return (int) $this->repository->createQueryBuilder('wl')
-            ->select('COUNT(wl.id)')
-            ->where('overlaps(:startTime, :endTime, wl.startTime, wl.endTime) = TRUE')
-            ->setParameter('startTime', $workLog->getStartTime())
-            ->setParameter('endTime', $workLog->getEndTime())
-            ->getQuery()
-            ->getSingleScalarResult();
+        try {
+            return (int) $this->repository->createQueryBuilder('wl')
+                ->select('COUNT(wl.id)')
+                ->where('overlaps(:startTime, :endTime, wl.startTime, wl.endTime) = TRUE')
+                ->andWhere('wl.user = :user')
+                ->setParameter('startTime', $workLog->getStartTime())
+                ->setParameter('endTime', $workLog->getEndTime())
+                ->setParameter('user', $workLog->getUser())
+                ->getQuery()
+                ->getSingleScalarResult() > 0;
+        } catch (NonUniqueResultException $e) {
+            return true;
+        }
     }
 }

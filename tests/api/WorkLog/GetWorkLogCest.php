@@ -25,13 +25,17 @@ class GetWorkLogCest
         $startTime2 = (new \DateTimeImmutable());
         $endTime2 = $startTime1->add(new \DateInterval('PT1M'));
 
+        $user = $I->createUser();
+
         $I->createWorkLog([
             'startTime' => $startTime1,
             'endTime' => $endTime1,
+            'user' => $user,
         ]);
         $I->createWorkLog([
             'startTime' => $startTime2,
             'endTime' => $endTime2,
+            'user' => $user,
         ]);
         $I->haveHttpHeader('Content-Type', 'application/json');
 
@@ -59,11 +63,15 @@ class GetWorkLogCest
         $startTime2 = (new \DateTimeImmutable());
         $endTime2 = $startTime1->add(new \DateInterval('PT1M'));
 
+        $user = $I->createUser();
+
         $I->createWorkLog([
+            'user' => $user,
             'startTime' => $startTime1,
             'endTime' => $endTime1,
         ]);
         $I->createWorkLog([
+            'user' => $user,
             'startTime' => $startTime2,
             'endTime' => $endTime2,
         ]);

@@ -11,3 +11,13 @@ App\Entity\WorkLog:
             type: datetime_immutable
         endTime:
             type: datetime_immutable
+
+    manyToOne:
+        user:
+            targetEntity: App\Entity\User
+            inversedBy: workLogs
+            joinColumn:
+                name: user_id
+                referencedColumnName: id
+                nullable: false
+                onDelete: cascade

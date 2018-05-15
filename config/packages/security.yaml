@@ -1,10 +1,23 @@
 security:
     providers:
-        in_memory:
-            memory: ~
-    firewalls:
-        dev:
-            pattern: ^/(_(profiler|wdt)|css|images|js)/
-            security: false
-        main:
-            anonymous: true
+        webservice:
+            id: App\Security\User\UserProvider
+    encoders:
+        App\Entity\User:
+            algorithm: bcrypt
+            cost: 12
+
+    role_hierarchy:
+        !php/const App\Entity\User::ROLE_USER: ~
+        !php/const App\Entity\User::ROLE_EMPLOYEE: !php/const App\Entity\User::ROLE_USER
+        !php/const App\Entity\User::ROLE_ADMIN: !php/const App\Entity\User::ROLE_USER
+        !php/const App\Entity\User::ROLE_SUPER_ADMIN: !php/const App\Entity\User::ROLE_ADMIN
+
+    access_control:
+        - { path: ^/$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/work_logs.+, roles: !php/const App\Entity\User::ROLE_EMPLOYEE }
+        - { path: ^/configs.+, roles: !php/const App\Entity\User::ROLE_EMPLOYEE }
+        -   path: ^/logout,
+            roles:
+                - !php/const App\Entity\User::ROLE_EMPLOYEE
+                - !php/const App\Entity\User::ROLE_ADMIN
