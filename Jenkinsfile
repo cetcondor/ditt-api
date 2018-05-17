@@ -102,7 +102,8 @@ def deploy(deployBranch, targetFolder, deployTar, deployFolder, backupFolder) {
             cp php.ini ${deployFolder}/php.ini
             cp .htaccess ${deployFolder}/.htaccess
             cp .htpasswd ${deployFolder}/.htpasswd 2>/dev/null || :
-            cp config/jwt ${deployFolder}/config/jwt
+            mkdir ${deployFolder}/config
+            cp -r config/jwt ${deployFolder}/config/jwt
 
             echo 'Moving deploy folder to targetFolder'
             rm -rf ${targetFolder}/${deployBranch.folder}.deploy
