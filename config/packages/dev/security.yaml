@@ -17,6 +17,8 @@ security:
         api:
             logout:
                 path:   /logout
+                invalidate_session: true
+                success_handler: App\Service\ApiLogoutHandler
             pattern:   ^/.+
             stateless: true
             guard:
