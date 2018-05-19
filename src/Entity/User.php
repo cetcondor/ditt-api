@@ -46,9 +46,24 @@ class User implements UserInterface
     private $password;
 
     /**
+     * @var bool
+     */
+    private $isActive;
+
+    /**
      * @var string[]
      */
     private $roles;
+
+    /**
+     * @var User|null
+     */
+    private $supervisor;
+
+    /**
+     * @var User[]|Collection
+     */
+    private $supervised;
 
     /**
      * @var WorkLog[]|Collection
@@ -62,7 +77,8 @@ class User implements UserInterface
         $this->email = '';
         $this->firstName = '';
         $this->lastName = '';
-        $this->roles = [self::ROLE_USER];
+        $this->roles = [self::ROLE_EMPLOYEE];
+        $this->supervised = new ArrayCollection();
         $this->workLogs = new ArrayCollection();
     }
 
@@ -170,24 +186,20 @@ class User implements UserInterface
     }
 
     /**
-     * @return WorkLog[]
+     * @return bool
      */
-    public function getWorkLogs(): array
+    public function getIsActive(): bool
     {
-        if ($this->workLogs instanceof Collection) {
-            return $this->workLogs->toArray();
-        }
-
-        return $this->workLogs;
+        return $this->isActive;
     }
 
     /**
-     * @param WorkLog[]|Collection $workLogs
+     * @param bool $isActive
      * @return User
      */
-    public function setWorkLogs($workLogs): User
+    public function setIsActive(bool $isActive): User
     {
-        $this->workLogs = $workLogs;
+        $this->isActive = $isActive;
 
         return $this;
     }
@@ -237,6 +249,71 @@ class User implements UserInterface
             }
         }
         unset($this->roles[$keyToRemove]);
+
+        return $this;
+    }
+
+    /**
+     * @return User|null
+     */
+    public function getSupervisor(): ?User
+    {
+        return $this->supervisor;
+    }
+
+    /**
+     * @param User|null $supervisor
+     * @return User
+     */
+    public function setSupervisor(?User $supervisor): User
+    {
+        $this->supervisor = $supervisor;
+
+        return $this;
+    }
+
+    /**
+     * @return User[]
+     */
+    public function getSupervised(): array
+    {
+        if ($this->supervised instanceof Collection) {
+            return $this->supervised->toArray();
+        }
+
+        return $this->supervised;
+    }
+
+    /**
+     * @param User[]|Collection $supervised
+     * @return User
+     */
+    public function setSupervised($supervised): User
+    {
+        $this->supervised = $supervised;
+
+        return $this;
+    }
+
+    /**
+     * @return WorkLog[]
+     */
+    public function getWorkLogs(): array
+    {
+        if ($this->workLogs instanceof Collection) {
+            return $this->workLogs->toArray();
+        }
+
+        return $this->workLogs;
+    }
+
+    /**
+     * @param WorkLog[]|Collection $workLogs
+     * @return User
+     */
+    public function setWorkLogs($workLogs): User
+    {
+        $this->workLogs = $workLogs;
 
         return $this;
     }

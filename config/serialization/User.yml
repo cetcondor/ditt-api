@@ -24,7 +24,18 @@ App\Entity\User:
         plainPassword:
             groups:
                 - user_in
+        isActive:
+            groups:
+                - user_out_list
+                - user_out_detail
+                - user_in
         roles:
             groups:
                 - user_out_list
                 - user_out_detail
+                - user_in
+        supervisor:
+            groups:
+                - user_out_list
+                - user_out_detail
+                - user_in

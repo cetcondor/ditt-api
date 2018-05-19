@@ -7,6 +7,8 @@ App\Entity\User:
     collectionOperations:
         get:
             method: 'GET'
+            filters:
+                - 'order_filter.user'
             normalization_context:
                 groups:
                     - user_out_list
@@ -18,15 +20,28 @@ App\Entity\User:
             denormalization_context:
                 groups:
                     - user_in
+            validation_groups:
+                - User
+                - user_password_required
     itemOperations:
         get:
             method: 'GET'
             normalization_context:
                 groups:
                     - user_out_detail
-        login:
+        put:
+            method: 'PUT'
+            normalization_context:
+                groups:
+                    - user_out_detail
+            denormalization_context:
+                groups:
+                    - user_in
+        delete:
+            method: 'DELETE'
+        login_check:
             method: 'POST'
-            route_name: 'api_login'
+            route_name: 'api_login_check'
             swagger_context:
                 summary: 'Authenticate user.'
                 responses:
@@ -37,15 +52,13 @@ App\Entity\User:
                     400:
                         description: 'Invalid request.'
                 parameters:
-                    - name: username
-                      description: 'Email of the user'
-                      example: 'username=user@example.com'
+                    - name: email
+                      description: 'Email'
                       type: string
                       in: body
                       required: true
                     - name: password
                       description: 'Password'
-                      example: 'password=password'
                       type: string
                       in: body
                       required: true

@@ -21,6 +21,9 @@ App\Entity\User:
         password:
             type: text
 
+        isActive:
+            type: boolean
+
         roles:
             type: json_array
 
@@ -28,3 +31,13 @@ App\Entity\User:
         workLogs:
             targetEntity: App\Entity\WorkLog
             mappedBy: user
+
+    manyToOne:
+        supervisor:
+            targetEntity: App\Entity\User
+            mappedBy: supervised
+            joinColumn:
+                name: supervisor_id
+                referencedColumnName: id
+                onDelete: SET NULL
+                nullable: true

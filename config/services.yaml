@@ -31,6 +31,9 @@ services:
     GuzzleHttp\Client:
       class: GuzzleHttp\Client
 
+    App\Security\User\UserChecker:
+        class: App\Security\User\UserChecker
+
     app.security.voter.resource:
         class: App\Security\ResourceVoter
         public: false
@@ -50,6 +53,18 @@ services:
         autoconfigure: false
         public: false
 
+    # API Order filters
+
+    app.order_filter.user:
+        parent:    'api_platform.doctrine.orm.order_filter'
+        arguments: [ { firstName: ~, lastName: ~, supervisor.firstName: ~, supervisor.lastName: ~ } ]
+        tags:      [ { name: 'api_platform.filter', id: 'order_filter.user' } ]
+        autowire: false
+        autoconfigure: false
+        public: false
+
+    # Event listeners
+
     app.event.jwt_created_listener:
         class: App\Listener\JWTCreatedListener
         tags:
@@ -57,3 +72,11 @@ services:
                 name: kernel.event_listener
                 event: lexik_jwt_authentication.on_jwt_created
                 method: onJWTCreated
+
+    # Event subscribers
+
+    app.event.subscriber.user_password_subscriber:
+        class: App\Subscriber\UserPasswordSubscriber
+        autowire: true
+        tags:
+            - { name: doctrine.event_subscriber }

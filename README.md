@@ -18,3 +18,14 @@ To update the project:
 
 1. Install composer packages: `composer install`
 2. Run the installation process `vendor/bin/robo update`
+
+## Users
+
+Following accounts are creating for testing purposes:
+
+| Email                      | Password | Roles           |
+|----------------------------|----------|-----------------|
+| employee@example.com       | password | EMPLOYEE        |
+| employee-admin@example.com | password | EMPLOYEE, ADMIN |
+| admin@example.com          | password | ADMIN           |
+| admin@example.com          | password | SUPER ADMIN     |

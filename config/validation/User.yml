@@ -1,4 +1,6 @@
 App\Entity\User:
+    constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: email
     properties:
         email:
             - NotBlank: ~
@@ -18,3 +20,9 @@ App\Entity\User:
                 min: 2
                 max: 200
 
+        plainPassword:
+            - NotBlank:
+                groups:
+                    - user_password_required
+            - Length:
+                min: 8

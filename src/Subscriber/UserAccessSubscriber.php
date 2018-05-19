@@ -15,6 +15,8 @@ class UserAccessSubscriber implements EventSubscriberInterface
     const ACCESS_METHODS_TO_PERMISSIONS = [
         Request::METHOD_GET => ResourceVoter::VIEW,
         Request::METHOD_POST => ResourceVoter::EDIT,
+        Request::METHOD_PUT => ResourceVoter::EDIT,
+        Request::METHOD_DELETE => ResourceVoter::EDIT,
     ];
 
     /**

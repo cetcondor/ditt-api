@@ -39,6 +39,10 @@ class ResourceVoter extends Voter
             return false;
         }
 
+        if ($subject instanceof User) {
+            return true;
+        }
+
         if ($subject instanceof WorkLog) {
             return true;
         }
@@ -61,7 +65,7 @@ class ResourceVoter extends Voter
             return false;
         }
 
-        if ($this->decisionManager->decide($token, [\App\Entity\User::ROLE_SUPER_ADMIN])) {
+        if ($this->decisionManager->decide($token, [User::ROLE_SUPER_ADMIN])) {
             return true;
         }
 
@@ -85,6 +89,10 @@ class ResourceVoter extends Voter
      */
     private function canView($subject, User $user): bool
     {
+        if ($subject instanceof User) {
+            return true;
+        }
+
         if ($subject instanceof WorkLog) {
             return $this->canViewWorkLog($subject, $user);
         }
@@ -109,6 +117,10 @@ class ResourceVoter extends Voter
      */
     private function canEdit($subject, User $user): bool
     {
+        if ($subject instanceof User) {
+            return true;
+        }
+
         if ($subject instanceof WorkLog) {
             return $this->canEditWorkLog($subject, $user);
         }
