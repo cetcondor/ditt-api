@@ -1,15 +1,15 @@
 <?php
 
-namespace api\WorkLog;
+namespace api\User;
 
-use App\Entity\WorkLog;
+use App\Entity\User;
 use Doctrine\ORM\NoResultException;
 use Prophecy\Prophet;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
-class CreateWorkLogCest
+class CreateUserCest
 {
     public function _before(\ApiTester $I)
     {
@@ -24,36 +24,39 @@ class CreateWorkLogCest
 
     public function testCreateWithValidData(\ApiTester $I)
     {
-        $startTime = (new \DateTimeImmutable());
-        $endTime = $startTime->add(new \DateInterval('PT1M'));
-
         $I->haveHttpHeader('Content-Type', 'application/json');
-        $I->sendPOST('/work_logs.json', [
-            'startTime' => $startTime->format(\DateTime::RFC3339),
-            'endTime' => $endTime->format(\DateTime::RFC3339),
+        $I->sendPOST('/users.json', [
+            'email' => 'test@visionapps.cz',
+            'firstName' => 'First',
+            'isActive' => true,
+            'lastName' => 'lastName',
+            'plainPassword' => 'password',
         ]);
 
         $I->seeHttpHeader('Content-Type', 'application/json; charset=utf-8');
         $I->seeResponseCodeIs(Response::HTTP_CREATED);
         $I->seeResponseContainsJson([
-            'startTime' => $startTime->format(\DateTime::RFC3339),
-            'endTime' => $endTime->format(\DateTime::RFC3339),
+            'email' => 'test@visionapps.cz',
+            'firstName' => 'First',
+            'isActive' => true,
+            'lastName' => 'lastName',
+            'roles' => ['ROLE_EMPLOYEE'],
+            'supervisor' => null,
         ]);
-        $I->grabEntityFromRepository(WorkLog::class, [
-            'startTime' => $startTime,
-            'endTime' => $endTime,
+        $I->grabEntityFromRepository(User::class, [
+            'email' => 'test@visionapps.cz',
         ]);
     }
 
     public function testCreateWithInvalidData(\ApiTester $I)
     {
-        $startTime = (new \DateTimeImmutable());
-        $endTime = $startTime->add(new \DateInterval('PT1M'));
-
         $I->haveHttpHeader('Content-Type', 'application/json');
-        $I->sendPOST('/work_logs.json', [
-            'startTime' => $endTime->format(\DateTime::RFC3339),
-            'endTime' => $startTime->format(\DateTime::RFC3339),
+        $I->sendPOST('/users.json', [
+            'email' => 'test@visionapps.cz',
+            'firstName' => 'First',
+            'isActive' => true,
+            'lastName' => 'lastName',
+            'plainPassword' => null,
         ]);
 
         $I->seeHttpHeader('Content-Type', 'application/problem+json; charset=utf-8');
@@ -62,10 +65,9 @@ class CreateWorkLogCest
             'violations' => [[]],
         ]);
 
-        $I->expectException(NoResultException::class, function () use ($I, $startTime, $endTime) {
-            $I->grabEntityFromRepository(WorkLog::class, [
-                'startTime' => $startTime,
-                'endTime' => $endTime,
+        $I->expectException(NoResultException::class, function () use ($I) {
+            $I->grabEntityFromRepository(User::class, [
+                'email' => 'test@visionapps.cz',
             ]);
         });
     }

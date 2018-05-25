@@ -1,6 +1,6 @@
 <?php
 
-namespace api\Config;
+namespace api\WorkLog;
 
 use Symfony\Component\HttpFoundation\Response;
 
