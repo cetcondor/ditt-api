@@ -5,7 +5,6 @@ App\Entity\User:
         email:
             - NotBlank: ~
             - Email:
-                checkMX: true
                 strict: true
 
         firstName:
