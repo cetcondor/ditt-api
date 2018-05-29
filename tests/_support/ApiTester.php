@@ -19,20 +19,6 @@ class ApiTester extends \Codeception\Actor
 {
     use _generated\ApiTesterActions;
 
-    public function createConfig(array $params = [])
-    {
-        $config = $this->populateEntity(new \App\Entity\Config(), [
-            'title' => 'Config title',
-            'description' => 'Config description',
-        ], $params);
-
-        $this->persistEntity($config);
-
-        return $this->grabEntityFromRepository(\App\Entity\Config::class, [
-            'title' => $config->getTitle(),
-        ]);
-    }
-
     public function createWorkLog(array $params = [])
     {
         $workLog = $this->populateEntity(new \App\Entity\WorkLog(), [
