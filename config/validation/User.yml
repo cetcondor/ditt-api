@@ -1,6 +1,7 @@
 App\Entity\User:
     constraints:
         - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: email
+        - App\Validator\Constraints\WorkHoursPresent: ~
     properties:
         email:
             - NotBlank: ~
@@ -25,3 +26,5 @@ App\Entity\User:
                     - user_password_required
             - Length:
                 min: 8
+        workHours:
+            - Valid: ~

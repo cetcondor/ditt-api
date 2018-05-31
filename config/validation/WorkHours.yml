@@ -1,0 +1,21 @@
+App\Entity\WorkHours:
+    properties:
+        year:
+            - NotBlank: ~
+            - Type: int
+
+        month:
+            - NotBlank: ~
+            - Type: int
+            - Range:
+                min: 1
+                max: 12
+
+        requiredHours:
+            - NotBlank: ~
+            - Type: int
+            - Range:
+                min: 0
+
+        user:
+            - NotBlank: ~

@@ -1,5 +1,9 @@
 App\Entity\User:
     properties:
+        workHours:
+            subresource:
+                resourceClass: 'App\Entity\WorkHours'
+                collection: true
         workLogs:
             subresource:
                 resourceClass: 'App\Entity\WorkLog'
@@ -12,6 +16,7 @@ App\Entity\User:
             normalization_context:
                 groups:
                     - user_out_list
+                    - work_hours_out_list
         post:
             method: 'POST'
             normalization_context:
@@ -20,6 +25,7 @@ App\Entity\User:
             denormalization_context:
                 groups:
                     - user_in
+                    - work_hours_in
             validation_groups:
                 - User
                 - user_password_required
@@ -37,6 +43,7 @@ App\Entity\User:
             denormalization_context:
                 groups:
                     - user_in
+                    - work_hours_in
         delete:
             method: 'DELETE'
         login_check:

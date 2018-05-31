@@ -1,0 +1,17 @@
+App\Entity\WorkHours:
+    attributes:
+        year:
+            groups:
+                - work_hours_out_list
+                - work_hours_out_detail
+                - work_hours_in
+        month:
+            groups:
+                - work_hours_out_list
+                - work_hours_out_detail
+                - work_hours_in
+        requiredHours:
+            groups:
+                - work_hours_out_list
+                - work_hours_out_detail
+                - work_hours_in

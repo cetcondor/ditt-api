@@ -21,6 +21,8 @@ To update the project:
 
 ## Users
 
+### Accounts
+
 Following accounts are creating for testing purposes:
 
 | Email                      | Password | Roles           |
@@ -29,3 +31,4 @@ Following accounts are creating for testing purposes:
 | employee-admin@example.com | password | EMPLOYEE, ADMIN |
 | admin@example.com          | password | ADMIN           |
 | admin@example.com          | password | SUPER ADMIN     |
+

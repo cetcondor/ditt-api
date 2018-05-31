@@ -3,6 +3,7 @@
 namespace App\Security;
 
 use App\Entity\User;
+use App\Entity\WorkHours;
 use App\Entity\WorkLog;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
@@ -43,6 +44,10 @@ class ResourceVoter extends Voter
             return true;
         }
 
+        if ($subject instanceof WorkHours) {
+            return true;
+        }
+
         if ($subject instanceof WorkLog) {
             return true;
         }
@@ -70,9 +75,9 @@ class ResourceVoter extends Voter
         }
 
         if ($attribute === self::VIEW) {
-            return $this->canView($subject, $user);
+            return $this->canView($subject, $user, $token);
         } elseif ($attribute === self::EDIT) {
-            return $this->canEdit($subject, $user);
+            return $this->canEdit($subject, $user, $token);
         }
 
         throw new \LogicException(
@@ -85,12 +90,17 @@ class ResourceVoter extends Voter
     /**
      * @param mixed $subject
      * @param User $user
+     * @param TokenInterface $token
      * @return bool
      */
-    private function canView($subject, User $user): bool
+    private function canView($subject, User $user, TokenInterface $token): bool
     {
         if ($subject instanceof User) {
             return true;
+        }
+
+        if ($subject instanceof WorkHours) {
+            return $this->canViewWorkHour($subject, $user, $token);
         }
 
         if ($subject instanceof WorkLog) {
@@ -98,6 +108,17 @@ class ResourceVoter extends Voter
         }
 
         return false;
+    }
+
+    /**
+     * @param WorkHours $workHours
+     * @param User $user
+     * @param TokenInterface $token
+     * @return bool
+     */
+    private function canViewWorkHour(WorkHours $workHours, User $user, TokenInterface $token): bool
+    {
+        return $workHours->getUser() === $user || $this->decisionManager->decide($token, [User::ROLE_ADMIN]);
     }
 
     /**
@@ -113,12 +134,17 @@ class ResourceVoter extends Voter
     /**
      * @param mixed $subject
      * @param User $user
+     * @param TokenInterface $token
      * @return bool
      */
-    private function canEdit($subject, User $user): bool
+    private function canEdit($subject, User $user, TokenInterface $token): bool
     {
         if ($subject instanceof User) {
             return true;
+        }
+
+        if ($subject instanceof WorkHours) {
+            return $this->canEditWorkHours($subject, $user, $token);
         }
 
         if ($subject instanceof WorkLog) {
@@ -126,6 +152,21 @@ class ResourceVoter extends Voter
         }
 
         return false;
+    }
+
+    /**
+     * @param WorkHours $workHours
+     * @param User $user
+     * @param TokenInterface $token
+     * @return bool
+     */
+    private function canEditWorkHours(WorkHours $workHours, User $user, TokenInterface $token): bool
+    {
+        try {
+            return $workHours->getUser() === $user || $this->decisionManager->decide($token, [User::ROLE_ADMIN]);
+        } catch (\TypeError $e) {
+            return true;
+        }
     }
 
     /**

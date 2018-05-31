@@ -66,6 +66,11 @@ class User implements UserInterface
     private $supervised;
 
     /**
+     * @var WorkHours[]|Collection
+     */
+    private $workHours;
+
+    /**
      * @var WorkLog[]|Collection
      */
     private $workLogs;
@@ -79,6 +84,7 @@ class User implements UserInterface
         $this->lastName = '';
         $this->roles = [self::ROLE_EMPLOYEE];
         $this->supervised = new ArrayCollection();
+        $this->workHours = new ArrayCollection();
         $this->workLogs = new ArrayCollection();
     }
 
@@ -291,6 +297,49 @@ class User implements UserInterface
     public function setSupervised($supervised): User
     {
         $this->supervised = $supervised;
+
+        return $this;
+    }
+
+    /**
+     * @return WorkHours[]
+     */
+    public function getWorkHours()
+    {
+        if ($this->workHours instanceof Collection) {
+            return $this->workHours->toArray();
+        }
+
+        return $this->workHours;
+    }
+
+    /**
+     * @param WorkHours[]|Collection $workHours
+     * @return User
+     */
+    public function setWorkHours($workHours): User
+    {
+        foreach ($workHours as $workHour) {
+            $workHour->setUser($this);
+        }
+
+        $this->workHours = $workHours;
+
+        return $this;
+    }
+
+    /**
+     * @param WorkHours $workHours
+     * @return User
+     */
+    public function addWorkHours(WorkHours $workHours): User
+    {
+        if ($this->workHours instanceof Collection) {
+            $workHours->setUser($this);
+            $this->workHours->add($workHours);
+        } else {
+            $this->workHours[] = $workHours;
+        }
 
         return $this;
     }

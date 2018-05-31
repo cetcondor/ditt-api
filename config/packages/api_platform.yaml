@@ -11,3 +11,6 @@ api_platform:
         html:
             mime_types:
                 - 'text/html'
+    collection:
+        pagination:
+            enabled: false

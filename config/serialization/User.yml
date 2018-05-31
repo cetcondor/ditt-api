@@ -39,3 +39,7 @@ App\Entity\User:
                 - user_out_list
                 - user_out_detail
                 - user_in
+        workHours:
+            groups:
+                - user_out_list
+                - user_in

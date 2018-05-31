@@ -31,6 +31,7 @@ class CreateUserCest
             'isActive' => true,
             'lastName' => 'lastName',
             'plainPassword' => 'password',
+            'workHours' => $I->generateWorkHours(100),
         ]);
 
         $I->seeHttpHeader('Content-Type', 'application/json; charset=utf-8');
