@@ -3,27 +3,26 @@
 DBJR Internal Time Tracking API developed by VisionApps
 
 ## Build
- 
+
 To install the project:
- 
+
 1. Install composer packages: `composer install`
 2. Run the installation process `vendor/bin/robo install`
-3. Create certificates for JWT
-```bash
-$ openssl genrsa -out config/jwt/private.pem -aes256 4096
-$ openssl rsa -pubout -in config/jwt/private.pem -out config/jwt/public.pem
-```
- 
+3. Create certificates for JWT:
+  ```bash
+  $ openssl genrsa -out config/jwt/private.pem -aes256 4096
+  $ openssl rsa -pubout -in config/jwt/private.pem -out config/jwt/public.pem
+  ```
+4. Set `JWT_PASSPHRASE` in `.env` to whatever you entered as a password in previous step
+
 To update the project:
 
 1. Install composer packages: `composer install`
 2. Run the installation process `vendor/bin/robo update`
 
-## Users
+## User Accounts
 
-### Accounts
-
-Following accounts are creating for testing purposes:
+Following accounts are available for testing purposes:
 
 | Email                      | Password | Roles           |
 |----------------------------|----------|-----------------|
@@ -31,4 +30,3 @@ Following accounts are creating for testing purposes:
 | employee-admin@example.com | password | EMPLOYEE, ADMIN |
 | admin@example.com          | password | ADMIN           |
 | admin@example.com          | password | SUPER ADMIN     |
-
