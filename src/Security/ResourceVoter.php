@@ -96,7 +96,7 @@ class ResourceVoter extends Voter
     private function canView($subject, User $user, TokenInterface $token): bool
     {
         if ($subject instanceof User) {
-            return true;
+            return $this->canViewUser($subject, $user, $token);
         }
 
         if ($subject instanceof WorkHours) {
@@ -108,6 +108,19 @@ class ResourceVoter extends Voter
         }
 
         return false;
+    }
+
+    /**
+     * @param User $subject
+     * @param User $user
+     * @param TokenInterface $token
+     * @return bool
+     */
+    private function canViewUser(User $subject, User $user, TokenInterface $token): bool
+    {
+        return $subject === $user
+            || $subject->getSupervisor() === $user
+            || $this->decisionManager->decide($token, [User::ROLE_ADMIN]);
     }
 
     /**
@@ -140,7 +153,7 @@ class ResourceVoter extends Voter
     private function canEdit($subject, User $user, TokenInterface $token): bool
     {
         if ($subject instanceof User) {
-            return true;
+            return $this->canEditUser($subject, $user, $token);
         }
 
         if ($subject instanceof WorkHours) {
@@ -152,6 +165,17 @@ class ResourceVoter extends Voter
         }
 
         return false;
+    }
+
+    /**
+     * @param User $subject
+     * @param User $user
+     * @param TokenInterface $token
+     * @return bool
+     */
+    private function canEditUser(User $subject, User $user, TokenInterface $token): bool
+    {
+        return $this->decisionManager->decide($token, [User::ROLE_ADMIN]);
     }
 
     /**

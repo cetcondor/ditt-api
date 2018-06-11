@@ -9,6 +9,12 @@ App\Entity\User:
                 resourceClass: 'App\Entity\WorkLog'
                 collection: true
     collectionOperations:
+        supervisedUsers:
+            method: 'GET'
+            route_name: 'api_supervised_users'
+            normalization_context:
+                groups:
+                    - supervised_user_out_list
         get:
             method: 'GET'
             filters:

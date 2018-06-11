@@ -10,3 +10,9 @@ api_logout:
     path: /logout
     methods: [POST]
 
+api_supervised_users:
+    path: /users/{id}/supervised_users
+    methods: ['GET']
+    controller: App\Controller\UserController:supervisedUsers
+    defaults:
+        _api_collection_operation_name: 'supervisedUsers'

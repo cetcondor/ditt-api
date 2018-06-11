@@ -24,6 +24,14 @@ class UserRepository
     }
 
     /**
+     * @return EntityRepository
+     */
+    public function getRepository(): EntityRepository
+    {
+        return $this->repository;
+    }
+
+    /**
      * @param string $email
      * @return User|null
      */
@@ -33,5 +41,20 @@ class UserRepository
         $user = $this->repository->findOneBy(['email' => $email]);
 
         return $user;
+    }
+
+    /**
+     * @param User $user
+     * @return User[]
+     */
+    public function getAllUsersBySupervisor(User $user): array
+    {
+        $users = $this->repository->findBy(['supervisor' => $user]);
+
+        if (!$users) {
+            return [];
+        }
+
+        return $users;
     }
 }

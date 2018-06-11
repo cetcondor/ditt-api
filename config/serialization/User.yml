@@ -4,22 +4,26 @@ App\Entity\User:
             groups:
                 - user_out_list
                 - user_out_detail
+                - supervised_user_out_list
                 - work_log_out_list
                 - work_log_out_detail
         email:
             groups:
                 - user_out_list
                 - user_out_detail
+                - supervised_user_out_list
                 - user_in
         firstName:
             groups:
                 - user_out_list
                 - user_out_detail
+                - supervised_user_out_list
                 - user_in
         lastName:
             groups:
                 - user_out_list
                 - user_out_detail
+                - supervised_user_out_list
                 - user_in
         plainPassword:
             groups:
@@ -28,11 +32,13 @@ App\Entity\User:
             groups:
                 - user_out_list
                 - user_out_detail
+                - supervised_user_out_list
                 - user_in
         roles:
             groups:
                 - user_out_list
                 - user_out_detail
+                - supervised_user_out_list
                 - user_in
         supervisor:
             groups:
