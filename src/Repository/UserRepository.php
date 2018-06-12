@@ -45,11 +45,37 @@ class UserRepository
 
     /**
      * @param User $user
+     * @param array $order
      * @return User[]
      */
-    public function getAllUsersBySupervisor(User $user): array
+    public function getAllUsersBySupervisor(User $user, array $order = []): array
     {
-        $users = $this->repository->findBy(['supervisor' => $user]);
+        $users = $this->repository->findBy(
+            ['supervisor' => $user],
+            $order
+        );
+
+        if (!$users) {
+            return [];
+        }
+
+        return $users;
+    }
+
+    /**
+     * @param User $user
+     * @param array $order
+     * @return User[]
+     */
+    public function getAllActiveUsersBySupervisor(User $user, array $order = []): array
+    {
+        $users = $this->repository->findBy(
+            [
+                'isActive' => true,
+                'supervisor' => $user,
+            ],
+            $order
+        );
 
         if (!$users) {
             return [];
