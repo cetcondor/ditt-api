@@ -1,0 +1,22 @@
+App\Entity\WorkMonth:
+    attributes:
+        id:
+            groups:
+                - work_month_out_list
+                - work_month_out_detail
+                - work_log_out_detail
+        year:
+            groups:
+                - work_month_out_list
+                - work_month_out_detail
+        month:
+            groups:
+                - work_month_out_list
+                - work_month_out_detail
+        user:
+            groups:
+                - work_month_out_list
+                - work_month_out_detail
+        workLogs:
+            groups:
+                - work_month_out_detail

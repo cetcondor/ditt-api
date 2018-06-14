@@ -34,10 +34,10 @@ class WorkLogRepository
             return (int) $this->repository->createQueryBuilder('wl')
                 ->select('COUNT(wl.id)')
                 ->where('overlaps(:startTime, :endTime, wl.startTime, wl.endTime) = TRUE')
-                ->andWhere('wl.user = :user')
+                ->andWhere('wl.workMonth = :workMonth')
                 ->setParameter('startTime', $workLog->getStartTime())
                 ->setParameter('endTime', $workLog->getEndTime())
-                ->setParameter('user', $workLog->getUser())
+                ->setParameter('workMonth', $workLog->getWorkMonth())
                 ->getQuery()
                 ->getSingleScalarResult() > 0;
         } catch (NonUniqueResultException $e) {

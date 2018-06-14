@@ -1,20 +1,7 @@
 App\Entity\WorkLog:
-    attributes:
-        filters:
-            - search_filter.work_log
     collectionOperations:
-        api_users_work_logs_get_subresource:
-            method: 'GET'
-            normalization_context:
-                groups:
-                    - work_log_out_list
-        get:
-            method: 'GET'
-            normalization_context:
-                groups:
-                    - work_log_out_list
         post:
-            method: 'POST'
+            method: POST
             normalization_context:
                 groups:
                     - work_log_out_detail
@@ -23,9 +10,9 @@ App\Entity\WorkLog:
                     - work_log_in
     itemOperations:
         delete:
-            method: 'DELETE'
+            method: DELETE
         get:
-            method: 'GET'
+            method: GET
             normalization_context:
                 groups:
                     - work_log_out_detail

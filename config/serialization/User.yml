@@ -5,8 +5,8 @@ App\Entity\User:
                 - user_out_list
                 - user_out_detail
                 - supervised_user_out_list
-                - work_log_out_list
-                - work_log_out_detail
+                - work_month_out_list
+                - work_month_out_detail
         email:
             groups:
                 - user_out_list

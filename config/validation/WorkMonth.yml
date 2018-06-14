@@ -1,0 +1,14 @@
+App\Entity\WorkMonth:
+    properties:
+        month:
+            - NotBlank: ~
+            - Range:
+                min: 1
+                max: 12
+        year:
+            - NotBlank: ~
+            - Range:
+                min: 2018
+                max: 2021
+        user:
+            - NotBlank: ~

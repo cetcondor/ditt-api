@@ -23,10 +23,11 @@ security:
             roles:
                 - !php/const App\Entity\User::ROLE_EMPLOYEE
                 - !php/const App\Entity\User::ROLE_ADMIN
-        - { path: '^/users/[0-9]+/work_logs$', roles: !php/const App\Entity\User::ROLE_EMPLOYEE }
+        - { path: '^/users/[0-9]+/work_months$', roles: !php/const App\Entity\User::ROLE_EMPLOYEE }
         - { path: ^/users, roles: !php/const App\Entity\User::ROLE_ADMIN }
         - { path: ^/work_hours, roles: !php/const App\Entity\User::ROLE_EMPLOYEE }
         - { path: ^/work_logs, roles: !php/const App\Entity\User::ROLE_EMPLOYEE }
+        - { path: ^/work_months, roles: !php/const App\Entity\User::ROLE_EMPLOYEE }
         -   path: ^/logout,
             roles:
                 - !php/const App\Entity\User::ROLE_EMPLOYEE

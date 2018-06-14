@@ -2,6 +2,7 @@
 
 namespace api\WorkLog;
 
+use App\Entity\User;
 use App\Entity\WorkLog;
 use Doctrine\ORM\NoResultException;
 use Prophecy\Prophet;
@@ -11,21 +12,38 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class CreateWorkLogCest
 {
+    /**
+     * @var User
+     */
+    private $user;
+
+    /**
+     * @param \ApiTester $I
+     */
     public function _before(\ApiTester $I)
     {
         $prophet = new Prophet();
-        $user = $I->createUser();
+        $this->user = $I->createUser();
         $token = $prophet->prophesize(TokenInterface::class);
-        $token->getUser()->willReturn($user);
+        $token->getUser()->willReturn($this->user);
         $tokenStorage = $prophet->prophesize(TokenStorageInterface::class);
         $tokenStorage->getToken()->willReturn($token->reveal());
         $I->getContainer()->set(TokenStorageInterface::class, $tokenStorage->reveal());
     }
 
-    public function testCreateWithValidData(\ApiTester $I)
+    /**
+     * @param \ApiTester $I
+     * @throws \Exception
+     */
+    public function testCreateWithValidData(\ApiTester $I): void
     {
         $startTime = (new \DateTimeImmutable());
         $endTime = $startTime->add(new \DateInterval('PT1M'));
+        $I->createWorkMonth([
+            'month' => $startTime->format('m'),
+            'user' => $this->user,
+            'year' => $startTime->format('Y'),
+        ]);
 
         $I->haveHttpHeader('Content-Type', 'application/json');
         $I->sendPOST('/work_logs.json', [
@@ -45,10 +63,19 @@ class CreateWorkLogCest
         ]);
     }
 
-    public function testCreateWithInvalidData(\ApiTester $I)
+    /**
+     * @param \ApiTester $I
+     * @throws \Exception
+     */
+    public function testCreateWithInvalidData(\ApiTester $I): void
     {
         $startTime = (new \DateTimeImmutable());
         $endTime = $startTime->add(new \DateInterval('PT1M'));
+        $I->createWorkMonth([
+            'month' => $startTime->format('m'),
+            'user' => $this->user,
+            'year' => $startTime->format('Y'),
+        ]);
 
         $I->haveHttpHeader('Content-Type', 'application/json');
         $I->sendPOST('/work_logs.json', [

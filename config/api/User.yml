@@ -4,9 +4,9 @@ App\Entity\User:
             subresource:
                 resourceClass: 'App\Entity\WorkHours'
                 collection: true
-        workLogs:
+        workMonths:
             subresource:
-                resourceClass: 'App\Entity\WorkLog'
+                resourceClass: 'App\Entity\WorkMonth'
                 collection: true
     collectionOperations:
         supervisedUsers:

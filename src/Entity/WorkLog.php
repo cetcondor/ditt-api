@@ -8,19 +8,21 @@ class WorkLog
      * @var int|null
      */
     private $id;
+
     /**
      * @var \DateTimeImmutable
      */
     private $startTime;
+
     /**
      * @var \DateTimeImmutable
      */
     private $endTime;
 
     /**
-     * @var User
+     * @var WorkMonth
      */
-    private $user;
+    private $workMonth;
 
     public function __construct()
     {
@@ -86,20 +88,20 @@ class WorkLog
     }
 
     /**
-     * @return User
+     * @return WorkMonth
      */
-    public function getUser(): User
+    public function getWorkMonth(): WorkMonth
     {
-        return $this->user;
+        return $this->workMonth;
     }
 
     /**
-     * @param User $user
+     * @param WorkMonth $workMonth
      * @return WorkLog
      */
-    public function setUser(User $user): WorkLog
+    public function setWorkMonth(WorkMonth $workMonth): WorkLog
     {
-        $this->user = $user;
+        $this->workMonth = $workMonth;
 
         return $this;
     }

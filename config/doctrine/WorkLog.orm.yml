@@ -13,11 +13,11 @@ App\Entity\WorkLog:
             type: datetime_immutable
 
     manyToOne:
-        user:
-            targetEntity: App\Entity\User
+        workMonth:
+            targetEntity: App\Entity\WorkMonth
             inversedBy: workLogs
             joinColumn:
-                name: user_id
+                name: work_month_id
                 referencedColumnName: id
                 nullable: false
                 onDelete: cascade

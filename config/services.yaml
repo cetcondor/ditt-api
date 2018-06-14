@@ -40,15 +40,17 @@ services:
         tags: [ { name: security.voter } ]
 
     # API Filters
-    app.search_filter.work_log:
+
+    app.search_filter.work_month:
         parent:    'api_platform.doctrine.orm.date_filter'
         arguments:
             -
-                $startTime: ~
-                $endTime: ~
+                $year: ~
+                $month: ~
+                $user: ~
         tags:
             $name: 'api_platform.filter'
-            $id: 'search_filter.work_log'
+            $id: 'search_filter.work_month'
         autowire: false
         autoconfigure: false
         public: false

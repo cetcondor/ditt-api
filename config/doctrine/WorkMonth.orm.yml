@@ -1,0 +1,35 @@
+App\Entity\WorkMonth:
+    type: entity
+
+    id:
+        id:
+            type: integer
+            generator: { strategy: IDENTITY }
+
+    fields:
+        month:
+            type: integer
+        year:
+            type: integer
+
+    oneToMany:
+        workLogs:
+            targetEntity: App\Entity\WorkLog
+            mappedBy: workMonth
+
+    manyToOne:
+        user:
+            targetEntity: App\Entity\User
+            inversedBy: workMonths
+            joinColumn:
+                name: user_id
+                referencedColumnName: id
+                nullable: false
+                onDelete: cascade
+
+    uniqueConstraints:
+        work_month_idx:
+            columns:
+                - month
+                - user_id
+                - year

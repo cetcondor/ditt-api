@@ -32,8 +32,8 @@ App\Entity\User:
             targetEntity: App\Entity\WorkHours
             mappedBy: user
             cascade: [persist]
-        workLogs:
-            targetEntity: App\Entity\WorkLog
+        workMonths:
+            targetEntity: App\Entity\WorkMonth
             mappedBy: user
 
     manyToOne:

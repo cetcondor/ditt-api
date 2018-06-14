@@ -71,9 +71,9 @@ class User implements UserInterface
     private $workHours;
 
     /**
-     * @var WorkLog[]|Collection
+     * @var WorkMonth[]|Collection
      */
-    private $workLogs;
+    private $workMonths;
 
     public function __construct()
     {
@@ -85,7 +85,7 @@ class User implements UserInterface
         $this->roles = [self::ROLE_EMPLOYEE];
         $this->supervised = new ArrayCollection();
         $this->workHours = new ArrayCollection();
-        $this->workLogs = new ArrayCollection();
+        $this->workMonths = new ArrayCollection();
     }
 
     /**
@@ -345,24 +345,24 @@ class User implements UserInterface
     }
 
     /**
-     * @return WorkLog[]
+     * @return WorkMonth[]
      */
-    public function getWorkLogs(): array
+    public function getWorkMonths()
     {
-        if ($this->workLogs instanceof Collection) {
-            return $this->workLogs->toArray();
+        if ($this->workMonths instanceof Collection) {
+            return $this->workMonths->toArray();
         }
 
-        return $this->workLogs;
+        return $this->workMonths;
     }
 
     /**
-     * @param WorkLog[]|Collection $workLogs
+     * @param WorkMonth[]|Collection $workMonths
      * @return User
      */
-    public function setWorkLogs($workLogs): User
+    public function setWorkMonths($workMonths): User
     {
-        $this->workLogs = $workLogs;
+        $this->workMonths = $workMonths;
 
         return $this;
     }

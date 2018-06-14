@@ -4,6 +4,8 @@ namespace App\Subscriber;
 
 use ApiPlatform\Core\EventListener\EventPriorities;
 use App\Entity\WorkLog;
+use App\Repository\WorkMonthRepository;
+use Doctrine\ORM\EntityNotFoundException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
@@ -12,12 +14,25 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class CreateWorkLogSubscriber implements EventSubscriberInterface
 {
-    /** @var TokenStorageInterface */
+    /**
+     * @var TokenStorageInterface
+     */
     private $tokenStorage;
 
-    public function __construct(TokenStorageInterface $tokenStorage)
+    /**
+     * @var WorkMonthRepository
+     */
+    private $workMonthRepository;
+
+    /**
+     * CreateWorkLogSubscriber constructor.
+     * @param TokenStorageInterface $tokenStorage
+     * @param WorkMonthRepository $workMonthRepository
+     */
+    public function __construct(TokenStorageInterface $tokenStorage, WorkMonthRepository $workMonthRepository)
     {
         $this->tokenStorage = $tokenStorage;
+        $this->workMonthRepository = $workMonthRepository;
     }
 
     /**
@@ -26,14 +41,15 @@ class CreateWorkLogSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            KernelEvents::VIEW => [['addUser', EventPriorities::PRE_VALIDATE]],
+            KernelEvents::VIEW => [['addWorkMonth', EventPriorities::PRE_VALIDATE]],
         ];
     }
 
     /**
      * @param GetResponseForControllerResultEvent $event
+     * @throws EntityNotFoundException
      */
-    public function addUser(GetResponseForControllerResultEvent $event): void
+    public function addWorkMonth(GetResponseForControllerResultEvent $event): void
     {
         $workLog = $event->getControllerResult();
         if (!$workLog instanceof WorkLog) {
@@ -42,14 +58,23 @@ class CreateWorkLogSubscriber implements EventSubscriberInterface
 
         $method = $event->getRequest()->getMethod();
         try {
-            if (Request::METHOD_POST !== $method || $workLog->getUser()) {
+            if (Request::METHOD_POST !== $method || $workLog->getWorkMonth()) {
                 return;
             }
         } catch (\TypeError $e) {
             $token = $this->tokenStorage->getToken();
-            if ($token !== null) {
-                $workLog->setUser($token->getUser());
+
+            if (!$token) {
+                throw new EntityNotFoundException('Cannot create work log without user.');
             }
+
+            $workMonth = $this->workMonthRepository->findByWorkLogAndUser($workLog, $token->getUser());
+
+            if (!$workMonth) {
+                throw new EntityNotFoundException('Cannot create work log without work month.');
+            }
+
+            $workLog->setWorkMonth($workMonth);
         }
     }
 }

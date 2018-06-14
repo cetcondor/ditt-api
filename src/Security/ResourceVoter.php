@@ -5,6 +5,7 @@ namespace App\Security;
 use App\Entity\User;
 use App\Entity\WorkHours;
 use App\Entity\WorkLog;
+use App\Entity\WorkMonth;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
@@ -49,6 +50,10 @@ class ResourceVoter extends Voter
         }
 
         if ($subject instanceof WorkLog) {
+            return true;
+        }
+
+        if ($subject instanceof WorkMonth) {
             return true;
         }
 
@@ -107,6 +112,10 @@ class ResourceVoter extends Voter
             return $this->canViewWorkLog($subject, $user);
         }
 
+        if ($subject instanceof WorkMonth) {
+            return $this->canViewWorkMonth($subject, $user);
+        }
+
         return false;
     }
 
@@ -141,7 +150,17 @@ class ResourceVoter extends Voter
      */
     private function canViewWorkLog(WorkLog $workLog, User $user): bool
     {
-        return $workLog->getUser() === $user;
+        return $workLog->getWorkMonth()->getUser() === $user;
+    }
+
+    /**
+     * @param WorkMonth $workMonth
+     * @param User $user
+     * @return bool
+     */
+    private function canViewWorkMonth(WorkMonth $workMonth, User $user): bool
+    {
+        return $workMonth->getUser() === $user;
     }
 
     /**
@@ -162,6 +181,10 @@ class ResourceVoter extends Voter
 
         if ($subject instanceof WorkLog) {
             return $this->canEditWorkLog($subject, $user);
+        }
+
+        if ($subject instanceof WorkMonth) {
+            return $this->canEditWorkMonth($subject, $user);
         }
 
         return false;
@@ -201,7 +224,21 @@ class ResourceVoter extends Voter
     private function canEditWorkLog(WorkLog $workLog, User $user): bool
     {
         try {
-            return $workLog->getUser() === $user;
+            return $workLog->getWorkMonth()->getUser() === $user;
+        } catch (\TypeError $e) {
+            return true;
+        }
+    }
+
+    /**
+     * @param WorkMonth $workMonth
+     * @param User $user
+     * @return bool
+     */
+    private function canEditWorkMonth(WorkMonth $workMonth, User $user): bool
+    {
+        try {
+            return $workMonth->getUser() === $user;
         } catch (\TypeError $e) {
             return true;
         }

@@ -12,3 +12,6 @@ App\Entity\WorkLog:
             - DateTime: ~
             - GreaterThan:
                 propertyPath: startTime
+
+        workMonth:
+            - NotBlank: ~
