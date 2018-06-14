@@ -11,6 +11,8 @@ App\Entity\WorkMonth:
             type: integer
         year:
             type: integer
+        status:
+            type: text
 
     oneToMany:
         workLogs:

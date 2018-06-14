@@ -7,6 +7,16 @@ use Doctrine\Common\Collections\Collection;
 
 class WorkMonth
 {
+    const STATUS_APPROVED = 'APPROVED';
+    const STATUS_OPENED = 'OPENED';
+    const STATUS_WAITING_FOR_APPROVAL = 'WAITING_FOR_APPROVAL';
+
+    const STATUSES = [
+      self::STATUS_APPROVED,
+      self::STATUS_OPENED,
+      self::STATUS_WAITING_FOR_APPROVAL,
+    ];
+
     /**
      * @var int
      */
@@ -28,6 +38,11 @@ class WorkMonth
     private $workLogs;
 
     /**
+     * @var string
+     */
+    private $status;
+
+    /**
      * @var User
      */
     private $user;
@@ -37,6 +52,7 @@ class WorkMonth
         $this->year = 0;
         $this->month = 0;
         $this->workLogs = new ArrayCollection();
+        $this->status = self::STATUS_OPENED;
     }
 
     /**
@@ -120,6 +136,25 @@ class WorkMonth
     }
 
     /**
+     * @return string
+     */
+    public function getStatus(): string
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param string $status
+     * @return WorkMonth
+     */
+    public function setStatus(string $status): WorkMonth
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
      * @return User
      */
     public function getUser(): User
@@ -136,5 +171,13 @@ class WorkMonth
         $this->user = $user;
 
         return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public static function getConstantStatuses(): array
+    {
+        return self::STATUSES;
     }
 }

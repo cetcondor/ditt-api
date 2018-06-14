@@ -10,5 +10,9 @@ App\Entity\WorkMonth:
             - Range:
                 min: 2018
                 max: 2021
+        status:
+            - NotBlank: ~
+            - Choice:
+                callback: getConstantStatuses
         user:
             - NotBlank: ~

@@ -40,6 +40,7 @@ class ApiTester extends \Codeception\Actor
     {
         $workLog = $this->populateEntity(new \App\Entity\WorkMonth(), [
             'month' => 1,
+            'status' => 'OPENED',
             'user'=> function() {
                 return $this->createUser();
             },

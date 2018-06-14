@@ -67,6 +67,40 @@ class CreateWorkLogCest
      * @param \ApiTester $I
      * @throws \Exception
      */
+    public function testCreateWithClosedMonth(\ApiTester $I): void
+    {
+        $startTime = (new \DateTimeImmutable());
+        $endTime = $startTime->add(new \DateInterval('PT1M'));
+        $I->createWorkMonth([
+            'month' => $startTime->format('m'),
+            'status' => 'APPROVED',
+            'user' => $this->user,
+            'year' => $startTime->format('Y'),
+        ]);
+
+        $I->haveHttpHeader('Content-Type', 'application/json');
+        $I->sendPOST('/work_logs.json', [
+            'startTime' => $startTime->format(\DateTime::RFC3339),
+            'endTime' => $endTime->format(\DateTime::RFC3339),
+        ]);
+
+        $I->seeHttpHeader('Content-Type', 'application/problem+json; charset=utf-8');
+        $I->seeResponseCodeIs(Response::HTTP_BAD_REQUEST);
+        $I->seeResponseContainsJson([
+            'detail' => 'Cannot add or delete work log to closed work month.',
+        ]);
+        $I->expectException(NoResultException::class, function () use ($I, $startTime, $endTime) {
+            $I->grabEntityFromRepository(WorkLog::class, [
+                'startTime' => $startTime,
+                'endTime' => $endTime,
+            ]);
+        });
+    }
+
+    /**
+     * @param \ApiTester $I
+     * @throws \Exception
+     */
     public function testCreateWithInvalidData(\ApiTester $I): void
     {
         $startTime = (new \DateTimeImmutable());

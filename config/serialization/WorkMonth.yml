@@ -13,6 +13,10 @@ App\Entity\WorkMonth:
             groups:
                 - work_month_out_list
                 - work_month_out_detail
+        status:
+            groups:
+                - work_month_out_list
+                - work_month_out_detail
         user:
             groups:
                 - work_month_out_list

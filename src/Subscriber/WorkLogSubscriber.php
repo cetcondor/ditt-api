@@ -3,16 +3,17 @@
 namespace App\Subscriber;
 
 use ApiPlatform\Core\EventListener\EventPriorities;
+use ApiPlatform\Core\Exception\InvalidArgumentException;
 use App\Entity\WorkLog;
+use App\Entity\WorkMonth;
 use App\Repository\WorkMonthRepository;
-use Doctrine\ORM\EntityNotFoundException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class CreateWorkLogSubscriber implements EventSubscriberInterface
+class WorkLogSubscriber implements EventSubscriberInterface
 {
     /**
      * @var TokenStorageInterface
@@ -25,7 +26,7 @@ class CreateWorkLogSubscriber implements EventSubscriberInterface
     private $workMonthRepository;
 
     /**
-     * CreateWorkLogSubscriber constructor.
+     * WorkLogSubscriber constructor.
      * @param TokenStorageInterface $tokenStorage
      * @param WorkMonthRepository $workMonthRepository
      */
@@ -41,13 +42,16 @@ class CreateWorkLogSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            KernelEvents::VIEW => [['addWorkMonth', EventPriorities::PRE_VALIDATE]],
+            KernelEvents::VIEW => [
+                ['addWorkMonth', EventPriorities::PRE_VALIDATE],
+                ['checkWorkMonthStatus', EventPriorities::PRE_WRITE],
+            ],
         ];
     }
 
     /**
      * @param GetResponseForControllerResultEvent $event
-     * @throws EntityNotFoundException
+     * @throws InvalidArgumentException
      */
     public function addWorkMonth(GetResponseForControllerResultEvent $event): void
     {
@@ -57,6 +61,7 @@ class CreateWorkLogSubscriber implements EventSubscriberInterface
         }
 
         $method = $event->getRequest()->getMethod();
+
         try {
             if (Request::METHOD_POST !== $method || $workLog->getWorkMonth()) {
                 return;
@@ -65,16 +70,38 @@ class CreateWorkLogSubscriber implements EventSubscriberInterface
             $token = $this->tokenStorage->getToken();
 
             if (!$token) {
-                throw new EntityNotFoundException('Cannot create work log without user.');
+                throw new InvalidArgumentException('Cannot create work log without user.');
             }
 
             $workMonth = $this->workMonthRepository->findByWorkLogAndUser($workLog, $token->getUser());
 
             if (!$workMonth) {
-                throw new EntityNotFoundException('Cannot create work log without work month.');
+                throw new InvalidArgumentException('Cannot create work log without work month.');
             }
 
             $workLog->setWorkMonth($workMonth);
+        }
+    }
+
+    /**
+     * @param GetResponseForControllerResultEvent $event
+     * @throws InvalidArgumentException
+     */
+    public function checkWorkMonthStatus(GetResponseForControllerResultEvent $event): void
+    {
+        $workLog = $event->getControllerResult();
+        if (!$workLog instanceof WorkLog) {
+            return;
+        }
+
+        $method = $event->getRequest()->getMethod();
+
+        if (Request::METHOD_POST !== $method && Request::METHOD_DELETE !== $method) {
+            return;
+        }
+
+        if ($workLog->getWorkMonth()->getStatus() === WorkMonth::STATUS_APPROVED) {
+            throw new InvalidArgumentException('Cannot add or delete work log to closed work month.');
         }
     }
 }
