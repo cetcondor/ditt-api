@@ -19,3 +19,19 @@ App\Entity\WorkMonth:
             normalization_context:
                 groups:
                     - work_month_out_detail
+        markApproved:
+            method: PUT
+            route_name: api_work_months_mark_approved
+            normalization_context:
+                groups:
+                    - work_month_out_detail
+            swagger_context:
+                summary: Marks the WorkMonth as approved.
+        markWaitingForApproval:
+            method: PUT
+            route_name: api_work_months_mark_waiting_for_approval
+            normalization_context:
+                groups:
+                    - work_month_out_detail
+            swagger_context:
+                summary: Marks the WorkMonth as waiting for approval.

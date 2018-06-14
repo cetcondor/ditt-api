@@ -12,7 +12,22 @@ api_logout:
 
 api_supervised_users:
     path: /users/{id}/supervised_users
-    methods: ['GET']
+    methods: [GET]
     controller: App\Controller\UserController:supervisedUsers
     defaults:
         _api_collection_operation_name: 'supervisedUsers'
+
+api_work_months_mark_approved:
+    path: /work_months/{id}/mark_approved
+    methods: [PUT]
+    controller: App\Controller\WorkMonthController:markApproved
+    defaults:
+        _api_collection_operation_name: 'markApproved'
+
+api_work_months_mark_waiting_for_approval:
+    path: /work_months/{id}/mark_waiting_for_approval
+    methods: [PUT]
+    controller: App\Controller\WorkMonthController:markWaitingForApproval
+    defaults:
+        _api_collection_operation_name: 'markWaitingForApproval'
+

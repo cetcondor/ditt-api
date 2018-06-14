@@ -155,6 +155,26 @@ class WorkMonth
     }
 
     /**
+     * @return WorkMonth
+     */
+    public function markApproved(): WorkMonth
+    {
+        $this->status = self::STATUS_APPROVED;
+
+        return $this;
+    }
+
+    /**
+     * @return WorkMonth
+     */
+    public function markWaitingForApproval(): WorkMonth
+    {
+        $this->status = self::STATUS_WAITING_FOR_APPROVAL;
+
+        return $this;
+    }
+
+    /**
      * @return User
      */
     public function getUser(): User

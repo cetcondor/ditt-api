@@ -12,6 +12,10 @@ use Doctrine\ORM\UnexpectedResultException;
 class WorkMonthRepository
 {
     /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+    /**
      * @var EntityRepository
      */
     private $repository;
@@ -23,7 +27,17 @@ class WorkMonthRepository
     {
         /** @var EntityRepository $repository */
         $repository = $entityManager->getRepository(WorkMonth::class);
+
+        $this->entityManager = $entityManager;
         $this->repository = $repository;
+    }
+
+    /**
+     * @return EntityRepository
+     */
+    public function getRepository(): EntityRepository
+    {
+        return $this->repository;
     }
 
     /**
@@ -47,5 +61,23 @@ class WorkMonthRepository
         } catch (UnexpectedResultException $e) {
             return null;
         }
+    }
+
+    /**
+     * @param WorkMonth $workMonth
+     */
+    public function markApproved(WorkMonth $workMonth)
+    {
+        $workMonth->markApproved();
+        $this->entityManager->flush();
+    }
+
+    /**
+     * @param WorkMonth $workMonth
+     */
+    public function markWaitingForApproval(WorkMonth $workMonth): void
+    {
+        $workMonth->markWaitingForApproval();
+        $this->entityManager->flush();
     }
 }
