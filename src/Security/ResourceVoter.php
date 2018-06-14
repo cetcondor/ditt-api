@@ -140,7 +140,11 @@ class ResourceVoter extends Voter
      */
     private function canViewWorkHour(WorkHours $workHours, User $user, TokenInterface $token): bool
     {
-        return $workHours->getUser() === $user || $this->decisionManager->decide($token, [User::ROLE_ADMIN]);
+        return $workHours->getUser() === $user
+            || (
+                $workHours->getUser()->getSupervisor()
+                && $workHours->getUser()->getSupervisor() === $user
+            ) || $this->decisionManager->decide($token, [User::ROLE_ADMIN]);
     }
 
     /**
@@ -150,7 +154,11 @@ class ResourceVoter extends Voter
      */
     private function canViewWorkLog(WorkLog $workLog, User $user): bool
     {
-        return $workLog->getWorkMonth()->getUser() === $user;
+        return $workLog->getWorkMonth()->getUser() === $user
+            || (
+                $workLog->getWorkMonth()->getUser()->getSupervisor()
+                && $workLog->getWorkMonth()->getUser()->getSupervisor() === $user
+            );
     }
 
     /**
@@ -160,7 +168,11 @@ class ResourceVoter extends Voter
      */
     private function canViewWorkMonth(WorkMonth $workMonth, User $user): bool
     {
-        return $workMonth->getUser() === $user;
+        return $workMonth->getUser() === $user
+            || (
+                $workMonth->getUser()->getSupervisor()
+                && $workMonth->getUser()->getSupervisor() === $user
+            );
     }
 
     /**
@@ -238,7 +250,11 @@ class ResourceVoter extends Voter
     private function canEditWorkMonth(WorkMonth $workMonth, User $user): bool
     {
         try {
-            return $workMonth->getUser() === $user;
+            return $workMonth->getUser() === $user
+                || (
+                    $workMonth->getUser()->getSupervisor()
+                    && $workMonth->getUser()->getSupervisor() === $user
+                );
         } catch (\TypeError $e) {
             return true;
         }
