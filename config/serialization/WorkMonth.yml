@@ -5,18 +5,22 @@ App\Entity\WorkMonth:
                 - work_month_out_list
                 - work_month_out_detail
                 - work_log_out_detail
+                - supervised_user_out_list
         year:
             groups:
                 - work_month_out_list
                 - work_month_out_detail
+                - supervised_user_out_list
         month:
             groups:
                 - work_month_out_list
                 - work_month_out_detail
+                - supervised_user_out_list
         status:
             groups:
                 - work_month_out_list
                 - work_month_out_detail
+                - supervised_user_out_list
         user:
             groups:
                 - work_month_out_list

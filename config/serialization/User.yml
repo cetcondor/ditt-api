@@ -49,3 +49,6 @@ App\Entity\User:
             groups:
                 - user_out_list
                 - user_in
+        workMonths:
+            groups:
+                - supervised_user_out_list
