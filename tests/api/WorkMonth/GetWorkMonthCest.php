@@ -77,16 +77,18 @@ class GetWorkMonthCest
             'year' => $startTime1->format('Y'),
         ]);
 
-        $I->createWorkLog([
+        $workLog1 = $I->createWorkLog([
             'startTime' => $startTime1,
             'endTime' => $endTime1,
             'workMonth' => $workMonth,
         ]);
-        $I->createWorkLog([
+        $workLog2 = $I->createWorkLog([
             'startTime' => $startTime2,
             'endTime' => $endTime2,
             'workMonth' => $workMonth,
         ]);
+        $workMonth->setWorkLogs([$workLog1, $workLog2]);
+        $I->flushToDatabase();
 
         $I->haveHttpHeader('Content-Type', 'application/json');
 
@@ -98,16 +100,20 @@ class GetWorkMonthCest
             'id' => $workMonth->getId(),
             'month' => $workMonth->getMonth(),
             'workLogs' => [
-//                [
-//                    'startTime' => $startTime1->format(\DateTime::RFC3339),
-//                    'endTime' => $endTime1->format(\DateTime::RFC3339),
-//                ],
-//                [
-//                    'startTime' => $startTime2->format(\DateTime::RFC3339),
-//                    'endTime' => $endTime2->format(\DateTime::RFC3339),
-//                ],
+                [
+                    'startTime' => $startTime1->format(\DateTime::RFC3339),
+                    'endTime' => $endTime1->format(\DateTime::RFC3339),
+                    'id' => $workLog1->getId(),
+                ],
+                [
+                    'startTime' => $startTime2->format(\DateTime::RFC3339),
+                    'endTime' => $endTime2->format(\DateTime::RFC3339),
+                    'id' => $workLog2->getId(),
+                ],
             ],
+            'status' => 'OPENED',
             'year' => $workMonth->getYear(),
+            'user' => ['id' => $this->user->getId()],
         ]);
     }
 }

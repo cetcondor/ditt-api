@@ -3,6 +3,7 @@
 namespace api\User;
 
 use App\Entity\User;
+use App\Entity\WorkMonth;
 use Doctrine\ORM\NoResultException;
 use Prophecy\Prophet;
 use Symfony\Component\HttpFoundation\Response;
@@ -44,9 +45,34 @@ class CreateUserCest
             'roles' => ['ROLE_EMPLOYEE'],
             'supervisor' => null,
         ]);
-        $I->grabEntityFromRepository(User::class, [
+        $user = $I->grabEntityFromRepository(User::class, [
             'email' => 'test@visionapps.cz',
         ]);
+
+        $I->expectException(NoResultException::class, function () use ($I, $user) {
+            $I->grabEntityFromRepository(WorkMonth::class, [
+                'month' => 12,
+                'user' => $user,
+                'year' => 2017,
+            ]);
+        });
+        $I->grabEntityFromRepository(WorkMonth::class, [
+            'month' => 1,
+            'user' => $user,
+            'year' => 2018,
+        ]);
+        $I->grabEntityFromRepository(WorkMonth::class, [
+            'month' => 12,
+            'user' => $user,
+            'year' => 2021,
+        ]);
+        $I->expectException(NoResultException::class, function () use ($I, $user) {
+            $I->grabEntityFromRepository(WorkMonth::class, [
+                'month' => 1,
+                'user' => $user,
+                'year' => 2022,
+            ]);
+        });
     }
 
     public function testCreateWithInvalidData(\ApiTester $I)

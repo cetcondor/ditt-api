@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\User;
 use App\Entity\WorkLog;
 use App\Entity\WorkMonth;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\UnexpectedResultException;
@@ -61,6 +62,22 @@ class WorkMonthRepository
         } catch (UnexpectedResultException $e) {
             return null;
         }
+    }
+
+    /**
+     * @param WorkMonth[] $workMonths
+     */
+    public function createWorkMonths(array $workMonths): void
+    {
+        $this->entityManager->transactional(function (EntityManager $em) use ($workMonths) {
+            foreach ($workMonths as $workMonth) {
+                if (!$workMonth instanceof WorkMonth) {
+                    throw new \TypeError('Entity is not of type WorkMonth.');
+                }
+
+                $em->persist($workMonth);
+            }
+        });
     }
 
     /**
