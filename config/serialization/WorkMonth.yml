@@ -4,6 +4,9 @@ App\Entity\WorkMonth:
             groups:
                 - work_month_out_list
                 - work_month_out_detail
+                - business_trip_work_log_out_detail
+                - home_office_work_log_out_detail
+                - time_off_work_log_out_detail
                 - work_log_out_detail
                 - supervised_user_out_list
         year:
@@ -24,6 +27,15 @@ App\Entity\WorkMonth:
         user:
             groups:
                 - work_month_out_list
+                - work_month_out_detail
+        businessTripWorkLogs:
+            groups:
+                - work_month_out_detail
+        homeOfficeWorkLogs:
+            groups:
+                - work_month_out_detail
+        timeOffWorkLogs:
+            groups:
                 - work_month_out_detail
         workLogs:
             groups:

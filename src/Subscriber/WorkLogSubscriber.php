@@ -4,7 +4,7 @@ namespace App\Subscriber;
 
 use ApiPlatform\Core\EventListener\EventPriorities;
 use ApiPlatform\Core\Exception\InvalidArgumentException;
-use App\Entity\WorkLog;
+use App\Entity\WorkLogInterface;
 use App\Entity\WorkMonth;
 use App\Repository\WorkMonthRepository;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -56,7 +56,7 @@ class WorkLogSubscriber implements EventSubscriberInterface
     public function addWorkMonth(GetResponseForControllerResultEvent $event): void
     {
         $workLog = $event->getControllerResult();
-        if (!$workLog instanceof WorkLog) {
+        if (!$workLog instanceof WorkLogInterface) {
             return;
         }
 
@@ -90,7 +90,7 @@ class WorkLogSubscriber implements EventSubscriberInterface
     public function checkWorkMonthStatus(GetResponseForControllerResultEvent $event): void
     {
         $workLog = $event->getControllerResult();
-        if (!$workLog instanceof WorkLog) {
+        if (!$workLog instanceof WorkLogInterface) {
             return;
         }
 

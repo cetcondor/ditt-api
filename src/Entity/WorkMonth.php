@@ -33,6 +33,21 @@ class WorkMonth
     private $month;
 
     /**
+     * @var BusinessTripWorkLog[]|Collection
+     */
+    private $businessTripWorkLogs;
+
+    /**
+     * @var HomeOfficeWorkLog[]|Collection
+     */
+    private $homeOfficeWorkLogs;
+
+    /**
+     * @var TimeOffWorkLog[]|Collection
+     */
+    private $timeOffWorkLogs;
+
+    /**
      * @var WorkLog[]|Collection
      */
     private $workLogs;
@@ -51,6 +66,9 @@ class WorkMonth
     {
         $this->year = 0;
         $this->month = 0;
+        $this->businessTripWorkLogs = new ArrayCollection();
+        $this->homeOfficeWorkLogs = new ArrayCollection();
+        $this->timeOffWorkLogs = new ArrayCollection();
         $this->workLogs = new ArrayCollection();
         $this->status = self::STATUS_OPENED;
     }
@@ -108,6 +126,75 @@ class WorkMonth
     public function setMonth(int $month): WorkMonth
     {
         $this->month = $month;
+
+        return $this;
+    }
+
+    /**
+     * @return BusinessTripWorkLog[]
+     */
+    public function getBusinessTripWorkLogs()
+    {
+        if ($this->businessTripWorkLogs instanceof Collection) {
+            return $this->businessTripWorkLogs->toArray();
+        }
+
+        return $this->businessTripWorkLogs;
+    }
+
+    /**
+     * @param BusinessTripWorkLog[]|Collection $businessTripWorkLogs
+     * @return WorkMonth
+     */
+    public function setBusinessTripWorkLogs($businessTripWorkLogs): WorkMonth
+    {
+        $this->businessTripWorkLogs = $businessTripWorkLogs;
+
+        return $this;
+    }
+
+    /**
+     * @return HomeOfficeWorkLog[]
+     */
+    public function getHomeOfficeWorkLogs()
+    {
+        if ($this->homeOfficeWorkLogs instanceof Collection) {
+            return $this->homeOfficeWorkLogs->toArray();
+        }
+
+        return $this->homeOfficeWorkLogs;
+    }
+
+    /**
+     * @param HomeOfficeWorkLog[]|Collection $homeOfficeWorkLogs
+     * @return WorkMonth
+     */
+    public function setHomeOfficeWorkLogs($homeOfficeWorkLogs): WorkMonth
+    {
+        $this->homeOfficeWorkLogs = $homeOfficeWorkLogs;
+
+        return $this;
+    }
+
+    /**
+     * @return TimeOffWorkLog[]
+     */
+    public function getTimeOffWorkLogs()
+    {
+        if ($this->timeOffWorkLogs instanceof Collection) {
+            return $this->timeOffWorkLogs->toArray();
+        }
+
+        return $this->timeOffWorkLogs;
+    }
+
+    /**
+     * @param TimeOffWorkLog[]|Collection $timeOffWorkLogs
+     * @return WorkMonth
+     */
+    public function setTimeOffWorkLogs($timeOffWorkLogs): WorkMonth
+    {
+        $this->timeOffWorkLogs = $timeOffWorkLogs;
 
         return $this;
     }

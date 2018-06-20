@@ -4,7 +4,7 @@ namespace App\Security;
 
 use App\Entity\User;
 use App\Entity\WorkHours;
-use App\Entity\WorkLog;
+use App\Entity\WorkLogInterface;
 use App\Entity\WorkMonth;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
@@ -49,7 +49,7 @@ class ResourceVoter extends Voter
             return true;
         }
 
-        if ($subject instanceof WorkLog) {
+        if ($subject instanceof WorkLogInterface) {
             return true;
         }
 
@@ -108,7 +108,7 @@ class ResourceVoter extends Voter
             return $this->canViewWorkHour($subject, $user, $token);
         }
 
-        if ($subject instanceof WorkLog) {
+        if ($subject instanceof WorkLogInterface) {
             return $this->canViewWorkLog($subject, $user);
         }
 
@@ -148,11 +148,11 @@ class ResourceVoter extends Voter
     }
 
     /**
-     * @param WorkLog $workLog
+     * @param WorkLogInterface $workLog
      * @param User $user
      * @return bool
      */
-    private function canViewWorkLog(WorkLog $workLog, User $user): bool
+    private function canViewWorkLog(WorkLogInterface $workLog, User $user): bool
     {
         return $workLog->getWorkMonth()->getUser() === $user
             || (
@@ -191,7 +191,7 @@ class ResourceVoter extends Voter
             return $this->canEditWorkHours($subject, $user, $token);
         }
 
-        if ($subject instanceof WorkLog) {
+        if ($subject instanceof WorkLogInterface) {
             return $this->canEditWorkLog($subject, $user);
         }
 
@@ -229,11 +229,11 @@ class ResourceVoter extends Voter
     }
 
     /**
-     * @param WorkLog $workLog
+     * @param WorkLogInterface $workLog
      * @param User $user
      * @return bool
      */
-    private function canEditWorkLog(WorkLog $workLog, User $user): bool
+    private function canEditWorkLog(WorkLogInterface $workLog, User $user): bool
     {
         try {
             return $workLog->getWorkMonth()->getUser() === $user;

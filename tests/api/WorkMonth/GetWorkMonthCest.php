@@ -65,10 +65,10 @@ class GetWorkMonthCest
 
     public function testGetDetail(\ApiTester $I)
     {
-        $startTime1 = (new \DateTimeImmutable());
+        $startTime1 = new \DateTimeImmutable();
         $endTime1 = $startTime1->add(new \DateInterval('PT1M'));
 
-        $startTime2 = (new \DateTimeImmutable());
+        $startTime2 = new \DateTimeImmutable();
         $endTime2 = $startTime1->add(new \DateInterval('PT1M'));
 
         $workMonth = $I->createWorkMonth([
@@ -77,6 +77,30 @@ class GetWorkMonthCest
             'year' => $startTime1->format('Y'),
         ]);
 
+        $businessTripWorkLog1 = $I->createBusinessTripWorkLog([
+            'date' => $startTime1,
+            'workMonth' => $workMonth,
+        ]);
+        $businessTripWorkLog2 = $I->createBusinessTripWorkLog([
+            'date' => $endTime1,
+            'workMonth' => $workMonth,
+        ]);
+        $homeOfficeWorkLog1 = $I->createHomeOfficeWorkLog([
+            'date' => $startTime1,
+            'workMonth' => $workMonth,
+        ]);
+        $homeOfficeWorkLog2 = $I->createHomeOfficeWorkLog([
+            'date' => $endTime1,
+            'workMonth' => $workMonth,
+        ]);
+        $timeOffWorkLog1 = $I->createTimeOffWorkLog([
+            'date' => $startTime1,
+            'workMonth' => $workMonth,
+        ]);
+        $timeOffWorkLog2 = $I->createTimeOffWorkLog([
+            'date' => $endTime1,
+            'workMonth' => $workMonth,
+        ]);
         $workLog1 = $I->createWorkLog([
             'startTime' => $startTime1,
             'endTime' => $endTime1,
@@ -87,6 +111,10 @@ class GetWorkMonthCest
             'endTime' => $endTime2,
             'workMonth' => $workMonth,
         ]);
+
+        $workMonth->setBusinessTripWorkLogs([$businessTripWorkLog1, $businessTripWorkLog2]);
+        $workMonth->setHomeOfficeWorkLogs([$homeOfficeWorkLog1, $homeOfficeWorkLog2]);
+        $workMonth->setTimeOffWorkLogs([$timeOffWorkLog1, $timeOffWorkLog2]);
         $workMonth->setWorkLogs([$workLog1, $workLog2]);
         $I->flushToDatabase();
 
@@ -98,7 +126,39 @@ class GetWorkMonthCest
         $I->seeResponseCodeIs(Response::HTTP_OK);
         $I->seeResponseContainsJson([
             'id' => $workMonth->getId(),
+            'businessTripWorkLogs' => [
+                [
+                    'date' => $startTime1->format(\DateTime::RFC3339),
+                    'id' => $businessTripWorkLog1->getId(),
+                ],
+                [
+                    'date' => $endTime1->format(\DateTime::RFC3339),
+                    'id' => $businessTripWorkLog2->getId(),
+                ],
+            ],
+            'homeOfficeWorkLogs' => [
+                [
+                    'date' => $startTime1->format(\DateTime::RFC3339),
+                    'id' => $homeOfficeWorkLog1->getId(),
+                ],
+                [
+                    'date' => $endTime1->format(\DateTime::RFC3339),
+                    'id' => $homeOfficeWorkLog2->getId(),
+                ],
+            ],
             'month' => $workMonth->getMonth(),
+            'status' => 'OPENED',
+            'timeOffWorkLogs' => [
+                [
+                    'date' => $startTime1->format(\DateTime::RFC3339),
+                    'id' => $timeOffWorkLog1->getId(),
+                ],
+                [
+                    'date' => $endTime1->format(\DateTime::RFC3339),
+                    'id' => $timeOffWorkLog2->getId(),
+                ],
+            ],
+            'user' => ['id' => $this->user->getId()],
             'workLogs' => [
                 [
                     'startTime' => $startTime1->format(\DateTime::RFC3339),
@@ -111,9 +171,7 @@ class GetWorkMonthCest
                     'id' => $workLog2->getId(),
                 ],
             ],
-            'status' => 'OPENED',
             'year' => $workMonth->getYear(),
-            'user' => ['id' => $this->user->getId()],
         ]);
     }
 }

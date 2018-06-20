@@ -1,0 +1,22 @@
+App\Entity\HomeOfficeWorkLog:
+    attributes:
+        id:
+            groups:
+                - home_office_work_log_out_detail
+                - work_month_out_detail
+        date:
+            groups:
+                - home_office_work_log_out_detail
+                - work_month_out_detail
+                - home_office_work_log_in
+        timeApproved:
+            groups:
+                - home_office_work_log_out_detail
+                - work_month_out_detail
+        timeRejected:
+            groups:
+                - home_office_work_log_out_detail
+                - work_month_out_detail
+        workMonth:
+            groups:
+                - home_office_work_log_out_detail

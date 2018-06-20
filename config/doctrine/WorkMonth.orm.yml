@@ -15,6 +15,15 @@ App\Entity\WorkMonth:
             type: text
 
     oneToMany:
+        businessTripWorkLogs:
+            targetEntity: App\Entity\BusinessTripWorkLog
+            mappedBy: workMonth
+        homeOfficeWorkLogs:
+            targetEntity: App\Entity\HomeOfficeWorkLog
+            mappedBy: workMonth
+        timeOffWorkLogs:
+            targetEntity: App\Entity\TimeOffWorkLog
+            mappedBy: workMonth
         workLogs:
             targetEntity: App\Entity\WorkLog
             mappedBy: workMonth

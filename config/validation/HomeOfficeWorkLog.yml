@@ -1,0 +1,14 @@
+App\Entity\HomeOfficeWorkLog:
+    properties:
+        date:
+            - NotBlank: ~
+            - DateTime: ~
+
+        timeApproved:
+            - DateTime: ~
+
+        timeRejected:
+            - DateTime: ~
+
+        workMonth:
+            - NotBlank: ~

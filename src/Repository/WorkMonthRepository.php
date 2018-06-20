@@ -3,7 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\User;
-use App\Entity\WorkLog;
+use App\Entity\WorkLogInterface;
 use App\Entity\WorkMonth;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -42,11 +42,11 @@ class WorkMonthRepository
     }
 
     /**
-     * @param WorkLog $workLog
+     * @param WorkLogInterface $workLog
      * @param User $user
      * @return WorkMonth|null
      */
-    public function findByWorkLogAndUser(WorkLog $workLog, User $user): ?WorkMonth
+    public function findByWorkLogAndUser(WorkLogInterface $workLog, User $user): ?WorkMonth
     {
         try {
             return $this->repository->createQueryBuilder('wm')
@@ -54,8 +54,8 @@ class WorkMonthRepository
                 ->where('wm.month = :workLogMonth')
                 ->andWhere('wm.year = :workLogYear')
                 ->andWhere('wm.user = :user')
-                ->setParameter('workLogMonth', $workLog->getStartTime()->format('m'))
-                ->setParameter('workLogYear', $workLog->getStartTime()->format('Y'))
+                ->setParameter('workLogMonth', $workLog->resolveWorkLogMonth())
+                ->setParameter('workLogYear', $workLog->resolveWorkLogYear())
                 ->setParameter('user', $user)
                 ->getQuery()
                 ->getSingleResult();

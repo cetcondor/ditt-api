@@ -1,0 +1,22 @@
+App\Entity\TimeOffWorkLog:
+    attributes:
+        id:
+            groups:
+                - time_off_work_log_out_detail
+                - work_month_out_detail
+        date:
+            groups:
+                - time_off_work_log_out_detail
+                - work_month_out_detail
+                - time_off_work_log_in
+        timeApproved:
+            groups:
+                - time_off_work_log_out_detail
+                - work_month_out_detail
+        timeRejected:
+            groups:
+                - time_off_work_log_out_detail
+                - work_month_out_detail
+        workMonth:
+            groups:
+                - time_off_work_log_out_detail

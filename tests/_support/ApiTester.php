@@ -19,13 +19,67 @@ class ApiTester extends \Codeception\Actor
 {
     use _generated\ApiTesterActions;
 
+    public function createBusinessTripWorkLog(array $params = [])
+    {
+        $businessTripWorkLog = $this->populateEntity(new \App\Entity\BusinessTripWorkLog(), [
+            'workMonth' => function () {
+                return $this->createWorkMonth();
+            },
+            'date' => new DateTimeImmutable(),
+            'timeApproved' => null,
+            'timeRejected' => null,
+        ], $params);
+
+        $this->persistEntity($businessTripWorkLog);
+
+        return $this->grabEntityFromRepository(\App\Entity\BusinessTripWorkLog::class, [
+            'id' => $businessTripWorkLog->getId(),
+        ]);
+    }
+
+    public function createHomeOfficeWorkLog(array $params = [])
+    {
+        $homeOfficeWorkLog = $this->populateEntity(new \App\Entity\HomeOfficeWorkLog(), [
+            'workMonth' => function () {
+                return $this->createWorkMonth();
+            },
+            'date' => new DateTimeImmutable(),
+            'timeApproved' => null,
+            'timeRejected' => null,
+        ], $params);
+
+        $this->persistEntity($homeOfficeWorkLog);
+
+        return $this->grabEntityFromRepository(\App\Entity\HomeOfficeWorkLog::class, [
+            'id' => $homeOfficeWorkLog->getId(),
+        ]);
+    }
+
+    public function createTimeOffWorkLog(array $params = [])
+    {
+        $timeOffWorkLog = $this->populateEntity(new \App\Entity\TimeOffWorkLog(), [
+            'workMonth' => function () {
+                return $this->createWorkMonth();
+            },
+            'date' => new DateTimeImmutable(),
+            'timeApproved' => null,
+            'timeRejected' => null,
+        ], $params);
+
+        $this->persistEntity($timeOffWorkLog);
+
+        return $this->grabEntityFromRepository(\App\Entity\TimeOffWorkLog::class, [
+            'id' => $timeOffWorkLog->getId(),
+        ]);
+    }
+
     public function createWorkLog(array $params = [])
     {
         $workLog = $this->populateEntity(new \App\Entity\WorkLog(), [
             'workMonth' => function () {
                 return $this->createWorkMonth();
             },
-            'startTime' => (new DateTimeImmutable()),
+            'startTime' => new DateTimeImmutable(),
             'endTime' => (new DateTimeImmutable())->add(new DateInterval('PT1S')),
         ], $params);
 

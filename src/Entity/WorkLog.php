@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-class WorkLog
+class WorkLog implements WorkLogInterface
 {
     /**
      * @var int|null
@@ -99,10 +99,26 @@ class WorkLog
      * @param WorkMonth $workMonth
      * @return WorkLog
      */
-    public function setWorkMonth(WorkMonth $workMonth): WorkLog
+    public function setWorkMonth(WorkMonth $workMonth): WorkLogInterface
     {
         $this->workMonth = $workMonth;
 
         return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function resolveWorkLogMonth(): int
+    {
+        return $this->startTime->format('m');
+    }
+
+    /**
+     * @return int
+     */
+    public function resolveWorkLogYear(): int
+    {
+        return $this->startTime->format('Y');
     }
 }
