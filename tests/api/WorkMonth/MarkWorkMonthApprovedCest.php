@@ -47,6 +47,8 @@ class MarkWorkMonthApprovedCest
         $I->haveHttpHeader('Content-Type', 'application/json');
         $I->sendPUT(sprintf('/work_months/%d/mark_approved', $workMonth->getId()));
 
+        $I->canSeeEmailIsSent();
+
         $I->seeHttpHeader('Content-Type', 'application/json');
         $I->seeResponseCodeIs(Response::HTTP_OK);
         $I->seeResponseContainsJson([

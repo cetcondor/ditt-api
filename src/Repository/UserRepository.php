@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query\ResultSetMappingBuilder;
 
 class UserRepository
 {
@@ -14,6 +15,11 @@ class UserRepository
     private $repository;
 
     /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    /**
      * @param EntityManagerInterface $entityManager
      */
     public function __construct(EntityManagerInterface $entityManager)
@@ -21,6 +27,7 @@ class UserRepository
         /** @var EntityRepository $repository */
         $repository = $entityManager->getRepository(User::class);
         $this->repository = $repository;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -41,6 +48,20 @@ class UserRepository
         $user = $this->repository->findOneBy(['email' => $email]);
 
         return $user;
+    }
+
+    /**
+     * @return User[]
+     */
+    public function getAllAdmins(): array
+    {
+        $rsm = new ResultSetMappingBuilder($this->entityManager);
+        $rsm->addRootEntityFromClassMetadata(User::class, 'u');
+
+        return $this->entityManager->createNativeQuery(
+            'SELECT id, email FROM app_user AS "u" WHERE u.roles::jsonb @> \'["ROLE_ADMIN"]\'::jsonb',
+            $rsm
+        )->getResult();
     }
 
     /**

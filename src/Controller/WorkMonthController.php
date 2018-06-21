@@ -2,9 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Entity\WorkMonth;
+use App\Event\WorkMonthApprovedEvent;
 use App\Repository\WorkMonthRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -22,15 +25,23 @@ class WorkMonthController extends Controller
     private $workMonthRepository;
 
     /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
+    /**
      * @param NormalizerInterface $normalizer
      * @param WorkMonthRepository $workMonthRepository
+     * @param EventDispatcherInterface $eventDispatcher
      */
     public function __construct(
         NormalizerInterface $normalizer,
-        WorkMonthRepository $workMonthRepository
+        WorkMonthRepository $workMonthRepository,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->normalizer = $normalizer;
         $this->workMonthRepository = $workMonthRepository;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -91,6 +102,15 @@ class WorkMonthController extends Controller
         }
 
         $this->workMonthRepository->markApproved($workMonth);
+
+        $supervisor = $this->getUser();
+        if (!$supervisor) { // This needs to be here for tests to work. In production the condition will never be met.
+            $supervisor = new User();
+        }
+        $this->eventDispatcher->dispatch(
+            WorkMonthApprovedEvent::APPROVED,
+            new WorkMonthApprovedEvent($workMonth, $supervisor)
+        );
 
         return JsonResponse::create(
             $this->normalizer->normalize(

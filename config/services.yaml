@@ -83,6 +83,15 @@ services:
                 event: lexik_jwt_authentication.on_jwt_created
                 method: onJWTCreated
 
+    App\Listener\WorkLogApprovedEmailNotificationListener:
+        class: App\Listener\WorkLogApprovedEmailNotificationListener
+        arguments:
+            $mailSenderAddress: '%env(NOTIFICATION_EMAIL_SENDER)%'
+        tags:
+            - name: kernel.event_listener
+              event: !php/const App\Event\WorkMonthApprovedEvent::APPROVED
+              method: onApprove
+
     # Event subscribers
 
     app.event.subscriber.user_password_subscriber:

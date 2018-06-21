@@ -152,6 +152,9 @@
     "guzzlehttp/psr7": {
         "version": "1.4.2"
     },
+    "html2text/html2text": {
+        "version": "4.1.0"
+    },
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
     },
