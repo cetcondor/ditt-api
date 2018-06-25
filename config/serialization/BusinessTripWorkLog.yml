@@ -3,20 +3,25 @@ App\Entity\BusinessTripWorkLog:
         id:
             groups:
                 - business_trip_work_log_out_detail
+                - special_approvals_out_list
                 - work_month_out_detail
         date:
             groups:
                 - business_trip_work_log_out_detail
+                - special_approvals_out_list
                 - work_month_out_detail
                 - business_trip_work_log_in
         timeApproved:
             groups:
                 - business_trip_work_log_out_detail
+                - special_approvals_out_list
                 - work_month_out_detail
         timeRejected:
             groups:
                 - business_trip_work_log_out_detail
+                - special_approvals_out_list
                 - work_month_out_detail
         workMonth:
             groups:
                 - business_trip_work_log_out_detail
+                - special_approvals_out_list

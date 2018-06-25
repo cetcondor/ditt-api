@@ -4,6 +4,7 @@ App\Entity\User:
             groups:
                 - user_out_list
                 - user_out_detail
+                - special_approvals_out_list
                 - supervised_user_out_list
                 - work_month_out_list
                 - work_month_out_detail
@@ -11,18 +12,21 @@ App\Entity\User:
             groups:
                 - user_out_list
                 - user_out_detail
+                - special_approvals_out_list
                 - supervised_user_out_list
                 - user_in
         firstName:
             groups:
                 - user_out_list
                 - user_out_detail
+                - special_approvals_out_list
                 - supervised_user_out_list
                 - user_in
         lastName:
             groups:
                 - user_out_list
                 - user_out_detail
+                - special_approvals_out_list
                 - supervised_user_out_list
                 - user_in
         plainPassword:

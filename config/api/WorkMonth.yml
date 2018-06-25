@@ -13,6 +13,14 @@ App\Entity\WorkMonth:
             normalization_context:
                 groups:
                     - work_month_out_list
+        specialApprovals:
+            method: GET
+            route_name: api_work_months_special_approvals
+            normalization_context:
+                groups:
+                    - special_approvals_out_list
+            swagger_context:
+                summary: Retrieves the collection of special work logs which need to approved.
     itemOperations:
         get:
             method: GET

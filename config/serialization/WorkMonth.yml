@@ -7,27 +7,32 @@ App\Entity\WorkMonth:
                 - business_trip_work_log_out_detail
                 - home_office_work_log_out_detail
                 - time_off_work_log_out_detail
+                - special_approvals_out_list
                 - work_log_out_detail
                 - supervised_user_out_list
         year:
             groups:
                 - work_month_out_list
                 - work_month_out_detail
+                - special_approvals_out_list
                 - supervised_user_out_list
         month:
             groups:
                 - work_month_out_list
                 - work_month_out_detail
+                - special_approvals_out_list
                 - supervised_user_out_list
         status:
             groups:
                 - work_month_out_list
                 - work_month_out_detail
+                - special_approvals_out_list
                 - supervised_user_out_list
         user:
             groups:
                 - work_month_out_list
                 - work_month_out_detail
+                - special_approvals_out_list
         businessTripWorkLogs:
             groups:
                 - work_month_out_detail

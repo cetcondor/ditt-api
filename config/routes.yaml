@@ -17,6 +17,13 @@ api_supervised_users:
     defaults:
         _api_collection_operation_name: 'supervisedUsers'
 
+api_work_months_special_approvals:
+    path: /special_approvals/{supervisorId}
+    methods: [GET]
+    controller: App\Controller\WorkMonthController:specialApprovals
+    defaults:
+        _api_collection_operation_name: 'specialApprovals'
+
 api_work_months_mark_approved:
     path: /work_months/{id}/mark_approved
     methods: [PUT]

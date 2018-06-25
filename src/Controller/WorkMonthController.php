@@ -5,6 +5,13 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Entity\WorkMonth;
 use App\Event\WorkMonthApprovedEvent;
+use App\Entity\BusinessTripWorkLog;
+use App\Entity\HomeOfficeWorkLog;
+use App\Entity\TimeOffWorkLog;
+use App\Repository\BusinessTripWorkLogRepository;
+use App\Repository\HomeOfficeWorkLogRepository;
+use App\Repository\TimeOffWorkLogRepository;
+use App\Repository\UserRepository;
 use App\Repository\WorkMonthRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -20,9 +27,29 @@ class WorkMonthController extends Controller
     private $normalizer;
 
     /**
+     * @var UserRepository
+     */
+    private $userRepository;
+
+    /**
      * @var WorkMonthRepository
      */
     private $workMonthRepository;
+
+    /**
+     * @var BusinessTripWorkLogRepository
+     */
+    private $businessTripWorkLogRepository;
+
+    /**
+     * @var HomeOfficeWorkLogRepository
+     */
+    private $homeOfficeWorkLogRepository;
+
+    /**
+     * @var TimeOffWorkLogRepository
+     */
+    private $timeOffWorkLogRepository;
 
     /**
      * @var EventDispatcherInterface
@@ -31,17 +58,73 @@ class WorkMonthController extends Controller
 
     /**
      * @param NormalizerInterface $normalizer
+     * @param UserRepository $userRepository
      * @param WorkMonthRepository $workMonthRepository
+     * @param BusinessTripWorkLogRepository $businessTripWorkLogRepository
+     * @param HomeOfficeWorkLogRepository $homeOfficeWorkLogRepository
+     * @param TimeOffWorkLogRepository $timeOffWorkLogRepository
      * @param EventDispatcherInterface $eventDispatcher
      */
     public function __construct(
         NormalizerInterface $normalizer,
+        UserRepository $userRepository,
         WorkMonthRepository $workMonthRepository,
+        BusinessTripWorkLogRepository $businessTripWorkLogRepository,
+        HomeOfficeWorkLogRepository $homeOfficeWorkLogRepository,
+        TimeOffWorkLogRepository $timeOffWorkLogRepository,
         EventDispatcherInterface $eventDispatcher
     ) {
         $this->normalizer = $normalizer;
+        $this->userRepository = $userRepository;
         $this->workMonthRepository = $workMonthRepository;
+        $this->businessTripWorkLogRepository = $businessTripWorkLogRepository;
+        $this->homeOfficeWorkLogRepository = $homeOfficeWorkLogRepository;
+        $this->timeOffWorkLogRepository = $timeOffWorkLogRepository;
         $this->eventDispatcher = $eventDispatcher;
+    }
+
+    /**
+     * @param int $supervisorId
+     * @return Response
+     */
+    public function specialApprovals(int $supervisorId): Response
+    {
+        $supervisor = $this->userRepository->getRepository()->find($supervisorId);
+        if (!$supervisor || !$supervisor instanceof User) {
+            throw $this->createNotFoundException(sprintf('User with id %d was not found', $supervisorId));
+        }
+
+        $response = [
+            'businessTripWorkLogs' => [],
+            'homeOfficeWorkLogs' => [],
+            'timeOffWorkLogs' => [],
+        ];
+
+        foreach ($this->businessTripWorkLogRepository->findAllWaitingForApproval($supervisor) as $workLog) {
+            $response['businessTripWorkLogs'][] = $this->normalizer->normalize(
+                $workLog,
+                BusinessTripWorkLog::class,
+                ['groups' => ['special_approvals_out_list']]
+            );
+        }
+
+        foreach ($this->homeOfficeWorkLogRepository->findAllWaitingForApproval($supervisor) as $workLog) {
+            $response['homeOfficeWorkLogs'][] = $this->normalizer->normalize(
+                $workLog,
+                HomeOfficeWorkLog::class,
+                ['groups' => ['special_approvals_out_list']]
+            );
+        }
+
+        foreach ($this->timeOffWorkLogRepository->findAllWaitingForApproval($supervisor) as $workLog) {
+            $response['timeOffWorkLogs'][] = $this->normalizer->normalize(
+                $workLog,
+                TimeOffWorkLog::class,
+                ['groups' => ['special_approvals_out_list']]
+            );
+        }
+
+        return JsonResponse::create($response, JsonResponse::HTTP_OK);
     }
 
     /**

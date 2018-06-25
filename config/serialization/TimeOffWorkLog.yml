@@ -3,20 +3,25 @@ App\Entity\TimeOffWorkLog:
         id:
             groups:
                 - time_off_work_log_out_detail
+                - special_approvals_out_list
                 - work_month_out_detail
         date:
             groups:
                 - time_off_work_log_out_detail
+                - special_approvals_out_list
                 - work_month_out_detail
                 - time_off_work_log_in
         timeApproved:
             groups:
                 - time_off_work_log_out_detail
+                - special_approvals_out_list
                 - work_month_out_detail
         timeRejected:
             groups:
                 - time_off_work_log_out_detail
+                - special_approvals_out_list
                 - work_month_out_detail
         workMonth:
             groups:
                 - time_off_work_log_out_detail
+                - special_approvals_out_list
