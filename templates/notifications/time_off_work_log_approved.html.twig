@@ -1,0 +1,13 @@
+<html lang="cs">
+    <head>
+        <meta charset="utf-8" />
+    </head>
+
+    <body>
+        <h1>
+            Time off work log for date {{ workLog.date | date('Y-m-d') }}
+            of employee {{ workLog.workMonth.user.firstName }} {{ workLog.workMonth.user.lastName }}
+            was approved by {{ supervisor.firstName }} {{ supervisor.lastName }}
+        </h1>
+    </body>
+</html>

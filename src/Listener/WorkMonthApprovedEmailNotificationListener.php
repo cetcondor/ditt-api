@@ -6,7 +6,7 @@ use App\Event\WorkMonthApprovedEvent;
 use App\Exception\EmailNotSentException;
 use App\Repository\UserRepository;
 
-class WorkLogApprovedEmailNotificationListener
+class WorkMonthApprovedEmailNotificationListener
 {
     /**
      * @var UserRepository
@@ -62,10 +62,11 @@ class WorkLogApprovedEmailNotificationListener
 
         $this->sendMail(
             sprintf(
-                'Worklog for month %d/%d was approved by %s',
+                'Worklog for month %d/%d was approved by %s %s',
                 $workMonth->getMonth(),
                 $workMonth->getYear(),
-                $supervisor->getUsername()
+                $supervisor->getFirstName(),
+                $supervisor->getLastName()
             ),
             $toEmails,
             $this->templating->render('notifications/work_month_approved.html.twig', [

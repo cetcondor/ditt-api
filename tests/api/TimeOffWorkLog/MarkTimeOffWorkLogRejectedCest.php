@@ -39,6 +39,8 @@ class MarkTimeOffWorkLogRejectedCest
         $I->haveHttpHeader('Content-Type', 'application/json');
         $I->sendPUT(sprintf('/time_off_work_logs/%d/mark_rejected', $workLog->getId()));
 
+        $I->canSeeEmailIsSent();
+
         $I->seeHttpHeader('Content-Type', 'application/json');
         $I->seeResponseCodeIs(Response::HTTP_OK);
         $I->seeResponseContainsJson([

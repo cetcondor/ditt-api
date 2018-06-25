@@ -3,8 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\TimeOffWorkLog;
+use App\Entity\User;
+use App\Event\TimeOffWorkLogApprovedEvent;
+use App\Event\TimeOffWorkLogRejectedEvent;
 use App\Repository\TimeOffWorkLogRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -23,15 +27,23 @@ class TimeOffWorkLogController extends Controller
     private $timeOffWorkLogRepository;
 
     /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
+    /**
      * @param NormalizerInterface $normalizer
      * @param TimeOffWorkLogRepository $timeOffWorkLogRepository
+     * @param EventDispatcherInterface $eventDispatcher
      */
     public function __construct(
         NormalizerInterface $normalizer,
-        TimeOffWorkLogRepository $timeOffWorkLogRepository
+        TimeOffWorkLogRepository $timeOffWorkLogRepository,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->normalizer = $normalizer;
         $this->timeOffWorkLogRepository = $timeOffWorkLogRepository;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -58,6 +70,16 @@ class TimeOffWorkLogController extends Controller
         }
 
         $this->timeOffWorkLogRepository->markApproved($workLog);
+
+        $supervisor = $this->getUser();
+        if (!$supervisor) {
+            $supervisor = new User();
+        }
+
+        $this->eventDispatcher->dispatch(
+            TimeOffWorkLogApprovedEvent::APPROVED,
+            new TimeOffWorkLogApprovedEvent($workLog, $supervisor)
+        );
 
         return JsonResponse::create(
             $this->normalizer->normalize(
@@ -92,6 +114,16 @@ class TimeOffWorkLogController extends Controller
         }
 
         $this->timeOffWorkLogRepository->markRejected($workLog);
+
+        $supervisor = $this->getUser();
+        if (!$supervisor) {
+            $supervisor = new User();
+        }
+
+        $this->eventDispatcher->dispatch(
+            TimeOffWorkLogRejectedEvent::REJECTED,
+            new TimeOffWorkLogRejectedEvent($workLog, $supervisor)
+        );
 
         return JsonResponse::create(
             $this->normalizer->normalize(

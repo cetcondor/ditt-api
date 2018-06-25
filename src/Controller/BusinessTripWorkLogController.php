@@ -3,8 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\BusinessTripWorkLog;
+use App\Entity\User;
+use App\Event\BusinessTripWorkLogApprovedEvent;
+use App\Event\BusinessTripWorkLogRejectedEvent;
 use App\Repository\BusinessTripWorkLogRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -22,15 +26,23 @@ class BusinessTripWorkLogController extends Controller
     private $businessTripWorkLogRepository;
 
     /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
+    /**
      * @param NormalizerInterface $normalizer
      * @param BusinessTripWorkLogRepository $businessTripWorkLogRepository
+     * @param EventDispatcherInterface $eventDispatcher
      */
     public function __construct(
         NormalizerInterface $normalizer,
-        BusinessTripWorkLogRepository $businessTripWorkLogRepository
+        BusinessTripWorkLogRepository $businessTripWorkLogRepository,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->normalizer = $normalizer;
         $this->businessTripWorkLogRepository = $businessTripWorkLogRepository;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -57,6 +69,16 @@ class BusinessTripWorkLogController extends Controller
         }
 
         $this->businessTripWorkLogRepository->markApproved($workLog);
+
+        $supervisor = $this->getUser();
+        if (!$supervisor) {
+            $supervisor = new User();
+        }
+
+        $this->eventDispatcher->dispatch(
+            BusinessTripWorkLogApprovedEvent::APPROVED,
+            new BusinessTripWorkLogApprovedEvent($workLog, $supervisor)
+        );
 
         return JsonResponse::create(
             $this->normalizer->normalize(
@@ -91,6 +113,16 @@ class BusinessTripWorkLogController extends Controller
         }
 
         $this->businessTripWorkLogRepository->markRejected($workLog);
+
+        $supervisor = $this->getUser();
+        if (!$supervisor) {
+            $supervisor = new User();
+        }
+
+        $this->eventDispatcher->dispatch(
+            BusinessTripWorkLogRejectedEvent::REJECTED,
+            new BusinessTripWorkLogRejectedEvent($workLog, $supervisor)
+        );
 
         return JsonResponse::create(
             $this->normalizer->normalize(

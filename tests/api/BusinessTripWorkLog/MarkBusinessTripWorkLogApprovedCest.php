@@ -39,6 +39,8 @@ class MarkBusinessTripWorkLogApprovedCest
         $I->haveHttpHeader('Content-Type', 'application/json');
         $I->sendPUT(sprintf('/business_trip_work_logs/%d/mark_approved', $workLog->getId()));
 
+        $I->canSeeEmailIsSent();
+
         $I->seeHttpHeader('Content-Type', 'application/json');
         $I->seeResponseCodeIs(Response::HTTP_OK);
         $I->seeResponseContainsJson([

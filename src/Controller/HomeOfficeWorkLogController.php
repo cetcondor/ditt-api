@@ -3,8 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\HomeOfficeWorkLog;
+use App\Entity\User;
+use App\Event\HomeOfficeWorkLogApprovedEvent;
+use App\Event\HomeOfficeWorkLogRejectedEvent;
 use App\Repository\HomeOfficeWorkLogRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -22,15 +26,23 @@ class HomeOfficeWorkLogController extends Controller
     private $homeOfficeWorkLogRepository;
 
     /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
+    /**
      * @param NormalizerInterface $normalizer
      * @param HomeOfficeWorkLogRepository $homeOfficeWorkLogRepository
+     * @param EventDispatcherInterface $eventDispatcher
      */
     public function __construct(
         NormalizerInterface $normalizer,
-        HomeOfficeWorkLogRepository $homeOfficeWorkLogRepository
+        HomeOfficeWorkLogRepository $homeOfficeWorkLogRepository,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->normalizer = $normalizer;
         $this->homeOfficeWorkLogRepository = $homeOfficeWorkLogRepository;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -57,6 +69,16 @@ class HomeOfficeWorkLogController extends Controller
         }
 
         $this->homeOfficeWorkLogRepository->markApproved($workLog);
+
+        $supervisor = $this->getUser();
+        if (!$supervisor) {
+            $supervisor = new User();
+        }
+
+        $this->eventDispatcher->dispatch(
+            HomeOfficeWorkLogApprovedEvent::APPROVED,
+            new HomeOfficeWorkLogApprovedEvent($workLog, $supervisor)
+        );
 
         return JsonResponse::create(
             $this->normalizer->normalize(
@@ -91,6 +113,16 @@ class HomeOfficeWorkLogController extends Controller
         }
 
         $this->homeOfficeWorkLogRepository->markRejected($workLog);
+
+        $supervisor = $this->getUser();
+        if (!$supervisor) {
+            $supervisor = new User();
+        }
+
+        $this->eventDispatcher->dispatch(
+            HomeOfficeWorkLogRejectedEvent::REJECTED,
+            new HomeOfficeWorkLogRejectedEvent($workLog, $supervisor)
+        );
 
         return JsonResponse::create(
             $this->normalizer->normalize(

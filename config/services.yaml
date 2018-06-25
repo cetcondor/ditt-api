@@ -83,8 +83,32 @@ services:
                 event: lexik_jwt_authentication.on_jwt_created
                 method: onJWTCreated
 
-    App\Listener\WorkLogApprovedEmailNotificationListener:
-        class: App\Listener\WorkLogApprovedEmailNotificationListener
+    App\Listener\WorkLogEmailNotificationListener:
+        class: App\Listener\WorkLogEmailNotificationListener
+        arguments:
+            $mailSenderAddress: '%env(NOTIFICATION_EMAIL_SENDER)%'
+        tags:
+            - name: kernel.event_listener
+              event: !php/const App\Event\BusinessTripWorkLogApprovedEvent::APPROVED
+              method: onBusinessTripWorkLogApproved
+            - name: kernel.event_listener
+              event: !php/const App\Event\BusinessTripWorkLogRejectedEvent::REJECTED
+              method: onBusinessTripWorkLogRejected
+            - name: kernel.event_listener
+              event: !php/const App\Event\HomeOfficeWorkLogApprovedEvent::APPROVED
+              method: onHomeOfficeWorkLogApproved
+            - name: kernel.event_listener
+              event: !php/const App\Event\HomeOfficeWorkLogRejectedEvent::REJECTED
+              method: onHomeOfficeWorkLogRejected
+            - name: kernel.event_listener
+              event: !php/const App\Event\TimeOffWorkLogApprovedEvent::APPROVED
+              method: onTimeOffWorkLogApproved
+            - name: kernel.event_listener
+              event: !php/const App\Event\TimeOffWorkLogRejectedEvent::REJECTED
+              method: onTimeOffWorkLogRejected
+
+    App\Listener\WorkMonthApprovedEmailNotificationListener:
+        class: App\Listener\WorkMonthApprovedEmailNotificationListener
         arguments:
             $mailSenderAddress: '%env(NOTIFICATION_EMAIL_SENDER)%'
         tags:
