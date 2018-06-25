@@ -25,6 +25,11 @@ class BusinessTripWorkLog implements WorkLogInterface
     private $timeRejected;
 
     /**
+     * @var string|null
+     */
+    private $rejectionMessage;
+
+    /**
      * @var WorkMonth
      */
     private $workMonth;
@@ -40,6 +45,17 @@ class BusinessTripWorkLog implements WorkLogInterface
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    /**
+     * @param int|null $id
+     * @return BusinessTripWorkLog
+     */
+    public function setId(?int $id): BusinessTripWorkLog
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     /**
@@ -91,10 +107,12 @@ class BusinessTripWorkLog implements WorkLogInterface
     }
 
     /**
+     * @param string $rejectionMessage
      * @return BusinessTripWorkLog
      */
-    public function markRejected(): BusinessTripWorkLog
+    public function markRejected(string $rejectionMessage): BusinessTripWorkLog
     {
+        $this->rejectionMessage = $rejectionMessage;
         $this->timeRejected = new \DateTimeImmutable();
 
         return $this;
@@ -120,12 +138,20 @@ class BusinessTripWorkLog implements WorkLogInterface
     }
 
     /**
-     * @param int|null $id
+     * @return null|string
+     */
+    public function getRejectionMessage(): ?string
+    {
+        return $this->rejectionMessage;
+    }
+
+    /**
+     * @param null|string $rejectionMessage
      * @return BusinessTripWorkLog
      */
-    public function setId(?int $id): BusinessTripWorkLog
+    public function setRejectionMessage(?string $rejectionMessage): BusinessTripWorkLog
     {
-        $this->id = $id;
+        $this->rejectionMessage = $rejectionMessage;
 
         return $this;
     }

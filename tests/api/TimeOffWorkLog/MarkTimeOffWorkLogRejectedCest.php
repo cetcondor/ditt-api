@@ -28,7 +28,7 @@ class MarkTimeOffWorkLogRejectedCest
      * @param \ApiTester $I
      * @throws \Exception
      */
-    public function testMarkApproved(\ApiTester $I): void
+    public function testMarkRejected(\ApiTester $I): void
     {
         $user = $I->createUser(['email' => 'user1@example.com']);
         $workMonth = $I->createWorkMonth(['user' => $user]);
@@ -37,7 +37,10 @@ class MarkTimeOffWorkLogRejectedCest
         ]);
 
         $I->haveHttpHeader('Content-Type', 'application/json');
-        $I->sendPUT(sprintf('/time_off_work_logs/%d/mark_rejected', $workLog->getId()));
+        $I->sendPUT(
+            sprintf('/time_off_work_logs/%d/mark_rejected', $workLog->getId()),
+            ['rejectionMessage' => 'Rejection message.']
+        );
 
         $I->canSeeEmailIsSent();
 
@@ -68,7 +71,10 @@ class MarkTimeOffWorkLogRejectedCest
         ]);
 
         $I->haveHttpHeader('Content-Type', 'application/json');
-        $I->sendPUT(sprintf('/time_off_work_logs/%d/mark_rejected', $workLog->getId()));
+        $I->sendPUT(
+            sprintf('/time_off_work_logs/%d/mark_rejected', $workLog->getId()),
+            ['rejectionMessage' => 'Rejection message.']
+        );
 
         $I->seeHttpHeader('Content-Type', 'application/json');
         $I->seeResponseCodeIs(Response::HTTP_BAD_REQUEST);
@@ -97,7 +103,10 @@ class MarkTimeOffWorkLogRejectedCest
         ]);
 
         $I->haveHttpHeader('Content-Type', 'application/json');
-        $I->sendPUT(sprintf('/time_off_work_logs/%d/mark_rejected', $workLog->getId()));
+        $I->sendPUT(
+            sprintf('/time_off_work_logs/%d/mark_rejected', $workLog->getId()),
+            ['rejectionMessage' => 'Rejection message.']
+        );
 
         $I->seeHttpHeader('Content-Type', 'application/json');
         $I->seeResponseCodeIs(Response::HTTP_BAD_REQUEST);

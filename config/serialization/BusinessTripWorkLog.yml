@@ -21,6 +21,12 @@ App\Entity\BusinessTripWorkLog:
                 - business_trip_work_log_out_detail
                 - special_approvals_out_list
                 - work_month_out_detail
+        rejectionMessage:
+            groups:
+                - business_trip_work_log_out_detail
+                - special_approvals_out_list
+                - work_month_out_detail
+                - business_trip_work_log_in
         workMonth:
             groups:
                 - business_trip_work_log_out_detail

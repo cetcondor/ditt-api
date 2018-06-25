@@ -15,6 +15,9 @@ App\Entity\HomeOfficeWorkLog:
         timeRejected:
             type: datetime_immutable
             nullable: true
+        rejectionMessage:
+            type: text
+            nullable: true
 
     manyToOne:
         workMonth:

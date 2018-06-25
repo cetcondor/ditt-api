@@ -71,10 +71,11 @@ class BusinessTripWorkLogRepository
 
     /**
      * @param BusinessTripWorkLog $businessTripWorkLog
+     * @param string $rejectionMessage
      */
-    public function markRejected(BusinessTripWorkLog $businessTripWorkLog): void
+    public function markRejected(BusinessTripWorkLog $businessTripWorkLog, string $rejectionMessage): void
     {
-        $businessTripWorkLog->markRejected();
+        $businessTripWorkLog->markRejected($rejectionMessage);
         $this->entityManager->flush();
     }
 }

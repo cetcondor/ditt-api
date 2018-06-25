@@ -25,6 +25,11 @@ class HomeOfficeWorkLog implements WorkLogInterface
     private $timeRejected;
 
     /**
+     * @var string|null
+     */
+    private $rejectionMessage;
+
+    /**
      * @var WorkMonth
      */
     private $workMonth;
@@ -40,6 +45,17 @@ class HomeOfficeWorkLog implements WorkLogInterface
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    /**
+     * @param int|null $id
+     * @return HomeOfficeWorkLog
+     */
+    public function setId(?int $id): HomeOfficeWorkLog
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     /**
@@ -91,10 +107,12 @@ class HomeOfficeWorkLog implements WorkLogInterface
     }
 
     /**
+     * @param string $rejectionMessage
      * @return HomeOfficeWorkLog
      */
-    public function markRejected(): HomeOfficeWorkLog
+    public function markRejected(string $rejectionMessage): HomeOfficeWorkLog
     {
+        $this->rejectionMessage = $rejectionMessage;
         $this->timeRejected = new \DateTimeImmutable();
 
         return $this;
@@ -120,12 +138,20 @@ class HomeOfficeWorkLog implements WorkLogInterface
     }
 
     /**
-     * @param int|null $id
+     * @return null|string
+     */
+    public function getRejectionMessage(): ?string
+    {
+        return $this->rejectionMessage;
+    }
+
+    /**
+     * @param null|string $rejectionMessage
      * @return HomeOfficeWorkLog
      */
-    public function setId(?int $id): HomeOfficeWorkLog
+    public function setRejectionMessage(?string $rejectionMessage): HomeOfficeWorkLog
     {
-        $this->id = $id;
+        $this->rejectionMessage = $rejectionMessage;
 
         return $this;
     }

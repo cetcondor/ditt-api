@@ -37,7 +37,10 @@ class MarkBusinessTripWorkLogRejectedCest
         ]);
 
         $I->haveHttpHeader('Content-Type', 'application/json');
-        $I->sendPUT(sprintf('/business_trip_work_logs/%d/mark_rejected', $workLog->getId()));
+        $I->sendPUT(
+            sprintf('/business_trip_work_logs/%d/mark_rejected', $workLog->getId()),
+            ['rejectionMessage' => 'Rejection message.']
+        );
 
         $I->canSeeEmailIsSent();
 
@@ -68,7 +71,10 @@ class MarkBusinessTripWorkLogRejectedCest
         ]);
 
         $I->haveHttpHeader('Content-Type', 'application/json');
-        $I->sendPUT(sprintf('/business_trip_work_logs/%d/mark_rejected', $workLog->getId()));
+        $I->sendPUT(
+            sprintf('/business_trip_work_logs/%d/mark_rejected', $workLog->getId()),
+            ['rejectionMessage' => 'Rejection message.']
+        );
 
         $I->seeHttpHeader('Content-Type', 'application/json');
         $I->seeResponseCodeIs(Response::HTTP_BAD_REQUEST);
@@ -97,7 +103,10 @@ class MarkBusinessTripWorkLogRejectedCest
         ]);
 
         $I->haveHttpHeader('Content-Type', 'application/json');
-        $I->sendPUT(sprintf('/business_trip_work_logs/%d/mark_rejected', $workLog->getId()));
+        $I->sendPUT(
+            sprintf('/business_trip_work_logs/%d/mark_rejected', $workLog->getId()),
+            ['rejectionMessage' => 'Rejection message.']
+        );
 
         $I->seeHttpHeader('Content-Type', 'application/json');
         $I->seeResponseCodeIs(Response::HTTP_BAD_REQUEST);

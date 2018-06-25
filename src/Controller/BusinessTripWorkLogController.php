@@ -10,6 +10,7 @@ use App\Repository\BusinessTripWorkLogRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -93,7 +94,7 @@ class BusinessTripWorkLogController extends Controller
      * @param int $id
      * @return Response
      */
-    public function markRejected(int $id): Response
+    public function markRejected(Request $request, int $id): Response
     {
         $workLog = $this->businessTripWorkLogRepository->getRepository()->find($id);
         if (!$workLog || !$workLog instanceof BusinessTripWorkLog) {
@@ -112,7 +113,14 @@ class BusinessTripWorkLogController extends Controller
             );
         }
 
-        $this->businessTripWorkLogRepository->markRejected($workLog);
+        $data = json_decode($request->getContent());
+        if (!isset($data->rejectionMessage)) {
+            return JsonResponse::create(
+                ['detail' => 'Rejection message is missing.'], JsonResponse::HTTP_BAD_REQUEST
+            );
+        }
+
+        $this->businessTripWorkLogRepository->markRejected($workLog, $data->rejectionMessage);
 
         $supervisor = $this->getUser();
         if (!$supervisor) {

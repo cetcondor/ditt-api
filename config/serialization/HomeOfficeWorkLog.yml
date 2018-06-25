@@ -21,6 +21,12 @@ App\Entity\HomeOfficeWorkLog:
                 - home_office_work_log_out_detail
                 - special_approvals_out_list
                 - work_month_out_detail
+        rejectionMessage:
+            groups:
+                - home_office_work_log_out_detail
+                - special_approvals_out_list
+                - work_month_out_detail
+                - home_office_work_log_in
         workMonth:
             groups:
                 - home_office_work_log_out_detail

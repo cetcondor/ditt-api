@@ -10,6 +10,7 @@ use App\Repository\HomeOfficeWorkLogRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -90,10 +91,11 @@ class HomeOfficeWorkLogController extends Controller
     }
 
     /**
+     * @param Request $request
      * @param int $id
      * @return Response
      */
-    public function markRejected(int $id): Response
+    public function markRejected(Request $request, int $id): Response
     {
         $workLog = $this->homeOfficeWorkLogRepository->getRepository()->find($id);
         if (!$workLog || !$workLog instanceof HomeOfficeWorkLog) {
@@ -112,7 +114,14 @@ class HomeOfficeWorkLogController extends Controller
             );
         }
 
-        $this->homeOfficeWorkLogRepository->markRejected($workLog);
+        $data = json_decode($request->getContent());
+        if (!isset($data->rejectionMessage)) {
+            return JsonResponse::create(
+                ['detail' => 'Rejection message is missing.'], JsonResponse::HTTP_BAD_REQUEST
+            );
+        }
+
+        $this->homeOfficeWorkLogRepository->markRejected($workLog, $data->rejectionMessage);
 
         $supervisor = $this->getUser();
         if (!$supervisor) {

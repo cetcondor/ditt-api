@@ -71,10 +71,11 @@ class TimeOffWorkLogRepository
 
     /**
      * @param TimeOffWorkLog $timeOffWorkLog
+     * @param string $rejectionMessage
      */
-    public function markRejected(TimeOffWorkLog $timeOffWorkLog): void
+    public function markRejected(TimeOffWorkLog $timeOffWorkLog, string $rejectionMessage): void
     {
-        $timeOffWorkLog->markRejected();
+        $timeOffWorkLog->markRejected($rejectionMessage);
         $this->entityManager->flush();
     }
 }

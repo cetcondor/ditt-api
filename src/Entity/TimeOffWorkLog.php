@@ -25,6 +25,11 @@ class TimeOffWorkLog implements WorkLogInterface
     private $timeRejected;
 
     /**
+     * @var string|null
+     */
+    private $rejectionMessage;
+
+    /**
      * @var WorkMonth
      */
     private $workMonth;
@@ -40,6 +45,17 @@ class TimeOffWorkLog implements WorkLogInterface
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    /**
+     * @param int|null $id
+     * @return TimeOffWorkLog
+     */
+    public function setId(?int $id): TimeOffWorkLog
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     /**
@@ -91,10 +107,12 @@ class TimeOffWorkLog implements WorkLogInterface
     }
 
     /**
+     * @param string $rejectionMessage
      * @return TimeOffWorkLog
      */
-    public function markRejected(): TimeOffWorkLog
+    public function markRejected(string $rejectionMessage): TimeOffWorkLog
     {
+        $this->rejectionMessage = $rejectionMessage;
         $this->timeRejected = new \DateTimeImmutable();
 
         return $this;
@@ -120,12 +138,20 @@ class TimeOffWorkLog implements WorkLogInterface
     }
 
     /**
-     * @param int|null $id
+     * @return null|string
+     */
+    public function getRejectionMessage(): ?string
+    {
+        return $this->rejectionMessage;
+    }
+
+    /**
+     * @param null|string $rejectionMessage
      * @return TimeOffWorkLog
      */
-    public function setId(?int $id): TimeOffWorkLog
+    public function setRejectionMessage(?string $rejectionMessage): TimeOffWorkLog
     {
-        $this->id = $id;
+        $this->rejectionMessage = $rejectionMessage;
 
         return $this;
     }

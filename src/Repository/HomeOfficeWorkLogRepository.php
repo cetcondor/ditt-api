@@ -71,10 +71,11 @@ class HomeOfficeWorkLogRepository
 
     /**
      * @param HomeOfficeWorkLog $homeOfficeWorkLog
+     * @param string $rejectionMessage
      */
-    public function markRejected(HomeOfficeWorkLog $homeOfficeWorkLog): void
+    public function markRejected(HomeOfficeWorkLog $homeOfficeWorkLog, string $rejectionMessage): void
     {
-        $homeOfficeWorkLog->markRejected();
+        $homeOfficeWorkLog->markRejected($rejectionMessage);
         $this->entityManager->flush();
     }
 }
