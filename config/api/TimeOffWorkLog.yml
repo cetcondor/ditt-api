@@ -16,3 +16,20 @@ App\Entity\TimeOffWorkLog:
             normalization_context:
                 groups:
                     - time_off_work_log_out_detail
+        markApproved:
+            method: PUT
+            route_name: api_time_off_work_log_mark_approved
+            normalization_context:
+                groups:
+                    - time_off_work_log_out_detail
+            swagger_context:
+                summary: Marks the TimeOffWorkLog as approved.
+        markRejected:
+            method: PUT
+            route_name: api_time_off_work_log_mark_rejected
+            normalization_context:
+                groups:
+                    - time_off_work_log_out_detail
+            swagger_context:
+                summary: Marks the TimeOffWorkLog as rejected.
+

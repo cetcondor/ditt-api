@@ -10,6 +10,10 @@ use Doctrine\ORM\EntityRepository;
 class HomeOfficeWorkLogRepository
 {
     /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+    /**
      * @var EntityRepository
      */
     private $repository;
@@ -21,7 +25,17 @@ class HomeOfficeWorkLogRepository
     {
         /** @var EntityRepository $repository */
         $repository = $entityManager->getRepository(HomeOfficeWorkLog::class);
+
+        $this->entityManager = $entityManager;
         $this->repository = $repository;
+    }
+
+    /**
+     * @return EntityRepository
+     */
+    public function getRepository(): EntityRepository
+    {
+        return $this->repository;
     }
 
     /**
@@ -44,5 +58,23 @@ class HomeOfficeWorkLogRepository
             ->setParameter('supervisor', $supervisor)
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * @param HomeOfficeWorkLog $homeOfficeWorkLog
+     */
+    public function markApproved(HomeOfficeWorkLog $homeOfficeWorkLog): void
+    {
+        $homeOfficeWorkLog->markApproved();
+        $this->entityManager->flush();
+    }
+
+    /**
+     * @param HomeOfficeWorkLog $homeOfficeWorkLog
+     */
+    public function markRejected(HomeOfficeWorkLog $homeOfficeWorkLog): void
+    {
+        $homeOfficeWorkLog->markRejected();
+        $this->entityManager->flush();
     }
 }

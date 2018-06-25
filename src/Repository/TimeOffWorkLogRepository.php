@@ -10,6 +10,10 @@ use Doctrine\ORM\EntityRepository;
 class TimeOffWorkLogRepository
 {
     /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+    /**
      * @var EntityRepository
      */
     private $repository;
@@ -21,7 +25,17 @@ class TimeOffWorkLogRepository
     {
         /** @var EntityRepository $repository */
         $repository = $entityManager->getRepository(TimeOffWorkLog::class);
+
+        $this->entityManager = $entityManager;
         $this->repository = $repository;
+    }
+
+    /**
+     * @return EntityRepository
+     */
+    public function getRepository(): EntityRepository
+    {
+        return $this->repository;
     }
 
     /**
@@ -44,5 +58,23 @@ class TimeOffWorkLogRepository
             ->setParameter('supervisor', $supervisor)
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * @param TimeOffWorkLog $timeOffWorkLog
+     */
+    public function markApproved(TimeOffWorkLog $timeOffWorkLog): void
+    {
+        $timeOffWorkLog->markApproved();
+        $this->entityManager->flush();
+    }
+
+    /**
+     * @param TimeOffWorkLog $timeOffWorkLog
+     */
+    public function markRejected(TimeOffWorkLog $timeOffWorkLog): void
+    {
+        $timeOffWorkLog->markRejected();
+        $this->entityManager->flush();
     }
 }

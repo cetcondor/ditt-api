@@ -10,6 +10,48 @@ api_logout:
     path: /logout
     methods: [POST]
 
+api_business_trip_work_log_mark_approved:
+    path: /business_trip_work_logs/{id}/mark_approved
+    methods: [PUT]
+    controller: App\Controller\BusinessTripWorkLogController:markApproved
+    defaults:
+        _api_collection_operation_name: 'markApproved'
+
+api_business_trip_work_log_mark_rejected:
+    path: /business_trip_work_logs/{id}/mark_rejected
+    methods: [PUT]
+    controller: App\Controller\BusinessTripWorkLogController:markRejected
+    defaults:
+        _api_collection_operation_name: 'markRejected'
+
+api_home_office_work_log_mark_approved:
+    path: /home_office_work_logs/{id}/mark_approved
+    methods: [PUT]
+    controller: App\Controller\HomeOfficeWorkLogController:markApproved
+    defaults:
+        _api_collection_operation_name: 'markApproved'
+
+api_home_office_work_log_mark_rejected:
+    path: /home_office_work_logs/{id}/mark_rejected
+    methods: [PUT]
+    controller: App\Controller\HomeOfficeWorkLogController:markRejected
+    defaults:
+        _api_collection_operation_name: 'markRejected'
+
+api_time_off_work_log_mark_approved:
+    path: /time_off_work_logs/{id}/mark_approved
+    methods: [PUT]
+    controller: App\Controller\TimeOffWorkLogController:markApproved
+    defaults:
+        _api_collection_operation_name: 'markApproved'
+
+api_time_off_work_log_mark_rejected:
+    path: /time_off_work_logs/{id}/mark_rejected
+    methods: [PUT]
+    controller: App\Controller\TimeOffWorkLogController:markRejected
+    defaults:
+        _api_collection_operation_name: 'markRejected'
+
 api_supervised_users:
     path: /users/{id}/supervised_users
     methods: [GET]

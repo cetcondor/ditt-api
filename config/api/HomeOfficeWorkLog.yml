@@ -16,3 +16,19 @@ App\Entity\HomeOfficeWorkLog:
             normalization_context:
                 groups:
                     - home_office_work_log_out_detail
+        markApproved:
+            method: PUT
+            route_name: api_home_office_work_log_mark_approved
+            normalization_context:
+                groups:
+                    - home_office_work_log_out_detail
+            swagger_context:
+                summary: Marks the HomeOfficeWorkLog as approved.
+        markRejected:
+            method: PUT
+            route_name: api_home_office_work_log_mark_rejected
+            normalization_context:
+                groups:
+                    - home_office_work_log_out_detail
+            swagger_context:
+                summary: Marks the HomeOfficeWorkLog as rejected.

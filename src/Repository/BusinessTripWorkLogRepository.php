@@ -10,6 +10,10 @@ use Doctrine\ORM\EntityRepository;
 class BusinessTripWorkLogRepository
 {
     /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+    /**
      * @var EntityRepository
      */
     private $repository;
@@ -21,7 +25,17 @@ class BusinessTripWorkLogRepository
     {
         /** @var EntityRepository $repository */
         $repository = $entityManager->getRepository(BusinessTripWorkLog::class);
+
+        $this->entityManager = $entityManager;
         $this->repository = $repository;
+    }
+
+    /**
+     * @return EntityRepository
+     */
+    public function getRepository(): EntityRepository
+    {
+        return $this->repository;
     }
 
     /**
@@ -44,5 +58,23 @@ class BusinessTripWorkLogRepository
             ->setParameter('supervisor', $supervisor)
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * @param BusinessTripWorkLog $businessTripWorkLog
+     */
+    public function markApproved(BusinessTripWorkLog $businessTripWorkLog): void
+    {
+        $businessTripWorkLog->markApproved();
+        $this->entityManager->flush();
+    }
+
+    /**
+     * @param BusinessTripWorkLog $businessTripWorkLog
+     */
+    public function markRejected(BusinessTripWorkLog $businessTripWorkLog): void
+    {
+        $businessTripWorkLog->markRejected();
+        $this->entityManager->flush();
     }
 }
