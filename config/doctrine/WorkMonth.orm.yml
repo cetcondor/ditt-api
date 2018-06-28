@@ -24,6 +24,9 @@ App\Entity\WorkMonth:
         timeOffWorkLogs:
             targetEntity: App\Entity\TimeOffWorkLog
             mappedBy: workMonth
+        vacationWorkLogs:
+            targetEntity: App\Entity\VacationWorkLog
+            mappedBy: workMonth
         workLogs:
             targetEntity: App\Entity\WorkLog
             mappedBy: workMonth

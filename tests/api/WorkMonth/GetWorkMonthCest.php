@@ -101,6 +101,14 @@ class GetWorkMonthCest
             'date' => $endTime1,
             'workMonth' => $workMonth,
         ]);
+        $vacationWorkLog1 = $I->createVacationWorkLog([
+            'date' => $startTime1,
+            'workMonth' => $workMonth,
+        ]);
+        $vacationWorkLog2 = $I->createVacationWorkLog([
+            'date' => $endTime1,
+            'workMonth' => $workMonth,
+        ]);
         $workLog1 = $I->createWorkLog([
             'startTime' => $startTime1,
             'endTime' => $endTime1,
@@ -115,6 +123,7 @@ class GetWorkMonthCest
         $workMonth->setBusinessTripWorkLogs([$businessTripWorkLog1, $businessTripWorkLog2]);
         $workMonth->setHomeOfficeWorkLogs([$homeOfficeWorkLog1, $homeOfficeWorkLog2]);
         $workMonth->setTimeOffWorkLogs([$timeOffWorkLog1, $timeOffWorkLog2]);
+        $workMonth->setVacationWorkLogs([$vacationWorkLog1, $vacationWorkLog2]);
         $workMonth->setWorkLogs([$workLog1, $workLog2]);
         $I->flushToDatabase();
 
@@ -159,6 +168,16 @@ class GetWorkMonthCest
                 ],
             ],
             'user' => ['id' => $this->user->getId()],
+            'vacationWorkLogs' => [
+                [
+                    'date' => $startTime1->format(\DateTime::RFC3339),
+                    'id' => $vacationWorkLog1->getId(),
+                ],
+                [
+                    'date' => $endTime1->format(\DateTime::RFC3339),
+                    'id' => $vacationWorkLog2->getId(),
+                ],
+            ],
             'workLogs' => [
                 [
                     'startTime' => $startTime1->format(\DateTime::RFC3339),

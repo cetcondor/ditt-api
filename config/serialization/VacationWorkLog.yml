@@ -1,0 +1,33 @@
+App\Entity\VacationWorkLog:
+    attributes:
+        id:
+            groups:
+                - vacation_work_log_out_detail
+                - special_approvals_out_list
+                - work_month_out_detail
+        date:
+            groups:
+                - vacation_work_log_out_detail
+                - special_approvals_out_list
+                - work_month_out_detail
+                - vacation_work_log_in
+        timeApproved:
+            groups:
+                - vacation_work_log_out_detail
+                - special_approvals_out_list
+                - work_month_out_detail
+        timeRejected:
+            groups:
+                - vacation_work_log_out_detail
+                - special_approvals_out_list
+                - work_month_out_detail
+        rejectionMessage:
+            groups:
+                - vacation_work_log_out_detail
+                - special_approvals_out_list
+                - work_month_out_detail
+                - vacation_work_log_in
+        workMonth:
+            groups:
+                - vacation_work_log_out_detail
+                - special_approvals_out_list

@@ -1,0 +1,34 @@
+App\Entity\VacationWorkLog:
+    collectionOperations:
+        post:
+            method: POST
+            normalization_context:
+                groups:
+                    - vacation_work_log_out_detail
+            denormalization_context:
+                groups:
+                    - vacation_work_log_in
+    itemOperations:
+        delete:
+            method: DELETE
+        get:
+            method: GET
+            normalization_context:
+                groups:
+                    - vacation_work_log_out_detail
+        markApproved:
+            method: PUT
+            route_name: api_vacation_work_log_mark_approved
+            normalization_context:
+                groups:
+                    - vacation_work_log_out_detail
+            swagger_context:
+                summary: Marks the VacationWorkLog as approved.
+        markRejected:
+            method: PUT
+            route_name: api_vacation_work_log_mark_rejected
+            normalization_context:
+                groups:
+                    - vacation_work_log_out_detail
+            swagger_context:
+                summary: Marks the VacationWorkLog as rejected.

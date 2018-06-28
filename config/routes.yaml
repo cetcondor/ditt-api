@@ -52,6 +52,20 @@ api_time_off_work_log_mark_rejected:
     defaults:
         _api_collection_operation_name: 'markRejected'
 
+api_vacation_work_log_mark_approved:
+    path: /vacation_work_logs/{id}/mark_approved
+    methods: [PUT]
+    controller: App\Controller\VacationWorkLogController:markApproved
+    defaults:
+        _api_collection_operation_name: 'markApproved'
+
+api_vacation_work_log_mark_rejected:
+    path: /vacation_work_logs/{id}/mark_rejected
+    methods: [PUT]
+    controller: App\Controller\VacationWorkLogController:markRejected
+    defaults:
+        _api_collection_operation_name: 'markRejected'
+
 api_supervised_users:
     path: /users/{id}/supervised_users
     methods: [GET]

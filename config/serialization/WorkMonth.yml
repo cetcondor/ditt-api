@@ -8,6 +8,7 @@ App\Entity\WorkMonth:
                 - home_office_work_log_out_detail
                 - time_off_work_log_out_detail
                 - special_approvals_out_list
+                - vacation_work_log_out_detail
                 - work_log_out_detail
                 - supervised_user_out_list
         year:
@@ -40,6 +41,9 @@ App\Entity\WorkMonth:
             groups:
                 - work_month_out_detail
         timeOffWorkLogs:
+            groups:
+                - work_month_out_detail
+        vacationWorkLogs:
             groups:
                 - work_month_out_detail
         workLogs:

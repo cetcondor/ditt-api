@@ -48,6 +48,11 @@ class WorkMonth
     private $timeOffWorkLogs;
 
     /**
+     * @var VacationWorkLog[]|Collection
+     */
+    private $vacationWorkLogs;
+
+    /**
      * @var WorkLog[]|Collection
      */
     private $workLogs;
@@ -69,6 +74,7 @@ class WorkMonth
         $this->businessTripWorkLogs = new ArrayCollection();
         $this->homeOfficeWorkLogs = new ArrayCollection();
         $this->timeOffWorkLogs = new ArrayCollection();
+        $this->vacationWorkLogs = new ArrayCollection();
         $this->workLogs = new ArrayCollection();
         $this->status = self::STATUS_OPENED;
     }
@@ -195,6 +201,29 @@ class WorkMonth
     public function setTimeOffWorkLogs($timeOffWorkLogs): WorkMonth
     {
         $this->timeOffWorkLogs = $timeOffWorkLogs;
+
+        return $this;
+    }
+
+    /**
+     * @return VacationWorkLog[]
+     */
+    public function getVacationWorkLogs()
+    {
+        if ($this->vacationWorkLogs instanceof Collection) {
+            return $this->vacationWorkLogs->toArray();
+        }
+
+        return $this->vacationWorkLogs;
+    }
+
+    /**
+     * @param VacationWorkLog[]|Collection $vacationWorkLogs
+     * @return WorkMonth
+     */
+    public function setVacationWorkLogs($vacationWorkLogs): WorkMonth
+    {
+        $this->vacationWorkLogs = $vacationWorkLogs;
 
         return $this;
     }

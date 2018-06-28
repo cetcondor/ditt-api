@@ -10,6 +10,8 @@ use App\Event\HomeOfficeWorkLogApprovedEvent;
 use App\Event\HomeOfficeWorkLogRejectedEvent;
 use App\Event\TimeOffWorkLogApprovedEvent;
 use App\Event\TimeOffWorkLogRejectedEvent;
+use App\Event\VacationWorkLogApprovedEvent;
+use App\Event\VacationWorkLogRejectedEvent;
 use App\Exception\EmailNotSentException;
 use App\Repository\UserRepository;
 
@@ -99,7 +101,7 @@ class WorkLogEmailNotificationListener
         $this->sendWorkLogMail(
             $event->getSupervisor(),
             $event->getHomeOfficeWorkLog(),
-            'Home office trip work log was approved by %s %s',
+            'Home office work log was approved by %s %s',
             'notifications/home_office_work_log_approved.html.twig'
         );
     }
@@ -116,7 +118,7 @@ class WorkLogEmailNotificationListener
         $this->sendWorkLogMail(
             $event->getSupervisor(),
             $event->getHomeOfficeWorkLog(),
-            'Home office trip work log was rejected by %s %s',
+            'Home office work log was rejected by %s %s',
             'notifications/home_office_work_log_rejected.html.twig'
         );
     }
@@ -133,7 +135,7 @@ class WorkLogEmailNotificationListener
         $this->sendWorkLogMail(
             $event->getSupervisor(),
             $event->getTimeOffWorkLog(),
-            'Time off trip work log was approved by %s %s',
+            'Time off work log was approved by %s %s',
             'notifications/time_off_work_log_approved.html.twig'
         );
     }
@@ -150,8 +152,42 @@ class WorkLogEmailNotificationListener
         $this->sendWorkLogMail(
             $event->getSupervisor(),
             $event->getTimeOffWorkLog(),
-            'Time off trip work log was rejected by %s %s',
+            'Time off work log was rejected by %s %s',
             'notifications/time_off_work_log_rejected.html.twig'
+        );
+    }
+
+    /**
+     * @param VacationWorkLogApprovedEvent $event
+     * @throws EmailNotSentException
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     */
+    public function onVacationWorkLogApproved(VacationWorkLogApprovedEvent $event)
+    {
+        $this->sendWorkLogMail(
+            $event->getSupervisor(),
+            $event->getVacationWorkLog(),
+            'Vacation work log was approved by %s %s',
+            'notifications/vacation_work_log_approved.html.twig'
+        );
+    }
+
+    /**
+     * @param VacationWorkLogRejectedEvent $event
+     * @throws EmailNotSentException
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     */
+    public function onVacationWorkLogRejected(VacationWorkLogRejectedEvent $event)
+    {
+        $this->sendWorkLogMail(
+            $event->getSupervisor(),
+            $event->getVacationWorkLog(),
+            'Vacation work log was rejected by %s %s',
+            'notifications/vacation_work_log_rejected.html.twig'
         );
     }
 

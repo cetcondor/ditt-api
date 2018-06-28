@@ -107,6 +107,25 @@ class GetSpecialApprovalCest
             'workMonth' => $workMonth1,
         ]);
 
+        $vacationWorkLog1 = $I->createVacationWorkLog([
+            'date' => new \DateTimeImmutable(),
+            'workMonth' => $workMonth2,
+        ]);
+        $vacationWorkLog2 = $I->createVacationWorkLog([
+            'date' => new \DateTimeImmutable(),
+            'timeApproved' => new \DateTimeImmutable(),
+            'workMonth' => $workMonth2,
+        ]);
+        $vacationWorkLog3 = $I->createVacationWorkLog([
+            'date' => new \DateTimeImmutable(),
+            'timeRejected' => new \DateTimeImmutable(),
+            'workMonth' => $workMonth1,
+        ]);
+        $vacationWorkLog4 = $I->createVacationWorkLog([
+            'date' => new \DateTimeImmutable(),
+            'workMonth' => $workMonth1,
+        ]);
+
         $I->haveHttpHeader('Content-Type', 'application/json');
 
         $I->sendGET(sprintf('/special_approvals/%s', $user1->getId()));
@@ -174,6 +193,26 @@ class GetSpecialApprovalCest
                     ],
                 ],
             ],
+            'vacationWorkLogs' => [
+                [
+                    'date' => $vacationWorkLog1->getDate()->format(\DateTime::RFC3339),
+                    'id' => $vacationWorkLog1->getId(),
+                    'timeApproved' => null,
+                    'timeRejected' => null,
+                    'workMonth' => [
+                        'id' => $workMonth2->getId(),
+                        'month' => $workMonth2->getMonth(),
+                        'status' => $workMonth2->getStatus(),
+                        'user' => [
+                            'email' => $user2->getEmail(),
+                            'firstName' => $user2->getFirstName(),
+                            'lastName' => $user2->getLastName(),
+                            'id' => $user2->getId(),
+                        ],
+                        'year' => $workMonth2->getYear(),
+                    ],
+                ],
+            ],
         ]);
         $I->dontSeeResponseContainsJson([
             'businessTripWorkLogs' => [
@@ -190,6 +229,11 @@ class GetSpecialApprovalCest
                 ['id' => $timeOffWorkLog2->getId()],
                 ['id' => $timeOffWorkLog3->getId()],
                 ['id' => $timeOffWorkLog4->getId()],
+            ],
+            'vacationWorkLogs' => [
+                ['id' => $vacationWorkLog2->getId()],
+                ['id' => $vacationWorkLog3->getId()],
+                ['id' => $vacationWorkLog4->getId()],
             ],
         ]);
     }
