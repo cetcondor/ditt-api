@@ -26,5 +26,11 @@ App\Entity\User:
                     - user_password_required
             - Length:
                 min: 8
+
+        vacationDays:
+            - NotBlank: ~
+            - Range:
+                min: 0
+
         workHours:
             - Valid: ~

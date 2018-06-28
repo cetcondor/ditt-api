@@ -27,6 +27,9 @@ App\Entity\User:
         roles:
             type: json_array
 
+        vacationDays:
+            type: integer
+
     oneToMany:
         workHours:
             targetEntity: App\Entity\WorkHours

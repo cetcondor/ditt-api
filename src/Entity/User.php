@@ -66,6 +66,11 @@ class User implements UserInterface
     private $supervised;
 
     /**
+     * @var int
+     */
+    private $vacationDays;
+
+    /**
      * @var WorkHours[]|Collection
      */
     private $workHours;
@@ -84,6 +89,7 @@ class User implements UserInterface
         $this->lastName = '';
         $this->roles = [self::ROLE_EMPLOYEE];
         $this->supervised = new ArrayCollection();
+        $this->vacationDays = 0;
         $this->workHours = new ArrayCollection();
         $this->workMonths = new ArrayCollection();
     }
@@ -297,6 +303,25 @@ class User implements UserInterface
     public function setSupervised($supervised): User
     {
         $this->supervised = $supervised;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getVacationDays(): int
+    {
+        return $this->vacationDays;
+    }
+
+    /**
+     * @param int $vacationDays
+     * @return User
+     */
+    public function setVacationDays(int $vacationDays): User
+    {
+        $this->vacationDays = $vacationDays;
 
         return $this;
     }
