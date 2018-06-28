@@ -59,23 +59,4 @@ class HomeOfficeWorkLogRepository
             ->getQuery()
             ->getResult();
     }
-
-    /**
-     * @param HomeOfficeWorkLog $homeOfficeWorkLog
-     */
-    public function markApproved(HomeOfficeWorkLog $homeOfficeWorkLog): void
-    {
-        $homeOfficeWorkLog->markApproved();
-        $this->entityManager->flush();
-    }
-
-    /**
-     * @param HomeOfficeWorkLog $homeOfficeWorkLog
-     * @param string $rejectionMessage
-     */
-    public function markRejected(HomeOfficeWorkLog $homeOfficeWorkLog, string $rejectionMessage): void
-    {
-        $homeOfficeWorkLog->markRejected($rejectionMessage);
-        $this->entityManager->flush();
-    }
 }

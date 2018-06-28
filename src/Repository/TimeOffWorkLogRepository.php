@@ -59,23 +59,4 @@ class TimeOffWorkLogRepository
             ->getQuery()
             ->getResult();
     }
-
-    /**
-     * @param TimeOffWorkLog $timeOffWorkLog
-     */
-    public function markApproved(TimeOffWorkLog $timeOffWorkLog): void
-    {
-        $timeOffWorkLog->markApproved();
-        $this->entityManager->flush();
-    }
-
-    /**
-     * @param TimeOffWorkLog $timeOffWorkLog
-     * @param string $rejectionMessage
-     */
-    public function markRejected(TimeOffWorkLog $timeOffWorkLog, string $rejectionMessage): void
-    {
-        $timeOffWorkLog->markRejected($rejectionMessage);
-        $this->entityManager->flush();
-    }
 }

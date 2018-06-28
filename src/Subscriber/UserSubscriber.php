@@ -6,7 +6,7 @@ use ApiPlatform\Core\EventListener\EventPriorities;
 use App\Entity\User;
 use App\Entity\WorkMonth;
 use App\Repository\WorkHoursRepository;
-use App\Repository\WorkMonthRepository;
+use App\Service\WorkMonthService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -27,23 +27,23 @@ class UserSubscriber implements EventSubscriberInterface
     private $workHoursRepository;
 
     /**
-     * @var WorkMonthRepository
+     * @var WorkMonthService
      */
-    private $workMonthRepository;
+    private $workMonthService;
 
     /**
      * @param EntityManagerInterface $entityManager
      * @param WorkHoursRepository $workHoursRepository
-     * @param WorkMonthRepository $workMonthRepository
+     * @param WorkMonthService $workMonthService
      */
     public function __construct(
         EntityManagerInterface $entityManager,
         WorkHoursRepository $workHoursRepository,
-        WorkMonthRepository $workMonthRepository
+        WorkMonthService $workMonthService
     ) {
         $this->entityManager = $entityManager;
         $this->workHoursRepository = $workHoursRepository;
-        $this->workMonthRepository = $workMonthRepository;
+        $this->workMonthService = $workMonthService;
     }
 
     /**
@@ -86,7 +86,7 @@ class UserSubscriber implements EventSubscriberInterface
             }
         }
 
-        $this->workMonthRepository->createWorkMonths($workMonths);
+        $this->workMonthService->createWorkMonths($workMonths);
     }
 
     /**

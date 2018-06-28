@@ -7,6 +7,7 @@ use App\Entity\User;
 use App\Event\HomeOfficeWorkLogApprovedEvent;
 use App\Event\HomeOfficeWorkLogRejectedEvent;
 use App\Repository\HomeOfficeWorkLogRepository;
+use App\Service\HomeOfficeWorkLogService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -27,6 +28,11 @@ class HomeOfficeWorkLogController extends Controller
     private $homeOfficeWorkLogRepository;
 
     /**
+     * @var HomeOfficeWorkLogService
+     */
+    private $homeOfficeWorkLogService;
+
+    /**
      * @var EventDispatcherInterface
      */
     private $eventDispatcher;
@@ -34,15 +40,18 @@ class HomeOfficeWorkLogController extends Controller
     /**
      * @param NormalizerInterface $normalizer
      * @param HomeOfficeWorkLogRepository $homeOfficeWorkLogRepository
+     * @param HomeOfficeWorkLogService $homeOfficeWorkLogService
      * @param EventDispatcherInterface $eventDispatcher
      */
     public function __construct(
         NormalizerInterface $normalizer,
         HomeOfficeWorkLogRepository $homeOfficeWorkLogRepository,
+        HomeOfficeWorkLogService $homeOfficeWorkLogService,
         EventDispatcherInterface $eventDispatcher
     ) {
         $this->normalizer = $normalizer;
         $this->homeOfficeWorkLogRepository = $homeOfficeWorkLogRepository;
+        $this->homeOfficeWorkLogService = $homeOfficeWorkLogService;
         $this->eventDispatcher = $eventDispatcher;
     }
 
@@ -69,7 +78,7 @@ class HomeOfficeWorkLogController extends Controller
             );
         }
 
-        $this->homeOfficeWorkLogRepository->markApproved($workLog);
+        $this->homeOfficeWorkLogService->markApproved($workLog);
 
         $supervisor = $this->getUser();
         if (!$supervisor) {
@@ -121,7 +130,7 @@ class HomeOfficeWorkLogController extends Controller
             );
         }
 
-        $this->homeOfficeWorkLogRepository->markRejected($workLog, $data->rejectionMessage);
+        $this->homeOfficeWorkLogService->markRejected($workLog, $data->rejectionMessage);
 
         $supervisor = $this->getUser();
         if (!$supervisor) {

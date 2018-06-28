@@ -7,6 +7,7 @@ use App\Entity\User;
 use App\Event\BusinessTripWorkLogApprovedEvent;
 use App\Event\BusinessTripWorkLogRejectedEvent;
 use App\Repository\BusinessTripWorkLogRepository;
+use App\Service\BusinessTripWorkLogService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -27,6 +28,11 @@ class BusinessTripWorkLogController extends Controller
     private $businessTripWorkLogRepository;
 
     /**
+     * @var BusinessTripWorkLogService
+     */
+    private $businessTripWorkLogService;
+
+    /**
      * @var EventDispatcherInterface
      */
     private $eventDispatcher;
@@ -34,15 +40,18 @@ class BusinessTripWorkLogController extends Controller
     /**
      * @param NormalizerInterface $normalizer
      * @param BusinessTripWorkLogRepository $businessTripWorkLogRepository
+     * @param BusinessTripWorkLogService $businessTripWorkLogService
      * @param EventDispatcherInterface $eventDispatcher
      */
     public function __construct(
         NormalizerInterface $normalizer,
         BusinessTripWorkLogRepository $businessTripWorkLogRepository,
+        BusinessTripWorkLogService $businessTripWorkLogService,
         EventDispatcherInterface $eventDispatcher
     ) {
         $this->normalizer = $normalizer;
         $this->businessTripWorkLogRepository = $businessTripWorkLogRepository;
+        $this->businessTripWorkLogService = $businessTripWorkLogService;
         $this->eventDispatcher = $eventDispatcher;
     }
 
@@ -69,7 +78,7 @@ class BusinessTripWorkLogController extends Controller
             );
         }
 
-        $this->businessTripWorkLogRepository->markApproved($workLog);
+        $this->businessTripWorkLogService->markApproved($workLog);
 
         $supervisor = $this->getUser();
         if (!$supervisor) {
@@ -91,6 +100,7 @@ class BusinessTripWorkLogController extends Controller
     }
 
     /**
+     * @param Request $request
      * @param int $id
      * @return Response
      */
@@ -120,7 +130,7 @@ class BusinessTripWorkLogController extends Controller
             );
         }
 
-        $this->businessTripWorkLogRepository->markRejected($workLog, $data->rejectionMessage);
+        $this->businessTripWorkLogService->markRejected($workLog, $data->rejectionMessage);
 
         $supervisor = $this->getUser();
         if (!$supervisor) {

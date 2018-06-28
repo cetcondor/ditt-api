@@ -7,13 +7,13 @@ use App\Entity\User;
 use App\Event\TimeOffWorkLogApprovedEvent;
 use App\Event\TimeOffWorkLogRejectedEvent;
 use App\Repository\TimeOffWorkLogRepository;
+use App\Service\TimeOffWorkLogService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Validator\Constraints\Time;
 
 class TimeOffWorkLogController extends Controller
 {
@@ -28,6 +28,11 @@ class TimeOffWorkLogController extends Controller
     private $timeOffWorkLogRepository;
 
     /**
+     * @var TimeOffWorkLogService
+     */
+    private $timeOffWorkLogService;
+
+    /**
      * @var EventDispatcherInterface
      */
     private $eventDispatcher;
@@ -35,15 +40,18 @@ class TimeOffWorkLogController extends Controller
     /**
      * @param NormalizerInterface $normalizer
      * @param TimeOffWorkLogRepository $timeOffWorkLogRepository
+     * @param TimeOffWorkLogService $timeOffWorkLogService
      * @param EventDispatcherInterface $eventDispatcher
      */
     public function __construct(
         NormalizerInterface $normalizer,
         TimeOffWorkLogRepository $timeOffWorkLogRepository,
+        TimeOffWorkLogService $timeOffWorkLogService,
         EventDispatcherInterface $eventDispatcher
     ) {
         $this->normalizer = $normalizer;
         $this->timeOffWorkLogRepository = $timeOffWorkLogRepository;
+        $this->timeOffWorkLogService = $timeOffWorkLogService;
         $this->eventDispatcher = $eventDispatcher;
     }
 
@@ -70,7 +78,7 @@ class TimeOffWorkLogController extends Controller
             );
         }
 
-        $this->timeOffWorkLogRepository->markApproved($workLog);
+        $this->timeOffWorkLogService->markApproved($workLog);
 
         $supervisor = $this->getUser();
         if (!$supervisor) {
@@ -122,7 +130,7 @@ class TimeOffWorkLogController extends Controller
             );
         }
 
-        $this->timeOffWorkLogRepository->markRejected($workLog, $data->rejectionMessage);
+        $this->timeOffWorkLogService->markRejected($workLog, $data->rejectionMessage);
 
         $supervisor = $this->getUser();
         if (!$supervisor) {

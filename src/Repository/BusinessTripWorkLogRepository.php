@@ -59,23 +59,4 @@ class BusinessTripWorkLogRepository
             ->getQuery()
             ->getResult();
     }
-
-    /**
-     * @param BusinessTripWorkLog $businessTripWorkLog
-     */
-    public function markApproved(BusinessTripWorkLog $businessTripWorkLog): void
-    {
-        $businessTripWorkLog->markApproved();
-        $this->entityManager->flush();
-    }
-
-    /**
-     * @param BusinessTripWorkLog $businessTripWorkLog
-     * @param string $rejectionMessage
-     */
-    public function markRejected(BusinessTripWorkLog $businessTripWorkLog, string $rejectionMessage): void
-    {
-        $businessTripWorkLog->markRejected($rejectionMessage);
-        $this->entityManager->flush();
-    }
 }

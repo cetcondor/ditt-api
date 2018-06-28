@@ -13,6 +13,7 @@ use App\Repository\HomeOfficeWorkLogRepository;
 use App\Repository\TimeOffWorkLogRepository;
 use App\Repository\UserRepository;
 use App\Repository\WorkMonthRepository;
+use App\Service\WorkMonthService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -35,6 +36,11 @@ class WorkMonthController extends Controller
      * @var WorkMonthRepository
      */
     private $workMonthRepository;
+
+    /**
+     * @var WorkMonthService
+     */
+    private $workMonthService;
 
     /**
      * @var BusinessTripWorkLogRepository
@@ -60,6 +66,7 @@ class WorkMonthController extends Controller
      * @param NormalizerInterface $normalizer
      * @param UserRepository $userRepository
      * @param WorkMonthRepository $workMonthRepository
+     * @param WorkMonthService $workMonthService
      * @param BusinessTripWorkLogRepository $businessTripWorkLogRepository
      * @param HomeOfficeWorkLogRepository $homeOfficeWorkLogRepository
      * @param TimeOffWorkLogRepository $timeOffWorkLogRepository
@@ -69,6 +76,7 @@ class WorkMonthController extends Controller
         NormalizerInterface $normalizer,
         UserRepository $userRepository,
         WorkMonthRepository $workMonthRepository,
+        WorkMonthService $workMonthService,
         BusinessTripWorkLogRepository $businessTripWorkLogRepository,
         HomeOfficeWorkLogRepository $homeOfficeWorkLogRepository,
         TimeOffWorkLogRepository $timeOffWorkLogRepository,
@@ -77,6 +85,7 @@ class WorkMonthController extends Controller
         $this->normalizer = $normalizer;
         $this->userRepository = $userRepository;
         $this->workMonthRepository = $workMonthRepository;
+        $this->workMonthService = $workMonthService;
         $this->businessTripWorkLogRepository = $businessTripWorkLogRepository;
         $this->homeOfficeWorkLogRepository = $homeOfficeWorkLogRepository;
         $this->timeOffWorkLogRepository = $timeOffWorkLogRepository;
@@ -150,7 +159,7 @@ class WorkMonthController extends Controller
             );
         }
 
-        $this->workMonthRepository->markWaitingForApproval($workMonth);
+        $this->workMonthService->markWaitingForApproval($workMonth);
 
         return JsonResponse::create(
             $this->normalizer->normalize(
@@ -184,7 +193,7 @@ class WorkMonthController extends Controller
             );
         }
 
-        $this->workMonthRepository->markApproved($workMonth);
+        $this->workMonthService->markApproved($workMonth);
 
         $supervisor = $this->getUser();
         if (!$supervisor) { // This needs to be here for tests to work. In production the condition will never be met.
