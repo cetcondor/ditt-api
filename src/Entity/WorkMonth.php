@@ -43,6 +43,11 @@ class WorkMonth
     private $homeOfficeWorkLogs;
 
     /**
+     * @var SickDayWorkLog[]|Collection
+     */
+    private $sickDayWorkLogs;
+
+    /**
      * @var TimeOffWorkLog[]|Collection
      */
     private $timeOffWorkLogs;
@@ -73,6 +78,7 @@ class WorkMonth
         $this->month = 0;
         $this->businessTripWorkLogs = new ArrayCollection();
         $this->homeOfficeWorkLogs = new ArrayCollection();
+        $this->sickDayWorkLogs = new ArrayCollection();
         $this->timeOffWorkLogs = new ArrayCollection();
         $this->vacationWorkLogs = new ArrayCollection();
         $this->workLogs = new ArrayCollection();
@@ -178,6 +184,29 @@ class WorkMonth
     public function setHomeOfficeWorkLogs($homeOfficeWorkLogs): WorkMonth
     {
         $this->homeOfficeWorkLogs = $homeOfficeWorkLogs;
+
+        return $this;
+    }
+
+    /**
+     * @return SickDayWorkLog[]
+     */
+    public function getSickDayWorkLogs()
+    {
+        if ($this->sickDayWorkLogs instanceof Collection) {
+            return $this->sickDayWorkLogs->toArray();
+        }
+
+        return $this->sickDayWorkLogs;
+    }
+
+    /**
+     * @param SickDayWorkLog[]|Collection $sickDayWorkLogs
+     * @return WorkMonth
+     */
+    public function setSickDayWorkLogs($sickDayWorkLogs): WorkMonth
+    {
+        $this->sickDayWorkLogs = $sickDayWorkLogs;
 
         return $this;
     }

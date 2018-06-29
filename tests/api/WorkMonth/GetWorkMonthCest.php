@@ -93,6 +93,16 @@ class GetWorkMonthCest
             'date' => $endTime1,
             'workMonth' => $workMonth,
         ]);
+        $sickDayWorkLog1 = $I->createSickDayWorkLog([
+            'date' => $startTime1,
+            'variant' => 'WITHOUT_NOTE',
+            'workMonth' => $workMonth,
+        ]);
+        $sickDayWorkLog2 = $I->createSickDayWorkLog([
+            'date' => $endTime1,
+            'variant' => 'SICK_CHILD',
+            'workMonth' => $workMonth,
+        ]);
         $timeOffWorkLog1 = $I->createTimeOffWorkLog([
             'date' => $startTime1,
             'workMonth' => $workMonth,
@@ -122,6 +132,7 @@ class GetWorkMonthCest
 
         $workMonth->setBusinessTripWorkLogs([$businessTripWorkLog1, $businessTripWorkLog2]);
         $workMonth->setHomeOfficeWorkLogs([$homeOfficeWorkLog1, $homeOfficeWorkLog2]);
+        $workMonth->setSickDayWorkLogs([$sickDayWorkLog1, $sickDayWorkLog2]);
         $workMonth->setTimeOffWorkLogs([$timeOffWorkLog1, $timeOffWorkLog2]);
         $workMonth->setVacationWorkLogs([$vacationWorkLog1, $vacationWorkLog2]);
         $workMonth->setWorkLogs([$workLog1, $workLog2]);
@@ -157,6 +168,18 @@ class GetWorkMonthCest
             ],
             'month' => $workMonth->getMonth(),
             'status' => 'OPENED',
+            'sickDayWorkLogs' => [
+                [
+                    'date' => $startTime1->format(\DateTime::RFC3339),
+                    'id' => $sickDayWorkLog1->getId(),
+                    'variant' => $sickDayWorkLog1->getVariant(),
+                ],
+                [
+                    'date' => $endTime1->format(\DateTime::RFC3339),
+                    'id' => $sickDayWorkLog2->getId(),
+                    'variant' => $sickDayWorkLog2->getVariant(),
+                ],
+            ],
             'timeOffWorkLogs' => [
                 [
                     'date' => $startTime1->format(\DateTime::RFC3339),

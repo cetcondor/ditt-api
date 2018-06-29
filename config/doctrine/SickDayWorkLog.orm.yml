@@ -1,0 +1,23 @@
+App\Entity\SickDayWorkLog:
+    type: entity
+
+    id:
+        id:
+            type: integer
+            generator: { strategy: IDENTITY }
+
+    fields:
+        date:
+            type: datetime_immutable
+        variant:
+            type: text
+
+    manyToOne:
+        workMonth:
+            targetEntity: App\Entity\WorkMonth
+            inversedBy: sickDayWorkLogs
+            joinColumn:
+                name: work_month_id
+                referencedColumnName: id
+                nullable: false
+                onDelete: cascade

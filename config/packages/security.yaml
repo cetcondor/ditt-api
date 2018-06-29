@@ -23,6 +23,10 @@ security:
             roles:
                 - !php/const App\Entity\User::ROLE_EMPLOYEE
                 - !php/const App\Entity\User::ROLE_ADMIN
+        -   path: ^/sick_day_work_logs
+            roles:
+                - !php/const App\Entity\User::ROLE_EMPLOYEE
+                - !php/const App\Entity\User::ROLE_ADMIN
         -   path: '^/special_approvals/[0-9]+'
             roles:
                 - !php/const App\Entity\User::ROLE_EMPLOYEE

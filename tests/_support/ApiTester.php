@@ -55,6 +55,23 @@ class ApiTester extends \Codeception\Actor
         ]);
     }
 
+    public function createSickDayWorkLog(array $params = [])
+    {
+        $sickDayWorkLog = $this->populateEntity(new \App\Entity\SickDayWorkLog(), [
+            'workMonth' => function () {
+                return $this->createWorkMonth();
+            },
+            'date' => new DateTimeImmutable(),
+            'variant' => 'WITH_NOTE',
+        ], $params);
+
+        $this->persistEntity($sickDayWorkLog);
+
+        return $this->grabEntityFromRepository(\App\Entity\SickDayWorkLog::class, [
+            'id' => $sickDayWorkLog->getId(),
+        ]);
+    }
+
     public function createTimeOffWorkLog(array $params = [])
     {
         $timeOffWorkLog = $this->populateEntity(new \App\Entity\TimeOffWorkLog(), [

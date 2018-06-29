@@ -1,0 +1,13 @@
+App\Entity\SickDayWorkLog:
+    properties:
+        date:
+            - NotBlank: ~
+            - DateTime: ~
+
+        variant:
+            - NotBlank: ~
+            - Choice:
+                callback: getConstantVariants
+
+        workMonth:
+            - NotBlank: ~
