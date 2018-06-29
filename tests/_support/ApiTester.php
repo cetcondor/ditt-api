@@ -135,6 +135,7 @@ class ApiTester extends \Codeception\Actor
             'isActive' => true,
             'plainPassword' => 'password',
             'supervisor' => null,
+            'vacationDays' => 20,
         ], $params);
 
         $this->persistEntity($user);

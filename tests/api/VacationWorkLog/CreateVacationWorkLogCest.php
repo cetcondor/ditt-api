@@ -23,7 +23,7 @@ class CreateVacationWorkLogCest
     public function _before(\ApiTester $I)
     {
         $prophet = new Prophet();
-        $this->user = $I->createUser();
+        $this->user = $I->createUser(['vacationDays' => 1]);
         $token = $prophet->prophesize(TokenInterface::class);
         $token->getUser()->willReturn($this->user);
         $tokenStorage = $prophet->prophesize(TokenStorageInterface::class);
@@ -57,6 +57,42 @@ class CreateVacationWorkLogCest
         $I->grabEntityFromRepository(VacationWorkLog::class, [
             'date' => $date,
         ]);
+    }
+
+    /**
+     * @param \ApiTester $I
+     * @throws \Exception
+     */
+    public function testCreateWithExhaustedVacationDays(\ApiTester $I): void
+    {
+        $date = new \DateTimeImmutable();
+        $date2 = $date->add(new \DateInterval('P1D'));
+
+        $workMonth = $I->createWorkMonth([
+            'month' => $date->format('m'),
+            'user' => $this->user,
+            'year' => $date->format('Y'),
+        ]);
+        $I->createVacationWorkLog([
+            'date' => $date,
+            'workMonth' => $workMonth,
+        ]);
+
+        $I->haveHttpHeader('Content-Type', 'application/json');
+        $I->sendPOST('/vacation_work_logs.json', [
+            'date' => $date2->format(\DateTime::RFC3339),
+        ]);
+
+        $I->seeHttpHeader('Content-Type', 'application/problem+json; charset=utf-8');
+        $I->seeResponseCodeIs(Response::HTTP_BAD_REQUEST);
+        $I->seeResponseContainsJson([
+            'detail' => 'Vacation days for given year have been already exhausted.',
+        ]);
+        $I->expectException(NoResultException::class, function () use ($I, $date2) {
+            $I->grabEntityFromRepository(VacationWorkLog::class, [
+                'date' => $date2,
+            ]);
+        });
     }
 
     /**

@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Entity\VacationWorkLog;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 
 class VacationWorkLogRepository
 {
@@ -58,5 +59,29 @@ class VacationWorkLogRepository
             ->setParameter('supervisor', $supervisor)
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * @param User $user
+     * @param int $year
+     * @return int
+     */
+    public function getRemainingVacationDays(User $user, int $year): int
+    {
+        try {
+            $vacationWorkLogsCount = (int) $this->repository->createQueryBuilder('vwl')
+                ->select('COUNT(vwl.id)')
+                ->leftJoin('vwl.workMonth', 'wm')
+                ->where('wm.user = :user')
+                ->andWhere('wm.year = :year')
+                ->setParameter('user', $user)
+                ->setParameter('year', $year)
+                ->getQuery()
+                ->getSingleScalarResult();
+
+            return $user->getVacationDays() - $vacationWorkLogsCount;
+        } catch (NonUniqueResultException $e) {
+            return 0;
+        }
     }
 }

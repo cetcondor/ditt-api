@@ -1,4 +1,7 @@
 App\Entity\VacationWorkLog:
+    constraints:
+        - App\Validator\Constraints\VacationDaysNotExhausted: ~
+
     properties:
         date:
             - NotBlank: ~
