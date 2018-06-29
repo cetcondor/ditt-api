@@ -64,24 +64,21 @@ class VacationWorkLogRepository
     /**
      * @param User $user
      * @param int $year
+     * @throws NonUniqueResultException
      * @return int
      */
     public function getRemainingVacationDays(User $user, int $year): int
     {
-        try {
-            $vacationWorkLogsCount = (int) $this->repository->createQueryBuilder('vwl')
-                ->select('COUNT(vwl.id)')
-                ->leftJoin('vwl.workMonth', 'wm')
-                ->where('wm.user = :user')
-                ->andWhere('wm.year = :year')
-                ->setParameter('user', $user)
-                ->setParameter('year', $year)
-                ->getQuery()
-                ->getSingleScalarResult();
+        $vacationWorkLogsCount = (int) $this->repository->createQueryBuilder('vwl')
+            ->select('COUNT(vwl.id)')
+            ->leftJoin('vwl.workMonth', 'wm')
+            ->where('wm.user = :user')
+            ->andWhere('wm.year = :year')
+            ->setParameter('user', $user)
+            ->setParameter('year', $year)
+            ->getQuery()
+            ->getSingleScalarResult();
 
-            return $user->getVacationDays() - $vacationWorkLogsCount;
-        } catch (NonUniqueResultException $e) {
-            return 0;
-        }
+        return $user->getVacationDays() - $vacationWorkLogsCount;
     }
 }

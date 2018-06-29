@@ -15,11 +15,11 @@ security:
 
     access_control:
         - { path: ^/$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        -   path: '^/business_trip_work_logs/[0-9]+/mark_(approved|rejected)$'
+        -   path: ^/business_trip_work_logs
             roles:
                 - !php/const App\Entity\User::ROLE_EMPLOYEE
                 - !php/const App\Entity\User::ROLE_ADMIN
-        -   path: '^/home_office_work_logs/[0-9]+/mark_(approved|rejected)$'
+        -   path: ^/home_office_work_logs
             roles:
                 - !php/const App\Entity\User::ROLE_EMPLOYEE
                 - !php/const App\Entity\User::ROLE_ADMIN
@@ -27,7 +27,7 @@ security:
             roles:
                 - !php/const App\Entity\User::ROLE_EMPLOYEE
                 - !php/const App\Entity\User::ROLE_SUPER_ADMIN
-        -   path: '^/time_off_work_logs/[0-9]+/mark_(approved|rejected)$'
+        -   path: ^/time_off_work_logs
             roles:
                 - !php/const App\Entity\User::ROLE_EMPLOYEE
                 - !php/const App\Entity\User::ROLE_ADMIN
@@ -35,11 +35,16 @@ security:
             roles:
                 - !php/const App\Entity\User::ROLE_EMPLOYEE
                 - !php/const App\Entity\User::ROLE_ADMIN
-        -   path: '^/vacation_work_logs/[0-9]+/mark_(approved|rejected)$'
+        -   path: ^/vacation_work_logs
             roles:
                 - !php/const App\Entity\User::ROLE_EMPLOYEE
                 - !php/const App\Entity\User::ROLE_ADMIN
         -   path: '^/users/[0-9]+/work_hours$'
+            roles:
+                - !php/const App\Entity\User::ROLE_EMPLOYEE
+                - !php/const App\Entity\User::ROLE_ADMIN
+        -   path: '^/users/[0-9]+$'
+            methods: [GET]
             roles:
                 - !php/const App\Entity\User::ROLE_EMPLOYEE
                 - !php/const App\Entity\User::ROLE_ADMIN
