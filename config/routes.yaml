@@ -10,6 +10,20 @@ api_logout:
     path: /logout
     methods: [POST]
 
+api_reset_password:
+    path: /reset-password
+    methods: [PUT]
+    controller: App\Controller\UserController:resetPassword
+    defaults:
+        _api_collection_operation_name: 'resetPassword'
+
+api_new_password:
+    path: /new-password
+    methods: [PUT]
+    controller: App\Controller\UserController:newPassword
+    defaults:
+        _api_collection_operation_name: 'newPassword'
+
 api_business_trip_work_log_mark_approved:
     path: /business_trip_work_logs/{id}/mark_approved
     methods: [PUT]

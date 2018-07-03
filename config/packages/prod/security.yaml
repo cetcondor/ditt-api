@@ -14,7 +14,9 @@ security:
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
             user_checker: App\Security\User\UserChecker
-
+        forgot_password:
+            pattern:  ^/(reset-password|new-password)
+            security: false
         api:
             logout:
                 path:   /logout

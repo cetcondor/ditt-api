@@ -90,3 +90,40 @@ App\Entity\User:
                     400:
                         description: 'Invalid request.'
                 parameters: ~
+        newPassword:
+            method: 'PUT'
+            route_name: 'api_new_password'
+            swagger_context:
+                summary: 'Sets new password'
+                responses:
+                    200:
+                        description: 'New password was set.'
+                    400:
+                        description: 'Invalid request.'
+                parameters:
+                    - name: resetPasswordToken
+                      description: 'Reset password token'
+                      type: string
+                      in: body
+                      required: true
+                    - name: newPlainPassword
+                      description: 'New plain password'
+                      type: string
+                      in: body
+                      required: true
+        resetPassword:
+            method: 'PUT'
+            route_name: 'api_reset_password'
+            swagger_context:
+                summary: 'Resets password'
+                responses:
+                    200:
+                        description: 'Password was reset and e-mail with reset link was sent.'
+                    400:
+                        description: 'Invalid request.'
+                parameters:
+                    - name: email
+                      description: 'Email'
+                      type: string
+                      in: body
+                      required: true

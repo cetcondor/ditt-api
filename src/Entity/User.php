@@ -56,6 +56,11 @@ class User implements UserInterface
     private $roles;
 
     /**
+     * @var string|null
+     */
+    private $resetPasswordToken;
+
+    /**
      * @var User|null
      */
     private $supervisor;
@@ -261,6 +266,25 @@ class User implements UserInterface
             }
         }
         unset($this->roles[$keyToRemove]);
+
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getResetPasswordToken(): ?string
+    {
+        return $this->resetPasswordToken;
+    }
+
+    /**
+     * @param null|string $resetPasswordToken
+     * @return User
+     */
+    public function setResetPasswordToken(?string $resetPasswordToken): User
+    {
+        $this->resetPasswordToken = $resetPasswordToken;
 
         return $this;
     }

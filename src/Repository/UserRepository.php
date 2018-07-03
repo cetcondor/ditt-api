@@ -51,6 +51,18 @@ class UserRepository
     }
 
     /**
+     * @param string $resetPasswordToken
+     * @return User|null
+     */
+    public function getByResetPasswordToken(string $resetPasswordToken): ?User
+    {
+        /** @var User|null $user */
+        $user = $this->repository->findOneBy(['resetPasswordToken' => $resetPasswordToken]);
+
+        return $user;
+    }
+
+    /**
      * @return User[]
      */
     public function getAllAdmins(): array

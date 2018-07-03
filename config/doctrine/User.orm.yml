@@ -30,6 +30,10 @@ App\Entity\User:
         vacationDays:
             type: integer
 
+        resetPasswordToken:
+            type: text
+            nullable: true
+
     oneToMany:
         workHours:
             targetEntity: App\Entity\WorkHours

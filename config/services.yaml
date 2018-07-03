@@ -83,6 +83,16 @@ services:
                 event: lexik_jwt_authentication.on_jwt_created
                 method: onJWTCreated
 
+    App\Listener\UserPasswordResetEmailNotificationListener:
+        class: App\Listener\UserPasswordResetEmailNotificationListener
+        arguments:
+            $mailSenderAddress: '%env(NOTIFICATION_EMAIL_SENDER)%'
+            $clientNewPasswordUrl: '%env(CLIENT_NEW_PASSWORD_URL)%'
+        tags:
+            - name: kernel.event_listener
+              event: !php/const App\Event\UserPasswordResetEvent::RESET
+              method: onReset
+
     App\Listener\WorkLogEmailNotificationListener:
         class: App\Listener\WorkLogEmailNotificationListener
         arguments:

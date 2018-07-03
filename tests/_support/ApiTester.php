@@ -153,6 +153,7 @@ class ApiTester extends \Codeception\Actor
             'plainPassword' => 'password',
             'supervisor' => null,
             'vacationDays' => 20,
+            'resetPasswordToken' => null,
         ], $params);
 
         $this->persistEntity($user);
