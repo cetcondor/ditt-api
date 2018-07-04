@@ -145,7 +145,7 @@ class WorkMonth
     /**
      * @return BusinessTripWorkLog[]
      */
-    public function getBusinessTripWorkLogs()
+    public function getBusinessTripWorkLogs(): array
     {
         if ($this->businessTripWorkLogs instanceof Collection) {
             return $this->businessTripWorkLogs->toArray();
@@ -168,7 +168,7 @@ class WorkMonth
     /**
      * @return HomeOfficeWorkLog[]
      */
-    public function getHomeOfficeWorkLogs()
+    public function getHomeOfficeWorkLogs(): array
     {
         if ($this->homeOfficeWorkLogs instanceof Collection) {
             return $this->homeOfficeWorkLogs->toArray();
@@ -191,7 +191,7 @@ class WorkMonth
     /**
      * @return SickDayWorkLog[]
      */
-    public function getSickDayWorkLogs()
+    public function getSickDayWorkLogs(): array
     {
         if ($this->sickDayWorkLogs instanceof Collection) {
             return $this->sickDayWorkLogs->toArray();
@@ -214,7 +214,7 @@ class WorkMonth
     /**
      * @return TimeOffWorkLog[]
      */
-    public function getTimeOffWorkLogs()
+    public function getTimeOffWorkLogs(): array
     {
         if ($this->timeOffWorkLogs instanceof Collection) {
             return $this->timeOffWorkLogs->toArray();
@@ -237,7 +237,7 @@ class WorkMonth
     /**
      * @return VacationWorkLog[]
      */
-    public function getVacationWorkLogs()
+    public function getVacationWorkLogs(): array
     {
         if ($this->vacationWorkLogs instanceof Collection) {
             return $this->vacationWorkLogs->toArray();
@@ -260,7 +260,7 @@ class WorkMonth
     /**
      * @return WorkLog[]
      */
-    public function getWorkLogs()
+    public function getWorkLogs(): array
     {
         if ($this->workLogs instanceof Collection) {
             return $this->workLogs->toArray();
