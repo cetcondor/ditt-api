@@ -75,10 +75,6 @@ class ResourceVoter extends Voter
             return false;
         }
 
-        if ($this->decisionManager->decide($token, [User::ROLE_SUPER_ADMIN])) {
-            return true;
-        }
-
         if ($attribute === self::VIEW) {
             return $this->canView($subject, $user, $token);
         } elseif ($attribute === self::EDIT) {
@@ -109,11 +105,11 @@ class ResourceVoter extends Voter
         }
 
         if ($subject instanceof WorkLogInterface) {
-            return $this->canViewWorkLog($subject, $user);
+            return $this->canViewWorkLog($subject, $user, $token);
         }
 
         if ($subject instanceof WorkMonth) {
-            return $this->canViewWorkMonth($subject, $user);
+            return $this->canViewWorkMonth($subject, $user, $token);
         }
 
         return false;
@@ -150,29 +146,31 @@ class ResourceVoter extends Voter
     /**
      * @param WorkLogInterface $workLog
      * @param User $user
+     * @param TokenInterface $token
      * @return bool
      */
-    private function canViewWorkLog(WorkLogInterface $workLog, User $user): bool
+    private function canViewWorkLog(WorkLogInterface $workLog, User $user, TokenInterface $token): bool
     {
         return $workLog->getWorkMonth()->getUser() === $user
             || (
                 $workLog->getWorkMonth()->getUser()->getSupervisor()
                 && $workLog->getWorkMonth()->getUser()->getSupervisor() === $user
-            );
+            ) || $this->decisionManager->decide($token, [User::ROLE_SUPER_ADMIN]);
     }
 
     /**
      * @param WorkMonth $workMonth
      * @param User $user
+     * @param TokenInterface $token
      * @return bool
      */
-    private function canViewWorkMonth(WorkMonth $workMonth, User $user): bool
+    private function canViewWorkMonth(WorkMonth $workMonth, User $user, TokenInterface $token): bool
     {
         return $workMonth->getUser() === $user
             || (
                 $workMonth->getUser()->getSupervisor()
                 && $workMonth->getUser()->getSupervisor() === $user
-            );
+            ) || $this->decisionManager->decide($token, [User::ROLE_SUPER_ADMIN]);
     }
 
     /**
@@ -196,7 +194,7 @@ class ResourceVoter extends Voter
         }
 
         if ($subject instanceof WorkMonth) {
-            return $this->canEditWorkMonth($subject, $user);
+            return $this->canEditWorkMonth($subject, $user, $token);
         }
 
         return false;
@@ -245,16 +243,17 @@ class ResourceVoter extends Voter
     /**
      * @param WorkMonth $workMonth
      * @param User $user
+     * @param TokenInterface $token
      * @return bool
      */
-    private function canEditWorkMonth(WorkMonth $workMonth, User $user): bool
+    private function canEditWorkMonth(WorkMonth $workMonth, User $user, TokenInterface $token): bool
     {
         try {
             return $workMonth->getUser() === $user
                 || (
                     $workMonth->getUser()->getSupervisor()
                     && $workMonth->getUser()->getSupervisor() === $user
-                );
+                ) || $this->decisionManager->decide($token, [User::ROLE_SUPER_ADMIN]);
         } catch (\TypeError $e) {
             return true;
         }

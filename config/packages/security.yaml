@@ -52,15 +52,17 @@ security:
             roles:
                 - !php/const App\Entity\User::ROLE_EMPLOYEE
                 - !php/const App\Entity\User::ROLE_ADMIN
-        - { path: '^/users/[0-9]+/work_months$', roles: !php/const App\Entity\User::ROLE_EMPLOYEE }
-        - { path: ^/users, roles: !php/const App\Entity\User::ROLE_ADMIN }
-        - { path: ^/work_hours, roles: !php/const App\Entity\User::ROLE_EMPLOYEE }
-        - { path: ^/work_logs, roles: !php/const App\Entity\User::ROLE_EMPLOYEE }
-        -   path: '^/work_months/[0-9]+/mark_(approved|waiting_for_approval)$'
+        -   path: '^/users/[0-9]+/work_months$'
             roles:
                 - !php/const App\Entity\User::ROLE_EMPLOYEE
                 - !php/const App\Entity\User::ROLE_ADMIN
-        - { path: ^/work_months, roles: !php/const App\Entity\User::ROLE_EMPLOYEE }
+        - { path: ^/users, roles: !php/const App\Entity\User::ROLE_ADMIN }
+        - { path: ^/work_hours, roles: !php/const App\Entity\User::ROLE_EMPLOYEE }
+        - { path: ^/work_logs, roles: !php/const App\Entity\User::ROLE_EMPLOYEE }
+        -   path: ^/work_months
+            roles:
+                - !php/const App\Entity\User::ROLE_EMPLOYEE
+                - !php/const App\Entity\User::ROLE_ADMIN
         -   path: ^/logout,
             roles:
                 - !php/const App\Entity\User::ROLE_EMPLOYEE
