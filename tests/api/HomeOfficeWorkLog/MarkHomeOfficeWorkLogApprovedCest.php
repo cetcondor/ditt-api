@@ -16,7 +16,7 @@ class MarkHomeOfficeWorkLogApprovedCest
     public function _before(\ApiTester $I)
     {
         $prophet = new Prophet();
-        $user = $I->createUser();
+        $user = $I->createUser(['email' => 'user1@example.com', 'employeeId' => 'id123']);
         $token = $prophet->prophesize(TokenInterface::class);
         $token->getUser()->willReturn($user);
         $tokenStorage = $prophet->prophesize(TokenStorageInterface::class);
@@ -30,7 +30,7 @@ class MarkHomeOfficeWorkLogApprovedCest
      */
     public function testMarkApproved(\ApiTester $I): void
     {
-        $user = $I->createUser(['email' => 'user1@example.com']);
+        $user = $I->createUser();
         $workMonth = $I->createWorkMonth(['user' => $user]);
         $workLog = $I->createHomeOfficeWorkLog([
             'workMonth' => $workMonth,
@@ -60,7 +60,7 @@ class MarkHomeOfficeWorkLogApprovedCest
     public function testAlreadyMarkedApproved(\ApiTester $I): void
     {
         $time = (new \DateTimeImmutable());
-        $user = $I->createUser(['email' => 'user1@example.com']);
+        $user = $I->createUser();
         $workMonth = $I->createWorkMonth(['user' => $user]);
         $workLog = $I->createHomeOfficeWorkLog([
             'timeApproved' => $time,
@@ -89,7 +89,7 @@ class MarkHomeOfficeWorkLogApprovedCest
     public function testAlreadyMarkedRejected(\ApiTester $I): void
     {
         $time = (new \DateTimeImmutable());
-        $user = $I->createUser(['email' => 'user1@example.com']);
+        $user = $I->createUser();
         $workMonth = $I->createWorkMonth(['user' => $user]);
         $workLog = $I->createHomeOfficeWorkLog([
             'timeRejected' => $time,

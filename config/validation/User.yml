@@ -8,6 +8,12 @@ App\Entity\User:
             - Email:
                 strict: true
 
+        employeeId:
+            - NotBlank: ~
+            - Length:
+                min: 1
+                max: 200
+
         firstName:
             - NotBlank: ~
             - Length:

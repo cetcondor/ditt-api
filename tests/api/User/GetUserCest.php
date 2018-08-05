@@ -28,6 +28,7 @@ class GetUserCest
             'firstName' => 'Petr',
             'lastName' => 'Pavel',
             'email' => 'test2@visionapps.cz',
+            'employeeId' => 'id456',
         ]);
         $I->haveHttpHeader('Content-Type', 'application/json');
 

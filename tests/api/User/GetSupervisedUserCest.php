@@ -12,17 +12,20 @@ class GetSupervisedUserCest
             'firstName' => 'Jan',
             'lastName' => 'Svoboda',
             'email' => 'test1@visionapps.cz',
+            'employeeId' => 'id123',
         ]);
         $user2 = $I->createUser([
             'firstName' => 'Petr',
             'lastName' => 'Pavel',
             'email' => 'test2@visionapps.cz',
+            'employeeId' => 'id456',
             'supervisor' => $user,
         ]);
         $user3 = $I->createUser([
             'firstName' => 'Marek',
             'lastName' => 'Lámal',
             'email' => 'test3@visionapps.cz',
+            'employeeId' => 'id789',
             'supervisor' => $user,
         ]);
         $I->haveHttpHeader('Content-Type', 'application/json');
@@ -35,10 +38,12 @@ class GetSupervisedUserCest
             [
                 'email' => $user2->getEmail(),
                 'firstName' => $user2->getFirstName(),
+                'employeeId' => $user2->getEmployeeId(),
                 'lastName' => $user2->getLastName(),
             ],
             [
                 'email' => $user3->getEmail(),
+                'employeeId' => $user3->getEmployeeId(),
                 'firstName' => $user3->getFirstName(),
                 'lastName' => $user3->getLastName(),
             ],
@@ -46,6 +51,7 @@ class GetSupervisedUserCest
         $I->cantSeeResponseContainsJson([
             [
                 'email' => $user->getEmail(),
+                'employeeId' => $user->getEmployeeId(),
                 'firstName' => $user->getFirstName(),
                 'lastName' => $user->getLastName(),
             ],
@@ -58,17 +64,20 @@ class GetSupervisedUserCest
             'firstName' => 'Jan',
             'lastName' => 'Svoboda',
             'email' => 'test1@visionapps.cz',
+            'employeeId' => 'id123',
         ]);
         $user2 = $I->createUser([
             'firstName' => 'Petr',
             'lastName' => 'Pavel',
             'email' => 'test2@visionapps.cz',
+            'employeeId' => 'id456',
             'supervisor' => $user,
         ]);
         $user3 = $I->createUser([
             'firstName' => 'Marek',
             'lastName' => 'Lámal',
             'email' => 'test3@visionapps.cz',
+            'employeeId' => 'id789',
             'supervisor' => $user,
             'isActive' => false,
         ]);
@@ -81,6 +90,7 @@ class GetSupervisedUserCest
         $I->seeResponseContainsJson([
             [
                 'email' => $user2->getEmail(),
+                'employeeId' => $user2->getEmployeeId(),
                 'firstName' => $user2->getFirstName(),
                 'lastName' => $user2->getLastName(),
             ],
@@ -88,11 +98,13 @@ class GetSupervisedUserCest
         $I->cantSeeResponseContainsJson([
             [
                 'email' => $user->getEmail(),
+                'employeeId' => $user->getEmployeeId(),
                 'firstName' => $user->getFirstName(),
                 'lastName' => $user->getLastName(),
             ],
             [
                 'email' => $user3->getEmail(),
+                'employeeId' => $user3->getEmployeeId(),
                 'firstName' => $user3->getFirstName(),
                 'lastName' => $user3->getLastName(),
             ],

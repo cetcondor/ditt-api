@@ -15,6 +15,12 @@ App\Entity\User:
                 - special_approvals_out_list
                 - supervised_user_out_list
                 - user_in
+        employeeId:
+            groups:
+                - user_out_detail
+                - special_approvals_out_list
+                - supervised_user_out_list
+                - user_in
         firstName:
             groups:
                 - user_out_list

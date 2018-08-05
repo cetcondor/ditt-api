@@ -28,6 +28,11 @@ class User implements UserInterface
     /**
      * @var string
      */
+    private $employeeId;
+
+    /**
+     * @var string
+     */
     private $firstName;
 
     /**
@@ -90,6 +95,7 @@ class User implements UserInterface
         $this->password = '';
         $this->plainPassword = null;
         $this->email = '';
+        $this->employeeId = '';
         $this->firstName = '';
         $this->lastName = '';
         $this->roles = [self::ROLE_EMPLOYEE];
@@ -122,6 +128,25 @@ class User implements UserInterface
     public function setEmail(string $email): User
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEmployeeId(): string
+    {
+        return $this->employeeId;
+    }
+
+    /**
+     * @param string $employeeId
+     * @return User
+     */
+    public function setEmployeeId(string $employeeId): User
+    {
+        $this->employeeId = $employeeId;
 
         return $this;
     }

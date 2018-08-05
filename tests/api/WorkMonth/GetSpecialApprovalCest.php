@@ -24,9 +24,11 @@ class GetSpecialApprovalCest
     {
         $user1 = $I->createUser([
             'email' => 'user1@example.com',
+            'employeeId' => 'id123',
         ]);
         $user2 = $I->createUser([
             'email' => 'user2@example.com',
+            'employeeId' => 'id456',
             'supervisor' => $user1,
         ]);
 
@@ -41,9 +43,10 @@ class GetSpecialApprovalCest
 
     public function testGetAll(\ApiTester $I)
     {
-        $user1 = $I->createUser(['email' => 'user2@example.com']);
+        $user1 = $I->createUser(['email' => 'user2@example.com', 'employeeId' => 'id123']);
         $user2 = $I->createUser([
             'email' => 'user1@example.com',
+            'employeeId' => 'id456',
             'supervisor' => $user1,
         ]);
 

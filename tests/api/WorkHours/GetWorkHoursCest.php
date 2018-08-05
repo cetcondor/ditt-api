@@ -37,6 +37,7 @@ class GetWorkHoursCest
             'firstName' => 'Jan',
             'lastName' => 'Svoboda',
             'email' => 'test1@visionapps.cz',
+            'employeeId' => 'id123',
         ]);
         $I->haveHttpHeader('Content-Type', 'application/json');
 

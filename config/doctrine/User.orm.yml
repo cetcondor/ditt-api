@@ -12,6 +12,10 @@ App\Entity\User:
             type: text
             unique: true
 
+        employeeId:
+            type: text
+            unique: true
+
         firstName:
             type: text
 

@@ -147,6 +147,7 @@ class ApiTester extends \Codeception\Actor
     {
         $user = $this->populateEntity(new \App\Entity\User(), [
             'email' => 'user@example.com',
+            'employeeId' => 'some_id_123',
             'firstName' => 'Jan',
             'lastName' => 'Novák',
             'isActive' => true,

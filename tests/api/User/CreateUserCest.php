@@ -28,6 +28,7 @@ class CreateUserCest
         $I->haveHttpHeader('Content-Type', 'application/json');
         $I->sendPOST('/users.json', [
             'email' => 'test@visionapps.cz',
+            'employeeId' => '123',
             'firstName' => 'First',
             'isActive' => true,
             'lastName' => 'lastName',
@@ -39,6 +40,7 @@ class CreateUserCest
         $I->seeResponseCodeIs(Response::HTTP_CREATED);
         $I->seeResponseContainsJson([
             'email' => 'test@visionapps.cz',
+            'employeeId' => '123',
             'firstName' => 'First',
             'isActive' => true,
             'lastName' => 'lastName',
@@ -80,6 +82,7 @@ class CreateUserCest
         $I->haveHttpHeader('Content-Type', 'application/json');
         $I->sendPOST('/users.json', [
             'email' => 'test@visionapps.cz',
+            'employeeId' => '123',
             'firstName' => 'First',
             'isActive' => true,
             'lastName' => 'lastName',
