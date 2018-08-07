@@ -24,6 +24,16 @@ class SickDayWorkLog implements WorkLogInterface
     private $date;
 
     /**
+     * @var string|null
+     */
+    private $childName;
+
+    /**
+     * @var \DateTimeImmutable|null
+     */
+    private $childDateOfBirth;
+
+    /**
      * @var string
      */
     private $variant;
@@ -73,6 +83,44 @@ class SickDayWorkLog implements WorkLogInterface
     public function setDate(\DateTimeImmutable $date): SickDayWorkLog
     {
         $this->date = $date;
+
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getChildName(): ?string
+    {
+        return $this->childName;
+    }
+
+    /**
+     * @param null|string $childName
+     * @return SickDayWorkLog
+     */
+    public function setChildName(?string $childName): SickDayWorkLog
+    {
+        $this->childName = $childName;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTimeImmutable|null
+     */
+    public function getChildDateOfBirth(): ?\DateTimeImmutable
+    {
+        return $this->childDateOfBirth;
+    }
+
+    /**
+     * @param \DateTimeImmutable|null $childDateOfBirth
+     * @return SickDayWorkLog
+     */
+    public function setChildDateOfBirth(?\DateTimeImmutable $childDateOfBirth): SickDayWorkLog
+    {
+        $this->childDateOfBirth = $childDateOfBirth;
 
         return $this;
     }

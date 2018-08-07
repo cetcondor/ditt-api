@@ -9,6 +9,12 @@ App\Entity\SickDayWorkLog:
     fields:
         date:
             type: datetime_immutable
+        childName:
+            type: text
+            nullable: true
+        childDateOfBirth:
+            type: datetime_immutable
+            nullable: true
         variant:
             type: text
 

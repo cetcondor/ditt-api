@@ -11,6 +11,18 @@ App\Entity\SickDayWorkLog:
                 - special_approvals_out_list
                 - work_month_out_detail
                 - sick_day_work_log_in
+        childName:
+            groups:
+                - sick_day_work_log_out_detail
+                - special_approvals_out_list
+                - work_month_out_detail
+                - sick_day_work_log_in
+        childDateOfBirth:
+            groups:
+                - sick_day_work_log_out_detail
+                - special_approvals_out_list
+                - work_month_out_detail
+                - sick_day_work_log_in
         variant:
             groups:
                 - sick_day_work_log_out_detail

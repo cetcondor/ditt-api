@@ -62,6 +62,8 @@ class ApiTester extends \Codeception\Actor
                 return $this->createWorkMonth();
             },
             'date' => new DateTimeImmutable(),
+            'childName' => 'Jan Novak',
+            'childDateOfBirth' => new DateTimeImmutable(),
             'variant' => 'WITH_NOTE',
         ], $params);
 

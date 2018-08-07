@@ -66,6 +66,43 @@ class CreateSickDayWorkLogCest
      * @param \ApiTester $I
      * @throws \Exception
      */
+    public function testCreateWithValidSickChildData(\ApiTester $I): void
+    {
+        $date = new \DateTimeImmutable();
+        $I->createWorkMonth([
+            'month' => $date->format('m'),
+            'user' => $this->user,
+            'year' => $date->format('Y'),
+        ]);
+
+        $I->haveHttpHeader('Content-Type', 'application/json');
+        $I->sendPOST('/sick_day_work_logs.json', [
+            'childName' => 'Jan Novak',
+            'childDateOfBirth' => $date->format(\DateTime::RFC3339),
+            'date' => $date->format(\DateTime::RFC3339),
+            'variant' => 'SICK_CHILD',
+        ]);
+
+        $I->seeHttpHeader('Content-Type', 'application/json; charset=utf-8');
+        $I->seeResponseCodeIs(Response::HTTP_CREATED);
+        $I->seeResponseContainsJson([
+            'childName' => 'Jan Novak',
+            'childDateOfBirth' => $date->format(\DateTime::RFC3339),
+            'date' => $date->format(\DateTime::RFC3339),
+            'variant' => 'SICK_CHILD',
+        ]);
+        $I->grabEntityFromRepository(SickDayWorkLog::class, [
+            'childName' => 'Jan Novak',
+            'childDateOfBirth' => $date->format(\DateTime::RFC3339),
+            'date' => $date,
+            'variant' => 'SICK_CHILD',
+        ]);
+    }
+
+    /**
+     * @param \ApiTester $I
+     * @throws \Exception
+     */
     public function testCreateWithClosedMonth(\ApiTester $I): void
     {
         $date = new \DateTimeImmutable();
@@ -110,6 +147,8 @@ class CreateSickDayWorkLogCest
 
         $I->haveHttpHeader('Content-Type', 'application/json');
         $I->sendPOST('/sick_day_work_logs.json', [
+            'childName' => '',
+            'childDateOfBirth' => null,
             'date' => null,
             'variant' => '',
         ]);
@@ -125,6 +164,41 @@ class CreateSickDayWorkLogCest
             $I->grabEntityFromRepository(SickDayWorkLog::class, [
                 'date' => $date,
                 'variant' => '',
+            ]);
+        });
+    }
+
+    /**
+     * @param \ApiTester $I
+     * @throws \Exception
+     */
+    public function testCreateWithInvalidSickDayData(\ApiTester $I): void
+    {
+        $date = new \DateTimeImmutable();
+        $I->createWorkMonth([
+            'month' => $date->format('m'),
+            'user' => $this->user,
+            'year' => $date->format('Y'),
+        ]);
+
+        $I->haveHttpHeader('Content-Type', 'application/json');
+        $I->sendPOST('/sick_day_work_logs.json', [
+            'childName' => '',
+            'childDateOfBirth' => null,
+            'date' => (new \DateTime())->format(\DateTime::RFC3339),
+            'variant' => 'SICK_CHILD',
+        ]);
+
+        $I->seeHttpHeader('Content-Type', 'application/problem+json; charset=utf-8');
+        $I->seeResponseCodeIs(Response::HTTP_BAD_REQUEST);
+        $I->seeResponseContainsJson([
+            'detail' => 'Sick day work log required child`s name and date of birth if sick child is selected.',
+        ]);
+
+        $I->expectException(NoResultException::class, function () use ($I, $date) {
+            $I->grabEntityFromRepository(SickDayWorkLog::class, [
+                'date' => $date,
+                'variant' => 'SICK_CHILD',
             ]);
         });
     }

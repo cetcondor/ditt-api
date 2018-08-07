@@ -1,7 +1,13 @@
 App\Entity\SickDayWorkLog:
+    constraints:
+        - App\Validator\Constraints\SickDayWorkLogValid: ~
+
     properties:
         date:
             - NotBlank: ~
+            - DateTime: ~
+
+        childDateOfBirth:
             - DateTime: ~
 
         variant:
