@@ -90,6 +90,11 @@ class User implements UserInterface
      */
     private $workMonths;
 
+    /**
+     * @var UserYearStats[]|Collection
+     */
+    private $yearStats;
+
     public function __construct()
     {
         $this->password = '';
@@ -103,6 +108,7 @@ class User implements UserInterface
         $this->vacationDays = 0;
         $this->workHours = new ArrayCollection();
         $this->workMonths = new ArrayCollection();
+        $this->yearStats = new ArrayCollection();
     }
 
     /**
@@ -460,5 +466,24 @@ class User implements UserInterface
     public function eraseCredentials()
     {
         $this->plainPassword = null;
+    }
+
+    /**
+     * @return UserYearStats[]|Collection
+     */
+    public function getYearStats()
+    {
+        return $this->yearStats;
+    }
+
+    /**
+     * @param UserYearStats[]|Collection $yearStats
+     * @return User
+     */
+    public function setYearStats($yearStats)
+    {
+        $this->yearStats = $yearStats;
+
+        return $this;
     }
 }

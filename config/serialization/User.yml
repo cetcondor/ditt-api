@@ -64,7 +64,12 @@ App\Entity\User:
         workHours:
             groups:
                 - user_out_list
+                - user_out_detail
+                - supervised_user_out_list
                 - user_in
         workMonths:
             groups:
                 - supervised_user_out_list
+        yearStats:
+            groups:
+                - user_out_list

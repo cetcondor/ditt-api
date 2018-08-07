@@ -17,6 +17,7 @@ App\Entity\User:
             normalization_context:
                 groups:
                     - supervised_user_out_list
+                    - work_hours_out_list
         get:
             method: 'GET'
             filters:
@@ -30,24 +31,24 @@ App\Entity\User:
             normalization_context:
                 groups:
                     - user_out_detail
+                    - work_hours_out_list
             denormalization_context:
                 groups:
                     - user_in
                     - work_hours_in
-            validation_groups:
-                - User
-                - user_password_required
     itemOperations:
         get:
             method: 'GET'
             normalization_context:
                 groups:
                     - user_out_detail
+                    - work_hours_out_list
         put:
             method: 'PUT'
             normalization_context:
                 groups:
                     - user_out_detail
+                    - work_hours_out_list
             denormalization_context:
                 groups:
                     - user_in

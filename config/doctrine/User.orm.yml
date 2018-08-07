@@ -46,6 +46,9 @@ App\Entity\User:
         workMonths:
             targetEntity: App\Entity\WorkMonth
             mappedBy: user
+        yearStats:
+            targetEntity: App\Entity\UserYearStats
+            mappedBy: user
 
     manyToOne:
         supervisor:

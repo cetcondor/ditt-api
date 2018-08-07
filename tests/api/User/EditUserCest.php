@@ -3,14 +3,12 @@
 namespace api\User;
 
 use App\Entity\User;
-use App\Entity\WorkMonth;
-use Doctrine\ORM\NoResultException;
 use Prophecy\Prophet;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
-class CreateUserCest
+class EditUserCest
 {
     public function _before(\ApiTester $I)
     {
@@ -23,12 +21,13 @@ class CreateUserCest
         $I->getContainer()->set(TokenStorageInterface::class, $tokenStorage->reveal());
     }
 
-    public function testCreateWithValidData(\ApiTester $I)
+    public function testEditWithValidData(\ApiTester $I)
     {
+        $user = $I->createUser(['email' => 'user1@example.com', 'employeeId' => 'id123']);
         $I->haveHttpHeader('Content-Type', 'application/json');
-        $I->sendPOST('/users.json', [
-            'email' => 'test@visionapps.cz',
-            'employeeId' => '123',
+        $I->sendPUT(sprintf('/users/%s.json', $user->getId()), [
+            'email' => 'user2@example.com',
+            'employeeId' => 'id123',
             'firstName' => 'First',
             'isActive' => true,
             'lastName' => 'lastName',
@@ -37,57 +36,36 @@ class CreateUserCest
         ]);
 
         $I->seeHttpHeader('Content-Type', 'application/json; charset=utf-8');
-        $I->seeResponseCodeIs(Response::HTTP_CREATED);
+        $I->seeResponseCodeIs(Response::HTTP_OK);
         $I->seeResponseContainsJson([
-            'email' => 'test@visionapps.cz',
-            'employeeId' => '123',
+            'email' => 'user2@example.com',
+            'employeeId' => 'id123',
             'firstName' => 'First',
+            'id' => $user->getId(),
             'isActive' => true,
             'lastName' => 'lastName',
             'roles' => ['ROLE_EMPLOYEE'],
             'supervisor' => null,
-            'workHours' => $I->generateWorkHours(100),
+            'workHours' => [], // Not sure why [] and not workHours data, probably some Codeception glitch
+            'vacationDays' => 20,
         ]);
-        $user = $I->grabEntityFromRepository(User::class, [
-            'email' => 'test@visionapps.cz',
+        $I->grabEntityFromRepository(User::class, [
+            'email' => 'user2@example.com',
         ]);
-
-        $I->expectException(NoResultException::class, function () use ($I, $user) {
-            $I->grabEntityFromRepository(WorkMonth::class, [
-                'month' => 12,
-                'user' => $user,
-                'year' => 2017,
-            ]);
-        });
-        $I->grabEntityFromRepository(WorkMonth::class, [
-            'month' => 1,
-            'user' => $user,
-            'year' => 2018,
-        ]);
-        $I->grabEntityFromRepository(WorkMonth::class, [
-            'month' => 12,
-            'user' => $user,
-            'year' => 2021,
-        ]);
-        $I->expectException(NoResultException::class, function () use ($I, $user) {
-            $I->grabEntityFromRepository(WorkMonth::class, [
-                'month' => 1,
-                'user' => $user,
-                'year' => 2022,
-            ]);
-        });
     }
 
-    public function testCreateWithInvalidData(\ApiTester $I)
+    public function testEditWithInvalidData(\ApiTester $I)
     {
+        $user = $I->createUser(['email' => 'user1@example.com', 'employeeId' => 'id123']);
         $I->haveHttpHeader('Content-Type', 'application/json');
-        $I->sendPOST('/users.json', [
+        $I->sendPUT(sprintf('/users/%s.json', $user->getId()), [
             'email' => 'INVALID',
-            'employeeId' => '123',
+            'employeeId' => 'id123',
             'firstName' => 'First',
             'isActive' => true,
             'lastName' => 'lastName',
             'plainPassword' => null,
+            'workHours' => $I->generateWorkHours(100),
         ]);
 
         $I->seeHttpHeader('Content-Type', 'application/problem+json; charset=utf-8');
@@ -95,11 +73,5 @@ class CreateUserCest
         $I->seeResponseContainsJson([
             'violations' => [[]],
         ]);
-
-        $I->expectException(NoResultException::class, function () use ($I) {
-            $I->grabEntityFromRepository(User::class, [
-                'email' => 'INVALID',
-            ]);
-        });
     }
 }

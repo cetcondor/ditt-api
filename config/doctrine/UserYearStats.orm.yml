@@ -1,0 +1,31 @@
+App\Entity\UserYearStats:
+    type: entity
+    table: app_user_year_stats
+
+    id:
+        id:
+            type: integer
+            generator: { strategy: IDENTITY }
+
+    indexes:
+        year_user_idx:
+            columns: [year, user_id]
+            type: unique
+        year_idx:
+            columns: [year]
+
+    fields:
+        year:
+            type: integer
+            index:
+        vacationDaysUsed:
+            type: integer
+
+    manyToOne:
+        user:
+            targetEntity: App\Entity\User
+            mappedBy: yearStats
+            joinColumn:
+                name: user_id
+                referencedColumnName: id
+                onDelete: CASCADE

@@ -1,0 +1,11 @@
+App\Entity\UserYearStats:
+    attributes:
+        id:
+            groups:
+                - user_out_list
+        year:
+            groups:
+                - user_out_list
+        vacationDaysUsed:
+            groups:
+                - user_out_list
