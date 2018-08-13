@@ -47,15 +47,30 @@ class CreateBusinessTripWorkLogCest
         $I->haveHttpHeader('Content-Type', 'application/json');
         $I->sendPOST('/business_trip_work_logs.json', [
             'date' => $date->format(\DateTime::RFC3339),
+            'purpose' => 'Event',
+            'destination' => 'Prague',
+            'transport' => 'Plane',
+            'expectedDeparture' => 'At the morning',
+            'expectedArrival' => 'In the evening',
         ]);
 
         $I->seeHttpHeader('Content-Type', 'application/json; charset=utf-8');
         $I->seeResponseCodeIs(Response::HTTP_CREATED);
         $I->seeResponseContainsJson([
             'date' => $date->format(\DateTime::RFC3339),
+            'purpose' => 'Event',
+            'destination' => 'Prague',
+            'transport' => 'Plane',
+            'expectedDeparture' => 'At the morning',
+            'expectedArrival' => 'In the evening',
         ]);
         $I->grabEntityFromRepository(BusinessTripWorkLog::class, [
             'date' => $date,
+            'purpose' => 'Event',
+            'destination' => 'Prague',
+            'transport' => 'Plane',
+            'expectedDeparture' => 'At the morning',
+            'expectedArrival' => 'In the evening',
         ]);
     }
 
@@ -76,6 +91,11 @@ class CreateBusinessTripWorkLogCest
         $I->haveHttpHeader('Content-Type', 'application/json');
         $I->sendPOST('/business_trip_work_logs.json', [
             'date' => $date->format(\DateTime::RFC3339),
+            'purpose' => 'Event',
+            'destination' => 'Prague',
+            'transport' => 'Plane',
+            'expectedDeparture' => 'At the morning',
+            'expectedArrival' => 'In the evening',
         ]);
 
         $I->seeHttpHeader('Content-Type', 'application/problem+json; charset=utf-8');
@@ -86,6 +106,11 @@ class CreateBusinessTripWorkLogCest
         $I->expectException(NoResultException::class, function () use ($I, $date) {
             $I->grabEntityFromRepository(BusinessTripWorkLog::class, [
                 'date' => $date,
+                'purpose' => 'Event',
+                'destination' => 'Prague',
+                'transport' => 'Plane',
+                'expectedDeparture' => 'At the morning',
+                'expectedArrival' => 'In the evening',
             ]);
         });
     }
@@ -106,6 +131,11 @@ class CreateBusinessTripWorkLogCest
         $I->haveHttpHeader('Content-Type', 'application/json');
         $I->sendPOST('/business_trip_work_logs.json', [
             'date' => null,
+            'purpose' => '',
+            'destination' => '',
+            'transport' => '',
+            'expectedDeparture' => '',
+            'expectedArrival' => '',
         ]);
 
         $I->seeHttpHeader('Content-Type', 'application/problem+json; charset=utf-8');

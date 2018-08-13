@@ -9,6 +9,16 @@ App\Entity\BusinessTripWorkLog:
     fields:
         date:
             type: datetime_immutable
+        purpose:
+            type: text
+        destination:
+            type: text
+        transport:
+            type: text
+        expectedDeparture:
+            type: text
+        expectedArrival:
+            type: text
         timeApproved:
             type: datetime_immutable
             nullable: true

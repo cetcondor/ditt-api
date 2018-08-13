@@ -26,6 +26,11 @@ class ApiTester extends \Codeception\Actor
                 return $this->createWorkMonth();
             },
             'date' => new DateTimeImmutable(),
+            'purpose' => 'Event',
+            'destination' => 'Prague',
+            'transport' => 'Plane',
+            'expectedDeparture' => 'At the morning',
+            'expectedArrival' => 'In the evening',
             'timeApproved' => null,
             'timeRejected' => null,
         ], $params);

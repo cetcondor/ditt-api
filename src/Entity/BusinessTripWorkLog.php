@@ -15,6 +15,31 @@ class BusinessTripWorkLog implements WorkLogInterface
     private $date;
 
     /**
+     * @var string
+     */
+    private $purpose;
+
+    /**
+     * @var string
+     */
+    private $destination;
+
+    /**
+     * @var string
+     */
+    private $transport;
+
+    /**
+     * @var string
+     */
+    private $expectedDeparture;
+
+    /**
+     * @var string
+     */
+    private $expectedArrival;
+
+    /**
      * @var \DateTimeImmutable|null
      */
     private $timeApproved;
@@ -37,6 +62,11 @@ class BusinessTripWorkLog implements WorkLogInterface
     public function __construct()
     {
         $this->date = (new \DateTimeImmutable())->setTime(0, 0, 0, 0);
+        $this->purpose = '';
+        $this->destination = '';
+        $this->transport = '';
+        $this->expectedDeparture = '';
+        $this->expectedArrival = '';
     }
 
     /**
@@ -73,6 +103,101 @@ class BusinessTripWorkLog implements WorkLogInterface
     public function setDate(\DateTimeImmutable $date): BusinessTripWorkLog
     {
         $this->date = $date;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPurpose(): string
+    {
+        return $this->purpose;
+    }
+
+    /**
+     * @param string $purpose
+     * @return BusinessTripWorkLog
+     */
+    public function setPurpose(string $purpose): BusinessTripWorkLog
+    {
+        $this->purpose = $purpose;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDestination(): string
+    {
+        return $this->destination;
+    }
+
+    /**
+     * @param string $destination
+     * @return BusinessTripWorkLog
+     */
+    public function setDestination(string $destination): BusinessTripWorkLog
+    {
+        $this->destination = $destination;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTransport(): string
+    {
+        return $this->transport;
+    }
+
+    /**
+     * @param string $transport
+     * @return BusinessTripWorkLog
+     */
+    public function setTransport(string $transport): BusinessTripWorkLog
+    {
+        $this->transport = $transport;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getExpectedDeparture(): string
+    {
+        return $this->expectedDeparture;
+    }
+
+    /**
+     * @param string $expectedDeparture
+     * @return BusinessTripWorkLog
+     */
+    public function setExpectedDeparture(string $expectedDeparture): BusinessTripWorkLog
+    {
+        $this->expectedDeparture = $expectedDeparture;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getExpectedArrival(): string
+    {
+        return $this->expectedArrival;
+    }
+
+    /**
+     * @param string $expectedArrival
+     * @return BusinessTripWorkLog
+     */
+    public function setExpectedArrival(string $expectedArrival): BusinessTripWorkLog
+    {
+        $this->expectedArrival = $expectedArrival;
 
         return $this;
     }
