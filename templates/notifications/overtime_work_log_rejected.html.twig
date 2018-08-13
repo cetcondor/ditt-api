@@ -1,0 +1,14 @@
+<html lang="cs">
+    <head>
+        <meta charset="utf-8" />
+    </head>
+
+    <body>
+        <h1>
+            Overtime work log for date {{ workLog.date | date('Y-m-d') }}
+            of employee {{ workLog.workMonth.user.firstName }} {{ workLog.workMonth.user.lastName }}
+            was rejected by {{ supervisor.firstName }} {{ supervisor.lastName }}
+        </h1>
+        <p>Reason: {{ workLog.rejectionMessage }}</p>
+    </body>
+</html>

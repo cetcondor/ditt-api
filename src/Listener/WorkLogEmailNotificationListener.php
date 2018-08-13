@@ -8,6 +8,8 @@ use App\Event\BusinessTripWorkLogApprovedEvent;
 use App\Event\BusinessTripWorkLogRejectedEvent;
 use App\Event\HomeOfficeWorkLogApprovedEvent;
 use App\Event\HomeOfficeWorkLogRejectedEvent;
+use App\Event\OvertimeWorkLogApprovedEvent;
+use App\Event\OvertimeWorkLogRejectedEvent;
 use App\Event\TimeOffWorkLogApprovedEvent;
 use App\Event\TimeOffWorkLogRejectedEvent;
 use App\Event\VacationWorkLogApprovedEvent;
@@ -120,6 +122,40 @@ class WorkLogEmailNotificationListener
             $event->getHomeOfficeWorkLog(),
             'Home office work log was rejected by %s %s',
             'notifications/home_office_work_log_rejected.html.twig'
+        );
+    }
+
+    /**
+     * @param OvertimeWorkLogApprovedEvent $event
+     * @throws EmailNotSentException
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     */
+    public function onOvertimeWorkLogApproved(OvertimeWorkLogApprovedEvent $event)
+    {
+        $this->sendWorkLogMail(
+            $event->getSupervisor(),
+            $event->getOvertimeWorkLog(),
+            'Overtime work log was approved by %s %s',
+            'notifications/overtime_work_log_approved.html.twig'
+        );
+    }
+
+    /**
+     * @param OvertimeWorkLogRejectedEvent $event
+     * @throws EmailNotSentException
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     */
+    public function onOvertimeWorkLogRejected(OvertimeWorkLogRejectedEvent $event)
+    {
+        $this->sendWorkLogMail(
+            $event->getSupervisor(),
+            $event->getOvertimeWorkLog(),
+            'Overtime log was rejected by %s %s',
+            'notifications/overtime_work_log_rejected.html.twig'
         );
     }
 

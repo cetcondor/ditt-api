@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\BusinessTripWorkLog;
 use App\Entity\HomeOfficeWorkLog;
+use App\Entity\OvertimeWorkLog;
 use App\Entity\TimeOffWorkLog;
 use App\Entity\User;
 use App\Entity\VacationWorkLog;
@@ -11,6 +12,7 @@ use App\Entity\WorkMonth;
 use App\Event\WorkMonthApprovedEvent;
 use App\Repository\BusinessTripWorkLogRepository;
 use App\Repository\HomeOfficeWorkLogRepository;
+use App\Repository\OvertimeWorkLogRepository;
 use App\Repository\TimeOffWorkLogRepository;
 use App\Repository\UserRepository;
 use App\Repository\VacationWorkLogRepository;
@@ -55,6 +57,11 @@ class WorkMonthController extends Controller
     private $homeOfficeWorkLogRepository;
 
     /**
+     * @var OvertimeWorkLogRepository
+     */
+    private $overtimeWorkLogRepository;
+
+    /**
      * @var TimeOffWorkLogRepository
      */
     private $timeOffWorkLogRepository;
@@ -76,6 +83,7 @@ class WorkMonthController extends Controller
      * @param WorkMonthService $workMonthService
      * @param BusinessTripWorkLogRepository $businessTripWorkLogRepository
      * @param HomeOfficeWorkLogRepository $homeOfficeWorkLogRepository
+     * @param OvertimeWorkLogRepository $overtimeWorkLogRepository
      * @param TimeOffWorkLogRepository $timeOffWorkLogRepository
      * @param VacationWorkLogRepository $vacationWorkLogRepository
      * @param EventDispatcherInterface $eventDispatcher
@@ -87,6 +95,7 @@ class WorkMonthController extends Controller
         WorkMonthService $workMonthService,
         BusinessTripWorkLogRepository $businessTripWorkLogRepository,
         HomeOfficeWorkLogRepository $homeOfficeWorkLogRepository,
+        OvertimeWorkLogRepository $overtimeWorkLogRepository,
         TimeOffWorkLogRepository $timeOffWorkLogRepository,
         VacationWorkLogRepository $vacationWorkLogRepository,
         EventDispatcherInterface $eventDispatcher
@@ -97,6 +106,7 @@ class WorkMonthController extends Controller
         $this->workMonthService = $workMonthService;
         $this->businessTripWorkLogRepository = $businessTripWorkLogRepository;
         $this->homeOfficeWorkLogRepository = $homeOfficeWorkLogRepository;
+        $this->overtimeWorkLogRepository = $overtimeWorkLogRepository;
         $this->timeOffWorkLogRepository = $timeOffWorkLogRepository;
         $this->vacationWorkLogRepository = $vacationWorkLogRepository;
         $this->eventDispatcher = $eventDispatcher;
@@ -116,6 +126,7 @@ class WorkMonthController extends Controller
         $response = [
             'businessTripWorkLogs' => [],
             'homeOfficeWorkLogs' => [],
+            'overtimeWorkLogs' => [],
             'timeOffWorkLogs' => [],
             'vacationWorkLogs' => [],
         ];
@@ -132,6 +143,14 @@ class WorkMonthController extends Controller
             $response['homeOfficeWorkLogs'][] = $this->normalizer->normalize(
                 $workLog,
                 HomeOfficeWorkLog::class,
+                ['groups' => ['special_approvals_out_list']]
+            );
+        }
+
+        foreach ($this->overtimeWorkLogRepository->findAllWaitingForApproval($supervisor) as $workLog) {
+            $response['overtimeWorkLogs'][] = $this->normalizer->normalize(
+                $workLog,
+                OvertimeWorkLog::class,
                 ['groups' => ['special_approvals_out_list']]
             );
         }

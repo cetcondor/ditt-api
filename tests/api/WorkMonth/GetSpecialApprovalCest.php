@@ -91,6 +91,25 @@ class GetSpecialApprovalCest
             'workMonth' => $workMonth1,
         ]);
 
+        $overTimeWorkLog1 = $I->createOvertimeWorkLog([
+            'date' => new \DateTimeImmutable(),
+            'workMonth' => $workMonth2,
+        ]);
+        $overTimeWorkLog2 = $I->createOvertimeWorkLog([
+            'date' => new \DateTimeImmutable(),
+            'timeApproved' => new \DateTimeImmutable(),
+            'workMonth' => $workMonth2,
+        ]);
+        $overTimeWorkLog3 = $I->createOvertimeWorkLog([
+            'date' => new \DateTimeImmutable(),
+            'timeRejected' => new \DateTimeImmutable(),
+            'workMonth' => $workMonth2,
+        ]);
+        $overTimeWorkLog4 = $I->createOvertimeWorkLog([
+            'date' => new \DateTimeImmutable(),
+            'workMonth' => $workMonth1,
+        ]);
+
         $timeOffWorkLog1 = $I->createTimeOffWorkLog([
             'date' => new \DateTimeImmutable(),
             'workMonth' => $workMonth2,
@@ -176,6 +195,26 @@ class GetSpecialApprovalCest
                     ],
                 ],
             ],
+            'overtimeWorkLogs' => [
+                [
+                    'date' => $overTimeWorkLog1->getDate()->format(\DateTime::RFC3339),
+                    'id' => $overTimeWorkLog1->getId(),
+                    'timeApproved' => null,
+                    'timeRejected' => null,
+                    'workMonth' => [
+                        'id' => $workMonth2->getId(),
+                        'month' => $workMonth2->getMonth(),
+                        'status' => $workMonth2->getStatus(),
+                        'user' => [
+                            'email' => $user2->getEmail(),
+                            'firstName' => $user2->getFirstName(),
+                            'lastName' => $user2->getLastName(),
+                            'id' => $user2->getId(),
+                        ],
+                        'year' => $workMonth2->getYear(),
+                    ],
+                ],
+            ],
             'timeOffWorkLogs' => [
                 [
                     'date' => $timeOffWorkLog1->getDate()->format(\DateTime::RFC3339),
@@ -227,6 +266,11 @@ class GetSpecialApprovalCest
                 ['id' => $homeOfficeWorkLog2->getId()],
                 ['id' => $homeOfficeWorkLog3->getId()],
                 ['id' => $homeOfficeWorkLog4->getId()],
+            ],
+            'overTimeWorkLogs' => [
+                ['id' => $overTimeWorkLog2->getId()],
+                ['id' => $overTimeWorkLog3->getId()],
+                ['id' => $overTimeWorkLog4->getId()],
             ],
             'timeOffWorkLogs' => [
                 ['id' => $timeOffWorkLog2->getId()],

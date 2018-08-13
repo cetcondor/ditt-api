@@ -1,0 +1,33 @@
+App\Entity\OvertimeWorkLog:
+    attributes:
+        id:
+            groups:
+                - overtime_work_log_out_detail
+                - special_approvals_out_list
+                - work_month_out_detail
+        date:
+            groups:
+                - overtime_work_log_out_detail
+                - special_approvals_out_list
+                - work_month_out_detail
+                - overtime_work_log_in
+        timeApproved:
+            groups:
+                - overtime_work_log_out_detail
+                - special_approvals_out_list
+                - work_month_out_detail
+        timeRejected:
+            groups:
+                - overtime_work_log_out_detail
+                - special_approvals_out_list
+                - work_month_out_detail
+        rejectionMessage:
+            groups:
+                - overtime_work_log_out_detail
+                - special_approvals_out_list
+                - work_month_out_detail
+                - overtime_work_log_in
+        workMonth:
+            groups:
+                - overtime_work_log_out_detail
+                - special_approvals_out_list

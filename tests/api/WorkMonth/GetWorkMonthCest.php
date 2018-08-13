@@ -93,6 +93,14 @@ class GetWorkMonthCest
             'date' => $endTime1,
             'workMonth' => $workMonth,
         ]);
+        $overtimeWorkLog1 = $I->createOvertimeWorkLog([
+            'date' => $startTime1,
+            'workMonth' => $workMonth,
+        ]);
+        $overtimeWorkLog2 = $I->createOvertimeWorkLog([
+            'date' => $endTime1,
+            'workMonth' => $workMonth,
+        ]);
         $sickDayWorkLog1 = $I->createSickDayWorkLog([
             'date' => $startTime1,
             'variant' => 'WITHOUT_NOTE',
@@ -132,6 +140,7 @@ class GetWorkMonthCest
 
         $workMonth->setBusinessTripWorkLogs([$businessTripWorkLog1, $businessTripWorkLog2]);
         $workMonth->setHomeOfficeWorkLogs([$homeOfficeWorkLog1, $homeOfficeWorkLog2]);
+        $workMonth->setOvertimeWorkLogs([$overtimeWorkLog1, $overtimeWorkLog2]);
         $workMonth->setSickDayWorkLogs([$sickDayWorkLog1, $sickDayWorkLog2]);
         $workMonth->setTimeOffWorkLogs([$timeOffWorkLog1, $timeOffWorkLog2]);
         $workMonth->setVacationWorkLogs([$vacationWorkLog1, $vacationWorkLog2]);
@@ -167,6 +176,16 @@ class GetWorkMonthCest
                 ],
             ],
             'month' => $workMonth->getMonth(),
+            'overtimeWorkLogs' => [
+                [
+                    'date' => $startTime1->format(\DateTime::RFC3339),
+                    'id' => $overtimeWorkLog1->getId(),
+                ],
+                [
+                    'date' => $endTime1->format(\DateTime::RFC3339),
+                    'id' => $overtimeWorkLog2->getId(),
+                ],
+            ],
             'status' => 'OPENED',
             'sickDayWorkLogs' => [
                 [

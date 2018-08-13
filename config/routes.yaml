@@ -52,6 +52,20 @@ api_home_office_work_log_mark_rejected:
     defaults:
         _api_collection_operation_name: 'markRejected'
 
+api_overtime_work_log_mark_approved:
+    path: /overtime_work_logs/{id}/mark_approved
+    methods: [PUT]
+    controller: App\Controller\OvertimeWorkLogController:markApproved
+    defaults:
+        _api_collection_operation_name: 'markApproved'
+
+api_overtime_work_log_mark_rejected:
+    path: /overtime_work_logs/{id}/mark_rejected
+    methods: [PUT]
+    controller: App\Controller\OvertimeWorkLogController:markRejected
+    defaults:
+        _api_collection_operation_name: 'markRejected'
+
 api_time_off_work_log_mark_approved:
     path: /time_off_work_logs/{id}/mark_approved
     methods: [PUT]
