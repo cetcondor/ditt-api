@@ -11,6 +11,12 @@ App\Entity\OvertimeWorkLog:
                 - special_approvals_out_list
                 - work_month_out_detail
                 - overtime_work_log_in
+        reason:
+            groups:
+                - overtime_work_log_out_detail
+                - special_approvals_out_list
+                - work_month_out_detail
+                - overtime_work_log_in
         timeApproved:
             groups:
                 - overtime_work_log_out_detail

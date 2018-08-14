@@ -4,6 +4,9 @@ App\Entity\OvertimeWorkLog:
             - NotBlank: ~
             - DateTime: ~
 
+        reason:
+            - NotBlank: ~
+
         timeApproved:
             - DateTime: ~
 

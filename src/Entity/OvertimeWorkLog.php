@@ -15,6 +15,11 @@ class OvertimeWorkLog implements WorkLogInterface
     private $date;
 
     /**
+     * @var string
+     */
+    private $reason;
+
+    /**
      * @var \DateTimeImmutable|null
      */
     private $timeApproved;
@@ -37,6 +42,7 @@ class OvertimeWorkLog implements WorkLogInterface
     public function __construct()
     {
         $this->date = (new \DateTimeImmutable())->setTime(0, 0, 0, 0);
+        $this->reason = '';
     }
 
     /**
@@ -73,6 +79,25 @@ class OvertimeWorkLog implements WorkLogInterface
     public function setDate(\DateTimeImmutable $date): OvertimeWorkLog
     {
         $this->date = $date;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getReason(): string
+    {
+        return $this->reason;
+    }
+
+    /**
+     * @param string $reason
+     * @return OvertimeWorkLog
+     */
+    public function setReason(string $reason): OvertimeWorkLog
+    {
+        $this->reason = $reason;
 
         return $this;
     }

@@ -9,6 +9,8 @@ App\Entity\OvertimeWorkLog:
     fields:
         date:
             type: datetime_immutable
+        reason:
+            type: text
         timeApproved:
             type: datetime_immutable
             nullable: true

@@ -47,15 +47,18 @@ class CreateOvertimeWorkLogCest
         $I->haveHttpHeader('Content-Type', 'application/json');
         $I->sendPOST('/overtime_work_logs.json', [
             'date' => $date->format(\DateTime::RFC3339),
+            'reason' => 'Reason',
         ]);
 
         $I->seeHttpHeader('Content-Type', 'application/json; charset=utf-8');
         $I->seeResponseCodeIs(Response::HTTP_CREATED);
         $I->seeResponseContainsJson([
             'date' => $date->format(\DateTime::RFC3339),
+            'reason' => 'Reason',
         ]);
         $I->grabEntityFromRepository(OvertimeWorkLog::class, [
             'date' => $date,
+            'reason' => 'Reason',
         ]);
     }
 
@@ -76,6 +79,7 @@ class CreateOvertimeWorkLogCest
         $I->haveHttpHeader('Content-Type', 'application/json');
         $I->sendPOST('/overtime_work_logs.json', [
             'date' => $date->format(\DateTime::RFC3339),
+            'reason' => 'Reason',
         ]);
 
         $I->seeHttpHeader('Content-Type', 'application/problem+json; charset=utf-8');
@@ -106,6 +110,7 @@ class CreateOvertimeWorkLogCest
         $I->haveHttpHeader('Content-Type', 'application/json');
         $I->sendPOST('/overtime_work_logs.json', [
             'date' => null,
+            'reason' => '',
         ]);
 
         $I->seeHttpHeader('Content-Type', 'application/problem+json; charset=utf-8');
