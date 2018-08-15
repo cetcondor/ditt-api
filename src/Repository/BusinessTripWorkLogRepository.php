@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\BusinessTripWorkLog;
 use App\Entity\User;
+use App\Entity\WorkMonth;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 
@@ -56,6 +57,21 @@ class BusinessTripWorkLogRepository
                 $qb->expr()->isNull('btwl.timeRejected')
             ))
             ->setParameter('supervisor', $supervisor)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @param WorkMonth $workMonth
+     * @return BusinessTripWorkLog[]
+     */
+    public function findAllApprovedByWorkMonth(WorkMonth $workMonth): array
+    {
+        return $this->repository->createQueryBuilder('btwl')
+            ->select('btwl')
+            ->where('btwl.workMonth = :workMonth')
+            ->andWhere('btwl.timeApproved IS NOT NULL')
+            ->setParameter('workMonth', $workMonth)
             ->getQuery()
             ->getResult();
     }

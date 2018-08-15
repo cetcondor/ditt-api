@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\WorkLog;
+use App\Entity\WorkMonth;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
@@ -22,6 +23,20 @@ class WorkLogRepository
         /** @var EntityRepository $repository */
         $repository = $entityManager->getRepository(WorkLog::class);
         $this->repository = $repository;
+    }
+
+    /**
+     * @param WorkMonth $workMonth
+     * @return WorkLog[]
+     */
+    public function findAllByWorkMonth(WorkMonth $workMonth): array
+    {
+        return $this->repository->createQueryBuilder('wl')
+            ->select('wl')
+            ->where('wl.workMonth = :workMonth')
+            ->setParameter('workMonth', $workMonth)
+            ->getQuery()
+            ->getResult();
     }
 
     /**

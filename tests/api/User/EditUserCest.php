@@ -46,7 +46,6 @@ class EditUserCest
             'lastName' => 'lastName',
             'roles' => ['ROLE_EMPLOYEE'],
             'supervisor' => null,
-            'workHours' => [], // Not sure why [] and not workHours data, probably some Codeception glitch
             'vacationDays' => 20,
         ]);
         $I->grabEntityFromRepository(User::class, [

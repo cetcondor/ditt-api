@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\User;
 use App\Entity\VacationWorkLog;
+use App\Entity\WorkMonth;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
@@ -57,6 +58,21 @@ class VacationWorkLogRepository
                 $qb->expr()->isNull('vwl.timeRejected')
             ))
             ->setParameter('supervisor', $supervisor)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @param WorkMonth $workMonth
+     * @return VacationWorkLog[]
+     */
+    public function findAllApprovedByWorkMonth(WorkMonth $workMonth): array
+    {
+        return $this->repository->createQueryBuilder('vwl')
+            ->select('vwl')
+            ->where('vwl.workMonth = :workMonth')
+            ->andWhere('vwl.timeApproved IS NOT NULL')
+            ->setParameter('workMonth', $workMonth)
             ->getQuery()
             ->getResult();
     }

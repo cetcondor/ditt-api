@@ -18,6 +18,10 @@ App\Entity\UserYearStats:
         year:
             type: integer
             index:
+        requiredHours:
+            type: float
+        workedHours:
+            type: float
         vacationDaysUsed:
             type: integer
 

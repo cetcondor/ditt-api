@@ -43,6 +43,10 @@ class MarkWorkMonthApprovedCest
             'user' => $this->user,
             'year' => $time->format('Y'),
         ]);
+        $I->createUserYearStats([
+            'user' => $this->user,
+            'year' => $time->format('Y'),
+        ]);
 
         $I->haveHttpHeader('Content-Type', 'application/json');
         $I->sendPUT(sprintf('/work_months/%d/mark_approved', $workMonth->getId()));
@@ -74,6 +78,10 @@ class MarkWorkMonthApprovedCest
             'user' => $this->user,
             'year' => $time->format('Y'),
         ]);
+        $I->createUserYearStats([
+            'user' => $this->user,
+            'year' => $time->format('Y'),
+        ]);
 
         $I->haveHttpHeader('Content-Type', 'application/json');
         $I->sendPUT(sprintf('/work_months/%d/mark_approved', $workMonth->getId()));
@@ -99,6 +107,10 @@ class MarkWorkMonthApprovedCest
         $workMonth = $I->createWorkMonth([
             'month' => $time->format('m'),
             'status' => 'APPROVED',
+            'user' => $this->user,
+            'year' => $time->format('Y'),
+        ]);
+        $I->createUserYearStats([
             'user' => $this->user,
             'year' => $time->format('Y'),
         ]);

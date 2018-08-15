@@ -20,6 +20,16 @@ class UserYearStats
     private $year;
 
     /**
+     * @var float
+     */
+    private $workedHours;
+
+    /**
+     * @var float
+     */
+    private $requiredHours;
+
+    /**
      * @var int
      */
     private $vacationDaysUsed;
@@ -29,6 +39,8 @@ class UserYearStats
         $this->id = null;
         $this->user = null;
         $this->year = null;
+        $this->requiredHours = 0;
+        $this->workedHours = 0;
         $this->vacationDaysUsed = 0;
     }
 
@@ -85,6 +97,44 @@ class UserYearStats
     public function setYear(?int $year): UserYearStats
     {
         $this->year = $year;
+
+        return $this;
+    }
+
+    /**
+     * @return float
+     */
+    public function getWorkedHours(): float
+    {
+        return $this->workedHours;
+    }
+
+    /**
+     * @param float $workedHours
+     * @return UserYearStats
+     */
+    public function setWorkedHours(float $workedHours): UserYearStats
+    {
+        $this->workedHours = $workedHours;
+
+        return $this;
+    }
+
+    /**
+     * @return float
+     */
+    public function getRequiredHours(): float
+    {
+        return $this->requiredHours;
+    }
+
+    /**
+     * @param float $requiredHours
+     * @return UserYearStats
+     */
+    public function setRequiredHours(float $requiredHours): UserYearStats
+    {
+        $this->requiredHours = $requiredHours;
 
         return $this;
     }

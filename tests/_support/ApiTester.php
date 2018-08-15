@@ -116,6 +116,25 @@ class ApiTester extends \Codeception\Actor
         ]);
     }
 
+    public function createUserYearStats(array $params = [])
+    {
+        $userYearStats = $this->populateEntity(new \App\Entity\UserYearStats(), [
+            'user' => function () {
+                return $this->createUser();
+            },
+            'year' => 2018,
+            'workedHours' => 0,
+            'requiredHours' => 0,
+            'vacationDaysUsed' => 0,
+        ], $params);
+
+        $this->persistEntity($userYearStats);
+
+        return $this->grabEntityFromRepository(\App\Entity\UserYearStats::class, [
+            'id' => $userYearStats->getId(),
+        ]);
+    }
+
     public function createVacationWorkLog(array $params = [])
     {
         $vacationWorkLog = $this->populateEntity(new \App\Entity\VacationWorkLog(), [
@@ -181,6 +200,18 @@ class ApiTester extends \Codeception\Actor
             'supervisor' => null,
             'vacationDays' => 20,
             'resetPasswordToken' => null,
+            'workHours' => function() {
+                $workHours = [];
+
+                foreach ($this->generateWorkHours(6) as $generatedWorkHour) {
+                    $workHours[] = (new \App\Entity\WorkHours())
+                        ->setMonth($generatedWorkHour['month'])
+                        ->setYear($generatedWorkHour['year'])
+                        ->setRequiredHours($generatedWorkHour['requiredHours']);
+                }
+
+                return $workHours;
+            }
         ], $params);
 
         $this->persistEntity($user);
