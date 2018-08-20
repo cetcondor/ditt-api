@@ -9,7 +9,7 @@ class Config
      */
     public function getSupportedHolidays(): array
     {
-        return \config\config::getSupportedHolidays();
+        return $this->getRawConfig()['supportedHolidays'];
     }
 
     /**
@@ -17,7 +17,7 @@ class Config
      */
     public function getSupportedYear(): array
     {
-        return \config\config::getSupportedYear();
+        return $this->getRawConfig()['supportedYear'];
     }
 
     /**
@@ -25,6 +25,14 @@ class Config
      */
     public function getWorkedHoursLimits(): array
     {
-        return \config\config::getWorkedHoursLimits();
+        return $this->getRawConfig()['workedHoursLimits'];
+    }
+
+    /**
+     * @return array
+     */
+    private function getRawConfig(): array
+    {
+        return include __DIR__ . '/../../config/config.php';
     }
 }
