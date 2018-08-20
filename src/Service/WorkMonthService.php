@@ -205,8 +205,8 @@ class WorkMonthService
 
             $totalWorkedTime = $workedHours + $specialWorkedHours;
 
-            $lowerLimit = Config::getWorkedHoursLimits()['lowerLimit'];
-            $upperLimit = Config::getWorkedHoursLimits()['upperLimit'];
+            $lowerLimit = (new Config())->getWorkedHoursLimits()['lowerLimit'];
+            $upperLimit = (new Config())->getWorkedHoursLimits()['upperLimit'];
 
             if (
                 $totalWorkedTime > $lowerLimit['limit'] / 3600
@@ -237,7 +237,7 @@ class WorkMonthService
         };
 
         $isHoliday = function ($date) {
-            foreach (Config::getSupportedHolidays() as $supportedHoliday) {
+            foreach ((new Config())->getSupportedHolidays() as $supportedHoliday) {
                 if ($supportedHoliday->format('Y-m-d') === $date->format('Y-m-d')) {
                     return true;
                 }

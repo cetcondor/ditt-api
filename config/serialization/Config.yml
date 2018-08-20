@@ -1,0 +1,11 @@
+App\Entity\Config:
+    attributes:
+        supportedHolidays:
+            groups:
+                - config_out
+        supportedYear:
+            groups:
+                - config_out
+        workedHoursLimits:
+            groups:
+                - config_out

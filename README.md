@@ -30,3 +30,8 @@ Following accounts are available for testing purposes:
 | employee-admin@example.com | password | EMPLOYEE, ADMIN |
 | admin@example.com          | password | ADMIN           |
 | admin@example.com          | password | SUPER ADMIN     |
+
+## Config
+
+To change supported years, supported holidays and worked hours limits, go to the `/config/config.php` file and
+make changes there. Config is exposed as API endpoint, so you do not need to change it in client's config.
