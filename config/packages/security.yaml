@@ -34,6 +34,7 @@ security:
         -   path: '^/special_approvals/[0-9]+'
             roles:
                 - !php/const App\Entity\User::ROLE_EMPLOYEE
+                - !php/const App\Entity\User::ROLE_ADMIN
                 - !php/const App\Entity\User::ROLE_SUPER_ADMIN
         -   path: ^/time_off_work_logs
             roles:

@@ -71,7 +71,7 @@ class UserRepository
         $rsm->addRootEntityFromClassMetadata(User::class, 'u');
 
         return $this->entityManager->createNativeQuery(
-            'SELECT id, email FROM app_user AS "u" WHERE u.roles::jsonb @> \'["ROLE_ADMIN"]\'::jsonb',
+            'SELECT * FROM app_user AS "u" WHERE u.roles::jsonb @> \'["ROLE_ADMIN"]\'::jsonb',
             $rsm
         )->getResult();
     }

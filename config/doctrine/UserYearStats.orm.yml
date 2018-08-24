@@ -28,7 +28,7 @@ App\Entity\UserYearStats:
     manyToOne:
         user:
             targetEntity: App\Entity\User
-            mappedBy: yearStats
+            inversedBy: yearStats
             joinColumn:
                 name: user_id
                 referencedColumnName: id
