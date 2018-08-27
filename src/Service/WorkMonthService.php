@@ -199,25 +199,23 @@ class WorkMonthService
                 }
             }
 
-            if ($containsBusinessDay && $workedHours < $workHours->getRequiredHours()) {
-                $workedHours = $workHours->getRequiredHours();
-            }
-
-            $totalWorkedTime = $workedHours + $specialWorkedHours;
-
             $lowerLimit = (new Config())->getWorkedHoursLimits()['lowerLimit'];
             $upperLimit = (new Config())->getWorkedHoursLimits()['upperLimit'];
 
             if (
-                $totalWorkedTime > $lowerLimit['limit'] / 3600
-                && $totalWorkedTime <= $upperLimit['limit'] / 3600
+                $workedHours > $lowerLimit['limit'] / 3600
+                && $workedHours <= $upperLimit['limit'] / 3600
             ) {
-                $allWorkLogWorkedHours[$day] = $totalWorkedTime + ($lowerLimit['changeBy'] / 3600);
-            } elseif ($totalWorkedTime > $upperLimit['limit'] / 3600) {
-                $allWorkLogWorkedHours[$day] = $totalWorkedTime + ($upperLimit['changeBy'] / 3600);
-            } else {
-                $allWorkLogWorkedHours[$day] = $totalWorkedTime;
+                $workedHours += ($lowerLimit['changeBy'] / 3600);
+            } elseif ($workedHours > $upperLimit['limit'] / 3600) {
+                $workedHours += ($upperLimit['changeBy'] / 3600);
             }
+
+            if ($containsBusinessDay && $workedHours < $workHours->getRequiredHours()) {
+                $workedHours = $workHours->getRequiredHours();
+            }
+
+            $allWorkLogWorkedHours[$day] = $workedHours + $specialWorkedHours;
         }
 
         return array_sum($allWorkLogWorkedHours);
