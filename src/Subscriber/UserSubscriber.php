@@ -3,9 +3,12 @@
 namespace App\Subscriber;
 
 use ApiPlatform\Core\EventListener\EventPriorities;
+use App\Entity\Config;
 use App\Entity\User;
+use App\Entity\UserYearStats;
 use App\Entity\WorkMonth;
 use App\Repository\WorkHoursRepository;
+use App\Service\UserYearStatsService;
 use App\Service\WorkMonthService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -22,6 +25,11 @@ class UserSubscriber implements EventSubscriberInterface
     private $entityManager;
 
     /**
+     * @var UserYearStatsService
+     */
+    private $userYearStatsService;
+
+    /**
      * @var WorkHoursRepository
      */
     private $workHoursRepository;
@@ -33,15 +41,18 @@ class UserSubscriber implements EventSubscriberInterface
 
     /**
      * @param EntityManagerInterface $entityManager
+     * @param UserYearStatsService $userYearStatsService
      * @param WorkHoursRepository $workHoursRepository
      * @param WorkMonthService $workMonthService
      */
     public function __construct(
         EntityManagerInterface $entityManager,
+        UserYearStatsService $userYearStatsService,
         WorkHoursRepository $workHoursRepository,
         WorkMonthService $workMonthService
     ) {
         $this->entityManager = $entityManager;
+        $this->userYearStatsService = $userYearStatsService;
         $this->workHoursRepository = $workHoursRepository;
         $this->workMonthService = $workMonthService;
     }
@@ -54,9 +65,37 @@ class UserSubscriber implements EventSubscriberInterface
         return [
             KernelEvents::VIEW => [
                 ['createWorkMonths', EventPriorities::POST_WRITE],
+                ['createYearStats', EventPriorities::POST_WRITE],
                 ['editWorkHours', EventPriorities::PRE_WRITE],
             ],
         ];
+    }
+
+    /**
+     * @param GetResponseForControllerResultEvent $event
+     */
+    public function createYearStats(GetResponseForControllerResultEvent $event): void
+    {
+        $user = $event->getControllerResult();
+        if (!$user instanceof User) {
+            return;
+        }
+
+        $method = $event->getRequest()->getMethod();
+
+        if (Request::METHOD_POST !== $method) {
+            return;
+        }
+
+        $userYearStats = [];
+
+        foreach ((new Config())->getSupportedYear() as $supportedYear) {
+            $userYearStats[] = (new UserYearStats())
+                ->setYear($supportedYear)
+                ->setUser($user);
+        }
+
+        $this->userYearStatsService->createUserYearStats($userYearStats);
     }
 
     /**
@@ -77,10 +116,10 @@ class UserSubscriber implements EventSubscriberInterface
 
         $workMonths = [];
 
-        for ($year = 2018; $year <= 2021; ++$year) {
+        foreach ((new Config())->getSupportedYear() as $supportedYear) {
             for ($month = 1; $month <= 12; ++$month) {
                 $workMonths[] = (new WorkMonth())
-                    ->setYear($year)
+                    ->setYear($supportedYear)
                     ->setMonth($month)
                     ->setUser($user);
             }

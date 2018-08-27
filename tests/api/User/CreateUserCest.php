@@ -3,6 +3,7 @@
 namespace api\User;
 
 use App\Entity\User;
+use App\Entity\UserYearStats;
 use App\Entity\WorkMonth;
 use Doctrine\ORM\NoResultException;
 use Prophecy\Prophet;
@@ -76,6 +77,15 @@ class CreateUserCest
                 'year' => 2022,
             ]);
         });
+
+        $I->grabEntityFromRepository(UserYearStats::class, [
+            'user' => $user,
+            'year' => 2018,
+        ]);
+        $I->grabEntityFromRepository(UserYearStats::class, [
+            'user' => $user,
+            'year' => 2021,
+        ]);
     }
 
     public function testCreateWithInvalidData(\ApiTester $I)
