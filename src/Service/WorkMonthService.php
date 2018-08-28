@@ -190,11 +190,14 @@ class WorkMonthService
                     $workedHours += $timeDiff->h + ($timeDiff->i / 60);
                 }
 
-                if ($workLog instanceof BusinessTripWorkLog) {
+                if ($workLog instanceof BusinessTripWorkLog && $workLog->getTimeApproved()) {
                     $containsBusinessDay = true;
                 }
 
-                if ($workLog instanceof SickDayWorkLog || $workLog instanceof VacationWorkLog) {
+                if (
+                    $workLog instanceof SickDayWorkLog
+                    || $workLog instanceof VacationWorkLog && $workLog->getTimeApproved()
+                ) {
                     $specialWorkedHours += $workHours->getRequiredHours();
                 }
             }
