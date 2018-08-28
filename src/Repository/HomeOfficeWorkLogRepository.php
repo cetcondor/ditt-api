@@ -39,10 +39,29 @@ class HomeOfficeWorkLogRepository
     }
 
     /**
+     * @return mixed
+     */
+    public function findAllWaitingForApproval()
+    {
+        $qb = $this->repository->createQueryBuilder('howl');
+
+        return $qb
+            ->select('howl')
+            ->leftJoin('howl.workMonth', 'wm')
+            ->leftJoin('wm.user', 'u')
+            ->where($qb->expr()->andX(
+                $qb->expr()->isNull('howl.timeApproved'),
+                $qb->expr()->isNull('howl.timeRejected')
+            ))
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
      * @param User $supervisor
      * @return mixed
      */
-    public function findAllWaitingForApproval(User $supervisor)
+    public function findAllWaitingForApprovalBySupervisor(User $supervisor)
     {
         $qb = $this->repository->createQueryBuilder('howl');
 

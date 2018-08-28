@@ -22,6 +22,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class WorkMonthController extends Controller
@@ -77,6 +78,11 @@ class WorkMonthController extends Controller
     private $eventDispatcher;
 
     /**
+     * @var User
+     */
+    private $loggedUser;
+
+    /**
      * @param NormalizerInterface $normalizer
      * @param UserRepository $userRepository
      * @param WorkMonthRepository $workMonthRepository
@@ -87,6 +93,7 @@ class WorkMonthController extends Controller
      * @param TimeOffWorkLogRepository $timeOffWorkLogRepository
      * @param VacationWorkLogRepository $vacationWorkLogRepository
      * @param EventDispatcherInterface $eventDispatcher
+     * @param TokenStorageInterface $tokenStorage
      */
     public function __construct(
         NormalizerInterface $normalizer,
@@ -98,7 +105,8 @@ class WorkMonthController extends Controller
         OvertimeWorkLogRepository $overtimeWorkLogRepository,
         TimeOffWorkLogRepository $timeOffWorkLogRepository,
         VacationWorkLogRepository $vacationWorkLogRepository,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        TokenStorageInterface $tokenStorage
     ) {
         $this->normalizer = $normalizer;
         $this->userRepository = $userRepository;
@@ -110,6 +118,10 @@ class WorkMonthController extends Controller
         $this->timeOffWorkLogRepository = $timeOffWorkLogRepository;
         $this->vacationWorkLogRepository = $vacationWorkLogRepository;
         $this->eventDispatcher = $eventDispatcher;
+
+        if ($tokenStorage->getToken()) {
+            $this->loggedUser = $tokenStorage->getToken()->getUser();
+        }
     }
 
     /**
@@ -123,6 +135,11 @@ class WorkMonthController extends Controller
             throw $this->createNotFoundException(sprintf('User with id %d was not found', $supervisorId));
         }
 
+        $isSuperAdmin = $this->loggedUser && in_array(
+            User::ROLE_SUPER_ADMIN,
+            $this->loggedUser->getRoles()
+        );
+
         $response = [
             'businessTripWorkLogs' => [],
             'homeOfficeWorkLogs' => [],
@@ -131,44 +148,86 @@ class WorkMonthController extends Controller
             'vacationWorkLogs' => [],
         ];
 
-        foreach ($this->businessTripWorkLogRepository->findAllWaitingForApproval($supervisor) as $workLog) {
-            $response['businessTripWorkLogs'][] = $this->normalizer->normalize(
-                $workLog,
-                BusinessTripWorkLog::class,
-                ['groups' => ['special_approvals_out_list']]
-            );
-        }
+        if ($isSuperAdmin) {
+            foreach ($this->businessTripWorkLogRepository->findAllWaitingForApproval() as $workLog) {
+                $response['businessTripWorkLogs'][] = $this->normalizer->normalize(
+                    $workLog,
+                    BusinessTripWorkLog::class,
+                    ['groups' => ['special_approvals_out_list']]
+                );
+            }
 
-        foreach ($this->homeOfficeWorkLogRepository->findAllWaitingForApproval($supervisor) as $workLog) {
-            $response['homeOfficeWorkLogs'][] = $this->normalizer->normalize(
-                $workLog,
-                HomeOfficeWorkLog::class,
-                ['groups' => ['special_approvals_out_list']]
-            );
-        }
+            foreach ($this->homeOfficeWorkLogRepository->findAllWaitingForApproval() as $workLog) {
+                $response['homeOfficeWorkLogs'][] = $this->normalizer->normalize(
+                    $workLog,
+                    HomeOfficeWorkLog::class,
+                    ['groups' => ['special_approvals_out_list']]
+                );
+            }
 
-        foreach ($this->overtimeWorkLogRepository->findAllWaitingForApproval($supervisor) as $workLog) {
-            $response['overtimeWorkLogs'][] = $this->normalizer->normalize(
-                $workLog,
-                OvertimeWorkLog::class,
-                ['groups' => ['special_approvals_out_list']]
-            );
-        }
+            foreach ($this->overtimeWorkLogRepository->findAllWaitingForApproval() as $workLog) {
+                $response['overtimeWorkLogs'][] = $this->normalizer->normalize(
+                    $workLog,
+                    OvertimeWorkLog::class,
+                    ['groups' => ['special_approvals_out_list']]
+                );
+            }
 
-        foreach ($this->timeOffWorkLogRepository->findAllWaitingForApproval($supervisor) as $workLog) {
-            $response['timeOffWorkLogs'][] = $this->normalizer->normalize(
-                $workLog,
-                TimeOffWorkLog::class,
-                ['groups' => ['special_approvals_out_list']]
-            );
-        }
+            foreach ($this->timeOffWorkLogRepository->findAllWaitingForApproval() as $workLog) {
+                $response['timeOffWorkLogs'][] = $this->normalizer->normalize(
+                    $workLog,
+                    TimeOffWorkLog::class,
+                    ['groups' => ['special_approvals_out_list']]
+                );
+            }
 
-        foreach ($this->vacationWorkLogRepository->findAllWaitingForApproval($supervisor) as $workLog) {
-            $response['vacationWorkLogs'][] = $this->normalizer->normalize(
-                $workLog,
-                VacationWorkLog::class,
-                ['groups' => ['special_approvals_out_list']]
-            );
+            foreach ($this->vacationWorkLogRepository->findAllWaitingForApproval() as $workLog) {
+                $response['vacationWorkLogs'][] = $this->normalizer->normalize(
+                    $workLog,
+                    VacationWorkLog::class,
+                    ['groups' => ['special_approvals_out_list']]
+                );
+            }
+        } else {
+            foreach ($this->businessTripWorkLogRepository->findAllWaitingForApprovalBySupervisor($supervisor) as $workLog) {
+                $response['businessTripWorkLogs'][] = $this->normalizer->normalize(
+                    $workLog,
+                    BusinessTripWorkLog::class,
+                    ['groups' => ['special_approvals_out_list']]
+                );
+            }
+
+            foreach ($this->homeOfficeWorkLogRepository->findAllWaitingForApprovalBySupervisor($supervisor) as $workLog) {
+                $response['homeOfficeWorkLogs'][] = $this->normalizer->normalize(
+                    $workLog,
+                    HomeOfficeWorkLog::class,
+                    ['groups' => ['special_approvals_out_list']]
+                );
+            }
+
+            foreach ($this->overtimeWorkLogRepository->findAllWaitingForApprovalBySupervisor($supervisor) as $workLog) {
+                $response['overtimeWorkLogs'][] = $this->normalizer->normalize(
+                    $workLog,
+                    OvertimeWorkLog::class,
+                    ['groups' => ['special_approvals_out_list']]
+                );
+            }
+
+            foreach ($this->timeOffWorkLogRepository->findAllWaitingForApprovalBySupervisor($supervisor) as $workLog) {
+                $response['timeOffWorkLogs'][] = $this->normalizer->normalize(
+                    $workLog,
+                    TimeOffWorkLog::class,
+                    ['groups' => ['special_approvals_out_list']]
+                );
+            }
+
+            foreach ($this->vacationWorkLogRepository->findAllWaitingForApprovalBySupervisor($supervisor) as $workLog) {
+                $response['vacationWorkLogs'][] = $this->normalizer->normalize(
+                    $workLog,
+                    VacationWorkLog::class,
+                    ['groups' => ['special_approvals_out_list']]
+                );
+            }
         }
 
         return JsonResponse::create($response, JsonResponse::HTTP_OK);

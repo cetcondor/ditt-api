@@ -211,7 +211,8 @@ class ApiTester extends \Codeception\Actor
                 }
 
                 return $workHours;
-            }
+            },
+            'roles' => [\App\Entity\User::ROLE_EMPLOYEE],
         ], $params);
 
         $this->persistEntity($user);

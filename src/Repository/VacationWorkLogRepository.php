@@ -41,10 +41,29 @@ class VacationWorkLogRepository
     }
 
     /**
+     * @return mixed
+     */
+    public function findAllWaitingForApproval()
+    {
+        $qb = $this->repository->createQueryBuilder('vwl');
+
+        return $qb
+            ->select('vwl')
+            ->leftJoin('vwl.workMonth', 'wm')
+            ->leftJoin('wm.user', 'u')
+            ->where($qb->expr()->andX(
+                $qb->expr()->isNull('vwl.timeApproved'),
+                $qb->expr()->isNull('vwl.timeRejected')
+            ))
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
      * @param User $supervisor
      * @return mixed
      */
-    public function findAllWaitingForApproval(User $supervisor)
+    public function findAllWaitingForApprovalBySupervisor(User $supervisor)
     {
         $qb = $this->repository->createQueryBuilder('vwl');
 

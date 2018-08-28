@@ -39,10 +39,29 @@ class OvertimeWorkLogRepository
     }
 
     /**
+     * @return mixed
+     */
+    public function findAllWaitingForApproval()
+    {
+        $qb = $this->repository->createQueryBuilder('owl');
+
+        return $qb
+            ->select('owl')
+            ->leftJoin('owl.workMonth', 'wm')
+            ->leftJoin('wm.user', 'u')
+            ->where($qb->expr()->andX(
+                $qb->expr()->isNull('owl.timeApproved'),
+                $qb->expr()->isNull('owl.timeRejected')
+            ))
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
      * @param User $supervisor
      * @return mixed
      */
-    public function findAllWaitingForApproval(User $supervisor)
+    public function findAllWaitingForApprovalBySupervisor(User $supervisor)
     {
         $qb = $this->repository->createQueryBuilder('owl');
 

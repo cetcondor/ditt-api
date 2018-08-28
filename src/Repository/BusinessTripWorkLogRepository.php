@@ -40,10 +40,29 @@ class BusinessTripWorkLogRepository
     }
 
     /**
+     * @return mixed
+     */
+    public function findAllWaitingForApproval()
+    {
+        $qb = $this->repository->createQueryBuilder('btwl');
+
+        return $qb
+            ->select('btwl')
+            ->leftJoin('btwl.workMonth', 'wm')
+            ->leftJoin('wm.user', 'u')
+            ->where($qb->expr()->andX(
+                $qb->expr()->isNull('btwl.timeApproved'),
+                $qb->expr()->isNull('btwl.timeRejected')
+            ))
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
      * @param User $supervisor
      * @return mixed
      */
-    public function findAllWaitingForApproval(User $supervisor)
+    public function findAllWaitingForApprovalBySupervisor(User $supervisor)
     {
         $qb = $this->repository->createQueryBuilder('btwl');
 
