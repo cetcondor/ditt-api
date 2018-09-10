@@ -15,7 +15,7 @@ class WorkHours
     private $month;
 
     /**
-     * @var int
+     * @var float
      */
     private $requiredHours;
 
@@ -70,18 +70,18 @@ class WorkHours
     }
 
     /**
-     * @return int
+     * @return float
      */
-    public function getRequiredHours(): int
+    public function getRequiredHours(): float
     {
         return $this->requiredHours;
     }
 
     /**
-     * @param int $requiredHours
+     * @param float $requiredHours
      * @return WorkHours
      */
-    public function setRequiredHours(int $requiredHours): WorkHours
+    public function setRequiredHours(float $requiredHours): WorkHours
     {
         $this->requiredHours = $requiredHours;
 

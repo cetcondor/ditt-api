@@ -13,9 +13,10 @@ App\Entity\WorkHours:
 
         requiredHours:
             - NotBlank: ~
-            - Type: int
+            - Type: numeric
             - Range:
                 min: 0
+                max: 24
 
         user:
             - NotBlank: ~

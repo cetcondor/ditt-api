@@ -11,7 +11,7 @@ App\Entity\WorkHours:
 
     fields:
         requiredHours:
-            type: integer
+            type: float
 
     manyToOne:
         user:
