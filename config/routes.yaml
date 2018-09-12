@@ -115,6 +115,13 @@ api_work_months_special_approvals:
     defaults:
         _api_collection_operation_name: 'specialApprovals'
 
+api_work_months_recent_special_approvals:
+    path: /recent_special_approvals/{supervisorId}
+    methods: [GET]
+    controller: App\Controller\WorkMonthController:recentSpecialApprovals
+    defaults:
+        _api_collection_operation_name: 'recentSpecialApprovals'
+
 api_work_months_mark_approved:
     path: /work_months/{id}/mark_approved
     methods: [PUT]

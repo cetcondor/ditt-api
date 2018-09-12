@@ -78,4 +78,85 @@ class OvertimeWorkLogRepository
             ->getQuery()
             ->getResult();
     }
+
+    /**
+     * @return OvertimeWorkLog[]
+     */
+    public function findAllRecent(): array
+    {
+        $date = new \DateTime();
+        $currentMonth = $date->format('m');
+        $currentYear = $date->format('Y');
+
+        $date->modify('-1 month');
+        $previousMonth = $date->format('m');
+        $previousYear = $date->format('Y');
+
+        $qb = $this->repository->createQueryBuilder('owl');
+
+        return $qb
+            ->select('owl')
+            ->leftJoin('owl.workMonth', 'wm')
+            ->leftJoin('wm.user', 'u')
+            ->where($qb->expr()->orX(
+                $qb->expr()->andX(
+                    $qb->expr()->eq('wm.month', ':currentMonth'),
+                    $qb->expr()->eq('wm.year', ':currentYear')
+                ),
+                $qb->expr()->andX(
+                    $qb->expr()->eq('wm.month', ':previousMonth'),
+                    $qb->expr()->eq('wm.year', ':previousYear')
+                )
+            ))
+            ->setParameter('currentMonth', $currentMonth)
+            ->setParameter('currentYear', $currentYear)
+            ->setParameter('previousMonth', $previousMonth)
+            ->setParameter('previousYear', $previousYear)
+            ->orderBy('owl.date', 'desc')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @param User $supervisor
+     * @return OvertimeWorkLog[]
+     */
+    public function findAllRecentBySupervisor(User $supervisor): array
+    {
+        $date = new \DateTime();
+        $currentMonth = $date->format('m');
+        $currentYear = $date->format('Y');
+
+        $date->modify('-1 month');
+        $previousMonth = $date->format('m');
+        $previousYear = $date->format('Y');
+
+        $qb = $this->repository->createQueryBuilder('owl');
+
+        return $qb
+            ->select('owl')
+            ->leftJoin('owl.workMonth', 'wm')
+            ->leftJoin('wm.user', 'u')
+            ->where($qb->expr()->andX(
+                $qb->expr()->eq('u.supervisor', ':supervisor'),
+                $qb->expr()->orX(
+                    $qb->expr()->andX(
+                        $qb->expr()->eq('wm.month', ':currentMonth'),
+                        $qb->expr()->eq('wm.year', ':currentYear')
+                    ),
+                    $qb->expr()->andX(
+                        $qb->expr()->eq('wm.month', ':previousMonth'),
+                        $qb->expr()->eq('wm.year', ':previousYear')
+                    )
+                )
+            ))
+            ->setParameter('supervisor', $supervisor)
+            ->setParameter('currentMonth', $currentMonth)
+            ->setParameter('currentYear', $currentYear)
+            ->setParameter('previousMonth', $previousMonth)
+            ->setParameter('previousYear', $previousYear)
+            ->orderBy('owl.date', 'desc')
+            ->getQuery()
+            ->getResult();
+    }
 }

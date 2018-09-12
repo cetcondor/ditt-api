@@ -234,6 +234,115 @@ class WorkMonthController extends Controller
     }
 
     /**
+     * @param int $supervisorId
+     * @return Response
+     */
+    public function recentSpecialApprovals(int $supervisorId): Response
+    {
+        $supervisor = $this->userRepository->getRepository()->find($supervisorId);
+        if (!$supervisor || !$supervisor instanceof User) {
+            throw $this->createNotFoundException(sprintf('User with id %d was not found', $supervisorId));
+        }
+
+        $isSuperAdmin = $this->loggedUser && in_array(
+                User::ROLE_SUPER_ADMIN,
+                $this->loggedUser->getRoles()
+            );
+
+        $response = [
+            'businessTripWorkLogs' => [],
+            'homeOfficeWorkLogs' => [],
+            'overtimeWorkLogs' => [],
+            'timeOffWorkLogs' => [],
+            'vacationWorkLogs' => [],
+        ];
+
+        if ($isSuperAdmin) {
+            foreach ($this->businessTripWorkLogRepository->findAllRecent() as $workLog) {
+                $response['businessTripWorkLogs'][] = $this->normalizer->normalize(
+                    $workLog,
+                    BusinessTripWorkLog::class,
+                    ['groups' => ['special_approvals_out_list']]
+                );
+            }
+
+            foreach ($this->homeOfficeWorkLogRepository->findAllRecent() as $workLog) {
+                $response['homeOfficeWorkLogs'][] = $this->normalizer->normalize(
+                    $workLog,
+                    HomeOfficeWorkLog::class,
+                    ['groups' => ['special_approvals_out_list']]
+                );
+            }
+
+            foreach ($this->overtimeWorkLogRepository->findAllRecent() as $workLog) {
+                $response['overtimeWorkLogs'][] = $this->normalizer->normalize(
+                    $workLog,
+                    OvertimeWorkLog::class,
+                    ['groups' => ['special_approvals_out_list']]
+                );
+            }
+
+            foreach ($this->timeOffWorkLogRepository->findAllRecent() as $workLog) {
+                $response['timeOffWorkLogs'][] = $this->normalizer->normalize(
+                    $workLog,
+                    TimeOffWorkLog::class,
+                    ['groups' => ['special_approvals_out_list']]
+                );
+            }
+
+            foreach ($this->vacationWorkLogRepository->findAllRecent() as $workLog) {
+                $response['vacationWorkLogs'][] = $this->normalizer->normalize(
+                    $workLog,
+                    VacationWorkLog::class,
+                    ['groups' => ['special_approvals_out_list']]
+                );
+            }
+        } else {
+            foreach ($this->businessTripWorkLogRepository->findAllRecentBySupervisor($supervisor) as $workLog) {
+                $response['businessTripWorkLogs'][] = $this->normalizer->normalize(
+                    $workLog,
+                    BusinessTripWorkLog::class,
+                    ['groups' => ['special_approvals_out_list']]
+                );
+            }
+
+            foreach ($this->homeOfficeWorkLogRepository->findAllRecentBySupervisor($supervisor) as $workLog) {
+                $response['homeOfficeWorkLogs'][] = $this->normalizer->normalize(
+                    $workLog,
+                    HomeOfficeWorkLog::class,
+                    ['groups' => ['special_approvals_out_list']]
+                );
+            }
+
+            foreach ($this->overtimeWorkLogRepository->findAllRecentBySupervisor($supervisor) as $workLog) {
+                $response['overtimeWorkLogs'][] = $this->normalizer->normalize(
+                    $workLog,
+                    OvertimeWorkLog::class,
+                    ['groups' => ['special_approvals_out_list']]
+                );
+            }
+
+            foreach ($this->timeOffWorkLogRepository->findAllRecentBySupervisor($supervisor) as $workLog) {
+                $response['timeOffWorkLogs'][] = $this->normalizer->normalize(
+                    $workLog,
+                    TimeOffWorkLog::class,
+                    ['groups' => ['special_approvals_out_list']]
+                );
+            }
+
+            foreach ($this->vacationWorkLogRepository->findAllRecentBySupervisor($supervisor) as $workLog) {
+                $response['vacationWorkLogs'][] = $this->normalizer->normalize(
+                    $workLog,
+                    VacationWorkLog::class,
+                    ['groups' => ['special_approvals_out_list']]
+                );
+            }
+        }
+
+        return JsonResponse::create($response, JsonResponse::HTTP_OK);
+    }
+
+    /**
      * @param int $id
      * @return Response
      */

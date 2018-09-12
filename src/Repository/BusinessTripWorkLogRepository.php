@@ -81,6 +81,87 @@ class BusinessTripWorkLogRepository
     }
 
     /**
+     * @return BusinessTripWorkLog[]
+     */
+    public function findAllRecent(): array
+    {
+        $date = new \DateTime();
+        $currentMonth = $date->format('m');
+        $currentYear = $date->format('Y');
+
+        $date->modify('-1 month');
+        $previousMonth = $date->format('m');
+        $previousYear = $date->format('Y');
+
+        $qb = $this->repository->createQueryBuilder('btwl');
+
+        return $qb
+            ->select('btwl')
+            ->leftJoin('btwl.workMonth', 'wm')
+            ->leftJoin('wm.user', 'u')
+            ->where($qb->expr()->orX(
+                $qb->expr()->andX(
+                    $qb->expr()->eq('wm.month', ':currentMonth'),
+                    $qb->expr()->eq('wm.year', ':currentYear')
+                ),
+                $qb->expr()->andX(
+                    $qb->expr()->eq('wm.month', ':previousMonth'),
+                    $qb->expr()->eq('wm.year', ':previousYear')
+                )
+            ))
+            ->setParameter('currentMonth', $currentMonth)
+            ->setParameter('currentYear', $currentYear)
+            ->setParameter('previousMonth', $previousMonth)
+            ->setParameter('previousYear', $previousYear)
+            ->orderBy('btwl.date', 'desc')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @param User $supervisor
+     * @return BusinessTripWorkLog[]
+     */
+    public function findAllRecentBySupervisor(User $supervisor): array
+    {
+        $date = new \DateTime();
+        $currentMonth = $date->format('m');
+        $currentYear = $date->format('Y');
+
+        $date->modify('-1 month');
+        $previousMonth = $date->format('m');
+        $previousYear = $date->format('Y');
+
+        $qb = $this->repository->createQueryBuilder('btwl');
+
+        return $qb
+            ->select('btwl')
+            ->leftJoin('btwl.workMonth', 'wm')
+            ->leftJoin('wm.user', 'u')
+            ->where($qb->expr()->andX(
+                $qb->expr()->eq('u.supervisor', ':supervisor'),
+                $qb->expr()->orX(
+                    $qb->expr()->andX(
+                        $qb->expr()->eq('wm.month', ':currentMonth'),
+                        $qb->expr()->eq('wm.year', ':currentYear')
+                    ),
+                    $qb->expr()->andX(
+                        $qb->expr()->eq('wm.month', ':previousMonth'),
+                        $qb->expr()->eq('wm.year', ':previousYear')
+                    )
+                )
+            ))
+            ->setParameter('supervisor', $supervisor)
+            ->setParameter('currentMonth', $currentMonth)
+            ->setParameter('currentYear', $currentYear)
+            ->setParameter('previousMonth', $previousMonth)
+            ->setParameter('previousYear', $previousYear)
+            ->orderBy('btwl.date', 'desc')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
      * @param WorkMonth $workMonth
      * @return BusinessTripWorkLog[]
      */
