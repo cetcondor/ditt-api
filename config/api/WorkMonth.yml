@@ -8,11 +8,6 @@ App\Entity\WorkMonth:
             normalization_context:
                 groups:
                     - work_month_out_list
-        get:
-            method: GET
-            normalization_context:
-                groups:
-                    - work_month_out_list
         specialApprovals:
             method: GET
             route_name: api_work_months_special_approvals
@@ -34,7 +29,17 @@ App\Entity\WorkMonth:
             method: GET
             normalization_context:
                 groups:
+                    - work_month_out_list
+            swagger_context:
+                summary: Retrieves a WorkMonth resource without work logs.
+        getWorkMonthDetail:
+            method: GET
+            route_name: api_work_months_detail
+            normalization_context:
+                groups:
                     - work_month_out_detail
+            swagger_context:
+                summary: Retrieves a WorkMonth resource with work logs.
         markApproved:
             method: PUT
             route_name: api_work_months_mark_approved

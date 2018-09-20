@@ -18,6 +18,7 @@ use App\Repository\UserRepository;
 use App\Repository\VacationWorkLogRepository;
 use App\Repository\WorkMonthRepository;
 use App\Service\WorkMonthService;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -122,6 +123,40 @@ class WorkMonthController extends Controller
         if ($tokenStorage->getToken()) {
             $this->loggedUser = $tokenStorage->getToken()->getUser();
         }
+    }
+
+    /**
+     * @param int $id
+     * @return Response
+     */
+    public function getWorkMonthDetail(int $id): Response
+    {
+        $workMonth = $this->workMonthRepository->getRepository()->find($id);
+        if (!$workMonth || !$workMonth instanceof  WorkMonth) {
+            throw $this->createNotFoundException(sprintf('Work month with id %d was not found', $id));
+        }
+
+        if (
+            $workMonth->getUser()->getId() !== $this->loggedUser->getId()
+            && WorkMonth::STATUS_OPENED === $workMonth->getStatus()
+        ) {
+            $emptyCollection = new ArrayCollection();
+            $workMonth->setBusinessTripWorkLogs($emptyCollection);
+            $workMonth->setHomeOfficeWorkLogs($emptyCollection);
+            $workMonth->setOvertimeWorkLogs($emptyCollection);
+            $workMonth->setSickDayWorkLogs($emptyCollection);
+            $workMonth->setTimeOffWorkLogs($emptyCollection);
+            $workMonth->setVacationWorkLogs($emptyCollection);
+            $workMonth->setWorkLogs($emptyCollection);
+        }
+
+        return JsonResponse::create(
+            $this->normalizer->normalize(
+                $workMonth,
+                WorkMonth::class,
+                ['groups' => ['work_month_out_detail']]
+            ), JsonResponse::HTTP_OK
+        );
     }
 
     /**

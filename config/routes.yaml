@@ -108,6 +108,13 @@ api_supervised_users:
     defaults:
         _api_collection_operation_name: 'supervisedUsers'
 
+api_work_months_detail:
+    path: /work_months/{id}/detail
+    methods: [GET]
+    controller: App\Controller\WorkMonthController:getWorkMonthDetail
+    defaults:
+        _api_collection_operation_name: 'getWorkMonthDetail'
+
 api_work_months_special_approvals:
     path: /special_approvals/{supervisorId}
     methods: [GET]
