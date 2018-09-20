@@ -45,6 +45,7 @@ class WorkLogSubscriber implements EventSubscriberInterface
             KernelEvents::VIEW => [
                 ['addWorkMonth', EventPriorities::PRE_VALIDATE],
                 ['checkWorkMonthStatus', EventPriorities::PRE_WRITE],
+                ['resetWorkMonthStatus', EventPriorities::PRE_WRITE],
             ],
         ];
     }
@@ -102,6 +103,27 @@ class WorkLogSubscriber implements EventSubscriberInterface
 
         if ($workLog->getWorkMonth()->getStatus() === WorkMonth::STATUS_APPROVED) {
             throw new InvalidArgumentException('Cannot add or delete work log to closed work month.');
+        }
+    }
+
+    /**
+     * @param GetResponseForControllerResultEvent $event
+     */
+    public function resetWorkMonthStatus(GetResponseForControllerResultEvent $event): void
+    {
+        $workLog = $event->getControllerResult();
+        if (!$workLog instanceof WorkLogInterface) {
+            return;
+        }
+
+        $method = $event->getRequest()->getMethod();
+
+        if (Request::METHOD_POST !== $method && Request::METHOD_PUT !== $method) {
+            return;
+        }
+
+        if ($workLog->getWorkMonth()->getStatus() === WorkMonth::STATUS_WAITING_FOR_APPROVAL) {
+            $workLog->getWorkMonth()->setStatus(WorkMonth::STATUS_OPENED);
         }
     }
 }
