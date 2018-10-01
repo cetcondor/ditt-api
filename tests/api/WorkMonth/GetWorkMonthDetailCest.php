@@ -47,6 +47,120 @@ class GetWorkMonthDetailCest
         $I->getContainer()->set(TokenStorageInterface::class, $tokenStorage->reveal());
     }
 
+    private function beforeSuperAdmin(\ApiTester $I)
+    {
+        $prophet = new Prophet();
+        $this->supervisor = $I->createUser();
+        $this->user = $I->createUser([
+            'employeeId' => '456',
+            'email' => 'user3@example.com',
+            'roles' => [User::ROLE_SUPER_ADMIN],
+        ]);
+        $token = $prophet->prophesize(TokenInterface::class);
+        $token->getUser()->willReturn($this->supervisor);
+        $tokenStorage = $prophet->prophesize(TokenStorageInterface::class);
+        $tokenStorage->getToken()->willReturn($token->reveal());
+        $I->getContainer()->set(TokenStorageInterface::class, $tokenStorage->reveal());
+    }
+
+    /**
+     * @param \ApiTester $I
+     * @param \DateTimeImmutable $startTime1
+     * @param \DateTimeImmutable $endTime1
+     * @param \DateTimeImmutable $startTime2
+     * @param \DateTimeImmutable $endTime2
+     * @param string $workMonthStatus
+     * @return array
+     */
+    private function prepareData(
+        \ApiTester $I,
+        \DateTimeImmutable $startTime1,
+        \DateTimeImmutable $endTime1,
+        \DateTimeImmutable $startTime2,
+        \DateTimeImmutable $endTime2,
+        string $workMonthStatus
+    ): array {
+        $data['workMonth'] = $I->createWorkMonth([
+            'month' => $startTime1->format('m'),
+            'status' => $workMonthStatus,
+            'user' => $this->user,
+            'year' => $startTime1->format('Y'),
+        ]);
+
+        $data['businessTripWorkLog1'] = $I->createBusinessTripWorkLog([
+            'date' => $startTime1,
+            'workMonth' => $data['workMonth'],
+        ]);
+        $data['businessTripWorkLog2'] = $I->createBusinessTripWorkLog([
+            'date' => $endTime1,
+            'workMonth' => $data['workMonth'],
+        ]);
+        $data['homeOfficeWorkLog1'] = $I->createHomeOfficeWorkLog([
+            'date' => $startTime1,
+            'workMonth' => $data['workMonth'],
+        ]);
+        $data['homeOfficeWorkLog2'] = $I->createHomeOfficeWorkLog([
+            'date' => $endTime1,
+            'workMonth' => $data['workMonth'],
+        ]);
+        $data['overtimeWorkLog1'] = $I->createOvertimeWorkLog([
+            'date' => $startTime1,
+            'workMonth' => $data['workMonth'],
+        ]);
+        $data['overtimeWorkLog2'] = $I->createOvertimeWorkLog([
+            'date' => $endTime1,
+            'workMonth' => $data['workMonth'],
+        ]);
+        $data['sickDayWorkLog1'] = $I->createSickDayWorkLog([
+            'date' => $startTime1,
+            'variant' => 'WITHOUT_NOTE',
+            'workMonth' => $data['workMonth'],
+        ]);
+        $data['sickDayWorkLog2'] = $I->createSickDayWorkLog([
+            'date' => $endTime1,
+            'variant' => 'SICK_CHILD',
+            'workMonth' => $data['workMonth'],
+        ]);
+        $data['timeOffWorkLog1'] = $I->createTimeOffWorkLog([
+            'date' => $startTime1,
+            'workMonth' => $data['workMonth'],
+        ]);
+        $data['timeOffWorkLog2'] = $I->createTimeOffWorkLog([
+            'date' => $endTime1,
+            'workMonth' => $data['workMonth'],
+        ]);
+        $data['vacationWorkLog1'] = $I->createVacationWorkLog([
+            'date' => $startTime1,
+            'workMonth' => $data['workMonth'],
+        ]);
+        $data['vacationWorkLog2'] = $I->createVacationWorkLog([
+            'date' => $endTime1,
+            'workMonth' => $data['workMonth'],
+        ]);
+        $data['workLog1'] = $I->createWorkLog([
+            'startTime' => $startTime1,
+            'endTime' => $endTime1,
+            'workMonth' => $data['workMonth'],
+        ]);
+        $data['workLog2'] = $I->createWorkLog([
+            'startTime' => $startTime2,
+            'endTime' => $endTime2,
+            'workMonth' => $data['workMonth'],
+        ]);
+
+        $data['workMonth']->setBusinessTripWorkLogs([$data['businessTripWorkLog1'], $data['businessTripWorkLog2']]);
+        $data['workMonth']->setHomeOfficeWorkLogs([$data['homeOfficeWorkLog1'], $data['homeOfficeWorkLog2']]);
+        $data['workMonth']->setOvertimeWorkLogs([$data['overtimeWorkLog1'], $data['overtimeWorkLog2']]);
+        $data['workMonth']->setSickDayWorkLogs([$data['sickDayWorkLog1'], $data['sickDayWorkLog2']]);
+        $data['workMonth']->setTimeOffWorkLogs([$data['timeOffWorkLog1'], $data['timeOffWorkLog2']]);
+        $data['workMonth']->setVacationWorkLogs([$data['vacationWorkLog1'], $data['vacationWorkLog2']]);
+        $data['workMonth']->setWorkLogs([$data['workLog1'], $data['workLog2']]);
+
+        $I->flushToDatabase();
+
+        return $data;
+    }
+
     public function testGetOpenedDetail(\ApiTester $I)
     {
         $this->beforeEmployee($I);
@@ -57,168 +171,94 @@ class GetWorkMonthDetailCest
         $startTime2 = new \DateTimeImmutable();
         $endTime2 = $startTime1->add(new \DateInterval('PT1M'));
 
-        $workMonth = $I->createWorkMonth([
-            'month' => $startTime1->format('m'),
-            'user' => $this->user,
-            'year' => $startTime1->format('Y'),
-        ]);
-
-        $businessTripWorkLog1 = $I->createBusinessTripWorkLog([
-            'date' => $startTime1,
-            'workMonth' => $workMonth,
-        ]);
-        $businessTripWorkLog2 = $I->createBusinessTripWorkLog([
-            'date' => $endTime1,
-            'workMonth' => $workMonth,
-        ]);
-        $homeOfficeWorkLog1 = $I->createHomeOfficeWorkLog([
-            'date' => $startTime1,
-            'workMonth' => $workMonth,
-        ]);
-        $homeOfficeWorkLog2 = $I->createHomeOfficeWorkLog([
-            'date' => $endTime1,
-            'workMonth' => $workMonth,
-        ]);
-        $overtimeWorkLog1 = $I->createOvertimeWorkLog([
-            'date' => $startTime1,
-            'workMonth' => $workMonth,
-        ]);
-        $overtimeWorkLog2 = $I->createOvertimeWorkLog([
-            'date' => $endTime1,
-            'workMonth' => $workMonth,
-        ]);
-        $sickDayWorkLog1 = $I->createSickDayWorkLog([
-            'date' => $startTime1,
-            'variant' => 'WITHOUT_NOTE',
-            'workMonth' => $workMonth,
-        ]);
-        $sickDayWorkLog2 = $I->createSickDayWorkLog([
-            'date' => $endTime1,
-            'variant' => 'SICK_CHILD',
-            'workMonth' => $workMonth,
-        ]);
-        $timeOffWorkLog1 = $I->createTimeOffWorkLog([
-            'date' => $startTime1,
-            'workMonth' => $workMonth,
-        ]);
-        $timeOffWorkLog2 = $I->createTimeOffWorkLog([
-            'date' => $endTime1,
-            'workMonth' => $workMonth,
-        ]);
-        $vacationWorkLog1 = $I->createVacationWorkLog([
-            'date' => $startTime1,
-            'workMonth' => $workMonth,
-        ]);
-        $vacationWorkLog2 = $I->createVacationWorkLog([
-            'date' => $endTime1,
-            'workMonth' => $workMonth,
-        ]);
-        $workLog1 = $I->createWorkLog([
-            'startTime' => $startTime1,
-            'endTime' => $endTime1,
-            'workMonth' => $workMonth,
-        ]);
-        $workLog2 = $I->createWorkLog([
-            'startTime' => $startTime2,
-            'endTime' => $endTime2,
-            'workMonth' => $workMonth,
-        ]);
-
-        $workMonth->setBusinessTripWorkLogs([$businessTripWorkLog1, $businessTripWorkLog2]);
-        $workMonth->setHomeOfficeWorkLogs([$homeOfficeWorkLog1, $homeOfficeWorkLog2]);
-        $workMonth->setOvertimeWorkLogs([$overtimeWorkLog1, $overtimeWorkLog2]);
-        $workMonth->setSickDayWorkLogs([$sickDayWorkLog1, $sickDayWorkLog2]);
-        $workMonth->setTimeOffWorkLogs([$timeOffWorkLog1, $timeOffWorkLog2]);
-        $workMonth->setVacationWorkLogs([$vacationWorkLog1, $vacationWorkLog2]);
-        $workMonth->setWorkLogs([$workLog1, $workLog2]);
-        $I->flushToDatabase();
+        $data = $this->prepareData($I, $startTime1, $endTime1, $startTime2, $endTime2, 'OPENED');
 
         $I->haveHttpHeader('Content-Type', 'application/json');
 
-        $I->sendGET(sprintf('/work_months/%d/detail', $workMonth->getId()));
+        $I->sendGET(sprintf('/work_months/%d/detail', $data['workMonth']->getId()));
 
         $I->seeHttpHeader('Content-Type', 'application/json');
         $I->seeResponseCodeIs(Response::HTTP_OK);
         $I->seeResponseContainsJson([
-            'id' => $workMonth->getId(),
+            'id' => $data['workMonth']->getId(),
             'businessTripWorkLogs' => [
                 [
                     'date' => $startTime1->format(\DateTime::RFC3339),
-                    'id' => $businessTripWorkLog1->getId(),
+                    'id' => $data['businessTripWorkLog1']->getId(),
                 ],
                 [
                     'date' => $endTime1->format(\DateTime::RFC3339),
-                    'id' => $businessTripWorkLog2->getId(),
+                    'id' => $data['businessTripWorkLog2']->getId(),
                 ],
             ],
             'homeOfficeWorkLogs' => [
                 [
                     'date' => $startTime1->format(\DateTime::RFC3339),
-                    'id' => $homeOfficeWorkLog1->getId(),
+                    'id' => $data['homeOfficeWorkLog1']->getId(),
                 ],
                 [
                     'date' => $endTime1->format(\DateTime::RFC3339),
-                    'id' => $homeOfficeWorkLog2->getId(),
+                    'id' => $data['homeOfficeWorkLog2']->getId(),
                 ],
             ],
-            'month' => $workMonth->getMonth(),
+            'month' => $data['workMonth']->getMonth(),
             'overtimeWorkLogs' => [
                 [
                     'date' => $startTime1->format(\DateTime::RFC3339),
-                    'id' => $overtimeWorkLog1->getId(),
+                    'id' => $data['overtimeWorkLog1']->getId(),
                 ],
                 [
                     'date' => $endTime1->format(\DateTime::RFC3339),
-                    'id' => $overtimeWorkLog2->getId(),
+                    'id' => $data['overtimeWorkLog2']->getId(),
                 ],
             ],
             'status' => 'OPENED',
             'sickDayWorkLogs' => [
                 [
                     'date' => $startTime1->format(\DateTime::RFC3339),
-                    'id' => $sickDayWorkLog1->getId(),
-                    'variant' => $sickDayWorkLog1->getVariant(),
+                    'id' => $data['sickDayWorkLog1']->getId(),
+                    'variant' => $data['sickDayWorkLog1']->getVariant(),
                 ],
                 [
                     'date' => $endTime1->format(\DateTime::RFC3339),
-                    'id' => $sickDayWorkLog2->getId(),
-                    'variant' => $sickDayWorkLog2->getVariant(),
+                    'id' => $data['sickDayWorkLog2']->getId(),
+                    'variant' => $data['sickDayWorkLog2']->getVariant(),
                 ],
             ],
             'timeOffWorkLogs' => [
                 [
                     'date' => $startTime1->format(\DateTime::RFC3339),
-                    'id' => $timeOffWorkLog1->getId(),
+                    'id' => $data['timeOffWorkLog1']->getId(),
                 ],
                 [
                     'date' => $endTime1->format(\DateTime::RFC3339),
-                    'id' => $timeOffWorkLog2->getId(),
+                    'id' => $data['timeOffWorkLog2']->getId(),
                 ],
             ],
             'user' => ['id' => $this->user->getId()],
             'vacationWorkLogs' => [
                 [
                     'date' => $startTime1->format(\DateTime::RFC3339),
-                    'id' => $vacationWorkLog1->getId(),
+                    'id' => $data['vacationWorkLog1']->getId(),
                 ],
                 [
                     'date' => $endTime1->format(\DateTime::RFC3339),
-                    'id' => $vacationWorkLog2->getId(),
+                    'id' => $data['vacationWorkLog2']->getId(),
                 ],
             ],
             'workLogs' => [
                 [
                     'startTime' => $startTime1->format(\DateTime::RFC3339),
                     'endTime' => $endTime1->format(\DateTime::RFC3339),
-                    'id' => $workLog1->getId(),
+                    'id' => $data['workLog1']->getId(),
                 ],
                 [
                     'startTime' => $startTime2->format(\DateTime::RFC3339),
                     'endTime' => $endTime2->format(\DateTime::RFC3339),
-                    'id' => $workLog2->getId(),
+                    'id' => $data['workLog2']->getId(),
                 ],
             ],
-            'year' => $workMonth->getYear(),
+            'year' => $data['workMonth']->getYear(),
         ]);
     }
 
@@ -232,169 +272,94 @@ class GetWorkMonthDetailCest
         $startTime2 = new \DateTimeImmutable();
         $endTime2 = $startTime1->add(new \DateInterval('PT1M'));
 
-        $workMonth = $I->createWorkMonth([
-            'month' => $startTime1->format('m'),
-            'status' => 'WAITING_FOR_APPROVAL',
-            'user' => $this->user,
-            'year' => $startTime1->format('Y'),
-        ]);
-
-        $businessTripWorkLog1 = $I->createBusinessTripWorkLog([
-            'date' => $startTime1,
-            'workMonth' => $workMonth,
-        ]);
-        $businessTripWorkLog2 = $I->createBusinessTripWorkLog([
-            'date' => $endTime1,
-            'workMonth' => $workMonth,
-        ]);
-        $homeOfficeWorkLog1 = $I->createHomeOfficeWorkLog([
-            'date' => $startTime1,
-            'workMonth' => $workMonth,
-        ]);
-        $homeOfficeWorkLog2 = $I->createHomeOfficeWorkLog([
-            'date' => $endTime1,
-            'workMonth' => $workMonth,
-        ]);
-        $overtimeWorkLog1 = $I->createOvertimeWorkLog([
-            'date' => $startTime1,
-            'workMonth' => $workMonth,
-        ]);
-        $overtimeWorkLog2 = $I->createOvertimeWorkLog([
-            'date' => $endTime1,
-            'workMonth' => $workMonth,
-        ]);
-        $sickDayWorkLog1 = $I->createSickDayWorkLog([
-            'date' => $startTime1,
-            'variant' => 'WITHOUT_NOTE',
-            'workMonth' => $workMonth,
-        ]);
-        $sickDayWorkLog2 = $I->createSickDayWorkLog([
-            'date' => $endTime1,
-            'variant' => 'SICK_CHILD',
-            'workMonth' => $workMonth,
-        ]);
-        $timeOffWorkLog1 = $I->createTimeOffWorkLog([
-            'date' => $startTime1,
-            'workMonth' => $workMonth,
-        ]);
-        $timeOffWorkLog2 = $I->createTimeOffWorkLog([
-            'date' => $endTime1,
-            'workMonth' => $workMonth,
-        ]);
-        $vacationWorkLog1 = $I->createVacationWorkLog([
-            'date' => $startTime1,
-            'workMonth' => $workMonth,
-        ]);
-        $vacationWorkLog2 = $I->createVacationWorkLog([
-            'date' => $endTime1,
-            'workMonth' => $workMonth,
-        ]);
-        $workLog1 = $I->createWorkLog([
-            'startTime' => $startTime1,
-            'endTime' => $endTime1,
-            'workMonth' => $workMonth,
-        ]);
-        $workLog2 = $I->createWorkLog([
-            'startTime' => $startTime2,
-            'endTime' => $endTime2,
-            'workMonth' => $workMonth,
-        ]);
-
-        $workMonth->setBusinessTripWorkLogs([$businessTripWorkLog1, $businessTripWorkLog2]);
-        $workMonth->setHomeOfficeWorkLogs([$homeOfficeWorkLog1, $homeOfficeWorkLog2]);
-        $workMonth->setOvertimeWorkLogs([$overtimeWorkLog1, $overtimeWorkLog2]);
-        $workMonth->setSickDayWorkLogs([$sickDayWorkLog1, $sickDayWorkLog2]);
-        $workMonth->setTimeOffWorkLogs([$timeOffWorkLog1, $timeOffWorkLog2]);
-        $workMonth->setVacationWorkLogs([$vacationWorkLog1, $vacationWorkLog2]);
-        $workMonth->setWorkLogs([$workLog1, $workLog2]);
-        $I->flushToDatabase();
+        $data = $this->prepareData($I, $startTime1, $endTime1, $startTime2, $endTime2, 'WAITING_FOR_APPROVAL');
 
         $I->haveHttpHeader('Content-Type', 'application/json');
 
-        $I->sendGET(sprintf('/work_months/%d/detail', $workMonth->getId()));
+        $I->sendGET(sprintf('/work_months/%d/detail', $data['workMonth']->getId()));
 
         $I->seeHttpHeader('Content-Type', 'application/json');
         $I->seeResponseCodeIs(Response::HTTP_OK);
         $I->seeResponseContainsJson([
-            'id' => $workMonth->getId(),
+            'id' => $data['workMonth']->getId(),
             'businessTripWorkLogs' => [
                 [
                     'date' => $startTime1->format(\DateTime::RFC3339),
-                    'id' => $businessTripWorkLog1->getId(),
+                    'id' => $data['businessTripWorkLog1']->getId(),
                 ],
                 [
                     'date' => $endTime1->format(\DateTime::RFC3339),
-                    'id' => $businessTripWorkLog2->getId(),
+                    'id' => $data['businessTripWorkLog2']->getId(),
                 ],
             ],
             'homeOfficeWorkLogs' => [
                 [
                     'date' => $startTime1->format(\DateTime::RFC3339),
-                    'id' => $homeOfficeWorkLog1->getId(),
+                    'id' => $data['homeOfficeWorkLog1']->getId(),
                 ],
                 [
                     'date' => $endTime1->format(\DateTime::RFC3339),
-                    'id' => $homeOfficeWorkLog2->getId(),
+                    'id' => $data['homeOfficeWorkLog2']->getId(),
                 ],
             ],
-            'month' => $workMonth->getMonth(),
+            'month' => $data['workMonth']->getMonth(),
             'overtimeWorkLogs' => [
                 [
                     'date' => $startTime1->format(\DateTime::RFC3339),
-                    'id' => $overtimeWorkLog1->getId(),
+                    'id' => $data['overtimeWorkLog1']->getId(),
                 ],
                 [
                     'date' => $endTime1->format(\DateTime::RFC3339),
-                    'id' => $overtimeWorkLog2->getId(),
+                    'id' => $data['overtimeWorkLog2']->getId(),
                 ],
             ],
             'status' => 'WAITING_FOR_APPROVAL',
             'sickDayWorkLogs' => [
                 [
                     'date' => $startTime1->format(\DateTime::RFC3339),
-                    'id' => $sickDayWorkLog1->getId(),
-                    'variant' => $sickDayWorkLog1->getVariant(),
+                    'id' => $data['sickDayWorkLog1']->getId(),
+                    'variant' => $data['sickDayWorkLog1']->getVariant(),
                 ],
                 [
                     'date' => $endTime1->format(\DateTime::RFC3339),
-                    'id' => $sickDayWorkLog2->getId(),
-                    'variant' => $sickDayWorkLog2->getVariant(),
+                    'id' => $data['sickDayWorkLog2']->getId(),
+                    'variant' => $data['sickDayWorkLog2']->getVariant(),
                 ],
             ],
             'timeOffWorkLogs' => [
                 [
                     'date' => $startTime1->format(\DateTime::RFC3339),
-                    'id' => $timeOffWorkLog1->getId(),
+                    'id' => $data['timeOffWorkLog1']->getId(),
                 ],
                 [
                     'date' => $endTime1->format(\DateTime::RFC3339),
-                    'id' => $timeOffWorkLog2->getId(),
+                    'id' => $data['timeOffWorkLog2']->getId(),
                 ],
             ],
             'user' => ['id' => $this->user->getId()],
             'vacationWorkLogs' => [
                 [
                     'date' => $startTime1->format(\DateTime::RFC3339),
-                    'id' => $vacationWorkLog1->getId(),
+                    'id' => $data['vacationWorkLog1']->getId(),
                 ],
                 [
                     'date' => $endTime1->format(\DateTime::RFC3339),
-                    'id' => $vacationWorkLog2->getId(),
+                    'id' => $data['vacationWorkLog2']->getId(),
                 ],
             ],
             'workLogs' => [
                 [
                     'startTime' => $startTime1->format(\DateTime::RFC3339),
                     'endTime' => $endTime1->format(\DateTime::RFC3339),
-                    'id' => $workLog1->getId(),
+                    'id' => $data['workLog1']->getId(),
                 ],
                 [
                     'startTime' => $startTime2->format(\DateTime::RFC3339),
                     'endTime' => $endTime2->format(\DateTime::RFC3339),
-                    'id' => $workLog2->getId(),
+                    'id' => $data['workLog2']->getId(),
                 ],
             ],
-            'year' => $workMonth->getYear(),
+            'year' => $data['workMonth']->getYear(),
         ]);
     }
 
@@ -408,93 +373,19 @@ class GetWorkMonthDetailCest
         $startTime2 = new \DateTimeImmutable();
         $endTime2 = $startTime1->add(new \DateInterval('PT1M'));
 
-        $workMonth = $I->createWorkMonth([
-            'month' => $startTime1->format('m'),
-            'user' => $this->user,
-            'year' => $startTime1->format('Y'),
-        ]);
-
-        $businessTripWorkLog1 = $I->createBusinessTripWorkLog([
-            'date' => $startTime1,
-            'workMonth' => $workMonth,
-        ]);
-        $businessTripWorkLog2 = $I->createBusinessTripWorkLog([
-            'date' => $endTime1,
-            'workMonth' => $workMonth,
-        ]);
-        $homeOfficeWorkLog1 = $I->createHomeOfficeWorkLog([
-            'date' => $startTime1,
-            'workMonth' => $workMonth,
-        ]);
-        $homeOfficeWorkLog2 = $I->createHomeOfficeWorkLog([
-            'date' => $endTime1,
-            'workMonth' => $workMonth,
-        ]);
-        $overtimeWorkLog1 = $I->createOvertimeWorkLog([
-            'date' => $startTime1,
-            'workMonth' => $workMonth,
-        ]);
-        $overtimeWorkLog2 = $I->createOvertimeWorkLog([
-            'date' => $endTime1,
-            'workMonth' => $workMonth,
-        ]);
-        $sickDayWorkLog1 = $I->createSickDayWorkLog([
-            'date' => $startTime1,
-            'variant' => 'WITHOUT_NOTE',
-            'workMonth' => $workMonth,
-        ]);
-        $sickDayWorkLog2 = $I->createSickDayWorkLog([
-            'date' => $endTime1,
-            'variant' => 'SICK_CHILD',
-            'workMonth' => $workMonth,
-        ]);
-        $timeOffWorkLog1 = $I->createTimeOffWorkLog([
-            'date' => $startTime1,
-            'workMonth' => $workMonth,
-        ]);
-        $timeOffWorkLog2 = $I->createTimeOffWorkLog([
-            'date' => $endTime1,
-            'workMonth' => $workMonth,
-        ]);
-        $vacationWorkLog1 = $I->createVacationWorkLog([
-            'date' => $startTime1,
-            'workMonth' => $workMonth,
-        ]);
-        $vacationWorkLog2 = $I->createVacationWorkLog([
-            'date' => $endTime1,
-            'workMonth' => $workMonth,
-        ]);
-        $workLog1 = $I->createWorkLog([
-            'startTime' => $startTime1,
-            'endTime' => $endTime1,
-            'workMonth' => $workMonth,
-        ]);
-        $workLog2 = $I->createWorkLog([
-            'startTime' => $startTime2,
-            'endTime' => $endTime2,
-            'workMonth' => $workMonth,
-        ]);
-
-        $workMonth->setBusinessTripWorkLogs([$businessTripWorkLog1, $businessTripWorkLog2]);
-        $workMonth->setHomeOfficeWorkLogs([$homeOfficeWorkLog1, $homeOfficeWorkLog2]);
-        $workMonth->setOvertimeWorkLogs([$overtimeWorkLog1, $overtimeWorkLog2]);
-        $workMonth->setSickDayWorkLogs([$sickDayWorkLog1, $sickDayWorkLog2]);
-        $workMonth->setTimeOffWorkLogs([$timeOffWorkLog1, $timeOffWorkLog2]);
-        $workMonth->setVacationWorkLogs([$vacationWorkLog1, $vacationWorkLog2]);
-        $workMonth->setWorkLogs([$workLog1, $workLog2]);
-        $I->flushToDatabase();
+        $data = $this->prepareData($I, $startTime1, $endTime1, $startTime2, $endTime2, 'OPENED');
 
         $I->haveHttpHeader('Content-Type', 'application/json');
 
-        $I->sendGET(sprintf('/work_months/%d/detail', $workMonth->getId()));
+        $I->sendGET(sprintf('/work_months/%d/detail', $data['workMonth']->getId()));
 
         $I->seeHttpHeader('Content-Type', 'application/json');
         $I->seeResponseCodeIs(Response::HTTP_OK);
         $I->seeResponseContainsJson([
-            'id' => $workMonth->getId(),
+            'id' => $data['workMonth']->getId(),
             'businessTripWorkLogs' => [],
             'homeOfficeWorkLogs' => [],
-            'month' => $workMonth->getMonth(),
+            'month' => $data['workMonth']->getMonth(),
             'overtimeWorkLogs' => [],
             'status' => 'OPENED',
             'sickDayWorkLogs' => [],
@@ -502,7 +393,7 @@ class GetWorkMonthDetailCest
             'user' => ['id' => $this->user->getId()],
             'vacationWorkLogs' => [],
             'workLogs' => [],
-            'year' => $workMonth->getYear(),
+            'year' => $data['workMonth']->getYear(),
         ]);
     }
 
@@ -516,169 +407,229 @@ class GetWorkMonthDetailCest
         $startTime2 = new \DateTimeImmutable();
         $endTime2 = $startTime1->add(new \DateInterval('PT1M'));
 
-        $workMonth = $I->createWorkMonth([
-            'month' => $startTime1->format('m'),
-            'status' => 'WAITING_FOR_APPROVAL',
-            'user' => $this->user,
-            'year' => $startTime1->format('Y'),
-        ]);
-
-        $businessTripWorkLog1 = $I->createBusinessTripWorkLog([
-            'date' => $startTime1,
-            'workMonth' => $workMonth,
-        ]);
-        $businessTripWorkLog2 = $I->createBusinessTripWorkLog([
-            'date' => $endTime1,
-            'workMonth' => $workMonth,
-        ]);
-        $homeOfficeWorkLog1 = $I->createHomeOfficeWorkLog([
-            'date' => $startTime1,
-            'workMonth' => $workMonth,
-        ]);
-        $homeOfficeWorkLog2 = $I->createHomeOfficeWorkLog([
-            'date' => $endTime1,
-            'workMonth' => $workMonth,
-        ]);
-        $overtimeWorkLog1 = $I->createOvertimeWorkLog([
-            'date' => $startTime1,
-            'workMonth' => $workMonth,
-        ]);
-        $overtimeWorkLog2 = $I->createOvertimeWorkLog([
-            'date' => $endTime1,
-            'workMonth' => $workMonth,
-        ]);
-        $sickDayWorkLog1 = $I->createSickDayWorkLog([
-            'date' => $startTime1,
-            'variant' => 'WITHOUT_NOTE',
-            'workMonth' => $workMonth,
-        ]);
-        $sickDayWorkLog2 = $I->createSickDayWorkLog([
-            'date' => $endTime1,
-            'variant' => 'SICK_CHILD',
-            'workMonth' => $workMonth,
-        ]);
-        $timeOffWorkLog1 = $I->createTimeOffWorkLog([
-            'date' => $startTime1,
-            'workMonth' => $workMonth,
-        ]);
-        $timeOffWorkLog2 = $I->createTimeOffWorkLog([
-            'date' => $endTime1,
-            'workMonth' => $workMonth,
-        ]);
-        $vacationWorkLog1 = $I->createVacationWorkLog([
-            'date' => $startTime1,
-            'workMonth' => $workMonth,
-        ]);
-        $vacationWorkLog2 = $I->createVacationWorkLog([
-            'date' => $endTime1,
-            'workMonth' => $workMonth,
-        ]);
-        $workLog1 = $I->createWorkLog([
-            'startTime' => $startTime1,
-            'endTime' => $endTime1,
-            'workMonth' => $workMonth,
-        ]);
-        $workLog2 = $I->createWorkLog([
-            'startTime' => $startTime2,
-            'endTime' => $endTime2,
-            'workMonth' => $workMonth,
-        ]);
-
-        $workMonth->setBusinessTripWorkLogs([$businessTripWorkLog1, $businessTripWorkLog2]);
-        $workMonth->setHomeOfficeWorkLogs([$homeOfficeWorkLog1, $homeOfficeWorkLog2]);
-        $workMonth->setOvertimeWorkLogs([$overtimeWorkLog1, $overtimeWorkLog2]);
-        $workMonth->setSickDayWorkLogs([$sickDayWorkLog1, $sickDayWorkLog2]);
-        $workMonth->setTimeOffWorkLogs([$timeOffWorkLog1, $timeOffWorkLog2]);
-        $workMonth->setVacationWorkLogs([$vacationWorkLog1, $vacationWorkLog2]);
-        $workMonth->setWorkLogs([$workLog1, $workLog2]);
-        $I->flushToDatabase();
+        $data = $this->prepareData($I, $startTime1, $endTime1, $startTime2, $endTime2, 'WAITING_FOR_APPROVAL');
 
         $I->haveHttpHeader('Content-Type', 'application/json');
 
-        $I->sendGET(sprintf('/work_months/%d/detail', $workMonth->getId()));
+        $I->sendGET(sprintf('/work_months/%d/detail', $data['workMonth']->getId()));
 
         $I->seeHttpHeader('Content-Type', 'application/json');
         $I->seeResponseCodeIs(Response::HTTP_OK);
         $I->seeResponseContainsJson([
-            'id' => $workMonth->getId(),
+            'id' => $data['workMonth']->getId(),
             'businessTripWorkLogs' => [
                 [
                     'date' => $startTime1->format(\DateTime::RFC3339),
-                    'id' => $businessTripWorkLog1->getId(),
+                    'id' => $data['businessTripWorkLog1']->getId(),
                 ],
                 [
                     'date' => $endTime1->format(\DateTime::RFC3339),
-                    'id' => $businessTripWorkLog2->getId(),
+                    'id' => $data['businessTripWorkLog2']->getId(),
                 ],
             ],
             'homeOfficeWorkLogs' => [
                 [
                     'date' => $startTime1->format(\DateTime::RFC3339),
-                    'id' => $homeOfficeWorkLog1->getId(),
+                    'id' => $data['homeOfficeWorkLog1']->getId(),
                 ],
                 [
                     'date' => $endTime1->format(\DateTime::RFC3339),
-                    'id' => $homeOfficeWorkLog2->getId(),
+                    'id' => $data['homeOfficeWorkLog2']->getId(),
                 ],
             ],
-            'month' => $workMonth->getMonth(),
+            'month' => $data['workMonth']->getMonth(),
             'overtimeWorkLogs' => [
                 [
                     'date' => $startTime1->format(\DateTime::RFC3339),
-                    'id' => $overtimeWorkLog1->getId(),
+                    'id' => $data['overtimeWorkLog1']->getId(),
                 ],
                 [
                     'date' => $endTime1->format(\DateTime::RFC3339),
-                    'id' => $overtimeWorkLog2->getId(),
+                    'id' => $data['overtimeWorkLog2']->getId(),
                 ],
             ],
             'status' => 'WAITING_FOR_APPROVAL',
             'sickDayWorkLogs' => [
                 [
                     'date' => $startTime1->format(\DateTime::RFC3339),
-                    'id' => $sickDayWorkLog1->getId(),
-                    'variant' => $sickDayWorkLog1->getVariant(),
+                    'id' => $data['sickDayWorkLog1']->getId(),
+                    'variant' => $data['sickDayWorkLog1']->getVariant(),
                 ],
                 [
                     'date' => $endTime1->format(\DateTime::RFC3339),
-                    'id' => $sickDayWorkLog2->getId(),
-                    'variant' => $sickDayWorkLog2->getVariant(),
+                    'id' => $data['sickDayWorkLog2']->getId(),
+                    'variant' => $data['sickDayWorkLog2']->getVariant(),
                 ],
             ],
             'timeOffWorkLogs' => [
                 [
                     'date' => $startTime1->format(\DateTime::RFC3339),
-                    'id' => $timeOffWorkLog1->getId(),
+                    'id' => $data['timeOffWorkLog1']->getId(),
                 ],
                 [
                     'date' => $endTime1->format(\DateTime::RFC3339),
-                    'id' => $timeOffWorkLog2->getId(),
+                    'id' => $data['timeOffWorkLog2']->getId(),
                 ],
             ],
             'user' => ['id' => $this->user->getId()],
             'vacationWorkLogs' => [
                 [
                     'date' => $startTime1->format(\DateTime::RFC3339),
-                    'id' => $vacationWorkLog1->getId(),
+                    'id' => $data['vacationWorkLog1']->getId(),
                 ],
                 [
                     'date' => $endTime1->format(\DateTime::RFC3339),
-                    'id' => $vacationWorkLog2->getId(),
+                    'id' => $data['vacationWorkLog2']->getId(),
                 ],
             ],
             'workLogs' => [
                 [
                     'startTime' => $startTime1->format(\DateTime::RFC3339),
                     'endTime' => $endTime1->format(\DateTime::RFC3339),
-                    'id' => $workLog1->getId(),
+                    'id' => $data['workLog1']->getId(),
                 ],
                 [
                     'startTime' => $startTime2->format(\DateTime::RFC3339),
                     'endTime' => $endTime2->format(\DateTime::RFC3339),
-                    'id' => $workLog2->getId(),
+                    'id' => $data['workLog2']->getId(),
                 ],
             ],
-            'year' => $workMonth->getYear(),
+            'year' => $data['workMonth']->getYear(),
+        ]);
+    }
+
+    public function testGetOpenedDetailAsSuperAdmin(\ApiTester $I)
+    {
+        $this->beforeSuperAdmin($I);
+
+        $startTime1 = new \DateTimeImmutable();
+        $endTime1 = $startTime1->add(new \DateInterval('PT1M'));
+
+        $startTime2 = new \DateTimeImmutable();
+        $endTime2 = $startTime1->add(new \DateInterval('PT1M'));
+
+        $data = $this->prepareData($I, $startTime1, $endTime1, $startTime2, $endTime2, 'OPENED');
+
+        $I->haveHttpHeader('Content-Type', 'application/json');
+
+        $I->sendGET(sprintf('/work_months/%d/detail', $data['workMonth']->getId()));
+
+        $I->seeHttpHeader('Content-Type', 'application/json');
+        $I->seeResponseCodeIs(Response::HTTP_OK);
+        $I->seeResponseContainsJson([
+            'id' => $data['workMonth']->getId(),
+            'businessTripWorkLogs' => [],
+            'homeOfficeWorkLogs' => [],
+            'month' => $data['workMonth']->getMonth(),
+            'overtimeWorkLogs' => [],
+            'status' => 'OPENED',
+            'sickDayWorkLogs' => [],
+            'timeOffWorkLogs' => [],
+            'user' => ['id' => $this->user->getId()],
+            'vacationWorkLogs' => [],
+            'workLogs' => [],
+            'year' => $data['workMonth']->getYear(),
+        ]);
+    }
+
+    public function testGetWaitingForApprovalDetailAsSuperAdmin(\ApiTester $I)
+    {
+        $this->beforeSuperAdmin($I);
+
+        $startTime1 = new \DateTimeImmutable();
+        $endTime1 = $startTime1->add(new \DateInterval('PT1M'));
+
+        $startTime2 = new \DateTimeImmutable();
+        $endTime2 = $startTime1->add(new \DateInterval('PT1M'));
+
+        $data = $this->prepareData($I, $startTime1, $endTime1, $startTime2, $endTime2, 'WAITING_FOR_APPROVAL');
+
+        $I->haveHttpHeader('Content-Type', 'application/json');
+
+        $I->sendGET(sprintf('/work_months/%d/detail', $data['workMonth']->getId()));
+
+        $I->seeHttpHeader('Content-Type', 'application/json');
+        $I->seeResponseCodeIs(Response::HTTP_OK);
+        $I->seeResponseContainsJson([
+            'id' => $data['workMonth']->getId(),
+            'businessTripWorkLogs' => [
+                [
+                    'date' => $startTime1->format(\DateTime::RFC3339),
+                    'id' => $data['businessTripWorkLog1']->getId(),
+                ],
+                [
+                    'date' => $endTime1->format(\DateTime::RFC3339),
+                    'id' => $data['businessTripWorkLog2']->getId(),
+                ],
+            ],
+            'homeOfficeWorkLogs' => [
+                [
+                    'date' => $startTime1->format(\DateTime::RFC3339),
+                    'id' => $data['homeOfficeWorkLog1']->getId(),
+                ],
+                [
+                    'date' => $endTime1->format(\DateTime::RFC3339),
+                    'id' => $data['homeOfficeWorkLog2']->getId(),
+                ],
+            ],
+            'month' => $data['workMonth']->getMonth(),
+            'overtimeWorkLogs' => [
+                [
+                    'date' => $startTime1->format(\DateTime::RFC3339),
+                    'id' => $data['overtimeWorkLog1']->getId(),
+                ],
+                [
+                    'date' => $endTime1->format(\DateTime::RFC3339),
+                    'id' => $data['overtimeWorkLog2']->getId(),
+                ],
+            ],
+            'status' => 'WAITING_FOR_APPROVAL',
+            'sickDayWorkLogs' => [
+                [
+                    'date' => $startTime1->format(\DateTime::RFC3339),
+                    'id' => $data['sickDayWorkLog1']->getId(),
+                    'variant' => $data['sickDayWorkLog1']->getVariant(),
+                ],
+                [
+                    'date' => $endTime1->format(\DateTime::RFC3339),
+                    'id' => $data['sickDayWorkLog2']->getId(),
+                    'variant' => $data['sickDayWorkLog2']->getVariant(),
+                ],
+            ],
+            'timeOffWorkLogs' => [
+                [
+                    'date' => $startTime1->format(\DateTime::RFC3339),
+                    'id' => $data['timeOffWorkLog1']->getId(),
+                ],
+                [
+                    'date' => $endTime1->format(\DateTime::RFC3339),
+                    'id' => $data['timeOffWorkLog2']->getId(),
+                ],
+            ],
+            'user' => ['id' => $this->user->getId()],
+            'vacationWorkLogs' => [
+                [
+                    'date' => $startTime1->format(\DateTime::RFC3339),
+                    'id' => $data['vacationWorkLog1']->getId(),
+                ],
+                [
+                    'date' => $endTime1->format(\DateTime::RFC3339),
+                    'id' => $data['vacationWorkLog2']->getId(),
+                ],
+            ],
+            'workLogs' => [
+                [
+                    'startTime' => $startTime1->format(\DateTime::RFC3339),
+                    'endTime' => $endTime1->format(\DateTime::RFC3339),
+                    'id' => $data['workLog1']->getId(),
+                ],
+                [
+                    'startTime' => $startTime2->format(\DateTime::RFC3339),
+                    'endTime' => $endTime2->format(\DateTime::RFC3339),
+                    'id' => $data['workLog2']->getId(),
+                ],
+            ],
+            'year' => $data['workMonth']->getYear(),
         ]);
     }
 }
