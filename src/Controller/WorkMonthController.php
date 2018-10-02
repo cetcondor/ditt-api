@@ -120,7 +120,7 @@ class WorkMonthController extends Controller
         $this->vacationWorkLogRepository = $vacationWorkLogRepository;
         $this->eventDispatcher = $eventDispatcher;
 
-        if ($tokenStorage->getToken()) {
+        if (null !== $tokenStorage->getToken() && $tokenStorage->getToken()->getUser() instanceof User) {
             $this->loggedUser = $tokenStorage->getToken()->getUser();
         }
     }
@@ -170,7 +170,7 @@ class WorkMonthController extends Controller
             throw $this->createNotFoundException(sprintf('User with id %d was not found', $supervisorId));
         }
 
-        $isSuperAdmin = $this->loggedUser && in_array(
+        $isSuperAdmin = in_array(
             User::ROLE_SUPER_ADMIN,
             $this->loggedUser->getRoles()
         );
@@ -279,10 +279,10 @@ class WorkMonthController extends Controller
             throw $this->createNotFoundException(sprintf('User with id %d was not found', $supervisorId));
         }
 
-        $isSuperAdmin = $this->loggedUser && in_array(
-                User::ROLE_SUPER_ADMIN,
-                $this->loggedUser->getRoles()
-            );
+        $isSuperAdmin = in_array(
+            User::ROLE_SUPER_ADMIN,
+            $this->loggedUser->getRoles()
+        );
 
         $response = [
             'businessTripWorkLogs' => [],

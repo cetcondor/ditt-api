@@ -64,7 +64,7 @@ class UserController extends Controller
 
     public function newPassword(Request $request): Response
     {
-        $data = json_decode($request->getContent());
+        $data = json_decode((string) $request->getContent());
         if (!$data || !isset($data->resetPasswordToken) || !isset($data->newPlainPassword)) {
             return JsonResponse::create(
                 ['detail' => 'Fields resetPasswordToken and newPlainPassword are required.'],
@@ -104,7 +104,7 @@ class UserController extends Controller
      */
     public function resetPassword(Request $request): Response
     {
-        $data = json_decode($request->getContent());
+        $data = json_decode((string) $request->getContent());
         if (!$data || !isset($data->email)) {
             return JsonResponse::create(
                 ['detail' => 'email field is required.'], JsonResponse::HTTP_BAD_REQUEST

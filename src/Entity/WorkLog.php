@@ -111,7 +111,7 @@ class WorkLog implements WorkLogInterface
      */
     public function resolveWorkLogMonth(): int
     {
-        return $this->startTime->format('m');
+        return (int) $this->startTime->format('m');
     }
 
     /**
@@ -119,6 +119,6 @@ class WorkLog implements WorkLogInterface
      */
     public function resolveWorkLogYear(): int
     {
-        return $this->startTime->format('Y');
+        return (int) $this->startTime->format('Y');
     }
 }

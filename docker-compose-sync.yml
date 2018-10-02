@@ -6,7 +6,7 @@ volumes:
 
 services:
     web:
-        image: visionappscz/apache-php
+        image: visionappscz/apache-php:7.2
         links:
             - db
             - mail

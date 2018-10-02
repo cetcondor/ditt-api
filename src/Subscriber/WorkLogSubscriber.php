@@ -4,6 +4,7 @@ namespace App\Subscriber;
 
 use ApiPlatform\Core\EventListener\EventPriorities;
 use ApiPlatform\Core\Exception\InvalidArgumentException;
+use App\Entity\User;
 use App\Entity\WorkLogInterface;
 use App\Entity\WorkMonth;
 use App\Repository\WorkMonthRepository;
@@ -63,25 +64,23 @@ class WorkLogSubscriber implements EventSubscriberInterface
 
         $method = $event->getRequest()->getMethod();
 
-        try {
-            if (Request::METHOD_POST !== $method || $workLog->getWorkMonth()) {
-                return;
-            }
-        } catch (\TypeError $e) {
-            $token = $this->tokenStorage->getToken();
-
-            if (!$token) {
-                throw new InvalidArgumentException('Cannot create work log without user.');
-            }
-
-            $workMonth = $this->workMonthRepository->findByWorkLogAndUser($workLog, $token->getUser());
-
-            if (!$workMonth) {
-                throw new InvalidArgumentException('Cannot create work log without work month.');
-            }
-
-            $workLog->setWorkMonth($workMonth);
+        if (Request::METHOD_POST !== $method) {
+            return;
         }
+
+        $token = $this->tokenStorage->getToken();
+
+        if (!$token || !$token->getUser() instanceof User) {
+            throw new InvalidArgumentException('Cannot create work log without user.');
+        }
+
+        $workMonth = $this->workMonthRepository->findByWorkLogAndUser($workLog, $token->getUser());
+
+        if (!$workMonth) {
+            throw new InvalidArgumentException('Cannot create work log without work month.');
+        }
+
+        $workLog->setWorkMonth($workMonth);
     }
 
     /**

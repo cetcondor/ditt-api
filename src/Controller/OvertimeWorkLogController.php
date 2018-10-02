@@ -123,7 +123,7 @@ class OvertimeWorkLogController extends Controller
             );
         }
 
-        $data = json_decode($request->getContent());
+        $data = json_decode((string) $request->getContent());
         if (!isset($data->rejectionMessage)) {
             return JsonResponse::create(
                 ['detail' => 'Rejection message is missing.'], JsonResponse::HTTP_BAD_REQUEST

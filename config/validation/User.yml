@@ -6,7 +6,7 @@ App\Entity\User:
         email:
             - NotBlank: ~
             - Email:
-                strict: true
+                mode: strict
 
         employeeId:
             - NotBlank: ~

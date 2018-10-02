@@ -1,4 +1,9 @@
 actor: ApiTester
+
+# Bedrich Schindler <bedrich@visionapps.cz>, 2. 10. 2018
+# ~E_USER_DEPRECATED added because Html2Text and Doctrine ORM uses deprecated classes
+error_level: E_ALL & ~E_STRICT & ~E_DEPRECATED & ~E_USER_DEPRECATED
+
 modules:
     enabled:
         - \Helper\Api

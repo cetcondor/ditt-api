@@ -49,7 +49,7 @@ class UserPasswordSubscriber implements EventSubscriber
 
     private function encodePassword(User $entity): void
     {
-        if (!$entity->getPlainPassword()) {
+        if (null === $entity->getPlainPassword()) {
             return;
         }
 

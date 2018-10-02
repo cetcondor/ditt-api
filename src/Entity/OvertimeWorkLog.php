@@ -205,7 +205,7 @@ class OvertimeWorkLog implements WorkLogInterface
      */
     public function resolveWorkLogMonth(): int
     {
-        return $this->date->format('m');
+        return (int) $this->date->format('m');
     }
 
     /**
@@ -213,6 +213,6 @@ class OvertimeWorkLog implements WorkLogInterface
      */
     public function resolveWorkLogYear(): int
     {
-        return $this->date->format('Y');
+        return (int) $this->date->format('Y');
     }
 }

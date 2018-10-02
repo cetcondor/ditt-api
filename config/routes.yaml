@@ -13,133 +13,133 @@ api_logout:
 api_reset_password:
     path: /reset-password
     methods: [PUT]
-    controller: App\Controller\UserController:resetPassword
+    controller: App\Controller\UserController::resetPassword
     defaults:
         _api_collection_operation_name: 'resetPassword'
 
 api_new_password:
     path: /new-password
     methods: [PUT]
-    controller: App\Controller\UserController:newPassword
+    controller: App\Controller\UserController::newPassword
     defaults:
         _api_collection_operation_name: 'newPassword'
 
 api_business_trip_work_log_mark_approved:
     path: /business_trip_work_logs/{id}/mark_approved
     methods: [PUT]
-    controller: App\Controller\BusinessTripWorkLogController:markApproved
+    controller: App\Controller\BusinessTripWorkLogController::markApproved
     defaults:
         _api_collection_operation_name: 'markApproved'
 
 api_business_trip_work_log_mark_rejected:
     path: /business_trip_work_logs/{id}/mark_rejected
     methods: [PUT]
-    controller: App\Controller\BusinessTripWorkLogController:markRejected
+    controller: App\Controller\BusinessTripWorkLogController::markRejected
     defaults:
         _api_collection_operation_name: 'markRejected'
 
 api_config:
     path: /configs
     methods: [GET]
-    controller: App\Controller\ConfigController:config
+    controller: App\Controller\ConfigController::config
     defaults:
         _api_collection_operation_name: 'config'
 
 api_home_office_work_log_mark_approved:
     path: /home_office_work_logs/{id}/mark_approved
     methods: [PUT]
-    controller: App\Controller\HomeOfficeWorkLogController:markApproved
+    controller: App\Controller\HomeOfficeWorkLogController::markApproved
     defaults:
         _api_collection_operation_name: 'markApproved'
 
 api_home_office_work_log_mark_rejected:
     path: /home_office_work_logs/{id}/mark_rejected
     methods: [PUT]
-    controller: App\Controller\HomeOfficeWorkLogController:markRejected
+    controller: App\Controller\HomeOfficeWorkLogController::markRejected
     defaults:
         _api_collection_operation_name: 'markRejected'
 
 api_overtime_work_log_mark_approved:
     path: /overtime_work_logs/{id}/mark_approved
     methods: [PUT]
-    controller: App\Controller\OvertimeWorkLogController:markApproved
+    controller: App\Controller\OvertimeWorkLogController::markApproved
     defaults:
         _api_collection_operation_name: 'markApproved'
 
 api_overtime_work_log_mark_rejected:
     path: /overtime_work_logs/{id}/mark_rejected
     methods: [PUT]
-    controller: App\Controller\OvertimeWorkLogController:markRejected
+    controller: App\Controller\OvertimeWorkLogController::markRejected
     defaults:
         _api_collection_operation_name: 'markRejected'
 
 api_time_off_work_log_mark_approved:
     path: /time_off_work_logs/{id}/mark_approved
     methods: [PUT]
-    controller: App\Controller\TimeOffWorkLogController:markApproved
+    controller: App\Controller\TimeOffWorkLogController::markApproved
     defaults:
         _api_collection_operation_name: 'markApproved'
 
 api_time_off_work_log_mark_rejected:
     path: /time_off_work_logs/{id}/mark_rejected
     methods: [PUT]
-    controller: App\Controller\TimeOffWorkLogController:markRejected
+    controller: App\Controller\TimeOffWorkLogController::markRejected
     defaults:
         _api_collection_operation_name: 'markRejected'
 
 api_vacation_work_log_mark_approved:
     path: /vacation_work_logs/{id}/mark_approved
     methods: [PUT]
-    controller: App\Controller\VacationWorkLogController:markApproved
+    controller: App\Controller\VacationWorkLogController::markApproved
     defaults:
         _api_collection_operation_name: 'markApproved'
 
 api_vacation_work_log_mark_rejected:
     path: /vacation_work_logs/{id}/mark_rejected
     methods: [PUT]
-    controller: App\Controller\VacationWorkLogController:markRejected
+    controller: App\Controller\VacationWorkLogController::markRejected
     defaults:
         _api_collection_operation_name: 'markRejected'
 
 api_supervised_users:
     path: /users/{id}/supervised_users
     methods: [GET]
-    controller: App\Controller\UserController:supervisedUsers
+    controller: App\Controller\UserController::supervisedUsers
     defaults:
         _api_collection_operation_name: 'supervisedUsers'
 
 api_work_months_detail:
     path: /work_months/{id}/detail
     methods: [GET]
-    controller: App\Controller\WorkMonthController:getWorkMonthDetail
+    controller: App\Controller\WorkMonthController::getWorkMonthDetail
     defaults:
         _api_collection_operation_name: 'getWorkMonthDetail'
 
 api_work_months_special_approvals:
     path: /special_approvals/{supervisorId}
     methods: [GET]
-    controller: App\Controller\WorkMonthController:specialApprovals
+    controller: App\Controller\WorkMonthController::specialApprovals
     defaults:
         _api_collection_operation_name: 'specialApprovals'
 
 api_work_months_recent_special_approvals:
     path: /recent_special_approvals/{supervisorId}
     methods: [GET]
-    controller: App\Controller\WorkMonthController:recentSpecialApprovals
+    controller: App\Controller\WorkMonthController::recentSpecialApprovals
     defaults:
         _api_collection_operation_name: 'recentSpecialApprovals'
 
 api_work_months_mark_approved:
     path: /work_months/{id}/mark_approved
     methods: [PUT]
-    controller: App\Controller\WorkMonthController:markApproved
+    controller: App\Controller\WorkMonthController::markApproved
     defaults:
         _api_collection_operation_name: 'markApproved'
 
 api_work_months_mark_waiting_for_approval:
     path: /work_months/{id}/mark_waiting_for_approval
     methods: [PUT]
-    controller: App\Controller\WorkMonthController:markWaitingForApproval
+    controller: App\Controller\WorkMonthController::markWaitingForApproval
     defaults:
         _api_collection_operation_name: 'markWaitingForApproval'
 
