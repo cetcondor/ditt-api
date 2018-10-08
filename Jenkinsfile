@@ -26,6 +26,13 @@ def deployBranches = [
         siteUrl: 'http://ditt-api.dev.visionapps.cz',
         credentials: 'deploy_lutra',
     ],
+    master: [
+        host: 'synergic@lutra.visionapps.cz',
+        folder: 'ditt_api_staging',
+        dbName: 'ditt_api_staging',
+        siteUrl: 'http://ditt-api.staging.visionapps.cz',
+        credentials: 'deploy_lutra',
+    ],
 ]
 
 
