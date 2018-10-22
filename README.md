@@ -29,7 +29,7 @@ Following accounts are available for testing purposes:
 | employee@example.com       | password | EMPLOYEE        |
 | employee-admin@example.com | password | EMPLOYEE, ADMIN |
 | admin@example.com          | password | ADMIN           |
-| admin@example.com          | password | SUPER ADMIN     |
+| superadmin@example.com     | password | SUPER ADMIN     |
 
 ## Config
 

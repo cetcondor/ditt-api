@@ -68,13 +68,13 @@ class CreateUserCest
         $I->grabEntityFromRepository(WorkMonth::class, [
             'month' => 12,
             'user' => $user,
-            'year' => 2021,
+            'year' => 2020,
         ]);
         $I->expectException(NoResultException::class, function () use ($I, $user) {
             $I->grabEntityFromRepository(WorkMonth::class, [
                 'month' => 1,
                 'user' => $user,
-                'year' => 2022,
+                'year' => 2021,
             ]);
         });
 
@@ -84,7 +84,7 @@ class CreateUserCest
         ]);
         $I->grabEntityFromRepository(UserYearStats::class, [
             'user' => $user,
-            'year' => 2021,
+            'year' => 2020,
         ]);
     }
 
