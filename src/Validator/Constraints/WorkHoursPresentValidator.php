@@ -2,6 +2,7 @@
 
 namespace App\Validator\Constraints;
 
+use App\Entity\Config;
 use App\Entity\User;
 use App\Repository\WorkLogRepository;
 use Symfony\Component\Validator\Constraint;
@@ -28,6 +29,8 @@ class WorkHoursPresentValidator extends ConstraintValidator
      */
     public function validate($value, Constraint $constraint): void
     {
+        $config = new Config();
+
         if (!$value instanceof User || !$constraint instanceof WorkHoursPresent) {
             return;
         }
@@ -42,13 +45,13 @@ class WorkHoursPresentValidator extends ConstraintValidator
             $present[$workHours->getYear()][] = $workHours->getMonth();
         }
 
-        if (count($present) !== count($constraint->supportedYears)) {
+        if (count($present) !== count($config->getSupportedYear())) {
             $this->context->buildViolation($constraint->message)->addViolation();
 
             return;
         }
 
-        foreach ($constraint->supportedYears as $supportedYear) {
+        foreach ($config->getSupportedYear() as $supportedYear) {
             if (isset($present[$supportedYear])) {
                 $uniqueMonths = array_unique($present[$supportedYear]);
 

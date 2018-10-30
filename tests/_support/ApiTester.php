@@ -225,7 +225,7 @@ class ApiTester extends \Codeception\Actor
     public function generateWorkHours($requiredHours) {
         $workHours = [];
 
-        for ($year = 2018; $year <= 2021; ++$year) {
+        for ($year = 2018; $year <= 2020; ++$year) {
             for ($month = 1; $month <= 12; ++$month) {
                 $workHours[] = [
                     'month' => $month,

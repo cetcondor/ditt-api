@@ -9,12 +9,8 @@ class WorkHoursPresent extends Constraint
     /**
      * @var string
      */
-    public $message = 'Work hours are required for every month between year 2018 and 2021.';
+    public $message = 'Work hours are required for every month of each supported year.';
 
-    /**
-     * @var int[]
-     */
-    public $supportedYears = [2018, 2019, 2020, 2021];
     /**
      * @var int[]
      */
