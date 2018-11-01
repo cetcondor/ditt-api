@@ -67,8 +67,8 @@ class GetRecentSpecialApprovalCest
         ]);
 
         $dateTime1 = new \DateTimeImmutable();
-        $dateTime2 = $dateTime1->modify('-1 month');
-        $dateTime3 = $dateTime1->modify('-2 month');
+        $dateTime2 = $this->subMonth($dateTime1);
+        $dateTime3 = $this->subMonth($dateTime2);
 
         $workMonth1 = $I->createWorkMonth([
             'month' => $dateTime1->format('m'),
@@ -640,8 +640,8 @@ class GetRecentSpecialApprovalCest
         ]);
 
         $dateTime1 = new \DateTimeImmutable();
-        $dateTime2 = $dateTime1->modify('-1 month');
-        $dateTime3 = $dateTime1->modify('-2 month');
+        $dateTime2 = $this->subMonth($dateTime1);
+        $dateTime3 = $this->subMonth($dateTime2);
 
         $workMonth1 = $I->createWorkMonth([
             'month' => $dateTime1->format('m'),
@@ -1284,5 +1284,20 @@ class GetRecentSpecialApprovalCest
                 ['id' => $vacationWorkLog6->getId()],
             ],
         ]);
+    }
+
+    private function subMonth(\DateTimeImmutable $date)
+    {
+        $year = (int) $date->format('Y');
+        $month = (int) $date->format('m');
+
+        --$month;
+
+        if ($month < 1) {
+            $month = 12;
+            --$year;
+        }
+
+        return $date->setDate($year, $month, 1);
     }
 }

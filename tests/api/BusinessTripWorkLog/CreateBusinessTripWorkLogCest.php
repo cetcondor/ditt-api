@@ -37,7 +37,7 @@ class CreateBusinessTripWorkLogCest
      */
     public function testCreateWithValidData(\ApiTester $I): void
     {
-        $date = new \DateTimeImmutable();
+        $date = new \DateTimeImmutable('2019-06-01T12:00:00');
         $I->createWorkMonth([
             'month' => $date->format('m'),
             'user' => $this->user,
@@ -80,7 +80,7 @@ class CreateBusinessTripWorkLogCest
      */
     public function testCreateWithClosedMonth(\ApiTester $I): void
     {
-        $date = new \DateTimeImmutable();
+        $date = new \DateTimeImmutable('2019-06-01T12:00:00');
         $I->createWorkMonth([
             'month' => $date->format('m'),
             'status' => 'APPROVED',
@@ -121,7 +121,7 @@ class CreateBusinessTripWorkLogCest
      */
     public function testCreateWithInvalidData(\ApiTester $I): void
     {
-        $date = new \DateTimeImmutable();
+        $date = new \DateTimeImmutable('2019-06-01T12:00:00');
         $I->createWorkMonth([
             'month' => $date->format('m'),
             'user' => $this->user,

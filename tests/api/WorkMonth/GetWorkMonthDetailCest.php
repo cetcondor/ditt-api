@@ -165,10 +165,10 @@ class GetWorkMonthDetailCest
     {
         $this->beforeEmployee($I);
 
-        $startTime1 = new \DateTimeImmutable();
+        $startTime1 = new \DateTimeImmutable('2019-06-01T12:00:00');
         $endTime1 = $startTime1->add(new \DateInterval('PT1M'));
 
-        $startTime2 = new \DateTimeImmutable();
+        $startTime2 = new \DateTimeImmutable('2019-06-01T12:00:00');
         $endTime2 = $startTime1->add(new \DateInterval('PT1M'));
 
         $data = $this->prepareData($I, $startTime1, $endTime1, $startTime2, $endTime2, 'OPENED');
@@ -266,10 +266,10 @@ class GetWorkMonthDetailCest
     {
         $this->beforeEmployee($I);
 
-        $startTime1 = new \DateTimeImmutable();
+        $startTime1 = new \DateTimeImmutable('2019-06-01T12:00:00');
         $endTime1 = $startTime1->add(new \DateInterval('PT1M'));
 
-        $startTime2 = new \DateTimeImmutable();
+        $startTime2 = new \DateTimeImmutable('2019-06-01T12:00:00');
         $endTime2 = $startTime1->add(new \DateInterval('PT1M'));
 
         $data = $this->prepareData($I, $startTime1, $endTime1, $startTime2, $endTime2, 'WAITING_FOR_APPROVAL');
@@ -367,10 +367,10 @@ class GetWorkMonthDetailCest
     {
         $this->beforeSupervisor($I);
 
-        $startTime1 = new \DateTimeImmutable();
+        $startTime1 = new \DateTimeImmutable('2019-06-01T12:00:00');
         $endTime1 = $startTime1->add(new \DateInterval('PT1M'));
 
-        $startTime2 = new \DateTimeImmutable();
+        $startTime2 = new \DateTimeImmutable('2019-06-01T12:00:00');
         $endTime2 = $startTime1->add(new \DateInterval('PT1M'));
 
         $data = $this->prepareData($I, $startTime1, $endTime1, $startTime2, $endTime2, 'OPENED');
@@ -401,10 +401,10 @@ class GetWorkMonthDetailCest
     {
         $this->beforeSupervisor($I);
 
-        $startTime1 = new \DateTimeImmutable();
+        $startTime1 = new \DateTimeImmutable('2019-06-01T12:00:00');
         $endTime1 = $startTime1->add(new \DateInterval('PT1M'));
 
-        $startTime2 = new \DateTimeImmutable();
+        $startTime2 = new \DateTimeImmutable('2019-06-01T12:00:00');
         $endTime2 = $startTime1->add(new \DateInterval('PT1M'));
 
         $data = $this->prepareData($I, $startTime1, $endTime1, $startTime2, $endTime2, 'WAITING_FOR_APPROVAL');
@@ -502,10 +502,10 @@ class GetWorkMonthDetailCest
     {
         $this->beforeSuperAdmin($I);
 
-        $startTime1 = new \DateTimeImmutable();
+        $startTime1 = new \DateTimeImmutable('2019-06-01T12:00:00');
         $endTime1 = $startTime1->add(new \DateInterval('PT1M'));
 
-        $startTime2 = new \DateTimeImmutable();
+        $startTime2 = new \DateTimeImmutable('2019-06-01T12:00:00');
         $endTime2 = $startTime1->add(new \DateInterval('PT1M'));
 
         $data = $this->prepareData($I, $startTime1, $endTime1, $startTime2, $endTime2, 'OPENED');
@@ -536,10 +536,10 @@ class GetWorkMonthDetailCest
     {
         $this->beforeSuperAdmin($I);
 
-        $startTime1 = new \DateTimeImmutable();
+        $startTime1 = new \DateTimeImmutable('2019-06-01T12:00:00');
         $endTime1 = $startTime1->add(new \DateInterval('PT1M'));
 
-        $startTime2 = new \DateTimeImmutable();
+        $startTime2 = new \DateTimeImmutable('2019-06-01T12:00:00');
         $endTime2 = $startTime1->add(new \DateInterval('PT1M'));
 
         $data = $this->prepareData($I, $startTime1, $endTime1, $startTime2, $endTime2, 'WAITING_FOR_APPROVAL');

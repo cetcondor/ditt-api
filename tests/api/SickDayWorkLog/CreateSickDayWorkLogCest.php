@@ -37,7 +37,7 @@ class CreateSickDayWorkLogCest
      */
     public function testCreateWithValidData(\ApiTester $I): void
     {
-        $date = new \DateTimeImmutable();
+        $date = new \DateTimeImmutable('2019-06-01T12:00:00');
         $I->createWorkMonth([
             'month' => $date->format('m'),
             'user' => $this->user,
@@ -68,7 +68,7 @@ class CreateSickDayWorkLogCest
      */
     public function testCreateWithValidSickChildData(\ApiTester $I): void
     {
-        $date = new \DateTimeImmutable();
+        $date = new \DateTimeImmutable('2019-06-01T12:00:00');
         $I->createWorkMonth([
             'month' => $date->format('m'),
             'user' => $this->user,
@@ -105,7 +105,7 @@ class CreateSickDayWorkLogCest
      */
     public function testCreateWithClosedMonth(\ApiTester $I): void
     {
-        $date = new \DateTimeImmutable();
+        $date = new \DateTimeImmutable('2019-06-01T12:00:00');
         $I->createWorkMonth([
             'month' => $date->format('m'),
             'status' => 'APPROVED',
@@ -138,7 +138,7 @@ class CreateSickDayWorkLogCest
      */
     public function testCreateWithInvalidData(\ApiTester $I): void
     {
-        $date = new \DateTimeImmutable();
+        $date = new \DateTimeImmutable('2019-06-01T12:00:00');
         $I->createWorkMonth([
             'month' => $date->format('m'),
             'user' => $this->user,
@@ -174,7 +174,7 @@ class CreateSickDayWorkLogCest
      */
     public function testCreateWithInvalidSickDayData(\ApiTester $I): void
     {
-        $date = new \DateTimeImmutable();
+        $date = new \DateTimeImmutable('2019-06-01T12:00:00');
         $I->createWorkMonth([
             'month' => $date->format('m'),
             'user' => $this->user,
@@ -185,7 +185,7 @@ class CreateSickDayWorkLogCest
         $I->sendPOST('/sick_day_work_logs.json', [
             'childName' => '',
             'childDateOfBirth' => null,
-            'date' => (new \DateTime())->format(\DateTime::RFC3339),
+            'date' => (new \DateTime('2019-06-01T12:00:00'))->format(\DateTime::RFC3339),
             'variant' => 'SICK_CHILD',
         ]);
 
