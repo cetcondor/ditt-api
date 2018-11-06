@@ -47,15 +47,18 @@ class CreateHomeOfficeWorkLogCest
         $I->haveHttpHeader('Content-Type', 'application/json');
         $I->sendPOST('/home_office_work_logs.json', [
             'date' => $date->format(\DateTime::RFC3339),
+            'comment' => 'Comment',
         ]);
 
         $I->seeHttpHeader('Content-Type', 'application/json; charset=utf-8');
         $I->seeResponseCodeIs(Response::HTTP_CREATED);
         $I->seeResponseContainsJson([
             'date' => $date->format(\DateTime::RFC3339),
+            'comment' => 'Comment',
         ]);
         $I->grabEntityFromRepository(HomeOfficeWorkLog::class, [
             'date' => $date,
+            'comment' => 'Comment',
         ]);
     }
 
@@ -76,6 +79,7 @@ class CreateHomeOfficeWorkLogCest
         $I->haveHttpHeader('Content-Type', 'application/json');
         $I->sendPOST('/home_office_work_logs.json', [
             'date' => $date->format(\DateTime::RFC3339),
+            'comment' => 'Comment',
         ]);
 
         $I->seeHttpHeader('Content-Type', 'application/problem+json; charset=utf-8');
@@ -86,6 +90,7 @@ class CreateHomeOfficeWorkLogCest
         $I->expectException(NoResultException::class, function () use ($I, $date) {
             $I->grabEntityFromRepository(HomeOfficeWorkLog::class, [
                 'date' => $date,
+                'comment' => 'Comment',
             ]);
         });
     }
@@ -106,6 +111,7 @@ class CreateHomeOfficeWorkLogCest
         $I->haveHttpHeader('Content-Type', 'application/json');
         $I->sendPOST('/home_office_work_logs.json', [
             'date' => null,
+            'comment' => null,
         ]);
 
         $I->seeHttpHeader('Content-Type', 'application/problem+json; charset=utf-8');

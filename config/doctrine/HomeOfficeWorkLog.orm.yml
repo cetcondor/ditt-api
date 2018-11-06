@@ -9,6 +9,8 @@ App\Entity\HomeOfficeWorkLog:
     fields:
         date:
             type: datetime_immutable
+        comment:
+            type: text
         timeApproved:
             type: datetime_immutable
             nullable: true

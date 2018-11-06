@@ -15,6 +15,11 @@ class TimeOffWorkLog implements WorkLogInterface
     private $date;
 
     /**
+     * @var string
+     */
+    private $comment;
+
+    /**
      * @var \DateTimeImmutable|null
      */
     private $timeApproved;
@@ -73,6 +78,25 @@ class TimeOffWorkLog implements WorkLogInterface
     public function setDate(\DateTimeImmutable $date): TimeOffWorkLog
     {
         $this->date = $date;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getComment(): string
+    {
+        return $this->comment;
+    }
+
+    /**
+     * @param string $comment
+     * @return TimeOffWorkLog
+     */
+    public function setComment(string $comment): TimeOffWorkLog
+    {
+        $this->comment = $comment;
 
         return $this;
     }

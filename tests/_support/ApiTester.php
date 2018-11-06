@@ -49,6 +49,7 @@ class ApiTester extends \Codeception\Actor
                 return $this->createWorkMonth();
             },
             'date' => new DateTimeImmutable(),
+            'comment' => 'Comment',
             'timeApproved' => null,
             'timeRejected' => null,
         ], $params);
@@ -105,6 +106,7 @@ class ApiTester extends \Codeception\Actor
                 return $this->createWorkMonth();
             },
             'date' => new DateTimeImmutable(),
+            'comment' => 'Comment',
             'timeApproved' => null,
             'timeRejected' => null,
         ], $params);

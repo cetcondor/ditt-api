@@ -15,6 +15,11 @@ class HomeOfficeWorkLog implements WorkLogInterface
     private $date;
 
     /**
+     * @var string
+     */
+    private $comment;
+
+    /**
      * @var \DateTimeImmutable|null
      */
     private $timeApproved;
@@ -73,6 +78,25 @@ class HomeOfficeWorkLog implements WorkLogInterface
     public function setDate(\DateTimeImmutable $date): HomeOfficeWorkLog
     {
         $this->date = $date;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getComment(): string
+    {
+        return $this->comment;
+    }
+
+    /**
+     * @param string $comment
+     * @return HomeOfficeWorkLog
+     */
+    public function setComment(string $comment): HomeOfficeWorkLog
+    {
+        $this->comment = $comment;
 
         return $this;
     }
