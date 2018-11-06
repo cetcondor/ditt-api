@@ -27,6 +27,7 @@ App\Entity\User:
                 - user_out_detail
                 - special_approvals_out_list
                 - supervised_user_out_list
+                - work_month_out_detail
                 - user_in
         lastName:
             groups:
@@ -34,6 +35,7 @@ App\Entity\User:
                 - user_out_detail
                 - special_approvals_out_list
                 - supervised_user_out_list
+                - work_month_out_detail
                 - user_in
         plainPassword:
             groups:
