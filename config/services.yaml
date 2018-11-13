@@ -111,6 +111,12 @@ services:
               event: !php/const App\Event\HomeOfficeWorkLogRejectedEvent::REJECTED
               method: onHomeOfficeWorkLogRejected
             - name: kernel.event_listener
+              event: !php/const App\Event\MultipleVacationWorkLogApprovedEvent::APPROVED
+              method: onMultipleVacationWorkLogApproved
+            - name: kernel.event_listener
+              event: !php/const App\Event\MultipleVacationWorkLogRejectedEvent::REJECTED
+              method: onMultipleVacationWorkLogRejected
+            - name: kernel.event_listener
               event: !php/const App\Event\OvertimeWorkLogApprovedEvent::APPROVED
               method: onOvertimeWorkLogApproved
             - name: kernel.event_listener

@@ -1,0 +1,14 @@
+<html lang="cs">
+    <head>
+        <meta charset="utf-8" />
+    </head>
+
+    <body>
+        <h1>
+            Multiple vacation work logs for dates {% for workLog in workLogs %}{{ workLog.date | date('Y-m-d') }}{% if not loop.last %}, {% endif %}{% endfor %}
+            of employee {{ workLogs[0].workMonth.user.firstName }} {{ workLogs[0].workMonth.user.lastName }}
+            were rejected by {{ supervisor.firstName }} {{ supervisor.lastName }}
+        </h1>
+        <p>Reason: {{ workLogs[0].rejectionMessage }}</p>
+    </body>
+</html>

@@ -94,6 +94,20 @@ api_vacation_work_log_bulk_create:
     defaults:
         _api_collection_operation_name: 'bulkCreate'
 
+api_vacation_work_log_bulk_mark_approved:
+    path: /vacation_work_logs/bulk/mark_approved
+    methods: [PUT]
+    controller: App\Controller\VacationWorkLogController::bulkMarkApproved
+    defaults:
+        _api_collection_operation_name: 'bulkMarkApproved'
+
+api_vacation_work_log_bulk_mark_rejected:
+    path: /vacation_work_logs/bulk/mark_rejected
+    methods: [PUT]
+    controller: App\Controller\VacationWorkLogController::bulkMarkRejected
+    defaults:
+        _api_collection_operation_name: 'bulkMarkRejected'
+
 api_vacation_work_log_mark_approved:
     path: /vacation_work_logs/{id}/mark_approved
     methods: [PUT]

@@ -41,6 +41,20 @@ class VacationWorkLogRepository
     }
 
     /**
+     * @param int[] $ids
+     * @return VacationWorkLog[]
+     */
+    public function findByIds(array $ids): array
+    {
+        $qb = $this->repository->createQueryBuilder('vwl');
+
+        return $qb->select('vwl')
+            ->where($qb->expr()->in('vwl.id', $ids))
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
      * @return mixed
      */
     public function findAllWaitingForApproval()

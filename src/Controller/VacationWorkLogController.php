@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Entity\VacationWorkLog;
 use App\Entity\WorkMonth;
+use App\Event\MultipleVacationWorkLogApprovedEvent;
+use App\Event\MultipleVacationWorkLogRejectedEvent;
 use App\Event\VacationWorkLogApprovedEvent;
 use App\Event\VacationWorkLogRejectedEvent;
 use App\Repository\VacationWorkLogRepository;
@@ -186,6 +188,131 @@ class VacationWorkLogController extends Controller
         }
 
         return JsonResponse::create($normalizedVacationWorkLogs, JsonResponse::HTTP_CREATED);
+    }
+
+    /**
+     * @param Request $request
+     * @return Response
+     */
+    public function bulkMarkApproved(Request $request): Response
+    {
+        $data = json_decode((string) $request->getContent());
+        if (!isset($data->workLogIds) || !is_array($data->workLogIds)) {
+            return JsonResponse::create(
+                ['detail' => 'Work log ids are missing.'], JsonResponse::HTTP_BAD_REQUEST
+            );
+        }
+
+        $workLogs = [];
+
+        foreach ($this->vacationWorkLogRepository->findByIds($data->workLogIds) as $workLog) {
+            if ($workLog->getTimeApproved()) {
+                return JsonResponse::create(
+                    ['detail' => sprintf('Vacation work log with id %d has been already approved.', $workLog->getId())],
+                    JsonResponse::HTTP_BAD_REQUEST
+                );
+            }
+
+            if ($workLog->getTimeRejected()) {
+                return JsonResponse::create(
+                    ['detail' => sprintf('Vacation work log with id %d has been already rejected.', $workLog->getId())],
+                    JsonResponse::HTTP_BAD_REQUEST
+                );
+            }
+
+            $workLogs[] = $workLog;
+        }
+
+        foreach ($workLogs as $workLog) {
+            $this->vacationWorkLogService->markApproved($workLog);
+        }
+
+        $supervisor = $this->getUser();
+        if (!$supervisor) {
+            $supervisor = new User();
+        }
+
+        $this->eventDispatcher->dispatch(
+            MultipleVacationWorkLogApprovedEvent::APPROVED,
+            new MultipleVacationWorkLogApprovedEvent($workLogs, $supervisor)
+        );
+
+        $normalizedWorkLogs = [];
+
+        foreach ($workLogs as $workLog) {
+            $normalizedWorkLogs[] = $this->normalizer->normalize(
+                $workLog,
+                VacationWorkLog::class,
+                ['groups' => ['vacation_work_log_out_detail']]
+            );
+        }
+
+        return JsonResponse::create($normalizedWorkLogs, JsonResponse::HTTP_OK);
+    }
+
+    /**
+     * @param Request $request
+     * @return Response
+     */
+    public function bulkMarkRejected(Request $request): Response
+    {
+        $data = json_decode((string) $request->getContent());
+        if (!isset($data->workLogIds) || !is_array($data->workLogIds)) {
+            return JsonResponse::create(
+                ['detail' => 'Work log ids are missing.'], JsonResponse::HTTP_BAD_REQUEST
+            );
+        }
+        if (!isset($data->rejectionMessage)) {
+            return JsonResponse::create(
+                ['detail' => 'Rejection message is missing.'], JsonResponse::HTTP_BAD_REQUEST
+            );
+        }
+
+        $workLogs = [];
+
+        foreach ($this->vacationWorkLogRepository->findByIds($data->workLogIds) as $workLog) {
+            if ($workLog->getTimeApproved()) {
+                return JsonResponse::create(
+                    ['detail' => sprintf('Vacation work log with id %d has been already approved.', $workLog->getId())],
+                    JsonResponse::HTTP_BAD_REQUEST
+                );
+            }
+
+            if ($workLog->getTimeRejected()) {
+                return JsonResponse::create(
+                    ['detail' => sprintf('Vacation work log with id %d has been already rejected.', $workLog->getId())],
+                    JsonResponse::HTTP_BAD_REQUEST
+                );
+            }
+
+            $workLogs[] = $workLog;
+        }
+
+        foreach ($workLogs as $workLog) {
+            $this->vacationWorkLogService->markRejected($workLog, $data->rejectionMessage);
+        }
+
+        $supervisor = $this->getUser();
+        if (!$supervisor) {
+            $supervisor = new User();
+        }
+
+        $this->eventDispatcher->dispatch(
+            MultipleVacationWorkLogRejectedEvent::REJECTED,
+            new MultipleVacationWorkLogRejectedEvent($workLogs, $supervisor)
+        );
+
+        $normalizedWorkLogs = [];
+
+        foreach ($workLogs as $workLog) {
+            $normalizedWorkLogs[] = $this->normalizer->normalize(
+                $workLog,
+                VacationWorkLog::class,
+                ['groups' => ['vacation_work_log_out_detail']]
+            );
+        }
+
+        return JsonResponse::create($normalizedWorkLogs, JsonResponse::HTTP_OK);
     }
 
     /**

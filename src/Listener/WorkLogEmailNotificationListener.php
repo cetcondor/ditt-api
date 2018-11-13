@@ -8,6 +8,8 @@ use App\Event\BusinessTripWorkLogApprovedEvent;
 use App\Event\BusinessTripWorkLogRejectedEvent;
 use App\Event\HomeOfficeWorkLogApprovedEvent;
 use App\Event\HomeOfficeWorkLogRejectedEvent;
+use App\Event\MultipleVacationWorkLogApprovedEvent;
+use App\Event\MultipleVacationWorkLogRejectedEvent;
 use App\Event\OvertimeWorkLogApprovedEvent;
 use App\Event\OvertimeWorkLogRejectedEvent;
 use App\Event\TimeOffWorkLogApprovedEvent;
@@ -122,6 +124,40 @@ class WorkLogEmailNotificationListener
             $event->getHomeOfficeWorkLog(),
             'Home office work log was rejected by %s %s',
             'notifications/home_office_work_log_rejected.html.twig'
+        );
+    }
+
+    /**
+     * @param MultipleVacationWorkLogApprovedEvent $event
+     * @throws EmailNotSentException
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     */
+    public function onMultipleVacationWorkLogApproved(MultipleVacationWorkLogApprovedEvent $event)
+    {
+        $this->sendWorkLogsMail(
+            $event->getSupervisor(),
+            $event->getVacationWorkLogs(),
+            'Multiple vacation work logs were approved by %s %s',
+            'notifications/multiple_vacation_work_log_approved.html.twig'
+        );
+    }
+
+    /**
+     * @param MultipleVacationWorkLogRejectedEvent $event
+     * @throws EmailNotSentException
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     */
+    public function onMultipleVacationWorkLogRejected(MultipleVacationWorkLogRejectedEvent $event)
+    {
+        $this->sendWorkLogsMail(
+            $event->getSupervisor(),
+            $event->getVacationWorkLogs(),
+            'Multiple vacation work logs were rejected by %s %s',
+            'notifications/multiple_vacation_work_log_rejected.html.twig'
         );
     }
 
@@ -255,6 +291,38 @@ class WorkLogEmailNotificationListener
             $this->templating->render($emailTemplate, [
                 'supervisor' => $supervisor,
                 'workLog' => $workLog,
+            ])
+        );
+    }
+
+    /**
+     * @param User $supervisor
+     * @param WorkLogInterface[] $workLogs
+     * @param string $emailSubject
+     * @param string $emailTemplate
+     * @throws EmailNotSentException
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     */
+    private function sendWorkLogsMail(
+        User $supervisor,
+        array $workLogs,
+        string $emailSubject,
+        string $emailTemplate
+    ) {
+        $admins = $this->userRepository->getAllAdmins();
+        $toEmails = [$workLogs[0]->getWorkMonth()->getUser()->getEmail()];
+        foreach ($admins as $admin) {
+            $toEmails[] = $admin->getEmail();
+        }
+
+        $this->sendMail(
+            sprintf($emailSubject, $supervisor->getFirstName(), $supervisor->getLastName()),
+            $toEmails,
+            $this->templating->render($emailTemplate, [
+                'supervisor' => $supervisor,
+                'workLogs' => $workLogs,
             ])
         );
     }
