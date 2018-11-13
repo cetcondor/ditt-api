@@ -4,16 +4,22 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\VacationWorkLog;
+use App\Entity\WorkMonth;
 use App\Event\VacationWorkLogApprovedEvent;
 use App\Event\VacationWorkLogRejectedEvent;
 use App\Repository\VacationWorkLogRepository;
+use App\Repository\WorkMonthRepository;
 use App\Service\VacationWorkLogService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class VacationWorkLogController extends Controller
 {
@@ -21,6 +27,11 @@ class VacationWorkLogController extends Controller
      * @var NormalizerInterface
      */
     private $normalizer;
+
+    /**
+     * @var DenormalizerInterface
+     */
+    private $denormalizer;
 
     /**
      * @var VacationWorkLogRepository
@@ -33,26 +44,148 @@ class VacationWorkLogController extends Controller
     private $vacationWorkLogService;
 
     /**
+     * @var WorkMonthRepository
+     */
+    private $workMonthRepository;
+
+    /**
      * @var EventDispatcherInterface
      */
     private $eventDispatcher;
 
     /**
+     * @var ValidatorInterface
+     */
+    private $validator;
+
+    /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
+
+    /**
      * @param NormalizerInterface $normalizer
+     * @param DenormalizerInterface $denormalizer
      * @param VacationWorkLogRepository $vacationWorkLogRepository
      * @param VacationWorkLogService $vacationWorkLogService
+     * @param WorkMonthRepository $workMonthRepository
      * @param EventDispatcherInterface $eventDispatcher
+     * @param ValidatorInterface $validator
+     * @param TokenStorageInterface $tokenStorage
      */
     public function __construct(
         NormalizerInterface $normalizer,
+        DenormalizerInterface $denormalizer,
         VacationWorkLogRepository $vacationWorkLogRepository,
         VacationWorkLogService $vacationWorkLogService,
-        EventDispatcherInterface $eventDispatcher
+        WorkMonthRepository $workMonthRepository,
+        EventDispatcherInterface $eventDispatcher,
+        ValidatorInterface $validator,
+        TokenStorageInterface $tokenStorage
     ) {
         $this->normalizer = $normalizer;
+        $this->denormalizer = $denormalizer;
         $this->vacationWorkLogRepository = $vacationWorkLogRepository;
         $this->vacationWorkLogService = $vacationWorkLogService;
+        $this->workMonthRepository = $workMonthRepository;
         $this->eventDispatcher = $eventDispatcher;
+        $this->validator = $validator;
+        $this->tokenStorage = $tokenStorage;
+    }
+
+    public function bulkCreate(Request $request): Response
+    {
+        $data = json_decode((string) $request->getContent(), true);
+        $vacationWorkLogs = [];
+        $vacationWorkLogsByYear = [];
+
+        if (!$data || !is_array($data)) {
+            return JsonResponse::create(
+                ['detail' => 'Expected array of work logs.'], JsonResponse::HTTP_BAD_REQUEST
+            );
+        }
+
+        $token = $this->tokenStorage->getToken();
+
+        // Authorization is checked in security layer of Symfony, this is necessary because of PHP Stan
+        if (!$token || !$token->getUser() instanceof User) {
+            return JsonResponse::create(
+                ['detail' => 'Cannot create work log without user.'], JsonResponse::HTTP_BAD_REQUEST
+            );
+        }
+
+        foreach ($data as $normalizedVacationWorkLog) {
+            try {
+                $vacationWorkLog = $this->denormalizer->denormalize(
+                    $normalizedVacationWorkLog,
+                    VacationWorkLog::class
+                );
+
+                if (!$vacationWorkLog instanceof VacationWorkLog) {
+                    throw new NotNormalizableValueException();
+                }
+            } catch (NotNormalizableValueException $e) {
+                return JsonResponse::create(
+                    ['detail' => 'Cannot denormalize work log.'], JsonResponse::HTTP_BAD_REQUEST
+                );
+            }
+
+            $workMonth = $this->workMonthRepository->findByWorkLogAndUser($vacationWorkLog, $token->getUser());
+
+            if (!$workMonth) {
+                return JsonResponse::create(
+                    ['detail' => 'Cannot create work log without work month.'], JsonResponse::HTTP_BAD_REQUEST
+                );
+            }
+
+            if ($workMonth->getStatus() === WorkMonth::STATUS_APPROVED) {
+                return JsonResponse::create(
+                    ['detail' => 'Cannot add work log to closed work month.'], JsonResponse::HTTP_BAD_REQUEST
+                );
+            }
+
+            $vacationWorkLog->setWorkMonth($workMonth);
+            $vacationWorkLogs[] = $vacationWorkLog;
+
+            if (!array_key_exists($workMonth->getYear(), $vacationWorkLogsByYear)) {
+                $vacationWorkLogsByYear[$workMonth->getYear()] = 0;
+            }
+
+            ++$vacationWorkLogsByYear[$workMonth->getYear()];
+        }
+
+        foreach ($vacationWorkLogsByYear as $year => $workLogCount) {
+            if ($this->vacationWorkLogRepository->getRemainingVacationDays($token->getUser(), $year) < $workLogCount) {
+                return JsonResponse::create(
+                    ['detail' => sprintf('Vacation days for year %s have been already exhausted.', $year)],
+                    JsonResponse::HTTP_BAD_REQUEST
+                );
+            }
+        }
+
+        foreach ($vacationWorkLogs as $index => $vacationWorkLog) {
+            $errors = $this->validator->validate($vacationWorkLog);
+
+            if (count($errors) > 0) {
+                return JsonResponse::create(
+                    ['detail' => sprintf('Vacation work log with index %d is not valid: %s', $index, $errors[0]->getMessage())],
+                    JsonResponse::HTTP_BAD_REQUEST
+                );
+            }
+        }
+
+        $this->vacationWorkLogService->createVacationWorkLogs($vacationWorkLogs);
+        $normalizedVacationWorkLogs = [];
+
+        foreach ($vacationWorkLogs as $vacationWorkLog) {
+            $normalizedVacationWorkLogs[] = $this->normalizer->normalize(
+                $vacationWorkLog,
+                VacationWorkLog::class,
+                ['groups' => ['vacation_work_log_out_detail']]
+            );
+        }
+
+        return JsonResponse::create($normalizedVacationWorkLogs, JsonResponse::HTTP_CREATED);
     }
 
     /**
