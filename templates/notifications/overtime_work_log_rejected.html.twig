@@ -1,14 +1,20 @@
-<html lang="cs">
+<html lang="de">
     <head>
         <meta charset="utf-8" />
+        <style>
+            body {
+                font-family: helvetica, roboto, arial, sans-serif;
+            }
+        </style>
     </head>
 
     <body>
-        <h1>
-            Overtime work log for date {{ workLog.date | date('Y-m-d') }}
-            of employee {{ workLog.workMonth.user.firstName }} {{ workLog.workMonth.user.lastName }}
-            was rejected by {{ supervisor.firstName }} {{ supervisor.lastName }}
-        </h1>
-        <p>Reason: {{ workLog.rejectionMessage }}</p>
+        <h1>Antrag auf Mehrarbeit abgelehnt</h1>
+        <p>
+            <strong>Datum: </strong>{{ workLog.date | date('d. m. Y') }}<br>
+            <strong>Betrifft: </strong>{{ workLog.workMonth.user.firstName }} {{ workLog.workMonth.user.lastName }}<br>
+            <strong>Abgelehnt durch: </strong>{{ supervisor.firstName }} {{ supervisor.lastName }}<br>
+            <strong>Begründung: </strong>{{ workLog.rejectionMessage }}
+        </p>
     </body>
 </html>

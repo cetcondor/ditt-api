@@ -62,11 +62,9 @@ class WorkMonthApprovedEmailNotificationListener
 
         $this->sendMail(
             sprintf(
-                'Worklog for month %d/%d was approved by %s %s',
+                'Arbeitsmonat angenommen – %d/%d',
                 $workMonth->getMonth(),
-                $workMonth->getYear(),
-                $supervisor->getFirstName(),
-                $supervisor->getLastName()
+                $workMonth->getYear()
             ),
             $toEmails,
             $this->templating->render('notifications/work_month_approved.html.twig', [

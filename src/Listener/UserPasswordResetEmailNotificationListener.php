@@ -53,7 +53,7 @@ class UserPasswordResetEmailNotificationListener
         $user = $event->getUser();
 
         $this->sendMail(
-            'Reset password',
+            'Passwort zurücksetzen',
             [$event->getUser()->getEmail()],
             $this->templating->render('notifications/password_reset.html.twig', [
                 'user' => $user,

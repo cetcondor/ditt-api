@@ -1,14 +1,25 @@
-<html lang="cs">
+<html lang="de">
     <head>
         <meta charset="utf-8" />
+        <style>
+            body {
+                font-family: helvetica, roboto, arial, sans-serif;
+            }
+        </style>
     </head>
 
     <body>
-        <h1>
-            Multiple vacation work logs for dates {% for workLog in workLogs %}{{ workLog.date | date('Y-m-d') }}{% if not loop.last %}, {% endif %}{% endfor %}
-            of employee {{ workLogs[0].workMonth.user.firstName }} {{ workLogs[0].workMonth.user.lastName }}
-            were rejected by {{ supervisor.firstName }} {{ supervisor.lastName }}
-        </h1>
-        <p>Reason: {{ workLogs[0].rejectionMessage }}</p>
+        <h1>Antrag auf mehrtägigen Urlaub abgelehnt</h1>
+        <p>
+            <strong>Daten: </strong><br>
+            <ul>
+                {% for workLog in workLogs %}
+                    <li>{{ workLog.date | date('d. m. Y') }}</li>
+                {% endfor %}
+            </ul>
+            <strong>Betrifft: </strong>{{ workLogs[0].workMonth.user.firstName }} {{ workLogs[0].workMonth.user.lastName }}<br>
+            <strong>Abgelehnt durch: </strong>{{ supervisor.firstName }} {{ supervisor.lastName }}<br>
+            <strong>Begründung: </strong>{{ workLogs[0].rejectionMessage }}
+        </p>
     </body>
 </html>

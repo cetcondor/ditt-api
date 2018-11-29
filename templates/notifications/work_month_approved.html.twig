@@ -1,13 +1,19 @@
-<html lang="cs">
+<html lang="de">
     <head>
         <meta charset="utf-8" />
+        <style>
+            body {
+                font-family: helvetica, roboto, arial, sans-serif;
+            }
+        </style>
     </head>
 
     <body>
-        <h1>
-            Work month {{ workMonth.month }}/{{ workMonth.year }}
-            of employee {{ workMonth.user.firstName }} {{ workMonth.user.lastName }}
-            was approved by {{ supervisor.firstName }} {{ supervisor.lastName }}
-        </h1>
+        <h1>Arbeitsmonat angenommen</h1>
+        <p>
+            <strong>Arbeitsmonat: </strong>{{ workMonth.month }}/{{ workMonth.year }}<br>
+            <strong>Betrifft: </strong>{{ workMonth.user.firstName }} {{ workMonth.user.lastName }}<br>
+            <strong>Angenommen durch: </strong>{{ supervisor.firstName }} {{ supervisor.lastName }}
+        </p>
     </body>
 </html>

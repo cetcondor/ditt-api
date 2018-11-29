@@ -71,7 +71,8 @@ class WorkLogEmailNotificationListener
         $this->sendWorkLogMail(
             $event->getSupervisor(),
             $event->getBusinessTripWorkLog(),
-            'Business trip work log was approved by %s %s',
+            'Antrag auf Dienstreise gewährt – %s',
+            $event->getBusinessTripWorkLog()->getTimeApproved(),
             'notifications/business_trip_work_log_approved.html.twig'
         );
     }
@@ -88,7 +89,8 @@ class WorkLogEmailNotificationListener
         $this->sendWorkLogMail(
             $event->getSupervisor(),
             $event->getBusinessTripWorkLog(),
-            'Business trip work log was rejected by %s %s',
+            'Antrag auf Dienstreise abgelehnt – %s',
+            $event->getBusinessTripWorkLog()->getTimeRejected(),
             'notifications/business_trip_work_log_rejected.html.twig'
         );
     }
@@ -105,7 +107,8 @@ class WorkLogEmailNotificationListener
         $this->sendWorkLogMail(
             $event->getSupervisor(),
             $event->getHomeOfficeWorkLog(),
-            'Home office work log was approved by %s %s',
+            'Antrag auf Telearbeit gewährt – %s',
+            $event->getHomeOfficeWorkLog()->getTimeApproved(),
             'notifications/home_office_work_log_approved.html.twig'
         );
     }
@@ -122,7 +125,8 @@ class WorkLogEmailNotificationListener
         $this->sendWorkLogMail(
             $event->getSupervisor(),
             $event->getHomeOfficeWorkLog(),
-            'Home office work log was rejected by %s %s',
+            'Antrag auf Telearbeit abgelehnt – %s',
+            $event->getHomeOfficeWorkLog()->getTimeRejected(),
             'notifications/home_office_work_log_rejected.html.twig'
         );
     }
@@ -136,10 +140,20 @@ class WorkLogEmailNotificationListener
      */
     public function onMultipleVacationWorkLogApproved(MultipleVacationWorkLogApprovedEvent $event)
     {
+        $workLogs = $event->getVacationWorkLogs();
+        $startDate = $workLogs[0]->getTimeApproved();
+        $endDate = $workLogs[0]->getTimeApproved();
+
+        if (count($workLogs) > 1) {
+            $endDate = end($workLogs)->getTimeApproved();
+        }
+
         $this->sendWorkLogsMail(
             $event->getSupervisor(),
-            $event->getVacationWorkLogs(),
-            'Multiple vacation work logs were approved by %s %s',
+            $workLogs,
+            'Antrag auf mehrtägigen Urlaub gewährt – %s bis %s',
+            $startDate,
+            $endDate,
             'notifications/multiple_vacation_work_log_approved.html.twig'
         );
     }
@@ -153,10 +167,20 @@ class WorkLogEmailNotificationListener
      */
     public function onMultipleVacationWorkLogRejected(MultipleVacationWorkLogRejectedEvent $event)
     {
+        $workLogs = $event->getVacationWorkLogs();
+        $startDate = $workLogs[0]->getTimeRejected();
+        $endDate = $workLogs[0]->getTimeRejected();
+
+        if (count($workLogs) > 1) {
+            $endDate = end($workLogs)->getTimeRejected();
+        }
+
         $this->sendWorkLogsMail(
             $event->getSupervisor(),
-            $event->getVacationWorkLogs(),
-            'Multiple vacation work logs were rejected by %s %s',
+            $workLogs,
+            'Antrag auf mehrtägigen Urlaub abgelehnt – %s bis %s',
+            $startDate,
+            $endDate,
             'notifications/multiple_vacation_work_log_rejected.html.twig'
         );
     }
@@ -173,7 +197,8 @@ class WorkLogEmailNotificationListener
         $this->sendWorkLogMail(
             $event->getSupervisor(),
             $event->getOvertimeWorkLog(),
-            'Overtime work log was approved by %s %s',
+            'Antrag auf Mehrarbeit gewährt – %s',
+            $event->getOvertimeWorkLog()->getTimeApproved(),
             'notifications/overtime_work_log_approved.html.twig'
         );
     }
@@ -190,7 +215,8 @@ class WorkLogEmailNotificationListener
         $this->sendWorkLogMail(
             $event->getSupervisor(),
             $event->getOvertimeWorkLog(),
-            'Overtime log was rejected by %s %s',
+            'Antrag auf Mehrarbeit abgelehnt – %s',
+            $event->getOvertimeWorkLog()->getTimeRejected(),
             'notifications/overtime_work_log_rejected.html.twig'
         );
     }
@@ -207,7 +233,8 @@ class WorkLogEmailNotificationListener
         $this->sendWorkLogMail(
             $event->getSupervisor(),
             $event->getTimeOffWorkLog(),
-            'Time off work log was approved by %s %s',
+            'Antrag auf Freizeitausgleich gewährt – %s',
+            $event->getTimeOffWorkLog()->getTimeApproved(),
             'notifications/time_off_work_log_approved.html.twig'
         );
     }
@@ -224,7 +251,8 @@ class WorkLogEmailNotificationListener
         $this->sendWorkLogMail(
             $event->getSupervisor(),
             $event->getTimeOffWorkLog(),
-            'Time off work log was rejected by %s %s',
+            'Antrag auf Freizeitausgleich abgelehnt – %s',
+            $event->getTimeOffWorkLog()->getTimeRejected(),
             'notifications/time_off_work_log_rejected.html.twig'
         );
     }
@@ -241,7 +269,8 @@ class WorkLogEmailNotificationListener
         $this->sendWorkLogMail(
             $event->getSupervisor(),
             $event->getVacationWorkLog(),
-            'Vacation work log was approved by %s %s',
+            'Antrag auf Urlaub gewährt – %s',
+            $event->getVacationWorkLog()->getTimeApproved(),
             'notifications/vacation_work_log_approved.html.twig'
         );
     }
@@ -258,7 +287,8 @@ class WorkLogEmailNotificationListener
         $this->sendWorkLogMail(
             $event->getSupervisor(),
             $event->getVacationWorkLog(),
-            'Vacation work log was rejected by %s %s',
+            'Antrag auf Urlaub abgelehnt – %s',
+            $event->getVacationWorkLog()->getTimeRejected(),
             'notifications/vacation_work_log_rejected.html.twig'
         );
     }
@@ -267,6 +297,7 @@ class WorkLogEmailNotificationListener
      * @param User $supervisor
      * @param WorkLogInterface $workLog
      * @param string $emailSubject
+     * @param \DateTimeImmutable|null $date
      * @param string $emailTemplate
      * @throws EmailNotSentException
      * @throws \Twig_Error_Loader
@@ -277,6 +308,7 @@ class WorkLogEmailNotificationListener
         User $supervisor,
         WorkLogInterface $workLog,
         string $emailSubject,
+        ?\DateTimeImmutable $date,
         string $emailTemplate
     ) {
         $admins = $this->userRepository->getAllAdmins();
@@ -285,8 +317,13 @@ class WorkLogEmailNotificationListener
             $toEmails[] = $admin->getEmail();
         }
 
+        $subjectDate = '';
+        if ($date) {
+            $subjectDate = $date->format('d. m. Y');
+        }
+
         $this->sendMail(
-            sprintf($emailSubject, $supervisor->getFirstName(), $supervisor->getLastName()),
+            sprintf($emailSubject, $subjectDate),
             $toEmails,
             $this->templating->render($emailTemplate, [
                 'supervisor' => $supervisor,
@@ -297,8 +334,10 @@ class WorkLogEmailNotificationListener
 
     /**
      * @param User $supervisor
-     * @param WorkLogInterface[] $workLogs
+     * @param array $workLogs
      * @param string $emailSubject
+     * @param \DateTimeImmutable|null $startDate
+     * @param \DateTimeImmutable|null $endDate
      * @param string $emailTemplate
      * @throws EmailNotSentException
      * @throws \Twig_Error_Loader
@@ -309,6 +348,8 @@ class WorkLogEmailNotificationListener
         User $supervisor,
         array $workLogs,
         string $emailSubject,
+        ?\DateTimeImmutable $startDate,
+        ?\DateTimeImmutable $endDate,
         string $emailTemplate
     ) {
         $admins = $this->userRepository->getAllAdmins();
@@ -317,8 +358,17 @@ class WorkLogEmailNotificationListener
             $toEmails[] = $admin->getEmail();
         }
 
+        $subjectStartDate = '';
+        $subjectEndDate = '';
+        if ($startDate) {
+            $subjectStartDate = $startDate->format('d. m. Y');
+        }
+        if ($endDate) {
+            $subjectEndDate = $endDate->format('d. m. Y');
+        }
+
         $this->sendMail(
-            sprintf($emailSubject, $supervisor->getFirstName(), $supervisor->getLastName()),
+            sprintf($emailSubject, $subjectStartDate, $subjectEndDate),
             $toEmails,
             $this->templating->render($emailTemplate, [
                 'supervisor' => $supervisor,
