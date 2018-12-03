@@ -81,6 +81,11 @@ class User implements UserInterface
     private $vacationDays;
 
     /**
+     * @var int[]|null
+     */
+    private $remainingVacationDaysByYear;
+
+    /**
      * @var WorkHours[]|Collection
      */
     private $workHours;
@@ -377,6 +382,25 @@ class User implements UserInterface
     public function setVacationDays(int $vacationDays): User
     {
         $this->vacationDays = $vacationDays;
+
+        return $this;
+    }
+
+    /**
+     * @return int[]|null
+     */
+    public function getRemainingVacationDaysByYear(): ?array
+    {
+        return $this->remainingVacationDaysByYear;
+    }
+
+    /**
+     * @param int[]|null $remainingVacationDaysByYear
+     * @return User
+     */
+    public function setRemainingVacationDaysByYear(?array $remainingVacationDaysByYear): User
+    {
+        $this->remainingVacationDaysByYear = $remainingVacationDaysByYear;
 
         return $this;
     }

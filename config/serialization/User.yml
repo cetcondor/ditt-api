@@ -63,6 +63,9 @@ App\Entity\User:
                 - user_out_detail
                 - supervised_user_out_list
                 - user_in
+        remainingVacationDaysByYear:
+            groups:
+                - work_month_out_detail
         workHours:
             groups:
                 - user_out_list

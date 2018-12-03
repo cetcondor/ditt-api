@@ -6,7 +6,7 @@ use Symfony\Component\Validator\Constraint;
 
 class VacationDaysNotExhausted extends Constraint
 {
-    public $message = 'Vacation days for given year have been already exhausted.';
+    public $message = 'Set duration exceeds number of vacation days allocated for this year';
 
     /**
      * @return string

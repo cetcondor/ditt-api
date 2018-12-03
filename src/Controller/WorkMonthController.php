@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\BusinessTripWorkLog;
+use App\Entity\Config;
 use App\Entity\HomeOfficeWorkLog;
 use App\Entity\OvertimeWorkLog;
 use App\Entity\TimeOffWorkLog;
@@ -149,6 +150,17 @@ class WorkMonthController extends Controller
             $workMonth->setVacationWorkLogs($emptyCollection);
             $workMonth->setWorkLogs($emptyCollection);
         }
+
+        $remainingVacationDaysByYear = [];
+
+        foreach ((new Config())->getSupportedYear() as $supportedYear) {
+            $remainingVacationDaysByYear[$supportedYear] = $this->vacationWorkLogRepository->getRemainingVacationDays(
+                $workMonth->getUser(),
+                $supportedYear
+            );
+        }
+
+        $workMonth->getUser()->setRemainingVacationDaysByYear($remainingVacationDaysByYear);
 
         return JsonResponse::create(
             $this->normalizer->normalize(

@@ -93,7 +93,7 @@ class BulkCreateVacationWorkLogCest
 
         $I->seeResponseCodeIs(Response::HTTP_BAD_REQUEST);
         $I->seeResponseContainsJson([
-            'detail' => 'Vacation days for year 2019 have been already exhausted.',
+            'detail' => 'Set duration exceeds number of vacation days allocated for this year.',
         ]);
         $I->expectException(NoResultException::class, function () use ($I, $date2, $date3) {
             $I->grabEntityFromRepository(VacationWorkLog::class, [

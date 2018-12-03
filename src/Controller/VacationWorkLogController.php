@@ -159,7 +159,7 @@ class VacationWorkLogController extends Controller
         foreach ($vacationWorkLogsByYear as $year => $workLogCount) {
             if ($this->vacationWorkLogRepository->getRemainingVacationDays($token->getUser(), $year) < $workLogCount) {
                 return JsonResponse::create(
-                    ['detail' => sprintf('Vacation days for year %s have been already exhausted.', $year)],
+                    ['detail' => 'Set duration exceeds number of vacation days allocated for this year.'],
                     JsonResponse::HTTP_BAD_REQUEST
                 );
             }
