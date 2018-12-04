@@ -36,6 +36,8 @@ App\Entity\WorkMonth:
         workLogs:
             targetEntity: App\Entity\WorkLog
             mappedBy: workMonth
+            orderBy:
+                startTime: ASC
 
     manyToOne:
         user:
