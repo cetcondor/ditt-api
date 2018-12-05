@@ -62,6 +62,27 @@ class UserController extends Controller
         $this->eventDispatcher = $eventDispatcher;
     }
 
+    /**
+     * @param string $apiToken
+     * @return Response
+     */
+    public function getUserByApiToken(string $apiToken): Response
+    {
+        $user = $this->userRepository->getByApiToken($apiToken);
+        if (!$user || !$user instanceof User) {
+            throw $this->createNotFoundException(sprintf('User with api token %d was not found', $apiToken));
+        }
+
+        return JsonResponse::create(
+            $this->normalizer->normalize(
+                $user,
+                User::class,
+                ['groups' => ['user_out_api_token_detail']]
+            ),
+            JsonResponse::HTTP_OK
+        );
+    }
+
     public function newPassword(Request $request): Response
     {
         $data = json_decode((string) $request->getContent());
@@ -133,6 +154,56 @@ class UserController extends Controller
         );
 
         return JsonResponse::create(null, JsonResponse::HTTP_OK);
+    }
+
+    /**
+     * @param Request $request
+     * @param int $id
+     * @throws \Exception
+     * @return Response
+     */
+    public function renewApiToken(Request $request, int $id): Response
+    {
+        $user = $this->userRepository->getRepository()->find($id);
+        if (!$user || !$user instanceof User) {
+            throw $this->createNotFoundException(sprintf('User with id %d was not found', $id));
+        }
+
+        $this->userService->renewApiToken($user);
+
+        return JsonResponse::create(
+            $this->normalizer->normalize(
+                $user,
+                User::class,
+                ['groups' => ['user_out_api_token_detail']]
+            ),
+            JsonResponse::HTTP_OK
+        );
+    }
+
+    /**
+     * @param Request $request
+     * @param int $id
+     * @throws \Exception
+     * @return Response
+     */
+    public function resetApiToken(Request $request, int $id): Response
+    {
+        $user = $this->userRepository->getRepository()->find($id);
+        if (!$user || !$user instanceof User) {
+            throw $this->createNotFoundException(sprintf('User with id %d was not found', $id));
+        }
+
+        $this->userService->resetApiToken($user);
+
+        return JsonResponse::create(
+            $this->normalizer->normalize(
+                $user,
+                User::class,
+                ['groups' => ['user_out_api_token_detail']]
+            ),
+            JsonResponse::HTTP_OK
+        );
     }
 
     /**

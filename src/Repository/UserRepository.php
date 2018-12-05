@@ -39,6 +39,18 @@ class UserRepository
     }
 
     /**
+     * @param string $apiToken
+     * @return User|null
+     */
+    public function getByApiToken(string $apiToken): ?User
+    {
+        /** @var User|null $user */
+        $user = $this->repository->findOneBy(['apiToken' => $apiToken]);
+
+        return $user;
+    }
+
+    /**
      * @param string $email
      * @return User|null
      */

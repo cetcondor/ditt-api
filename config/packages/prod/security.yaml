@@ -26,4 +26,6 @@ security:
             stateless: true
             guard:
                 authenticators:
+                    - App\Security\TokenAuthenticator
                     - lexik_jwt_authentication.jwt_token_authenticator
+                entry_point: App\Security\TokenAuthenticator

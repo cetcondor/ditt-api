@@ -122,6 +122,27 @@ api_vacation_work_log_mark_rejected:
     defaults:
         _api_collection_operation_name: 'markRejected'
 
+api_users_renew_api_token:
+    path: /users/{id}/api_token/renew
+    methods: [PUT]
+    controller: App\Controller\UserController::renewApiToken
+    defaults:
+        _api_collection_operation_name: 'renewApiToken'
+
+api_users_reset_api_token:
+    path: /users/{id}/api_token/reset
+    methods: [PUT]
+    controller: App\Controller\UserController::resetApiToken
+    defaults:
+        _api_collection_operation_name: 'resetApiToken'
+
+api_users_by_api_token:
+    path: /users/api_token/{apiToken}
+    methods: [GET]
+    controller: App\Controller\UserController::getUserByApiToken
+    defaults:
+        _api_collection_operation_name: 'getUserByApiToken'
+
 api_supervised_users:
     path: /users/{id}/supervised_users
     methods: [GET]

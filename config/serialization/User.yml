@@ -4,6 +4,7 @@ App\Entity\User:
             groups:
                 - user_out_list
                 - user_out_detail
+                - user_out_api_token_detail
                 - special_approvals_out_list
                 - supervised_user_out_list
                 - work_month_out_list
@@ -12,12 +13,14 @@ App\Entity\User:
             groups:
                 - user_out_list
                 - user_out_detail
+                - user_out_api_token_detail
                 - special_approvals_out_list
                 - supervised_user_out_list
                 - user_in
         employeeId:
             groups:
                 - user_out_detail
+                - user_out_api_token_detail
                 - special_approvals_out_list
                 - supervised_user_out_list
                 - user_in
@@ -25,6 +28,7 @@ App\Entity\User:
             groups:
                 - user_out_list
                 - user_out_detail
+                - user_out_api_token_detail
                 - special_approvals_out_list
                 - supervised_user_out_list
                 - work_month_out_detail
@@ -33,6 +37,7 @@ App\Entity\User:
             groups:
                 - user_out_list
                 - user_out_detail
+                - user_out_api_token_detail
                 - special_approvals_out_list
                 - supervised_user_out_list
                 - work_month_out_detail
@@ -44,12 +49,14 @@ App\Entity\User:
             groups:
                 - user_out_list
                 - user_out_detail
+                - user_out_api_token_detail
                 - supervised_user_out_list
                 - user_in
         roles:
             groups:
                 - user_out_list
                 - user_out_detail
+                - user_out_api_token_detail
                 - supervised_user_out_list
                 - user_in
         supervisor:
@@ -61,6 +68,7 @@ App\Entity\User:
             groups:
                 - user_out_list
                 - user_out_detail
+                - user_out_api_token_detail
                 - supervised_user_out_list
                 - user_in
         remainingVacationDaysByYear:
@@ -71,6 +79,7 @@ App\Entity\User:
             groups:
                 - user_out_list
                 - user_out_detail
+                - user_out_api_token_detail
                 - supervised_user_out_list
                 - user_in
         workMonths:
@@ -79,3 +88,7 @@ App\Entity\User:
         yearStats:
             groups:
                 - user_out_list
+        apiToken:
+            groups:
+                - user_out_detail
+                - user_out_api_token_detail

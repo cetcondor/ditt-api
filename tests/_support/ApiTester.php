@@ -193,6 +193,7 @@ class ApiTester extends \Codeception\Actor
     public function createUser(array $params = [])
     {
         $user = $this->populateEntity(new \App\Entity\User(), [
+            'apiToken' => null,
             'email' => 'user@example.com',
             'employeeId' => 'some_id_123',
             'firstName' => 'Jan',

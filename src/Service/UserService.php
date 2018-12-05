@@ -53,6 +53,26 @@ class UserService
      * @param User $user
      * @throws \Exception
      */
+    public function renewApiToken(User $user): void
+    {
+        $user->renewApiToken();
+        $this->entityManager->flush();
+    }
+
+    /**
+     * @param User $user
+     * @throws \Exception
+     */
+    public function resetApiToken(User $user): void
+    {
+        $user->setApiToken(null);
+        $this->entityManager->flush();
+    }
+
+    /**
+     * @param User $user
+     * @throws \Exception
+     */
     public function setResetPasswordToken(User $user): void
     {
         $resetPasswordToken = sha1(random_bytes(32));

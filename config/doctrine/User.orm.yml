@@ -38,6 +38,11 @@ App\Entity\User:
             type: text
             nullable: true
 
+        apiToken:
+            type: text
+            unique: true
+            nullable: true
+
     oneToMany:
         workHours:
             targetEntity: App\Entity\WorkHours

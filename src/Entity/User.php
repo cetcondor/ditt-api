@@ -100,6 +100,11 @@ class User implements UserInterface
      */
     private $yearStats;
 
+    /**
+     * @var string|null
+     */
+    private $apiToken;
+
     public function __construct()
     {
         $this->password = '';
@@ -507,6 +512,36 @@ class User implements UserInterface
     public function setYearStats($yearStats)
     {
         $this->yearStats = $yearStats;
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getApiToken(): ?string
+    {
+        return $this->apiToken;
+    }
+
+    /**
+     * @param string|null $apiToken
+     * @return User
+     */
+    public function setApiToken(?string $apiToken): User
+    {
+        $this->apiToken = $apiToken;
+
+        return $this;
+    }
+
+    /**
+     * @throws \Exception
+     * @return User
+     */
+    public function renewApiToken(): User
+    {
+        $this->apiToken = substr(str_replace(['+', '/', '='], '', base64_encode(random_bytes(128))), 0, 128);
 
         return $this;
     }
