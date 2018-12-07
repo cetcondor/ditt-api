@@ -4,9 +4,6 @@ App\Entity\HomeOfficeWorkLog:
             - NotBlank: ~
             - DateTime: ~
 
-        comment:
-            - NotBlank: ~
-
         timeApproved:
             - DateTime: ~
 

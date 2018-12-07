@@ -15,7 +15,7 @@ class TimeOffWorkLog implements WorkLogInterface
     private $date;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $comment;
 
@@ -83,18 +83,18 @@ class TimeOffWorkLog implements WorkLogInterface
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getComment(): string
+    public function getComment(): ?string
     {
         return $this->comment;
     }
 
     /**
-     * @param string $comment
+     * @param string|null $comment
      * @return TimeOffWorkLog
      */
-    public function setComment(string $comment): TimeOffWorkLog
+    public function setComment(?string $comment): TimeOffWorkLog
     {
         $this->comment = $comment;
 
