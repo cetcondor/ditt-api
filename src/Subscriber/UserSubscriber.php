@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Entity\UserYearStats;
 use App\Entity\WorkMonth;
 use App\Repository\WorkHoursRepository;
+use App\Service\UserService;
 use App\Service\UserYearStatsService;
 use App\Service\WorkMonthService;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -23,6 +24,11 @@ class UserSubscriber implements EventSubscriberInterface
      * @var EntityManagerInterface
      */
     private $entityManager;
+
+    /**
+     * @var UserService
+     */
+    private $userService;
 
     /**
      * @var UserYearStatsService
@@ -41,17 +47,20 @@ class UserSubscriber implements EventSubscriberInterface
 
     /**
      * @param EntityManagerInterface $entityManager
+     * @param UserService $userService
      * @param UserYearStatsService $userYearStatsService
      * @param WorkHoursRepository $workHoursRepository
      * @param WorkMonthService $workMonthService
      */
     public function __construct(
         EntityManagerInterface $entityManager,
+        UserService $userService,
         UserYearStatsService $userYearStatsService,
         WorkHoursRepository $workHoursRepository,
         WorkMonthService $workMonthService
     ) {
         $this->entityManager = $entityManager;
+        $this->userService = $userService;
         $this->userYearStatsService = $userYearStatsService;
         $this->workHoursRepository = $workHoursRepository;
         $this->workMonthService = $workMonthService;
@@ -67,6 +76,7 @@ class UserSubscriber implements EventSubscriberInterface
                 ['createWorkMonths', EventPriorities::POST_WRITE],
                 ['createYearStats', EventPriorities::POST_WRITE],
                 ['editWorkHours', EventPriorities::PRE_WRITE],
+                ['addRemainingVacationDaysByYear', EventPriorities::PRE_SERIALIZE],
             ],
         ];
     }
@@ -158,5 +168,26 @@ class UserSubscriber implements EventSubscriberInterface
 
         $user->setWorkHours(new ArrayCollection());
         $this->entityManager->flush();
+    }
+
+    /**
+     * @param GetResponseForControllerResultEvent $event
+     */
+    public function addRemainingVacationDaysByYear(GetResponseForControllerResultEvent $event): void
+    {
+        $user = $event->getControllerResult();
+        if (!$user instanceof User) {
+            return;
+        }
+
+        $method = $event->getRequest()->getMethod();
+
+        if (Request::METHOD_GET !== $method) {
+            return;
+        }
+
+        $user->setRemainingVacationDaysByYear(
+            $this->userService->calculateRemainingVacationDaysByYear($user)
+        );
     }
 }

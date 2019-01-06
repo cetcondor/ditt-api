@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\BusinessTripWorkLog;
-use App\Entity\Config;
 use App\Entity\HomeOfficeWorkLog;
 use App\Entity\OvertimeWorkLog;
 use App\Entity\TimeOffWorkLog;
@@ -18,6 +17,7 @@ use App\Repository\TimeOffWorkLogRepository;
 use App\Repository\UserRepository;
 use App\Repository\VacationWorkLogRepository;
 use App\Repository\WorkMonthRepository;
+use App\Service\UserService;
 use App\Service\WorkMonthService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -38,6 +38,11 @@ class WorkMonthController extends Controller
      * @var UserRepository
      */
     private $userRepository;
+
+    /**
+     * @var UserService
+     */
+    private $userService;
 
     /**
      * @var WorkMonthRepository
@@ -87,6 +92,7 @@ class WorkMonthController extends Controller
     /**
      * @param NormalizerInterface $normalizer
      * @param UserRepository $userRepository
+     * @param UserService $userService
      * @param WorkMonthRepository $workMonthRepository
      * @param WorkMonthService $workMonthService
      * @param BusinessTripWorkLogRepository $businessTripWorkLogRepository
@@ -100,6 +106,7 @@ class WorkMonthController extends Controller
     public function __construct(
         NormalizerInterface $normalizer,
         UserRepository $userRepository,
+        UserService $userService,
         WorkMonthRepository $workMonthRepository,
         WorkMonthService $workMonthService,
         BusinessTripWorkLogRepository $businessTripWorkLogRepository,
@@ -112,6 +119,7 @@ class WorkMonthController extends Controller
     ) {
         $this->normalizer = $normalizer;
         $this->userRepository = $userRepository;
+        $this->userService = $userService;
         $this->workMonthRepository = $workMonthRepository;
         $this->workMonthService = $workMonthService;
         $this->businessTripWorkLogRepository = $businessTripWorkLogRepository;
@@ -151,16 +159,9 @@ class WorkMonthController extends Controller
             $workMonth->setWorkLogs($emptyCollection);
         }
 
-        $remainingVacationDaysByYear = [];
-
-        foreach ((new Config())->getSupportedYear() as $supportedYear) {
-            $remainingVacationDaysByYear[$supportedYear] = $this->vacationWorkLogRepository->getRemainingVacationDays(
-                $workMonth->getUser(),
-                $supportedYear
-            );
-        }
-
-        $workMonth->getUser()->setRemainingVacationDaysByYear($remainingVacationDaysByYear);
+        $workMonth->getUser()->setRemainingVacationDaysByYear(
+            $this->userService->calculateRemainingVacationDaysByYear($workMonth->getUser())
+        );
 
         return JsonResponse::create(
             $this->normalizer->normalize(

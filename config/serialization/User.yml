@@ -65,6 +65,7 @@ App\Entity\User:
                 - user_in
         remainingVacationDaysByYear:
             groups:
+                - user_out_detail
                 - work_month_out_detail
         workHours:
             groups:
