@@ -5,16 +5,21 @@ namespace App\Listener;
 use App\Entity\User;
 use App\Entity\WorkLogInterface;
 use App\Event\BusinessTripWorkLogApprovedEvent;
+use App\Event\BusinessTripWorkLogCanceledEvent;
 use App\Event\BusinessTripWorkLogRejectedEvent;
 use App\Event\HomeOfficeWorkLogApprovedEvent;
+use App\Event\HomeOfficeWorkLogCanceledEvent;
 use App\Event\HomeOfficeWorkLogRejectedEvent;
 use App\Event\MultipleVacationWorkLogApprovedEvent;
 use App\Event\MultipleVacationWorkLogRejectedEvent;
 use App\Event\OvertimeWorkLogApprovedEvent;
+use App\Event\OvertimeWorkLogCanceledEvent;
 use App\Event\OvertimeWorkLogRejectedEvent;
 use App\Event\TimeOffWorkLogApprovedEvent;
+use App\Event\TimeOffWorkLogCanceledEvent;
 use App\Event\TimeOffWorkLogRejectedEvent;
 use App\Event\VacationWorkLogApprovedEvent;
+use App\Event\VacationWorkLogCanceledEvent;
 use App\Event\VacationWorkLogRejectedEvent;
 use App\Exception\EmailNotSentException;
 use App\Repository\UserRepository;
@@ -78,6 +83,24 @@ class WorkLogEmailNotificationListener
     }
 
     /**
+     * @param BusinessTripWorkLogCanceledEvent $event
+     * @throws EmailNotSentException
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     */
+    public function onBusinessTripWorkLogCanceled(BusinessTripWorkLogCanceledEvent $event): void
+    {
+        $this->sendWorkLogMail(
+            null,
+            $event->getBusinessTripWorkLog(),
+            'Antrag auf Dienstreise storniert – %s',
+            $event->getBusinessTripWorkLog()->getDate(),
+            'notifications/business_trip_work_log_canceled.html.twig'
+        );
+    }
+
+    /**
      * @param BusinessTripWorkLogRejectedEvent $event
      * @throws EmailNotSentException
      * @throws \Twig_Error_Loader
@@ -110,6 +133,24 @@ class WorkLogEmailNotificationListener
             'Antrag auf Telearbeit gewährt – %s',
             $event->getHomeOfficeWorkLog()->getDate(),
             'notifications/home_office_work_log_approved.html.twig'
+        );
+    }
+
+    /**
+     * @param HomeOfficeWorkLogCanceledEvent $event
+     * @throws EmailNotSentException
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     */
+    public function onHomeOfficeWorkLogCanceled(HomeOfficeWorkLogCanceledEvent $event)
+    {
+        $this->sendWorkLogMail(
+            null,
+            $event->getHomeOfficeWorkLog(),
+            'Antrag auf Telearbeit storniert – %s',
+            $event->getHomeOfficeWorkLog()->getDate(),
+            'notifications/home_office_work_log_canceled.html.twig'
         );
     }
 
@@ -204,6 +245,24 @@ class WorkLogEmailNotificationListener
     }
 
     /**
+     * @param OvertimeWorkLogCanceledEvent $event
+     * @throws EmailNotSentException
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     */
+    public function onOvertimeWorkLogCanceled(OvertimeWorkLogCanceledEvent $event)
+    {
+        $this->sendWorkLogMail(
+            null,
+            $event->getOvertimeWorkLog(),
+            'Antrag auf Mehrarbeit storniert – %s',
+            $event->getOvertimeWorkLog()->getDate(),
+            'notifications/overtime_work_log_canceled.html.twig'
+        );
+    }
+
+    /**
      * @param OvertimeWorkLogRejectedEvent $event
      * @throws EmailNotSentException
      * @throws \Twig_Error_Loader
@@ -236,6 +295,24 @@ class WorkLogEmailNotificationListener
             'Antrag auf Freizeitausgleich gewährt – %s',
             $event->getTimeOffWorkLog()->getDate(),
             'notifications/time_off_work_log_approved.html.twig'
+        );
+    }
+
+    /**
+     * @param TimeOffWorkLogCanceledEvent $event
+     * @throws EmailNotSentException
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     */
+    public function onTimeOffWorkLogCanceled(TimeOffWorkLogCanceledEvent $event)
+    {
+        $this->sendWorkLogMail(
+            null,
+            $event->getTimeOffWorkLog(),
+            'Antrag auf Freizeitausgleich storniert – %s',
+            $event->getTimeOffWorkLog()->getDate(),
+            'notifications/time_off_work_log_canceled.html.twig'
         );
     }
 
@@ -276,6 +353,24 @@ class WorkLogEmailNotificationListener
     }
 
     /**
+     * @param VacationWorkLogCanceledEvent $event
+     * @throws EmailNotSentException
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     */
+    public function onVacationWorkLogCanceled(VacationWorkLogCanceledEvent $event)
+    {
+        $this->sendWorkLogMail(
+            null,
+            $event->getVacationWorkLog(),
+            'Antrag auf Urlaub storniert – %s',
+            $event->getVacationWorkLog()->getDate(),
+            'notifications/vacation_work_log_canceled.html.twig'
+        );
+    }
+
+    /**
      * @param VacationWorkLogRejectedEvent $event
      * @throws EmailNotSentException
      * @throws \Twig_Error_Loader
@@ -294,7 +389,7 @@ class WorkLogEmailNotificationListener
     }
 
     /**
-     * @param User $supervisor
+     * @param User|null $supervisor
      * @param WorkLogInterface $workLog
      * @param string $emailSubject
      * @param \DateTimeImmutable|null $date
@@ -305,7 +400,7 @@ class WorkLogEmailNotificationListener
      * @throws \Twig_Error_Syntax
      */
     private function sendWorkLogMail(
-        User $supervisor,
+        ?User $supervisor,
         WorkLogInterface $workLog,
         string $emailSubject,
         ?\DateTimeImmutable $date,

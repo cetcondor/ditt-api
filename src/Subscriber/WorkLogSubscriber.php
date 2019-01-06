@@ -4,10 +4,21 @@ namespace App\Subscriber;
 
 use ApiPlatform\Core\EventListener\EventPriorities;
 use ApiPlatform\Core\Exception\InvalidArgumentException;
+use App\Entity\BusinessTripWorkLog;
+use App\Entity\HomeOfficeWorkLog;
+use App\Entity\OvertimeWorkLog;
+use App\Entity\TimeOffWorkLog;
 use App\Entity\User;
+use App\Entity\VacationWorkLog;
 use App\Entity\WorkLogInterface;
 use App\Entity\WorkMonth;
+use App\Event\BusinessTripWorkLogCanceledEvent;
+use App\Event\HomeOfficeWorkLogCanceledEvent;
+use App\Event\OvertimeWorkLogCanceledEvent;
+use App\Event\TimeOffWorkLogCanceledEvent;
+use App\Event\VacationWorkLogCanceledEvent;
 use App\Repository\WorkMonthRepository;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
@@ -16,6 +27,11 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class WorkLogSubscriber implements EventSubscriberInterface
 {
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
     /**
      * @var TokenStorageInterface
      */
@@ -27,12 +43,16 @@ class WorkLogSubscriber implements EventSubscriberInterface
     private $workMonthRepository;
 
     /**
-     * WorkLogSubscriber constructor.
+     * @param EventDispatcherInterface $eventDispatcher
      * @param TokenStorageInterface $tokenStorage
      * @param WorkMonthRepository $workMonthRepository
      */
-    public function __construct(TokenStorageInterface $tokenStorage, WorkMonthRepository $workMonthRepository)
-    {
+    public function __construct(
+        EventDispatcherInterface $eventDispatcher,
+        TokenStorageInterface $tokenStorage,
+        WorkMonthRepository $workMonthRepository
+    ) {
+        $this->eventDispatcher = $eventDispatcher;
         $this->tokenStorage = $tokenStorage;
         $this->workMonthRepository = $workMonthRepository;
     }
@@ -45,6 +65,7 @@ class WorkLogSubscriber implements EventSubscriberInterface
         return [
             KernelEvents::VIEW => [
                 ['addWorkMonth', EventPriorities::PRE_VALIDATE],
+                ['deleteWorkLog', EventPriorities::PRE_WRITE],
                 ['checkWorkMonthStatus', EventPriorities::PRE_WRITE],
                 ['resetWorkMonthStatus', EventPriorities::PRE_WRITE],
             ],
@@ -81,6 +102,50 @@ class WorkLogSubscriber implements EventSubscriberInterface
         }
 
         $workLog->setWorkMonth($workMonth);
+    }
+
+    /**
+     * @param GetResponseForControllerResultEvent $event
+     */
+    public function deleteWorkLog(GetResponseForControllerResultEvent $event): void
+    {
+        $workLog = $event->getControllerResult();
+        if (!$workLog instanceof WorkLogInterface) {
+            return;
+        }
+
+        $method = $event->getRequest()->getMethod();
+
+        if (Request::METHOD_DELETE !== $method) {
+            return;
+        }
+
+        if ($workLog instanceof BusinessTripWorkLog && $workLog->getTimeApproved() !== null) {
+            $this->eventDispatcher->dispatch(
+                BusinessTripWorkLogCanceledEvent::CANCELED,
+                new BusinessTripWorkLogCanceledEvent($workLog)
+            );
+        } elseif ($workLog instanceof HomeOfficeWorkLog && $workLog->getTimeApproved() !== null) {
+            $this->eventDispatcher->dispatch(
+                HomeOfficeWorkLogCanceledEvent::CANCELED,
+                new HomeOfficeWorkLogCanceledEvent($workLog)
+            );
+        } elseif ($workLog instanceof OvertimeWorkLog && $workLog->getTimeApproved() !== null) {
+            $this->eventDispatcher->dispatch(
+                OvertimeWorkLogCanceledEvent::CANCELED,
+                new OvertimeWorkLogCanceledEvent($workLog)
+            );
+        } elseif ($workLog instanceof TimeOffWorkLog && $workLog->getTimeApproved() !== null) {
+            $this->eventDispatcher->dispatch(
+                TimeOffWorkLogCanceledEvent::CANCELED,
+                new TimeOffWorkLogCanceledEvent($workLog)
+            );
+        } elseif ($workLog instanceof VacationWorkLog && $workLog->getTimeApproved() !== null) {
+            $this->eventDispatcher->dispatch(
+                VacationWorkLogCanceledEvent::CANCELED,
+                new VacationWorkLogCanceledEvent($workLog)
+            );
+        }
     }
 
     /**

@@ -1,0 +1,18 @@
+<html lang="de">
+    <head>
+        <meta charset="utf-8" />
+        <style>
+            body {
+                font-family: helvetica, roboto, arial, sans-serif;
+            }
+        </style>
+    </head>
+
+    <body>
+        <h1>Antrag auf Telearbeit storniert</h1>
+        <p>
+            <strong>Datum: </strong>{{ workLog.date | date('d. m. Y') }}<br>
+            <strong>Betrifft: </strong>{{ workLog.workMonth.user.firstName }} {{ workLog.workMonth.user.lastName }}<br>
+        </p>
+    </body>
+</html>

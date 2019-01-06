@@ -1,0 +1,29 @@
+security:
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        login:
+            pattern:  ^/login
+            stateless: true
+            anonymous: true
+            json_login:
+                check_path: /login_check
+                username_path: email
+                password_path: password
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+            user_checker: App\Security\User\UserChecker
+        forgot_password:
+            pattern:  ^/(reset-password|new-password)
+            security: false
+        api:
+            logout:
+                path:   /logout
+                invalidate_session: true
+                success_handler: App\Service\ApiLogoutHandler
+            pattern:   ^/.+
+            stateless: true
+            guard:
+                authenticators:
+                    - lexik_jwt_authentication.jwt_token_authenticator
