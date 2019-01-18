@@ -78,9 +78,38 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
      * @param Request $request
      * @param TokenInterface $token
      * @param string $providerKey
+     * @return JsonResponse|Response|null
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
+        $ipFilter = null;
+
+        if (is_string(getenv('USER_API_TOKEN_IP_FILTER'))) {
+            $ipFilter = json_decode(getenv('USER_API_TOKEN_IP_FILTER'));
+        }
+
+        if (is_array($ipFilter)) {
+            $clientIp = null;
+
+            if ($request->server->has('HTTP_X_FORWARDED_FOR')) {
+                $clientIp = $request->server->get('HTTP_X_FORWARDED_FOR');
+            } elseif ($request->server->has('HTTP_CLIENT_IP')) {
+                $clientIp = $request->server->get('HTTP_CLIENT_IP');
+            } else {
+                $clientIp = $request->server->get('REMOTE_ADDR');
+            }
+
+            if (!in_array($clientIp, $ipFilter)) {
+                return JsonResponse::create(
+                    [
+                        'clientIp' => $clientIp,
+                        'detail' => 'IP address in not on the list of allowed IP addresses for usage with user\'s api token.',
+                    ],
+                    Response::HTTP_FORBIDDEN
+                );
+            }
+        }
+
         return null;
     }
 
