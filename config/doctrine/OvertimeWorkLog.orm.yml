@@ -29,4 +29,3 @@ App\Entity\OvertimeWorkLog:
                 name: work_month_id
                 referencedColumnName: id
                 nullable: false
-                onDelete: cascade

@@ -99,7 +99,7 @@ class UserSubscriber implements EventSubscriberInterface
 
         $userYearStats = [];
 
-        foreach ((new Config())->getSupportedYear() as $supportedYear) {
+        foreach ((new Config())->getSupportedYears() as $supportedYear) {
             $userYearStats[] = (new UserYearStats())
                 ->setYear($supportedYear)
                 ->setUser($user);
@@ -126,7 +126,7 @@ class UserSubscriber implements EventSubscriberInterface
 
         $workMonths = [];
 
-        foreach ((new Config())->getSupportedYear() as $supportedYear) {
+        foreach ((new Config())->getSupportedYears() as $supportedYear) {
             for ($month = 1; $month <= 12; ++$month) {
                 $workMonths[] = (new WorkMonth())
                     ->setYear($supportedYear)

@@ -15,9 +15,6 @@ App\Entity\UserYearStats:
             columns: [year]
 
     fields:
-        year:
-            type: integer
-            index:
         requiredHours:
             type: float
         workedHours:
@@ -33,3 +30,10 @@ App\Entity\UserYearStats:
                 name: user_id
                 referencedColumnName: id
                 onDelete: CASCADE
+        year:
+            targetEntity: App\Entity\SupportedYear
+            joinColumn:
+                name: year
+                referencedColumnName: year
+                nullable: false
+                onDelete: cascade

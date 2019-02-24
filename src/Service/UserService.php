@@ -39,7 +39,7 @@ class UserService
     {
         $remainingVacationDaysByYear = [];
 
-        foreach ((new Config())->getSupportedYear() as $supportedYear) {
+        foreach ((new Config())->getSupportedYears() as $supportedYear) {
             $remainingVacationDaysByYear[$supportedYear] = $this->vacationWorkLogRepository->getRemainingVacationDays(
                 $user,
                 $supportedYear

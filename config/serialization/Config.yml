@@ -3,7 +3,7 @@ App\Entity\Config:
         supportedHolidays:
             groups:
                 - config_out
-        supportedYear:
+        supportedYears:
             groups:
                 - config_out
         workedHoursLimits:

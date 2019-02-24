@@ -45,13 +45,13 @@ class WorkHoursPresentValidator extends ConstraintValidator
             $present[$workHours->getYear()][] = $workHours->getMonth();
         }
 
-        if (count($present) !== count($config->getSupportedYear())) {
+        if (count($present) !== count($config->getSupportedYears())) {
             $this->context->buildViolation($constraint->message)->addViolation();
 
             return;
         }
 
-        foreach ($config->getSupportedYear() as $supportedYear) {
+        foreach ($config->getSupportedYears() as $supportedYear) {
             if (isset($present[$supportedYear])) {
                 $uniqueMonths = array_unique($present[$supportedYear]);
 

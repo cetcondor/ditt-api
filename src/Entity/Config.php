@@ -5,19 +5,57 @@ namespace App\Entity;
 class Config
 {
     /**
-     * @return \DateTime[]
+     * @var SupportedHoliday[]
      */
-    public function getSupportedHolidays(): array
+    private $supportedHolidays;
+
+    /**
+     * @var SupportedYear[]
+     */
+    private $supportedYears;
+
+    public function __construct()
     {
-        return $this->getRawConfig()['supportedHolidays'];
+        $this->supportedHolidays = [];
+        $this->supportedYears = [];
     }
 
     /**
-     * @return int[]
+     * @return SupportedHoliday[]
      */
-    public function getSupportedYear(): array
+    public function getSupportedHolidays(): array
     {
-        return $this->getRawConfig()['supportedYear'];
+        return $this->supportedHolidays;
+    }
+
+    /**
+     * @param SupportedHoliday[] $supportedHolidays
+     * @return Config
+     */
+    public function setSupportedHolidays(array $supportedHolidays): Config
+    {
+        $this->supportedHolidays = $supportedHolidays;
+
+        return $this;
+    }
+
+    /**
+     * @return SupportedYear[]
+     */
+    public function getSupportedYears(): array
+    {
+        return $this->supportedYears;
+    }
+
+    /**
+     * @param SupportedYear[] $supportedYears
+     * @return Config
+     */
+    public function setSupportedYears(array $supportedYears): Config
+    {
+        $this->supportedYears = $supportedYears;
+
+        return $this;
     }
 
     /**

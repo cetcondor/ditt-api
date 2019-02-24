@@ -15,7 +15,7 @@ class UserYearStats
     private $user;
 
     /**
-     * @var null|int
+     * @var null|SupportedYear
      */
     private $year;
 
@@ -83,18 +83,18 @@ class UserYearStats
     }
 
     /**
-     * @return int|null
+     * @return SupportedYear|null
      */
-    public function getYear(): ?int
+    public function getYear(): ?SupportedYear
     {
         return $this->year;
     }
 
     /**
-     * @param int|null $year
+     * @param SupportedYear|null $year
      * @return UserYearStats
      */
-    public function setYear(?int $year): UserYearStats
+    public function setYear(?SupportedYear $year): UserYearStats
     {
         $this->year = $year;
 

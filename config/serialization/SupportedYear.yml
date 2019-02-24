@@ -1,0 +1,20 @@
+App\Entity\SupportedYear:
+    attributes:
+        day:
+            groups:
+                - config_out
+                - supported_year_out_detail
+                - supported_year_out_list
+                - supported_year_out_in
+        month:
+            groups:
+                - config_out
+                - supported_year_out_detail
+                - supported_year_out_list
+                - supported_year_out_in
+        year:
+            groups:
+                - config_out
+                - supported_year_out_detail
+                - supported_year_out_list
+                - supported_year_out_in

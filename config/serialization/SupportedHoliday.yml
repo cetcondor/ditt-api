@@ -1,0 +1,20 @@
+App\Entity\SupportedHoliday:
+    attributes:
+        day:
+            groups:
+                - config_out
+                - supported_holiday_out_detail
+                - supported_holiday_out_list
+                - supported_holiday_out_in
+        month:
+            groups:
+                - config_out
+                - supported_holiday_out_detail
+                - supported_holiday_out_list
+                - supported_holiday_out_in
+        year:
+            groups:
+                - config_out
+                - supported_holiday_out_detail
+                - supported_holiday_out_list
+                - supported_holiday_out_in

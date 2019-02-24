@@ -5,7 +5,7 @@ namespace App\Entity;
 class WorkHours
 {
     /**
-     * @var int
+     * @var SupportedYear
      */
     private $year;
 
@@ -26,24 +26,24 @@ class WorkHours
 
     public function __construct()
     {
-        $this->year = 0;
+        $this->year = null;
         $this->month = 0;
         $this->requiredHours = 0;
     }
 
     /**
-     * @return int
+     * @return SupportedYear
      */
-    public function getYear(): int
+    public function getYear(): SupportedYear
     {
         return $this->year;
     }
 
     /**
-     * @param int $year
+     * @param SupportedYear $year
      * @return WorkHours
      */
-    public function setYear(int $year): WorkHours
+    public function setYear(SupportedYear $year): WorkHours
     {
         $this->year = $year;
 

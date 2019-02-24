@@ -23,7 +23,7 @@ class WorkMonth
     private $id;
 
     /**
-     * @var int
+     * @var SupportedYear
      */
     private $year;
 
@@ -79,7 +79,7 @@ class WorkMonth
 
     public function __construct()
     {
-        $this->year = 0;
+        $this->year = null;
         $this->month = 0;
         $this->businessTripWorkLogs = new ArrayCollection();
         $this->homeOfficeWorkLogs = new ArrayCollection();
@@ -111,18 +111,18 @@ class WorkMonth
     }
 
     /**
-     * @return int
+     * @return SupportedYear
      */
-    public function getYear(): int
+    public function getYear(): SupportedYear
     {
         return $this->year;
     }
 
     /**
-     * @param int $year
+     * @param SupportedYear $year
      * @return WorkMonth
      */
-    public function setYear(int $year): WorkMonth
+    public function setYear(SupportedYear $year): WorkMonth
     {
         $this->year = $year;
 

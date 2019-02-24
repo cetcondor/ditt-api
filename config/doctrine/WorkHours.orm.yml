@@ -7,7 +7,7 @@ App\Entity\WorkHours:
         user:
             associationKey: true
         year:
-            type: integer
+            associationKey: true
 
     fields:
         requiredHours:
@@ -22,3 +22,11 @@ App\Entity\WorkHours:
                 referencedColumnName: id
                 nullable: false
                 onDelete: cascade
+        year:
+            targetEntity: App\Entity\SupportedYear
+            joinColumn:
+                name: year
+                referencedColumnName: year
+                nullable: false
+                onDelete: cascade
+

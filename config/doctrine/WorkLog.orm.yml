@@ -20,4 +20,3 @@ App\Entity\WorkLog:
                 name: work_month_id
                 referencedColumnName: id
                 nullable: false
-                onDelete: cascade

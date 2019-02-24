@@ -1,0 +1,11 @@
+App\Entity\SupportedYear:
+    type: entity
+
+    id:
+        year:
+            type: integer
+
+    oneToMany:
+        supportedHolidays:
+            targetEntity: App\Entity\SupportedHoliday
+            mappedBy: year

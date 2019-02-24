@@ -9,8 +9,6 @@ App\Entity\WorkMonth:
     fields:
         month:
             type: integer
-        year:
-            type: integer
         status:
             type: text
 
@@ -46,6 +44,13 @@ App\Entity\WorkMonth:
             joinColumn:
                 name: user_id
                 referencedColumnName: id
+                nullable: false
+                onDelete: cascade
+        year:
+            targetEntity: App\Entity\SupportedYear
+            joinColumn:
+                name: year
+                referencedColumnName: year
                 nullable: false
                 onDelete: cascade
 

@@ -1,0 +1,19 @@
+App\Entity\SupportedHoliday:
+    type: entity
+
+    id:
+        day:
+            type: integer
+        month:
+            type: integer
+        year:
+            associationKey: true
+
+    manyToOne:
+        year:
+            targetEntity: App\Entity\SupportedYear
+            joinColumn:
+                name: year
+                referencedColumnName: year
+                nullable: false
+                onDelete: cascade
