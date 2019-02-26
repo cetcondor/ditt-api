@@ -1,8 +1,7 @@
 App\Entity\WorkHours:
     properties:
         year:
-            - NotBlank: ~
-            - Type: int
+            - Valid: ~
 
         month:
             - NotBlank: ~

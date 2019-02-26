@@ -42,7 +42,7 @@ class CreateWorkLogCest
         $I->createWorkMonth([
             'month' => $startTime->format('m'),
             'user' => $this->user,
-            'year' => $startTime->format('Y'),
+            'year' => $I->getSupportedYear($startTime->format('Y')),
         ]);
 
         $I->haveHttpHeader('Content-Type', 'application/json');
@@ -75,7 +75,7 @@ class CreateWorkLogCest
             'month' => $startTime->format('m'),
             'status' => 'APPROVED',
             'user' => $this->user,
-            'year' => $startTime->format('Y'),
+            'year' => $I->getSupportedYear($startTime->format('Y')),
         ]);
 
         $I->haveHttpHeader('Content-Type', 'application/json');
@@ -108,7 +108,7 @@ class CreateWorkLogCest
         $I->createWorkMonth([
             'month' => $startTime->format('m'),
             'user' => $this->user,
-            'year' => $startTime->format('Y'),
+            'year' => $I->getSupportedYear($startTime->format('Y')),
         ]);
 
         $I->haveHttpHeader('Content-Type', 'application/json');

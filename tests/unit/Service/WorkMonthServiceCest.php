@@ -3,7 +3,9 @@
 namespace unit\Service;
 
 use App\Entity\BusinessTripWorkLog;
+use App\Entity\Config;
 use App\Entity\SickDayWorkLog;
+use App\Entity\SupportedYear;
 use App\Entity\User;
 use App\Entity\VacationWorkLog;
 use App\Entity\WorkHours;
@@ -15,6 +17,7 @@ use App\Repository\UserYearStatsRepository;
 use App\Repository\VacationWorkLogRepository;
 use App\Repository\WorkHoursRepository;
 use App\Repository\WorkLogRepository;
+use App\Service\ConfigService;
 use App\Service\WorkMonthService;
 use Doctrine\ORM\EntityManager;
 use Prophecy\Argument;
@@ -356,7 +359,7 @@ class WorkMonthServiceCest
     private function getWorkMonth(Prophet $prophet): WorkMonth
     {
         $workMonth = $prophet->prophesize(WorkMonth::class);
-        $workMonth->getYear()->willReturn(2018);
+        $workMonth->getYear()->willReturn((new SupportedYear())->setYear(2018));
         $workMonth->getMonth()->willReturn(1);
         $workMonth->getUser()->willReturn(new User());
 
@@ -370,7 +373,7 @@ class WorkMonthServiceCest
     private function getWorkHours(Prophet $prophet): WorkHours
     {
         $workMonth = $prophet->prophesize(WorkHours::class);
-        $workMonth->getYear()->willReturn(2018);
+        $workMonth->getYear()->willReturn((new SupportedYear())->setYear(2018));
         $workMonth->getMonth()->willReturn(1);
         $workMonth->getRequiredHours()->willReturn(6);
         $workMonth->getUser()->willReturn(new User());
@@ -387,6 +390,30 @@ class WorkMonthServiceCest
         $entityManager = $prophet->prophesize(EntityManager::class);
 
         return $entityManager->reveal();
+    }
+
+    /**
+     * @param Prophet $prophet
+     * @return BusinessTripWorkLogRepository
+     */
+    private function getConfigService(Prophet $prophet): ConfigService
+    {
+        $config = $prophet->prophesize(Config::class);
+        $config->getWorkedHoursLimits()->willReturn([
+            'lowerLimit' => [
+                'changeBy' => -1800,
+                'limit' => 21600,
+            ],
+            'upperLimit' => [
+                'changeBy' => -2700,
+                'limit' => 32400,
+            ],
+        ]);
+
+        $service = $prophet->prophesize(ConfigService::class);
+        $service->getConfig()->willReturn($config);
+
+        return $service->reveal();
     }
 
     /**
@@ -461,7 +488,7 @@ class WorkMonthServiceCest
     {
         $repository = $prophet->prophesize(WorkHoursRepository::class);
         $repository->findOne(
-            Argument::type('int'),
+            Argument::type(SupportedYear::class),
             Argument::type('int'),
             Argument::type(User::class)
         )->willReturn($workHours);
@@ -488,6 +515,7 @@ class WorkMonthServiceCest
     ): WorkMonthService {
         return new WorkMonthService(
             $this->getEntityManager($prophet),
+            $this->getConfigService($prophet),
             $this->getBusinessTripWorkLogRepository($prophet, $businessTripWorkLogs),
             $this->getSickDayWorkLogRepository($prophet, $sickDayWorkLogs),
             $this->getUserYearStatsRepository($prophet),

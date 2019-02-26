@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Config;
+use App\Service\ConfigService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,11 +17,20 @@ class ConfigController extends Controller
     private $normalizer;
 
     /**
-     * @param NormalizerInterface $normalizer
+     * @var ConfigService
      */
-    public function __construct(NormalizerInterface $normalizer)
-    {
+    private $configService;
+
+    /**
+     * @param NormalizerInterface $normalizer
+     * @param ConfigService $configService
+     */
+    public function __construct(
+        NormalizerInterface $normalizer,
+        ConfigService $configService
+    ) {
         $this->normalizer = $normalizer;
+        $this->configService = $configService;
     }
 
     /**
@@ -28,8 +38,10 @@ class ConfigController extends Controller
      */
     public function config(): Response
     {
+        $config = $this->configService->getConfig();
+
         $normalizedConfig = $this->normalizer->normalize(
-            new Config(),
+            $config,
             Config::class,
             ['groups' => ['config_out']]
         );

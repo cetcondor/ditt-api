@@ -41,7 +41,7 @@ class CreateVacationWorkLogCest
         $I->createWorkMonth([
             'month' => $date->format('m'),
             'user' => $this->user,
-            'year' => $date->format('Y'),
+            'year' => $I->getSupportedYear($date->format('Y')),
         ]);
 
         $I->haveHttpHeader('Content-Type', 'application/json');
@@ -71,7 +71,7 @@ class CreateVacationWorkLogCest
         $workMonth = $I->createWorkMonth([
             'month' => $date->format('m'),
             'user' => $this->user,
-            'year' => $date->format('Y'),
+            'year' => $I->getSupportedYear($date->format('Y')),
         ]);
         $I->createVacationWorkLog([
             'date' => $date,
@@ -106,7 +106,7 @@ class CreateVacationWorkLogCest
             'month' => $date->format('m'),
             'status' => 'APPROVED',
             'user' => $this->user,
-            'year' => $date->format('Y'),
+            'year' => $I->getSupportedYear($date->format('Y')),
         ]);
 
         $I->haveHttpHeader('Content-Type', 'application/json');
@@ -136,7 +136,7 @@ class CreateVacationWorkLogCest
         $I->createWorkMonth([
             'month' => $date->format('m'),
             'user' => $this->user,
-            'year' => $date->format('Y'),
+            'year' => $I->getSupportedYear($date->format('Y')),
         ]);
 
         $I->haveHttpHeader('Content-Type', 'application/json');

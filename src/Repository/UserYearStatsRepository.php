@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\SupportedYear;
 use App\Entity\User;
 use App\Entity\UserYearStats;
 use Doctrine\ORM\EntityManagerInterface;
@@ -40,10 +41,10 @@ class UserYearStatsRepository
 
     /**
      * @param User $user
-     * @param int $year
+     * @param SupportedYear $year
      * @return UserYearStats|null
      */
-    public function findByUserAndYear(User $user, int $year): ?UserYearStats
+    public function findByUserAndYear(User $user, SupportedYear $year): ?UserYearStats
     {
         /** @var UserYearStats|null $user */
         $userYearStats = $this->repository->findOneBy([

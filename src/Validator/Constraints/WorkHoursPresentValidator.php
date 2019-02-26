@@ -2,24 +2,33 @@
 
 namespace App\Validator\Constraints;
 
-use App\Entity\Config;
 use App\Entity\User;
 use App\Repository\WorkLogRepository;
+use App\Service\ConfigService;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
 class WorkHoursPresentValidator extends ConstraintValidator
 {
     /**
+     * @var ConfigService
+     */
+    private $configService;
+
+    /**
      * @var \App\Repository\WorkLogRepository
      */
     private $workLogRepository;
 
     /**
+     * @param ConfigService $configService
      * @param WorkLogRepository $workLogRepository
      */
-    public function __construct(WorkLogRepository $workLogRepository)
-    {
+    public function __construct(
+        ConfigService $configService,
+        WorkLogRepository $workLogRepository
+    ) {
+        $this->configService = $configService;
         $this->workLogRepository = $workLogRepository;
     }
 
@@ -29,7 +38,7 @@ class WorkHoursPresentValidator extends ConstraintValidator
      */
     public function validate($value, Constraint $constraint): void
     {
-        $config = new Config();
+        $config = $this->configService->getConfig();
 
         if (!$value instanceof User || !$constraint instanceof WorkHoursPresent) {
             return;
@@ -38,11 +47,11 @@ class WorkHoursPresentValidator extends ConstraintValidator
         $present = [];
 
         foreach ($value->getWorkHours() as $workHours) {
-            if (!isset($present[$workHours->getYear()])) {
-                $present[$workHours->getYear()] = [];
+            if (!isset($present[$workHours->getYear()->getYear()])) {
+                $present[$workHours->getYear()->getYear()] = [];
             }
 
-            $present[$workHours->getYear()][] = $workHours->getMonth();
+            $present[$workHours->getYear()->getYear()][] = $workHours->getMonth();
         }
 
         if (count($present) !== count($config->getSupportedYears())) {
@@ -52,8 +61,8 @@ class WorkHoursPresentValidator extends ConstraintValidator
         }
 
         foreach ($config->getSupportedYears() as $supportedYear) {
-            if (isset($present[$supportedYear])) {
-                $uniqueMonths = array_unique($present[$supportedYear]);
+            if (isset($present[$supportedYear->getYear()])) {
+                $uniqueMonths = array_unique($present[$supportedYear->getYear()]);
 
                 if (count($uniqueMonths) !== count($constraint->supportedMonths)) {
                     $this->context->buildViolation($constraint->message)->addViolation();

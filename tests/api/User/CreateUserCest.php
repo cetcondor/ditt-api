@@ -34,7 +34,7 @@ class CreateUserCest
             'isActive' => true,
             'lastName' => 'lastName',
             'plainPassword' => 'password',
-            'workHours' => $I->generateWorkHours(8.5),
+            'workHours' => $I->generateWorkHoursNormalizedUri(8.5),
         ]);
 
         $I->seeHttpHeader('Content-Type', 'application/json; charset=utf-8');
@@ -47,7 +47,7 @@ class CreateUserCest
             'lastName' => 'lastName',
             'roles' => ['ROLE_EMPLOYEE'],
             'supervisor' => null,
-            'workHours' => $I->generateWorkHours(8.5),
+            'workHours' => $I->generateWorkHoursNormalized(8.5),
         ]);
         $user = $I->grabEntityFromRepository(User::class, [
             'email' => 'test@visionapps.cz',
@@ -57,34 +57,34 @@ class CreateUserCest
             $I->grabEntityFromRepository(WorkMonth::class, [
                 'month' => 12,
                 'user' => $user,
-                'year' => 2017,
+                'year' => $I->getSupportedYear(2017),
             ]);
         });
         $I->grabEntityFromRepository(WorkMonth::class, [
             'month' => 1,
             'user' => $user,
-            'year' => 2018,
+            'year' => $I->getSupportedYear(2018),
         ]);
         $I->grabEntityFromRepository(WorkMonth::class, [
             'month' => 12,
             'user' => $user,
-            'year' => 2020,
+            'year' => $I->getSupportedYear(2020),
         ]);
         $I->expectException(NoResultException::class, function () use ($I, $user) {
             $I->grabEntityFromRepository(WorkMonth::class, [
                 'month' => 1,
                 'user' => $user,
-                'year' => 2021,
+                'year' => $I->getSupportedYear(2021),
             ]);
         });
 
         $I->grabEntityFromRepository(UserYearStats::class, [
             'user' => $user,
-            'year' => 2018,
+            'year' => $I->getSupportedYear(2018),
         ]);
         $I->grabEntityFromRepository(UserYearStats::class, [
             'user' => $user,
-            'year' => 2020,
+            'year' => $I->getSupportedYear(2020),
         ]);
     }
 

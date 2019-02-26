@@ -3,11 +3,11 @@
 namespace App\Subscriber;
 
 use ApiPlatform\Core\EventListener\EventPriorities;
-use App\Entity\Config;
 use App\Entity\User;
 use App\Entity\UserYearStats;
 use App\Entity\WorkMonth;
 use App\Repository\WorkHoursRepository;
+use App\Service\ConfigService;
 use App\Service\UserService;
 use App\Service\UserYearStatsService;
 use App\Service\WorkMonthService;
@@ -24,6 +24,11 @@ class UserSubscriber implements EventSubscriberInterface
      * @var EntityManagerInterface
      */
     private $entityManager;
+
+    /**
+     * @var ConfigService
+     */
+    private $configService;
 
     /**
      * @var UserService
@@ -47,6 +52,7 @@ class UserSubscriber implements EventSubscriberInterface
 
     /**
      * @param EntityManagerInterface $entityManager
+     * @param ConfigService $configService
      * @param UserService $userService
      * @param UserYearStatsService $userYearStatsService
      * @param WorkHoursRepository $workHoursRepository
@@ -54,12 +60,14 @@ class UserSubscriber implements EventSubscriberInterface
      */
     public function __construct(
         EntityManagerInterface $entityManager,
+        ConfigService $configService,
         UserService $userService,
         UserYearStatsService $userYearStatsService,
         WorkHoursRepository $workHoursRepository,
         WorkMonthService $workMonthService
     ) {
         $this->entityManager = $entityManager;
+        $this->configService = $configService;
         $this->userService = $userService;
         $this->userYearStatsService = $userYearStatsService;
         $this->workHoursRepository = $workHoursRepository;
@@ -98,8 +106,9 @@ class UserSubscriber implements EventSubscriberInterface
         }
 
         $userYearStats = [];
+        $config = $this->configService->getConfig();
 
-        foreach ((new Config())->getSupportedYears() as $supportedYear) {
+        foreach ($config->getSupportedYears() as $supportedYear) {
             $userYearStats[] = (new UserYearStats())
                 ->setYear($supportedYear)
                 ->setUser($user);
@@ -125,8 +134,9 @@ class UserSubscriber implements EventSubscriberInterface
         }
 
         $workMonths = [];
+        $config = $this->configService->getConfig();
 
-        foreach ((new Config())->getSupportedYears() as $supportedYear) {
+        foreach ($config->getSupportedYears() as $supportedYear) {
             for ($month = 1; $month <= 12; ++$month) {
                 $workMonths[] = (new WorkMonth())
                     ->setYear($supportedYear)

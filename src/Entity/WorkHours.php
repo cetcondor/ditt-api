@@ -26,7 +26,6 @@ class WorkHours
 
     public function __construct()
     {
-        $this->year = null;
         $this->month = 0;
         $this->requiredHours = 0;
     }

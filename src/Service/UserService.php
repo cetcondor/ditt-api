@@ -2,7 +2,6 @@
 
 namespace App\Service;
 
-use App\Entity\Config;
 use App\Entity\User;
 use App\Repository\VacationWorkLogRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -15,19 +14,27 @@ class UserService
     private $entityManager;
 
     /**
+     * @var ConfigService
+     */
+    private $configService;
+
+    /**
      * @var VacationWorkLogRepository
      */
     private $vacationWorkLogRepository;
 
     /**
      * @param EntityManagerInterface $entityManager
+     * @param ConfigService $configService
      * @param VacationWorkLogRepository $vacationWorkLogRepository
      */
     public function __construct(
         EntityManagerInterface $entityManager,
+        ConfigService $configService,
         VacationWorkLogRepository $vacationWorkLogRepository
     ) {
         $this->entityManager = $entityManager;
+        $this->configService = $configService;
         $this->vacationWorkLogRepository = $vacationWorkLogRepository;
     }
 
@@ -37,10 +44,11 @@ class UserService
      */
     public function calculateRemainingVacationDaysByYear(User $user): array
     {
+        $config = $this->configService->getConfig();
         $remainingVacationDaysByYear = [];
 
-        foreach ((new Config())->getSupportedYears() as $supportedYear) {
-            $remainingVacationDaysByYear[$supportedYear] = $this->vacationWorkLogRepository->getRemainingVacationDays(
+        foreach ($config->getSupportedYears() as $supportedYear) {
+            $remainingVacationDaysByYear[$supportedYear->getYear()] = $this->vacationWorkLogRepository->getRemainingVacationDays(
                 $user,
                 $supportedYear
             );

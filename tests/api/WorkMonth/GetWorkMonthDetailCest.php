@@ -84,7 +84,7 @@ class GetWorkMonthDetailCest
             'month' => $startTime1->format('m'),
             'status' => $workMonthStatus,
             'user' => $this->user,
-            'year' => $startTime1->format('Y'),
+            'year' => $I->getSupportedYear($startTime1->format('Y')),
         ]);
 
         $data['businessTripWorkLog1'] = $I->createBusinessTripWorkLog([
@@ -258,7 +258,9 @@ class GetWorkMonthDetailCest
                     'id' => $data['workLog2']->getId(),
                 ],
             ],
-            'year' => $data['workMonth']->getYear(),
+            'year' => [
+                'year' => $data['workMonth']->getYear()->getYear(),
+            ],
         ]);
     }
 
@@ -359,7 +361,9 @@ class GetWorkMonthDetailCest
                     'id' => $data['workLog2']->getId(),
                 ],
             ],
-            'year' => $data['workMonth']->getYear(),
+            'year' => [
+                'year' => $data['workMonth']->getYear()->getYear(),
+            ],
         ]);
     }
 
@@ -393,7 +397,9 @@ class GetWorkMonthDetailCest
             'user' => ['id' => $this->user->getId()],
             'vacationWorkLogs' => [],
             'workLogs' => [],
-            'year' => $data['workMonth']->getYear(),
+            'year' => [
+                'year' => $data['workMonth']->getYear()->getYear(),
+            ],
         ]);
     }
 
@@ -494,7 +500,9 @@ class GetWorkMonthDetailCest
                     'id' => $data['workLog2']->getId(),
                 ],
             ],
-            'year' => $data['workMonth']->getYear(),
+            'year' => [
+                'year' => $data['workMonth']->getYear()->getYear(),
+            ],
         ]);
     }
 
@@ -528,7 +536,9 @@ class GetWorkMonthDetailCest
             'user' => ['id' => $this->user->getId()],
             'vacationWorkLogs' => [],
             'workLogs' => [],
-            'year' => $data['workMonth']->getYear(),
+            'year' => [
+                'year' => $data['workMonth']->getYear()->getYear(),
+            ],
         ]);
     }
 
@@ -629,7 +639,9 @@ class GetWorkMonthDetailCest
                     'id' => $data['workLog2']->getId(),
                 ],
             ],
-            'year' => $data['workMonth']->getYear(),
+            'year' => [
+                'year' => $data['workMonth']->getYear()->getYear(),
+            ],
         ]);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\SupportedYear;
 use App\Entity\User;
 use App\Entity\WorkHours;
 use Doctrine\ORM\EntityManagerInterface;
@@ -25,12 +26,12 @@ class WorkHoursRepository
     }
 
     /**
-     * @param int $year
+     * @param SupportedYear $year
      * @param int $month
      * @param User $user
      * @return WorkHours|null
      */
-    public function findOne(int $year, int $month, User $user): ?WorkHours
+    public function findOne(SupportedYear $year, int $month, User $user): ?WorkHours
     {
         $workHours = $this->repository->findOneBy([
             'month' => $month,

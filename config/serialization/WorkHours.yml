@@ -2,16 +2,28 @@ App\Entity\WorkHours:
     attributes:
         year:
             groups:
+                - supervised_user_out_list
+                - user_out_list
+                - user_out_detail
+                - user_out_api_token_detail
                 - work_hours_out_list
                 - work_hours_out_detail
                 - work_hours_in
         month:
             groups:
+                - supervised_user_out_list
+                - user_out_list
+                - user_out_detail
+                - user_out_api_token_detail
                 - work_hours_out_list
                 - work_hours_out_detail
                 - work_hours_in
         requiredHours:
             groups:
+                - supervised_user_out_list
+                - user_out_list
+                - user_out_detail
+                - user_out_api_token_detail
                 - work_hours_out_list
                 - work_hours_out_detail
                 - work_hours_in

@@ -45,6 +45,6 @@ class GetWorkHoursCest
 
         $I->seeHttpHeader('Content-Type', 'application/json; charset=utf-8');
         $I->seeResponseCodeIs(Response::HTTP_OK);
-        $I->seeResponseContainsJson($I->generateWorkHours(0));
+        $I->seeResponseContainsJson($I->generateWorkHoursNormalized(0));
     }
 }

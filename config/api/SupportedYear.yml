@@ -1,0 +1,13 @@
+App\Entity\SupportedYear:
+    collectionOperations:
+        get:
+            method: GET
+            normalization_context:
+                groups:
+                    - supported_year_out_list
+    itemOperations:
+        get:
+            method: GET
+            normalization_context:
+                groups:
+                    - supported_year_out_detail

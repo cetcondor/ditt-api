@@ -47,7 +47,7 @@ class GetWorkMonthByUserCest
         $I->createWorkMonth([
             'month' => $time->format('m'),
             'user' => $this->user,
-            'year' => $time->format('Y'),
+            'year' => $I->getSupportedYear($time->format('Y')),
         ]);
 
         $I->haveHttpHeader('Content-Type', 'application/json');
@@ -59,7 +59,9 @@ class GetWorkMonthByUserCest
         $I->seeResponseContainsJson([
             [
                 'month' => intval($time->format('m')),
-                'year' => intval($time->format('Y')),
+                'year' => [
+                    'year' => $time->format('Y'),
+                ],
             ],
         ]);
     }

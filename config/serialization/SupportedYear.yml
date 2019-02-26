@@ -1,20 +1,18 @@
 App\Entity\SupportedYear:
     attributes:
-        day:
-            groups:
-                - config_out
-                - supported_year_out_detail
-                - supported_year_out_list
-                - supported_year_out_in
-        month:
-            groups:
-                - config_out
-                - supported_year_out_detail
-                - supported_year_out_list
-                - supported_year_out_in
         year:
             groups:
                 - config_out
+                - special_approvals_out_list
+                - supervised_user_out_list
                 - supported_year_out_detail
                 - supported_year_out_list
                 - supported_year_out_in
+                - user_out_list
+                - user_out_detail
+                - user_out_api_token_detail
+                - work_hours_out_list
+                - work_hours_out_detail
+                - work_month_out_list
+                - work_month_out_detail
+                - work_hours_in

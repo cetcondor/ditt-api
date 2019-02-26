@@ -3,7 +3,6 @@
 namespace App\Service;
 
 use App\Entity\BusinessTripWorkLog;
-use App\Entity\Config;
 use App\Entity\SickDayWorkLog;
 use App\Entity\VacationWorkLog;
 use App\Entity\WorkLog;
@@ -23,6 +22,11 @@ class WorkMonthService
      * @var EntityManagerInterface
      */
     private $entityManager;
+
+    /**
+     * @var ConfigService
+     */
+    private $configService;
 
     /**
      * @var BusinessTripWorkLogRepository
@@ -65,6 +69,7 @@ class WorkMonthService
      */
     public function __construct(
         EntityManagerInterface $entityManager,
+        ConfigService $configService,
         BusinessTripWorkLogRepository $businessTripWorkLogRepository,
         SickDayWorkLogRepository $sickDayWorkLogRepository,
         UserYearStatsRepository $userYearStatsRepository,
@@ -73,6 +78,7 @@ class WorkMonthService
         WorkHoursRepository $workHoursRepository
     ) {
         $this->entityManager = $entityManager;
+        $this->configService = $configService;
         $this->businessTripWorkLogRepository = $businessTripWorkLogRepository;
         $this->sickDayWorkLogRepository = $sickDayWorkLogRepository;
         $this->userYearStatsRepository = $userYearStatsRepository;
@@ -202,8 +208,10 @@ class WorkMonthService
                 }
             }
 
-            $lowerLimit = (new Config())->getWorkedHoursLimits()['lowerLimit'];
-            $upperLimit = (new Config())->getWorkedHoursLimits()['upperLimit'];
+            $config = $this->configService->getConfig();
+
+            $lowerLimit = $config->getWorkedHoursLimits()['lowerLimit'];
+            $upperLimit = $config->getWorkedHoursLimits()['upperLimit'];
 
             if (
                 $workedHours > $lowerLimit['limit'] / 3600
@@ -231,15 +239,16 @@ class WorkMonthService
      */
     public function calculateRequiredHours(WorkMonth $workMonth): float
     {
+        $config = $this->configService->getConfig();
         $workingDaysInMonth = 0;
 
         $isWeekend = function ($date) {
             return $date->format('l') === 'Saturday' || $date->format('l') === 'Sunday';
         };
 
-        $isHoliday = function ($date) {
-            foreach ((new Config())->getSupportedHolidays() as $supportedHoliday) {
-                if ($supportedHoliday->format('Y-m-d') === $date->format('Y-m-d')) {
+        $isHoliday = function ($date) use ($config) {
+            foreach ($config->getSupportedHolidays() as $supportedHoliday) {
+                if ($supportedHoliday->getDate()->format('Y-m-d') === $date->format('Y-m-d')) {
                     return true;
                 }
             }
@@ -248,7 +257,7 @@ class WorkMonthService
         };
 
         for (
-            $date = (new \DateTime())->setDate($workMonth->getYear(), $workMonth->getMonth(), 1);
+            $date = (new \DateTime())->setDate($workMonth->getYear()->getYear(), $workMonth->getMonth(), 1);
             (int) $date->format('m') === $workMonth->getMonth();
             $date->add(new \DateInterval('P1D'))
         ) {

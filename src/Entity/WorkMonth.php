@@ -79,7 +79,6 @@ class WorkMonth
 
     public function __construct()
     {
-        $this->year = null;
         $this->month = 0;
         $this->businessTripWorkLogs = new ArrayCollection();
         $this->homeOfficeWorkLogs = new ArrayCollection();

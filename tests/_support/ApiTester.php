@@ -19,6 +19,18 @@ class ApiTester extends \Codeception\Actor
 {
     use _generated\ApiTesterActions;
 
+    public function getSupportedYear($year) {
+        return $this->grabEntityFromRepository(\App\Entity\SupportedYear::class, [
+            'year' => $year,
+        ]);
+    }
+
+    public function getSupportedYearNormalized($year) {
+        return $this->grabEntityFromRepository(\App\Entity\SupportedYear::class, [
+            'year' => $year,
+        ]);
+    }
+
     public function createBusinessTripWorkLog(array $params = [])
     {
         $businessTripWorkLog = $this->populateEntity(new \App\Entity\BusinessTripWorkLog(), [
@@ -124,7 +136,7 @@ class ApiTester extends \Codeception\Actor
             'user' => function () {
                 return $this->createUser();
             },
-            'year' => 2018,
+            'year' => $this->getSupportedYear(2018),
             'workedHours' => 0,
             'requiredHours' => 0,
             'vacationDaysUsed' => 0,
@@ -180,7 +192,7 @@ class ApiTester extends \Codeception\Actor
             'user'=> function() {
                 return $this->createUser();
             },
-            'year' => 2018,
+            'year' => $this->getSupportedYear(2018),
         ], $params);
 
         $this->persistEntity($workLog);
@@ -233,7 +245,41 @@ class ApiTester extends \Codeception\Actor
                 $workHours[] = [
                     'month' => $month,
                     'requiredHours' => $requiredHours,
-                    'year' => $year,
+                    'year' => $this->getSupportedYear($year),
+                ];
+            }
+        }
+
+        return $workHours;
+    }
+
+    public function generateWorkHoursNormalized($requiredHours) {
+        $workHours = [];
+
+        for ($year = 2018; $year <= 2020; ++$year) {
+            for ($month = 1; $month <= 12; ++$month) {
+                $workHours[] = [
+                    'month' => $month,
+                    'requiredHours' => $requiredHours,
+                    'year' => [
+                        'year' => $year,
+                    ],
+                ];
+            }
+        }
+
+        return $workHours;
+    }
+
+    public function generateWorkHoursNormalizedUri($requiredHours) {
+        $workHours = [];
+
+        for ($year = 2018; $year <= 2020; ++$year) {
+            for ($month = 1; $month <= 12; ++$month) {
+                $workHours[] = [
+                    'month' => $month,
+                    'requiredHours' => $requiredHours,
+                    'year' => sprintf('/supported_years/%s', $year),
                 ];
             }
         }

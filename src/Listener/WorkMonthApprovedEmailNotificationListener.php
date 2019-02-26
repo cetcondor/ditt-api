@@ -64,7 +64,7 @@ class WorkMonthApprovedEmailNotificationListener
             sprintf(
                 'Arbeitsmonat angenommen – %d/%d',
                 $workMonth->getMonth(),
-                $workMonth->getYear()
+                $workMonth->getYear()->getYear()
             ),
             $toEmails,
             $this->templating->render('notifications/work_month_approved.html.twig', [

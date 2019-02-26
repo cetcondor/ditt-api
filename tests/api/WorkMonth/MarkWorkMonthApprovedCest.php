@@ -41,11 +41,11 @@ class MarkWorkMonthApprovedCest
             'month' => $time->format('m'),
             'status' => 'WAITING_FOR_APPROVAL',
             'user' => $this->user,
-            'year' => $time->format('Y'),
+            'year' => $I->getSupportedYear($time->format('Y')),
         ]);
         $I->createUserYearStats([
             'user' => $this->user,
-            'year' => $time->format('Y'),
+            'year' => $I->getSupportedYear($time->format('Y')),
         ]);
 
         $I->haveHttpHeader('Content-Type', 'application/json');
@@ -76,11 +76,11 @@ class MarkWorkMonthApprovedCest
             'month' => $time->format('m'),
             'status' => 'OPENED',
             'user' => $this->user,
-            'year' => $time->format('Y'),
+            'year' => $I->getSupportedYear($time->format('Y')),
         ]);
         $I->createUserYearStats([
             'user' => $this->user,
-            'year' => $time->format('Y'),
+            'year' => $I->getSupportedYear($time->format('Y')),
         ]);
 
         $I->haveHttpHeader('Content-Type', 'application/json');
@@ -108,11 +108,11 @@ class MarkWorkMonthApprovedCest
             'month' => $time->format('m'),
             'status' => 'APPROVED',
             'user' => $this->user,
-            'year' => $time->format('Y'),
+            'year' => $I->getSupportedYear($time->format('Y')),
         ]);
         $I->createUserYearStats([
             'user' => $this->user,
-            'year' => $time->format('Y'),
+            'year' => $I->getSupportedYear($time->format('Y')),
         ]);
 
         $I->haveHttpHeader('Content-Type', 'application/json');

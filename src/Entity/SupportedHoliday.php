@@ -23,7 +23,6 @@ class SupportedHoliday
     {
         $this->day = (int) date('j');
         $this->month = (int) date('n');
-        $this->year = null;
     }
 
     /**
@@ -90,7 +89,7 @@ class SupportedHoliday
     public function getDate(): \DateTimeImmutable
     {
         return (new \DateTimeImmutable())
-            ->setDate($this->getYear(), $this->getMonth(), $this->getDay())
+            ->setDate($this->getYear()->getYear(), $this->getMonth(), $this->getDay())
             ->setTime(0, 0, 0, 0);
     }
 }

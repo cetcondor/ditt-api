@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\SupportedYear;
 use App\Entity\User;
 use App\Entity\VacationWorkLog;
 use App\Entity\WorkMonth;
@@ -193,11 +194,11 @@ class VacationWorkLogRepository
 
     /**
      * @param User $user
-     * @param int $year
+     * @param SupportedYear $year
      * @throws NonUniqueResultException
      * @return int
      */
-    public function getRemainingVacationDays(User $user, int $year): int
+    public function getRemainingVacationDays(User $user, SupportedYear $year): int
     {
         $vacationWorkLogsCount = (int) $this->repository->createQueryBuilder('vwl')
             ->select('COUNT(vwl.id)')

@@ -72,22 +72,22 @@ class GetRecentSpecialApprovalCest
 
         $workMonth1 = $I->createWorkMonth([
             'month' => $dateTime1->format('m'),
-            'year' => $dateTime1->format('Y'),
+            'year' => $I->getSupportedYear($dateTime1->format('Y')),
             'user' => $user1,
         ]);
         $workMonth2 = $I->createWorkMonth([
             'month' => $dateTime1->format('m'),
-            'year' => $dateTime1->format('Y'),
+            'year' => $I->getSupportedYear($dateTime1->format('Y')),
             'user' => $user2,
         ]);
         $workMonth3 = $I->createWorkMonth([
             'month' => $dateTime2->format('m'),
-            'year' => $dateTime2->format('Y'),
+            'year' => $I->getSupportedYear($dateTime2->format('Y')),
             'user' => $user2,
         ]);
         $workMonth4 = $I->createWorkMonth([
             'month' => $dateTime3->format('m'),
-            'year' => $dateTime3->format('Y'),
+            'year' => $I->getSupportedYear($dateTime3->format('Y')),
             'user' => $user2,
         ]);
 
@@ -249,7 +249,9 @@ class GetRecentSpecialApprovalCest
                             'lastName' => $user2->getLastName(),
                             'id' => $user2->getId(),
                         ],
-                        'year' => $workMonth2->getYear(),
+                        'year' => [
+                            'year' => $workMonth2->getYear()->getYear(),
+                        ],
                     ],
                 ],
                 [
@@ -267,7 +269,9 @@ class GetRecentSpecialApprovalCest
                             'lastName' => $user2->getLastName(),
                             'id' => $user2->getId(),
                         ],
-                        'year' => $workMonth2->getYear(),
+                        'year' => [
+                            'year' => $workMonth2->getYear()->getYear(),
+                        ],
                     ],
                 ],
                 [
@@ -285,7 +289,9 @@ class GetRecentSpecialApprovalCest
                             'lastName' => $user2->getLastName(),
                             'id' => $user2->getId(),
                         ],
-                        'year' => $workMonth2->getYear(),
+                        'year' => [
+                            'year' => $workMonth2->getYear()->getYear(),
+                        ],
                     ],
                 ],
                 [
@@ -303,7 +309,9 @@ class GetRecentSpecialApprovalCest
                             'lastName' => $user2->getLastName(),
                             'id' => $user2->getId(),
                         ],
-                        'year' => $workMonth3->getYear(),
+                        'year' => [
+                            'year' => $workMonth3->getYear()->getYear(),
+                        ],
                     ],
                 ],
             ],
@@ -323,7 +331,9 @@ class GetRecentSpecialApprovalCest
                             'lastName' => $user2->getLastName(),
                             'id' => $user2->getId(),
                         ],
-                        'year' => $workMonth2->getYear(),
+                        'year' => [
+                            'year' => $workMonth2->getYear()->getYear(),
+                        ],
                     ],
                 ],
                 [
@@ -341,7 +351,9 @@ class GetRecentSpecialApprovalCest
                             'lastName' => $user2->getLastName(),
                             'id' => $user2->getId(),
                         ],
-                        'year' => $workMonth2->getYear(),
+                        'year' => [
+                            'year' => $workMonth2->getYear()->getYear(),
+                        ],
                     ],
                 ],
                 [
@@ -359,7 +371,9 @@ class GetRecentSpecialApprovalCest
                             'lastName' => $user2->getLastName(),
                             'id' => $user2->getId(),
                         ],
-                        'year' => $workMonth2->getYear(),
+                        'year' => [
+                            'year' => $workMonth2->getYear()->getYear(),
+                        ],
                     ],
                 ],
                 [
@@ -377,7 +391,9 @@ class GetRecentSpecialApprovalCest
                             'lastName' => $user2->getLastName(),
                             'id' => $user2->getId(),
                         ],
-                        'year' => $workMonth3->getYear(),
+                        'year' => [
+                            'year' => $workMonth2->getYear()->getYear(),
+                        ],
                     ],
                 ],
             ],
@@ -397,7 +413,9 @@ class GetRecentSpecialApprovalCest
                             'lastName' => $user2->getLastName(),
                             'id' => $user2->getId(),
                         ],
-                        'year' => $workMonth2->getYear(),
+                        'year' => [
+                            'year' => $workMonth2->getYear()->getYear(),
+                        ],
                     ],
                 ],
                 [
@@ -415,7 +433,9 @@ class GetRecentSpecialApprovalCest
                             'lastName' => $user2->getLastName(),
                             'id' => $user2->getId(),
                         ],
-                        'year' => $workMonth2->getYear(),
+                        'year' => [
+                            'year' => $workMonth2->getYear()->getYear(),
+                        ],
                     ],
                 ],
                 [
@@ -433,7 +453,9 @@ class GetRecentSpecialApprovalCest
                             'lastName' => $user2->getLastName(),
                             'id' => $user2->getId(),
                         ],
-                        'year' => $workMonth2->getYear(),
+                        'year' => [
+                            'year' => $workMonth2->getYear()->getYear(),
+                        ],
                     ],
                 ],
                 [
@@ -451,7 +473,9 @@ class GetRecentSpecialApprovalCest
                             'lastName' => $user2->getLastName(),
                             'id' => $user2->getId(),
                         ],
-                        'year' => $workMonth3->getYear(),
+                        'year' => [
+                            'year' => $workMonth2->getYear()->getYear(),
+                        ],
                     ],
                 ],
             ],
@@ -471,7 +495,9 @@ class GetRecentSpecialApprovalCest
                             'lastName' => $user2->getLastName(),
                             'id' => $user2->getId(),
                         ],
-                        'year' => $workMonth2->getYear(),
+                        'year' => [
+                            'year' => $workMonth2->getYear()->getYear(),
+                        ],
                     ],
                 ],
                 [
@@ -489,7 +515,9 @@ class GetRecentSpecialApprovalCest
                             'lastName' => $user2->getLastName(),
                             'id' => $user2->getId(),
                         ],
-                        'year' => $workMonth2->getYear(),
+                        'year' => [
+                            'year' => $workMonth2->getYear()->getYear(),
+                        ],
                     ],
                 ],
                 [
@@ -507,7 +535,9 @@ class GetRecentSpecialApprovalCest
                             'lastName' => $user2->getLastName(),
                             'id' => $user2->getId(),
                         ],
-                        'year' => $workMonth2->getYear(),
+                        'year' => [
+                            'year' => $workMonth2->getYear()->getYear(),
+                        ],
                     ],
                 ],
                 [
@@ -525,7 +555,9 @@ class GetRecentSpecialApprovalCest
                             'lastName' => $user2->getLastName(),
                             'id' => $user2->getId(),
                         ],
-                        'year' => $workMonth3->getYear(),
+                        'year' => [
+                            'year' => $workMonth3->getYear()->getYear(),
+                        ],
                     ],
                 ],
             ],
@@ -545,7 +577,9 @@ class GetRecentSpecialApprovalCest
                             'lastName' => $user2->getLastName(),
                             'id' => $user2->getId(),
                         ],
-                        'year' => $workMonth2->getYear(),
+                        'year' => [
+                            'year' => $workMonth2->getYear()->getYear(),
+                        ],
                     ],
                 ],
                 [
@@ -563,7 +597,9 @@ class GetRecentSpecialApprovalCest
                             'lastName' => $user2->getLastName(),
                             'id' => $user2->getId(),
                         ],
-                        'year' => $workMonth2->getYear(),
+                        'year' => [
+                            'year' => $workMonth2->getYear()->getYear(),
+                        ],
                     ],
                 ],
                 [
@@ -581,7 +617,9 @@ class GetRecentSpecialApprovalCest
                             'lastName' => $user2->getLastName(),
                             'id' => $user2->getId(),
                         ],
-                        'year' => $workMonth2->getYear(),
+                        'year' => [
+                            'year' => $workMonth2->getYear()->getYear(),
+                        ],
                     ],
                 ],
                 [
@@ -599,7 +637,9 @@ class GetRecentSpecialApprovalCest
                             'lastName' => $user2->getLastName(),
                             'id' => $user2->getId(),
                         ],
-                        'year' => $workMonth3->getYear(),
+                        'year' => [
+                            'year' => $workMonth3->getYear()->getYear(),
+                        ],
                     ],
                 ],
             ],
@@ -645,22 +685,22 @@ class GetRecentSpecialApprovalCest
 
         $workMonth1 = $I->createWorkMonth([
             'month' => $dateTime1->format('m'),
-            'year' => $dateTime1->format('Y'),
+            'year' => $I->getSupportedYear($dateTime1->format('Y')),
             'user' => $user1,
         ]);
         $workMonth2 = $I->createWorkMonth([
             'month' => $dateTime1->format('m'),
-            'year' => $dateTime1->format('Y'),
+            'year' => $I->getSupportedYear($dateTime1->format('Y')),
             'user' => $user2,
         ]);
         $workMonth3 = $I->createWorkMonth([
             'month' => $dateTime2->format('m'),
-            'year' => $dateTime2->format('Y'),
+            'year' => $I->getSupportedYear($dateTime2->format('Y')),
             'user' => $user2,
         ]);
         $workMonth4 = $I->createWorkMonth([
             'month' => $dateTime3->format('m'),
-            'year' => $dateTime3->format('Y'),
+            'year' => $I->getSupportedYear($dateTime3->format('Y')),
             'user' => $user2,
         ]);
 
@@ -822,7 +862,9 @@ class GetRecentSpecialApprovalCest
                             'lastName' => $user2->getLastName(),
                             'id' => $user2->getId(),
                         ],
-                        'year' => $workMonth2->getYear(),
+                        'year' => [
+                            'year' => $workMonth2->getYear()->getYear(),
+                        ],
                     ],
                 ],
                 [
@@ -840,7 +882,9 @@ class GetRecentSpecialApprovalCest
                             'lastName' => $user2->getLastName(),
                             'id' => $user2->getId(),
                         ],
-                        'year' => $workMonth2->getYear(),
+                        'year' => [
+                            'year' => $workMonth2->getYear()->getYear(),
+                        ],
                     ],
                 ],
                 [
@@ -858,7 +902,9 @@ class GetRecentSpecialApprovalCest
                             'lastName' => $user2->getLastName(),
                             'id' => $user2->getId(),
                         ],
-                        'year' => $workMonth2->getYear(),
+                        'year' => [
+                            'year' => $workMonth2->getYear()->getYear(),
+                        ],
                     ],
                 ],
                 [
@@ -876,7 +922,9 @@ class GetRecentSpecialApprovalCest
                             'lastName' => $user1->getLastName(),
                             'id' => $user1->getId(),
                         ],
-                        'year' => $workMonth1->getYear(),
+                        'year' => [
+                            'year' => $workMonth1->getYear()->getYear(),
+                        ],
                     ],
                 ],
                 [
@@ -894,7 +942,9 @@ class GetRecentSpecialApprovalCest
                             'lastName' => $user2->getLastName(),
                             'id' => $user2->getId(),
                         ],
-                        'year' => $workMonth3->getYear(),
+                        'year' => [
+                            'year' => $workMonth3->getYear()->getYear(),
+                        ],
                     ],
                 ],
             ],
@@ -914,7 +964,9 @@ class GetRecentSpecialApprovalCest
                             'lastName' => $user2->getLastName(),
                             'id' => $user2->getId(),
                         ],
-                        'year' => $workMonth2->getYear(),
+                        'year' => [
+                            'year' => $workMonth2->getYear()->getYear(),
+                        ],
                     ],
                 ],
                 [
@@ -932,7 +984,9 @@ class GetRecentSpecialApprovalCest
                             'lastName' => $user2->getLastName(),
                             'id' => $user2->getId(),
                         ],
-                        'year' => $workMonth2->getYear(),
+                        'year' => [
+                            'year' => $workMonth2->getYear()->getYear(),
+                        ],
                     ],
                 ],
                 [
@@ -950,7 +1004,9 @@ class GetRecentSpecialApprovalCest
                             'lastName' => $user2->getLastName(),
                             'id' => $user2->getId(),
                         ],
-                        'year' => $workMonth2->getYear(),
+                        'year' => [
+                            'year' => $workMonth2->getYear()->getYear(),
+                        ],
                     ],
                 ],
                 [
@@ -968,7 +1024,9 @@ class GetRecentSpecialApprovalCest
                             'lastName' => $user1->getLastName(),
                             'id' => $user1->getId(),
                         ],
-                        'year' => $workMonth1->getYear(),
+                        'year' => [
+                            'year' => $workMonth1->getYear()->getYear(),
+                        ],
                     ],
                 ],
                 [
@@ -986,7 +1044,9 @@ class GetRecentSpecialApprovalCest
                             'lastName' => $user2->getLastName(),
                             'id' => $user2->getId(),
                         ],
-                        'year' => $workMonth3->getYear(),
+                        'year' => [
+                            'year' => $workMonth3->getYear()->getYear(),
+                        ],
                     ],
                 ],
             ],
@@ -1006,7 +1066,9 @@ class GetRecentSpecialApprovalCest
                             'lastName' => $user2->getLastName(),
                             'id' => $user2->getId(),
                         ],
-                        'year' => $workMonth2->getYear(),
+                        'year' => [
+                            'year' => $workMonth2->getYear()->getYear(),
+                        ],
                     ],
                 ],
                 [
@@ -1024,7 +1086,9 @@ class GetRecentSpecialApprovalCest
                             'lastName' => $user2->getLastName(),
                             'id' => $user2->getId(),
                         ],
-                        'year' => $workMonth2->getYear(),
+                        'year' => [
+                            'year' => $workMonth2->getYear()->getYear(),
+                        ],
                     ],
                 ],
                 [
@@ -1042,7 +1106,9 @@ class GetRecentSpecialApprovalCest
                             'lastName' => $user2->getLastName(),
                             'id' => $user2->getId(),
                         ],
-                        'year' => $workMonth2->getYear(),
+                        'year' => [
+                            'year' => $workMonth2->getYear()->getYear(),
+                        ],
                     ],
                 ],
                 [
@@ -1060,7 +1126,9 @@ class GetRecentSpecialApprovalCest
                             'lastName' => $user1->getLastName(),
                             'id' => $user1->getId(),
                         ],
-                        'year' => $workMonth1->getYear(),
+                        'year' => [
+                            'year' => $workMonth1->getYear()->getYear(),
+                        ],
                     ],
                 ],
                 [
@@ -1078,7 +1146,9 @@ class GetRecentSpecialApprovalCest
                             'lastName' => $user2->getLastName(),
                             'id' => $user2->getId(),
                         ],
-                        'year' => $workMonth3->getYear(),
+                        'year' => [
+                            'year' => $workMonth3->getYear()->getYear(),
+                        ],
                     ],
                 ],
             ],
@@ -1098,7 +1168,9 @@ class GetRecentSpecialApprovalCest
                             'lastName' => $user2->getLastName(),
                             'id' => $user2->getId(),
                         ],
-                        'year' => $workMonth2->getYear(),
+                        'year' => [
+                            'year' => $workMonth2->getYear()->getYear(),
+                        ],
                     ],
                 ],
                 [
@@ -1116,7 +1188,9 @@ class GetRecentSpecialApprovalCest
                             'lastName' => $user2->getLastName(),
                             'id' => $user2->getId(),
                         ],
-                        'year' => $workMonth2->getYear(),
+                        'year' => [
+                            'year' => $workMonth2->getYear()->getYear(),
+                        ],
                     ],
                 ],
                 [
@@ -1134,7 +1208,9 @@ class GetRecentSpecialApprovalCest
                             'lastName' => $user2->getLastName(),
                             'id' => $user2->getId(),
                         ],
-                        'year' => $workMonth2->getYear(),
+                        'year' => [
+                            'year' => $workMonth2->getYear()->getYear(),
+                        ],
                     ],
                 ],
                 [
@@ -1152,7 +1228,9 @@ class GetRecentSpecialApprovalCest
                             'lastName' => $user1->getLastName(),
                             'id' => $user1->getId(),
                         ],
-                        'year' => $workMonth1->getYear(),
+                        'year' => [
+                            'year' => $workMonth1->getYear()->getYear(),
+                        ],
                     ],
                 ],
                 [
@@ -1170,7 +1248,9 @@ class GetRecentSpecialApprovalCest
                             'lastName' => $user2->getLastName(),
                             'id' => $user2->getId(),
                         ],
-                        'year' => $workMonth3->getYear(),
+                        'year' => [
+                            'year' => $workMonth3->getYear()->getYear(),
+                        ],
                     ],
                 ],
             ],
@@ -1190,7 +1270,9 @@ class GetRecentSpecialApprovalCest
                             'lastName' => $user2->getLastName(),
                             'id' => $user2->getId(),
                         ],
-                        'year' => $workMonth2->getYear(),
+                        'year' => [
+                            'year' => $workMonth2->getYear()->getYear(),
+                        ],
                     ],
                 ],
                 [
@@ -1208,7 +1290,9 @@ class GetRecentSpecialApprovalCest
                             'lastName' => $user2->getLastName(),
                             'id' => $user2->getId(),
                         ],
-                        'year' => $workMonth2->getYear(),
+                        'year' => [
+                            'year' => $workMonth2->getYear()->getYear(),
+                        ],
                     ],
                 ],
                 [
@@ -1226,7 +1310,9 @@ class GetRecentSpecialApprovalCest
                             'lastName' => $user2->getLastName(),
                             'id' => $user2->getId(),
                         ],
-                        'year' => $workMonth2->getYear(),
+                        'year' => [
+                            'year' => $workMonth2->getYear()->getYear(),
+                        ],
                     ],
                 ],
                 [
@@ -1244,7 +1330,9 @@ class GetRecentSpecialApprovalCest
                             'lastName' => $user1->getLastName(),
                             'id' => $user1->getId(),
                         ],
-                        'year' => $workMonth1->getYear(),
+                        'year' => [
+                            'year' => $workMonth1->getYear()->getYear(),
+                        ],
                     ],
                 ],
                 [
@@ -1262,7 +1350,9 @@ class GetRecentSpecialApprovalCest
                             'lastName' => $user2->getLastName(),
                             'id' => $user2->getId(),
                         ],
-                        'year' => $workMonth3->getYear(),
+                        'year' => [
+                            'year' => $workMonth3->getYear()->getYear(),
+                        ],
                     ],
                 ],
             ],

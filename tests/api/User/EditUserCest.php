@@ -32,7 +32,7 @@ class EditUserCest
             'isActive' => true,
             'lastName' => 'lastName',
             'plainPassword' => 'password',
-            'workHours' => $I->generateWorkHours(8.5),
+            'workHours' => $I->generateWorkHoursNormalized(8.5),
         ]);
 
         $I->seeHttpHeader('Content-Type', 'application/json; charset=utf-8');
@@ -64,7 +64,7 @@ class EditUserCest
             'isActive' => true,
             'lastName' => 'lastName',
             'plainPassword' => null,
-            'workHours' => $I->generateWorkHours(100),
+            'workHours' => $I->generateWorkHoursNormalized(100),
         ]);
 
         $I->seeHttpHeader('Content-Type', 'application/problem+json; charset=utf-8');

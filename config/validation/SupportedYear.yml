@@ -1,0 +1,5 @@
+App\Entity\SupportedYear:
+    properties:
+        year:
+            - NotBlank: ~
+            - Type: int

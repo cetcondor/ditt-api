@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\SupportedYear;
 use App\Entity\User;
 use App\Entity\VacationWorkLog;
 use App\Entity\WorkMonth;
@@ -9,6 +10,7 @@ use App\Event\MultipleVacationWorkLogApprovedEvent;
 use App\Event\MultipleVacationWorkLogRejectedEvent;
 use App\Event\VacationWorkLogApprovedEvent;
 use App\Event\VacationWorkLogRejectedEvent;
+use App\Repository\SupportedYearRepository;
 use App\Repository\VacationWorkLogRepository;
 use App\Repository\WorkMonthRepository;
 use App\Service\VacationWorkLogService;
@@ -34,6 +36,11 @@ class VacationWorkLogController extends Controller
      * @var DenormalizerInterface
      */
     private $denormalizer;
+
+    /**
+     * @var SupportedYearRepository
+     */
+    private $supportedYearRepository;
 
     /**
      * @var VacationWorkLogRepository
@@ -68,6 +75,7 @@ class VacationWorkLogController extends Controller
     /**
      * @param NormalizerInterface $normalizer
      * @param DenormalizerInterface $denormalizer
+     * @param SupportedYearRepository $supportedYearRepository
      * @param VacationWorkLogRepository $vacationWorkLogRepository
      * @param VacationWorkLogService $vacationWorkLogService
      * @param WorkMonthRepository $workMonthRepository
@@ -78,6 +86,7 @@ class VacationWorkLogController extends Controller
     public function __construct(
         NormalizerInterface $normalizer,
         DenormalizerInterface $denormalizer,
+        SupportedYearRepository $supportedYearRepository,
         VacationWorkLogRepository $vacationWorkLogRepository,
         VacationWorkLogService $vacationWorkLogService,
         WorkMonthRepository $workMonthRepository,
@@ -87,6 +96,7 @@ class VacationWorkLogController extends Controller
     ) {
         $this->normalizer = $normalizer;
         $this->denormalizer = $denormalizer;
+        $this->supportedYearRepository = $supportedYearRepository;
         $this->vacationWorkLogRepository = $vacationWorkLogRepository;
         $this->vacationWorkLogService = $vacationWorkLogService;
         $this->workMonthRepository = $workMonthRepository;
@@ -149,15 +159,18 @@ class VacationWorkLogController extends Controller
             $vacationWorkLog->setWorkMonth($workMonth);
             $vacationWorkLogs[] = $vacationWorkLog;
 
-            if (!array_key_exists($workMonth->getYear(), $vacationWorkLogsByYear)) {
-                $vacationWorkLogsByYear[$workMonth->getYear()] = 0;
+            if (!array_key_exists($workMonth->getYear()->getYear(), $vacationWorkLogsByYear)) {
+                $vacationWorkLogsByYear[$workMonth->getYear()->getYear()] = 0;
             }
 
-            ++$vacationWorkLogsByYear[$workMonth->getYear()];
+            ++$vacationWorkLogsByYear[$workMonth->getYear()->getYear()];
         }
 
         foreach ($vacationWorkLogsByYear as $year => $workLogCount) {
-            if ($this->vacationWorkLogRepository->getRemainingVacationDays($token->getUser(), $year) < $workLogCount) {
+            /** @var SupportedYear */
+            $supportedYear = $this->supportedYearRepository->getRepository()->find($year);
+
+            if ($this->vacationWorkLogRepository->getRemainingVacationDays($token->getUser(), $supportedYear) < $workLogCount) {
                 return JsonResponse::create(
                     ['detail' => 'Set duration exceeds number of vacation days allocated for this year.'],
                     JsonResponse::HTTP_BAD_REQUEST

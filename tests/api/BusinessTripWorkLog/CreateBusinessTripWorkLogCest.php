@@ -41,7 +41,7 @@ class CreateBusinessTripWorkLogCest
         $I->createWorkMonth([
             'month' => $date->format('m'),
             'user' => $this->user,
-            'year' => $date->format('Y'),
+            'year' => $I->getSupportedYear($date->format('Y')),
         ]);
 
         $I->haveHttpHeader('Content-Type', 'application/json');
@@ -85,7 +85,7 @@ class CreateBusinessTripWorkLogCest
             'month' => $date->format('m'),
             'status' => 'APPROVED',
             'user' => $this->user,
-            'year' => $date->format('Y'),
+            'year' => $I->getSupportedYear($date->format('Y')),
         ]);
 
         $I->haveHttpHeader('Content-Type', 'application/json');
@@ -125,7 +125,7 @@ class CreateBusinessTripWorkLogCest
         $I->createWorkMonth([
             'month' => $date->format('m'),
             'user' => $this->user,
-            'year' => $date->format('Y'),
+            'year' => $I->getSupportedYear($date->format('Y')),
         ]);
 
         $I->haveHttpHeader('Content-Type', 'application/json');

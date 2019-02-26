@@ -1,0 +1,13 @@
+App\Entity\SupportedHoliday:
+    collectionOperations:
+        get:
+            method: GET
+            normalization_context:
+                groups:
+                    - supported_holiday_out_list
+    itemOperations:
+        get:
+            method: GET
+            normalization_context:
+                groups:
+                    - supported_holiday_out_detail

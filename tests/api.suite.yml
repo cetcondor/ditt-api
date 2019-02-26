@@ -5,9 +5,17 @@ actor: ApiTester
 error_level: E_ALL & ~E_STRICT & ~E_DEPRECATED & ~E_USER_DEPRECATED
 
 modules:
+    config:
+        Db:
+            dsn: 'pgsql:host=db;dbname=docker_test'
+            user: 'postgres'
+            password: 'pass'
+            dump: tests/_data/config.sql
+            cleanup: true
     enabled:
         - \Helper\Api
         - Asserts
+        - Db
         - Symfony:
             app_path: 'src'
             var_path: 'var'

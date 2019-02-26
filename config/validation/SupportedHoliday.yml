@@ -1,0 +1,14 @@
+App\Entity\SupportedHoliday:
+    properties:
+        day:
+            - NotBlank: ~
+            - Range:
+                  min: 1
+                  max: 31
+        month:
+            - NotBlank: ~
+            - Range:
+                  min: 1
+                  max: 12
+        year:
+            - Valid: ~
