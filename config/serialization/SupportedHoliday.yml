@@ -6,15 +6,18 @@ App\Entity\SupportedHoliday:
                 - supported_holiday_out_detail
                 - supported_holiday_out_list
                 - supported_holiday_out_in
+                - config_in
         month:
             groups:
                 - config_out
                 - supported_holiday_out_detail
                 - supported_holiday_out_list
                 - supported_holiday_out_in
+                - config_in
         year:
             groups:
                 - config_out
                 - supported_holiday_out_detail
                 - supported_holiday_out_list
                 - supported_holiday_out_in
+                - config_in

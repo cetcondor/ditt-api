@@ -1,9 +1,18 @@
 App\Entity\Config:
     collectionOperations:
-        config:
+        get:
             method: GET
-            route_name: api_config
+            route_name: api_config_get
             normalization_context:
                 groups:
                     - config_out
+        post:
+            method: POST
+            route_name: api_config_save
+            normalization_context:
+                groups:
+                    - config_out
+            denormalization_context:
+                groups:
+                    - config_in
     itemOperations: []

@@ -15,4 +15,5 @@ App\Entity\SupportedYear:
                 - work_hours_out_detail
                 - work_month_out_list
                 - work_month_out_detail
+                - config_in
                 - work_hours_in

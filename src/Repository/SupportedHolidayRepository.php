@@ -37,4 +37,17 @@ class SupportedHolidayRepository
     {
         return $this->repository;
     }
+
+    /**
+     * @return SupportedHoliday[]
+     */
+    public function findAll(): array
+    {
+        return $this->repository->createQueryBuilder('sh')
+            ->select('sh')
+            ->orderBy('sh.month', 'ASC')
+            ->addOrderBy('sh.day', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }

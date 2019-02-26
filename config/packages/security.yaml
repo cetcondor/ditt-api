@@ -19,6 +19,15 @@ security:
             roles:
                 - !php/const App\Entity\User::ROLE_EMPLOYEE
                 - !php/const App\Entity\User::ROLE_ADMIN
+        -   path: ^/configs
+            methods: [GET]
+            roles:
+                - !php/const App\Entity\User::ROLE_EMPLOYEE
+                - !php/const App\Entity\User::ROLE_ADMIN
+        -   path: ^/configs
+            methods: [POST]
+            roles:
+              - !php/const App\Entity\User::ROLE_SUPER_ADMIN
         -   path: ^/home_office_work_logs
             roles:
                 - !php/const App\Entity\User::ROLE_EMPLOYEE

@@ -37,4 +37,16 @@ class SupportedYearRepository
     {
         return $this->repository;
     }
+
+    /**
+     * @return SupportedYear[]
+     */
+    public function findAll(): array
+    {
+        return $this->repository->createQueryBuilder('sy')
+            ->select('sy')
+            ->orderBy('sy.year', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }
