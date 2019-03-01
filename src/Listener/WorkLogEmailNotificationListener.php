@@ -130,7 +130,7 @@ class WorkLogEmailNotificationListener
         $this->sendWorkLogMail(
             $event->getSupervisor(),
             $event->getHomeOfficeWorkLog(),
-            'Antrag auf Telearbeit gewährt – %s',
+            'Antrag auf Mobile Arbeit gewährt – %s',
             $event->getHomeOfficeWorkLog()->getDate(),
             'notifications/home_office_work_log_approved.html.twig'
         );
@@ -148,7 +148,7 @@ class WorkLogEmailNotificationListener
         $this->sendWorkLogMail(
             null,
             $event->getHomeOfficeWorkLog(),
-            'Antrag auf Telearbeit storniert – %s',
+            'Antrag auf Mobile Arbeit storniert – %s',
             $event->getHomeOfficeWorkLog()->getDate(),
             'notifications/home_office_work_log_canceled.html.twig'
         );
@@ -166,7 +166,7 @@ class WorkLogEmailNotificationListener
         $this->sendWorkLogMail(
             $event->getSupervisor(),
             $event->getHomeOfficeWorkLog(),
-            'Antrag auf Telearbeit abgelehnt – %s',
+            'Antrag auf Mobile Arbeit abgelehnt – %s',
             $event->getHomeOfficeWorkLog()->getDate(),
             'notifications/home_office_work_log_rejected.html.twig'
         );
