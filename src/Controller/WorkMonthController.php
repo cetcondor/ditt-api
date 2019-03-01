@@ -415,6 +415,10 @@ class WorkMonthController extends Controller
 
         $this->workMonthService->markWaitingForApproval($workMonth);
 
+        $workMonth->getUser()->setRemainingVacationDaysByYear(
+            $this->userService->calculateRemainingVacationDaysByYear($workMonth->getUser())
+        );
+
         return JsonResponse::create(
             $this->normalizer->normalize(
                 $workMonth,
