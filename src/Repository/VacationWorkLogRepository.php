@@ -210,6 +210,16 @@ class VacationWorkLogRepository
             ->getQuery()
             ->getSingleScalarResult();
 
-        return $user->getVacationDays() - $vacationWorkLogsCount;
+        $vacationDays = 0;
+
+        foreach ($user->getVacations() as $vacation) {
+            if ($vacation->getYear()->getYear() === $year->getYear()) {
+                $vacationDays = $vacation->getVacationDays();
+
+                break;
+            }
+        }
+
+        return $vacationDays - $vacationWorkLogsCount;
     }
 }

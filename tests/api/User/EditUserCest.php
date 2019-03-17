@@ -32,6 +32,7 @@ class EditUserCest
             'isActive' => true,
             'lastName' => 'lastName',
             'plainPassword' => 'password',
+            'vacations' => $I->generateVacationsNormalized(25),
             'workHours' => $I->generateWorkHoursNormalized(8.5),
         ]);
 
@@ -46,7 +47,8 @@ class EditUserCest
             'lastName' => 'lastName',
             'roles' => ['ROLE_EMPLOYEE'],
             'supervisor' => null,
-            'vacationDays' => 20,
+            'vacations' => $I->generateVacationsNormalized(25),
+            'workHours' => $I->generateWorkHoursNormalized(8.5),
         ]);
         $I->grabEntityFromRepository(User::class, [
             'email' => 'user2@example.com',

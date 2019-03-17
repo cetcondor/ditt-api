@@ -159,9 +159,9 @@ class WorkMonthController extends Controller
             $workMonth->setWorkLogs($emptyCollection);
         }
 
-        $workMonth->getUser()->setRemainingVacationDaysByYear(
-            $this->userService->calculateRemainingVacationDaysByYear($workMonth->getUser())
-        );
+        $user = $workMonth->getUser();
+        $this->userService->fullfilRemainingVacationDays($user);
+        $workMonth->setUser($user);
 
         return JsonResponse::create(
             $this->normalizer->normalize(
@@ -415,9 +415,9 @@ class WorkMonthController extends Controller
 
         $this->workMonthService->markWaitingForApproval($workMonth);
 
-        $workMonth->getUser()->setRemainingVacationDaysByYear(
-            $this->userService->calculateRemainingVacationDaysByYear($workMonth->getUser())
-        );
+        $user = $workMonth->getUser();
+        $this->userService->fullfilRemainingVacationDays($user);
+        $workMonth->setUser($user);
 
         return JsonResponse::create(
             $this->normalizer->normalize(
@@ -452,6 +452,10 @@ class WorkMonthController extends Controller
         }
 
         $this->workMonthService->markApproved($workMonth);
+
+        $user = $workMonth->getUser();
+        $this->userService->fullfilRemainingVacationDays($user);
+        $workMonth->setUser($user);
 
         $supervisor = $this->getUser();
         if (!$supervisor) { // This needs to be here for tests to work. In production the condition will never be met.

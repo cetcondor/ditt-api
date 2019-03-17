@@ -64,17 +64,14 @@ App\Entity\User:
                 - user_out_list
                 - user_out_detail
                 - user_in
-        vacationDays:
+        vacations:
             groups:
                 - user_out_list
                 - user_out_detail
                 - user_out_api_token_detail
                 - supervised_user_out_list
-                - user_in
-        remainingVacationDaysByYear:
-            groups:
-                - user_out_detail
                 - work_month_out_detail
+                - user_in
         workHours:
             groups:
                 - user_out_list

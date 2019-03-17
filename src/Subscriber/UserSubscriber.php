@@ -6,6 +6,7 @@ use ApiPlatform\Core\EventListener\EventPriorities;
 use App\Entity\User;
 use App\Entity\UserYearStats;
 use App\Entity\WorkMonth;
+use App\Repository\VacationRepository;
 use App\Repository\WorkHoursRepository;
 use App\Service\ConfigService;
 use App\Service\UserService;
@@ -41,6 +42,11 @@ class UserSubscriber implements EventSubscriberInterface
     private $userYearStatsService;
 
     /**
+     * @var VacationRepository
+     */
+    private $vacationRepository;
+
+    /**
      * @var WorkHoursRepository
      */
     private $workHoursRepository;
@@ -55,6 +61,7 @@ class UserSubscriber implements EventSubscriberInterface
      * @param ConfigService $configService
      * @param UserService $userService
      * @param UserYearStatsService $userYearStatsService
+     * @param VacationRepository $vacationRepository
      * @param WorkHoursRepository $workHoursRepository
      * @param WorkMonthService $workMonthService
      */
@@ -63,6 +70,7 @@ class UserSubscriber implements EventSubscriberInterface
         ConfigService $configService,
         UserService $userService,
         UserYearStatsService $userYearStatsService,
+        VacationRepository $vacationRepository,
         WorkHoursRepository $workHoursRepository,
         WorkMonthService $workMonthService
     ) {
@@ -70,6 +78,7 @@ class UserSubscriber implements EventSubscriberInterface
         $this->configService = $configService;
         $this->userService = $userService;
         $this->userYearStatsService = $userYearStatsService;
+        $this->vacationRepository = $vacationRepository;
         $this->workHoursRepository = $workHoursRepository;
         $this->workMonthService = $workMonthService;
     }
@@ -83,8 +92,8 @@ class UserSubscriber implements EventSubscriberInterface
             KernelEvents::VIEW => [
                 ['createWorkMonths', EventPriorities::POST_WRITE],
                 ['createYearStats', EventPriorities::POST_WRITE],
-                ['editWorkHours', EventPriorities::PRE_WRITE],
-                ['addRemainingVacationDaysByYear', EventPriorities::PRE_SERIALIZE],
+                ['editUser', EventPriorities::PRE_WRITE],
+                ['fullfilRemainingVacationDays', EventPriorities::PRE_SERIALIZE],
             ],
         ];
     }
@@ -151,7 +160,7 @@ class UserSubscriber implements EventSubscriberInterface
     /**
      * @param GetResponseForControllerResultEvent $event
      */
-    public function editWorkHours(GetResponseForControllerResultEvent $event): void
+    public function editUser(GetResponseForControllerResultEvent $event): void
     {
         $user = $event->getControllerResult();
         if (!$user instanceof User) {
@@ -162,6 +171,17 @@ class UserSubscriber implements EventSubscriberInterface
 
         if (Request::METHOD_PUT !== $method) {
             return;
+        }
+
+        foreach ($user->getVacations() as $detachedVacation) {
+            $attachedVacation = $this->vacationRepository->findOne(
+                $detachedVacation->getYear(),
+                $user
+            );
+
+            if ($attachedVacation) {
+                $attachedVacation->setVacationDays($detachedVacation->getVacationDays());
+            }
         }
 
         foreach ($user->getWorkHours() as $detachedWorkHours) {
@@ -177,13 +197,14 @@ class UserSubscriber implements EventSubscriberInterface
         }
 
         $user->setWorkHours(new ArrayCollection());
+        $user->setVacations(new ArrayCollection());
         $this->entityManager->flush();
     }
 
     /**
      * @param GetResponseForControllerResultEvent $event
      */
-    public function addRemainingVacationDaysByYear(GetResponseForControllerResultEvent $event): void
+    public function fullfilRemainingVacationDays(GetResponseForControllerResultEvent $event): void
     {
         $user = $event->getControllerResult();
         if (!$user instanceof User) {
@@ -196,8 +217,6 @@ class UserSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $user->setRemainingVacationDaysByYear(
-            $this->userService->calculateRemainingVacationDaysByYear($user)
-        );
+        $this->userService->fullfilRemainingVacationDays($user);
     }
 }

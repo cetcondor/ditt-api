@@ -11,9 +11,12 @@ App\Entity\SupportedYear:
                 - user_out_list
                 - user_out_detail
                 - user_out_api_token_detail
+                - vacation_out_list
+                - vacation_out_detail
                 - work_hours_out_list
                 - work_hours_out_detail
                 - work_month_out_list
                 - work_month_out_detail
                 - config_in
+                - vacation_in
                 - work_hours_in

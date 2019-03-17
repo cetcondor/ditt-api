@@ -213,8 +213,18 @@ class ApiTester extends \Codeception\Actor
             'isActive' => true,
             'plainPassword' => 'password',
             'supervisor' => null,
-            'vacationDays' => 20,
             'resetPasswordToken' => null,
+            'vacations' => function() {
+                $vacations = [];
+
+                foreach ($this->generateVacations(20) as $generatedVacation) {
+                    $vacations[] = (new \App\Entity\Vacation())
+                        ->setYear($generatedVacation['year'])
+                        ->setVacationDays($generatedVacation['vacationDays']);
+                }
+
+                return $vacations;
+            },
             'workHours' => function() {
                 $workHours = [];
 
@@ -235,6 +245,47 @@ class ApiTester extends \Codeception\Actor
         return $this->grabEntityFromRepository(\App\Entity\User::class, [
             'id' => $user->getId(),
         ]);
+    }
+
+    public function generateVacations($vacationDays) {
+        $vacations = [];
+
+        for ($year = 2018; $year <= 2020; ++$year) {
+            $vacations[] = [
+                'vacationDays' => $vacationDays,
+                'year' => $this->getSupportedYear($year),
+            ];
+        }
+
+        return $vacations;
+    }
+
+    public function generateVacationsNormalized($vacationDays) {
+        $vacations = [];
+
+        for ($year = 2018; $year <= 2020; ++$year) {
+            $vacations[] = [
+                'vacationDays' => $vacationDays,
+                'year' => [
+                    'year' => $year,
+                ],
+            ];
+        }
+
+        return $vacations;
+    }
+
+    public function generateVacationsNormalizedUri($vacationDays) {
+        $vacations = [];
+
+        for ($year = 2018; $year <= 2020; ++$year) {
+            $vacations[] = [
+                'vacationDays' => $vacationDays,
+                'year' => sprintf('/supported_years/%s', $year),
+            ];
+        }
+
+        return $vacations;
     }
 
     public function generateWorkHours($requiredHours) {

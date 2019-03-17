@@ -1,5 +1,9 @@
 App\Entity\User:
     properties:
+        vacations:
+            subresource:
+                resourceClass: 'App\Entity\Vacation'
+                collection: true
         workHours:
             subresource:
                 resourceClass: 'App\Entity\WorkHours'
@@ -17,6 +21,7 @@ App\Entity\User:
             normalization_context:
                 groups:
                     - supervised_user_out_list
+                    - vacation_out_list
                     - work_hours_out_list
         get:
             method: 'GET'
@@ -25,16 +30,19 @@ App\Entity\User:
             normalization_context:
                 groups:
                     - user_out_list
+                    - vacation_out_list
                     - work_hours_out_list
         post:
             method: 'POST'
             normalization_context:
                 groups:
                     - user_out_detail
+                    - vacation_out_list
                     - work_hours_out_list
             denormalization_context:
                 groups:
                     - user_in
+                    - vacation_in
                     - work_hours_in
     itemOperations:
         get:
@@ -42,16 +50,19 @@ App\Entity\User:
             normalization_context:
                 groups:
                     - user_out_detail
+                    - vacation_out_list
                     - work_hours_out_list
         put:
             method: 'PUT'
             normalization_context:
                 groups:
                     - user_out_detail
+                    - vacation_out_list
                     - work_hours_out_list
             denormalization_context:
                 groups:
                     - user_in
+                    - vacation_in
                     - work_hours_in
         delete:
             method: 'DELETE'

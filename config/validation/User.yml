@@ -2,6 +2,7 @@ App\Entity\User:
     constraints:
         - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: apiToken
         - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: email
+        - App\Validator\Constraints\VacationPresent: ~
         - App\Validator\Constraints\WorkHoursPresent: ~
     properties:
         email:
@@ -34,10 +35,8 @@ App\Entity\User:
             - Length:
                 min: 8
 
-        vacationDays:
-            - NotBlank: ~
-            - Range:
-                min: 0
+        vacations:
+            - Valid: ~
 
         workHours:
             - Valid: ~

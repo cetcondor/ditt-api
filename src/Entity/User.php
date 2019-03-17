@@ -76,14 +76,9 @@ class User implements UserInterface
     private $supervised;
 
     /**
-     * @var int
+     * @var Vacation[]|Collection
      */
-    private $vacationDays;
-
-    /**
-     * @var int[]|null
-     */
-    private $remainingVacationDaysByYear;
+    private $vacations;
 
     /**
      * @var WorkHours[]|Collection
@@ -115,7 +110,7 @@ class User implements UserInterface
         $this->lastName = '';
         $this->roles = [self::ROLE_EMPLOYEE];
         $this->supervised = new ArrayCollection();
-        $this->vacationDays = 0;
+        $this->vacations = new ArrayCollection();
         $this->workHours = new ArrayCollection();
         $this->workMonths = new ArrayCollection();
         $this->yearStats = new ArrayCollection();
@@ -373,39 +368,28 @@ class User implements UserInterface
     }
 
     /**
-     * @return int
+     * @return Vacation[]
      */
-    public function getVacationDays(): int
+    public function getVacations()
     {
-        return $this->vacationDays;
+        if ($this->vacations instanceof Collection) {
+            return $this->vacations->toArray();
+        }
+
+        return $this->vacations;
     }
 
     /**
-     * @param int $vacationDays
+     * @param Vacation[]|Collection $vacations
      * @return User
      */
-    public function setVacationDays(int $vacationDays): User
+    public function setVacations($vacations): User
     {
-        $this->vacationDays = $vacationDays;
+        foreach ($vacations as $vacation) {
+            $vacation->setUser($this);
+        }
 
-        return $this;
-    }
-
-    /**
-     * @return int[]|null
-     */
-    public function getRemainingVacationDaysByYear(): ?array
-    {
-        return $this->remainingVacationDaysByYear;
-    }
-
-    /**
-     * @param int[]|null $remainingVacationDaysByYear
-     * @return User
-     */
-    public function setRemainingVacationDaysByYear(?array $remainingVacationDaysByYear): User
-    {
-        $this->remainingVacationDaysByYear = $remainingVacationDaysByYear;
+        $this->vacations = $vacations;
 
         return $this;
     }

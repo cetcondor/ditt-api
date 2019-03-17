@@ -31,9 +31,6 @@ App\Entity\User:
         roles:
             type: json_array
 
-        vacationDays:
-            type: integer
-
         resetPasswordToken:
             type: text
             nullable: true
@@ -44,6 +41,10 @@ App\Entity\User:
             nullable: true
 
     oneToMany:
+        vacations:
+            targetEntity: App\Entity\Vacation
+            mappedBy: user
+            cascade: [persist]
         workHours:
             targetEntity: App\Entity\WorkHours
             mappedBy: user

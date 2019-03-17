@@ -23,7 +23,19 @@ class BulkCreateVacationWorkLogCest
     public function _before(\ApiTester $I)
     {
         $prophet = new Prophet();
-        $this->user = $I->createUser(['vacationDays' => 2]);
+        $this->user = $I->createUser([
+            'vacations' => function () use ($I) {
+                $vacations = [];
+
+                foreach ($I->generateVacations(2) as $generatedVacation) {
+                    $vacations[] = (new \App\Entity\Vacation())
+                        ->setYear($generatedVacation['year'])
+                        ->setVacationDays($generatedVacation['vacationDays']);
+                }
+
+                return $vacations;
+            },
+        ]);
         $token = $prophet->prophesize(TokenInterface::class);
         $token->getUser()->willReturn($this->user);
         $tokenStorage = $prophet->prophesize(TokenStorageInterface::class);

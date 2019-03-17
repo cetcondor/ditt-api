@@ -3,6 +3,7 @@
 namespace App\Security;
 
 use App\Entity\User;
+use App\Entity\Vacation;
 use App\Entity\WorkHours;
 use App\Entity\WorkLogInterface;
 use App\Entity\WorkMonth;
@@ -42,6 +43,10 @@ class ResourceVoter extends Voter
         }
 
         if ($subject instanceof User) {
+            return true;
+        }
+
+        if ($subject instanceof Vacation) {
             return true;
         }
 
@@ -100,6 +105,10 @@ class ResourceVoter extends Voter
             return $this->canViewUser($subject, $user, $token);
         }
 
+        if ($subject instanceof Vacation) {
+            return $this->canViewVacation($subject, $user, $token);
+        }
+
         if ($subject instanceof WorkHours) {
             return $this->canViewWorkHour($subject, $user, $token);
         }
@@ -126,6 +135,21 @@ class ResourceVoter extends Voter
         return $subject === $user
             || $subject->getSupervisor() === $user
             || $this->decisionManager->decide($token, [User::ROLE_ADMIN]);
+    }
+
+    /**
+     * @param Vacation $vacation
+     * @param User $user
+     * @param TokenInterface $token
+     * @return bool
+     */
+    private function canViewVacation(Vacation $vacation, User $user, TokenInterface $token): bool
+    {
+        return $vacation->getUser() === $user
+            || (
+                $vacation->getUser()->getSupervisor()
+                && $vacation->getUser()->getSupervisor() === $user
+            ) || $this->decisionManager->decide($token, [User::ROLE_ADMIN]);
     }
 
     /**
@@ -185,6 +209,10 @@ class ResourceVoter extends Voter
             return $this->canEditUser($subject, $user, $token);
         }
 
+        if ($subject instanceof Vacation) {
+            return $this->canEditVacation($subject, $user, $token);
+        }
+
         if ($subject instanceof WorkHours) {
             return $this->canEditWorkHours($subject, $user, $token);
         }
@@ -209,6 +237,21 @@ class ResourceVoter extends Voter
     private function canEditUser(User $subject, User $user, TokenInterface $token): bool
     {
         return $this->decisionManager->decide($token, [User::ROLE_ADMIN]);
+    }
+
+    /**
+     * @param Vacation $vacation
+     * @param User $user
+     * @param TokenInterface $token
+     * @return bool
+     */
+    private function canEditVacation(Vacation $vacation, User $user, TokenInterface $token): bool
+    {
+        try {
+            return $vacation->getUser() === $user || $this->decisionManager->decide($token, [User::ROLE_ADMIN]);
+        } catch (\TypeError $e) {
+            return true;
+        }
     }
 
     /**

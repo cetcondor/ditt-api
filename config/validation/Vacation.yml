@@ -1,0 +1,15 @@
+App\Entity\Vacation:
+    properties:
+        user:
+            - NotBlank: ~
+
+        year:
+            - NotBlank: ~
+            - Valid: ~
+
+        vacationDays:
+            - NotBlank: ~
+            - Type: numeric
+            - Range:
+                min: 0
+                max: 365

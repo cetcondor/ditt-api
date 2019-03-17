@@ -1,0 +1,30 @@
+App\Entity\Vacation:
+    type: entity
+
+    id:
+        user:
+            associationKey: true
+        year:
+            associationKey: true
+
+    fields:
+        vacationDays:
+            type: integer
+
+    manyToOne:
+        user:
+            targetEntity: App\Entity\User
+            inversedBy: vacations
+            joinColumn:
+                name: user_id
+                referencedColumnName: id
+                nullable: false
+                onDelete: cascade
+        year:
+            targetEntity: App\Entity\SupportedYear
+            joinColumn:
+                name: year
+                referencedColumnName: year
+                nullable: false
+                onDelete: cascade
+

@@ -65,6 +65,10 @@ security:
             roles:
                 - !php/const App\Entity\User::ROLE_EMPLOYEE
                 - !php/const App\Entity\User::ROLE_ADMIN
+        -   path: '^/users/[0-9]+/vacations'
+            roles:
+                - !php/const App\Entity\User::ROLE_EMPLOYEE
+                - !php/const App\Entity\User::ROLE_ADMIN
         -   path: '^/users/[0-9]+/work_hours$'
             roles:
                 - !php/const App\Entity\User::ROLE_EMPLOYEE
@@ -79,7 +83,14 @@ security:
                 - !php/const App\Entity\User::ROLE_EMPLOYEE
                 - !php/const App\Entity\User::ROLE_ADMIN
         - { path: ^/users, roles: !php/const App\Entity\User::ROLE_ADMIN }
-        - { path: ^/work_hours, roles: !php/const App\Entity\User::ROLE_EMPLOYEE }
+        -   path: ^/vacations
+            roles:
+                - !php/const App\Entity\User::ROLE_EMPLOYEE
+                - !php/const App\Entity\User::ROLE_ADMIN
+        -   path: ^/work_hours
+            roles:
+                - !php/const App\Entity\User::ROLE_EMPLOYEE
+                - !php/const App\Entity\User::ROLE_ADMIN
         -   path: ^/work_logs
             roles:
                 - !php/const App\Entity\User::ROLE_EMPLOYEE

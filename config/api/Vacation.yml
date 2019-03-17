@@ -1,0 +1,18 @@
+App\Entity\Vacation:
+    collectionOperations:
+        api_users_vacations_get_subresource:
+            method: GET
+            normalization_context:
+                groups:
+                    - vacation_out_list
+        get:
+            method: GET
+            normalization_context:
+                groups:
+                    - vacation_out_list
+    itemOperations:
+        get:
+            method: GET
+            normalization_context:
+                groups:
+                    - vacation_out_detail

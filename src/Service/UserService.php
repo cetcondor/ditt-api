@@ -3,7 +3,9 @@
 namespace App\Service;
 
 use App\Entity\User;
+use App\Entity\Vacation;
 use App\Repository\VacationWorkLogRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 
 class UserService
@@ -40,21 +42,30 @@ class UserService
 
     /**
      * @param User $user
-     * @return array
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function calculateRemainingVacationDaysByYear(User $user): array
+    public function fullfilRemainingVacationDays(User &$user): void
     {
         $config = $this->configService->getConfig();
-        $remainingVacationDaysByYear = [];
+        /** @var Vacation[] $vacations */
+        $vacations = [];
 
-        foreach ($config->getSupportedYears() as $supportedYear) {
-            $remainingVacationDaysByYear[$supportedYear->getYear()] = $this->vacationWorkLogRepository->getRemainingVacationDays(
-                $user,
-                $supportedYear
-            );
+        foreach ($user->getVacations() as $vacation) {
+            foreach ($config->getSupportedYears() as $supportedYear) {
+                if ($vacation->getYear()->getYear() === $supportedYear->getYear()) {
+                    $vacations[] = $vacation->setRemainingVacationDays(
+                        $this->vacationWorkLogRepository->getRemainingVacationDays(
+                            $user,
+                            $supportedYear
+                        )
+                    );
+
+                    break;
+                }
+            }
         }
 
-        return $remainingVacationDaysByYear;
+        $user->setVacations(new ArrayCollection($vacations));
     }
 
     /**

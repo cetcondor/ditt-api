@@ -1,0 +1,26 @@
+App\Entity\Vacation:
+    attributes:
+        year:
+            groups:
+                - supervised_user_out_list
+                - user_out_list
+                - user_out_detail
+                - user_out_api_token_detail
+                - vacation_out_list
+                - vacation_out_detail
+                - work_month_out_detail
+                - vacation_in
+        vacationDays:
+            groups:
+                - supervised_user_out_list
+                - user_out_list
+                - user_out_detail
+                - user_out_api_token_detail
+                - vacation_out_list
+                - vacation_out_detail
+                - work_month_out_detail
+                - vacation_in
+        remainingVacationDays:
+            groups:
+                - user_out_detail
+                - work_month_out_detail
