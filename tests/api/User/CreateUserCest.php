@@ -34,7 +34,7 @@ class CreateUserCest
             'isActive' => true,
             'lastName' => 'lastName',
             'plainPassword' => 'password',
-            'vacations' => $I->generateVacationsNormalizedUri(25),
+            'vacations' => $I->generateVacationsNormalizedUri(25, -5),
             'workHours' => $I->generateWorkHoursNormalizedUri(8.5),
         ]);
 
@@ -48,7 +48,7 @@ class CreateUserCest
             'lastName' => 'lastName',
             'roles' => ['ROLE_EMPLOYEE'],
             'supervisor' => null,
-            'vacations' => $I->generateVacationsNormalized(25),
+            'vacations' => $I->generateVacationsNormalized(25, -5),
             'workHours' => $I->generateWorkHoursNormalized(8.5),
         ]);
         $user = $I->grabEntityFromRepository(User::class, [

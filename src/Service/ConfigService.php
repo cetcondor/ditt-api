@@ -208,6 +208,7 @@ class ConfigService
             $newEntities[] = (new Vacation())
                 ->setUser($user)
                 ->setVacationDays(0)
+                ->setVacationDaysCorrection(0)
                 ->setYear($supportedYear);
 
             for ($month = 1; $month <= 12; ++$month) {

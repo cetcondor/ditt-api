@@ -27,10 +27,11 @@ class CreateVacationWorkLogCest
             'vacations' => function () use ($I) {
                 $vacations = [];
 
-                foreach ($I->generateVacations(1) as $generatedVacation) {
+                foreach ($I->generateVacations(2, -1) as $generatedVacation) {
                     $vacations[] = (new \App\Entity\Vacation())
                         ->setYear($generatedVacation['year'])
-                        ->setVacationDays($generatedVacation['vacationDays']);
+                        ->setVacationDays($generatedVacation['vacationDays'])
+                        ->setVacationDaysCorrection($generatedVacation['vacationDaysCorrection']);
                 }
 
                 return $vacations;

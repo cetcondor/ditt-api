@@ -10,6 +10,8 @@ App\Entity\Vacation:
     fields:
         vacationDays:
             type: integer
+        vacationDaysCorrection:
+            type: integer
 
     manyToOne:
         user:

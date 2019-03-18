@@ -217,10 +217,11 @@ class ApiTester extends \Codeception\Actor
             'vacations' => function() {
                 $vacations = [];
 
-                foreach ($this->generateVacations(20) as $generatedVacation) {
+                foreach ($this->generateVacations(20, 0) as $generatedVacation) {
                     $vacations[] = (new \App\Entity\Vacation())
                         ->setYear($generatedVacation['year'])
-                        ->setVacationDays($generatedVacation['vacationDays']);
+                        ->setVacationDays($generatedVacation['vacationDays'])
+                        ->setVacationDaysCorrection($generatedVacation['vacationDaysCorrection']);
                 }
 
                 return $vacations;
@@ -247,12 +248,13 @@ class ApiTester extends \Codeception\Actor
         ]);
     }
 
-    public function generateVacations($vacationDays) {
+    public function generateVacations($vacationDays, $vacationDaysCorrection) {
         $vacations = [];
 
         for ($year = 2018; $year <= 2020; ++$year) {
             $vacations[] = [
                 'vacationDays' => $vacationDays,
+                'vacationDaysCorrection' => $vacationDaysCorrection,
                 'year' => $this->getSupportedYear($year),
             ];
         }
@@ -260,12 +262,13 @@ class ApiTester extends \Codeception\Actor
         return $vacations;
     }
 
-    public function generateVacationsNormalized($vacationDays) {
+    public function generateVacationsNormalized($vacationDays, $vacationDaysCorrection) {
         $vacations = [];
 
         for ($year = 2018; $year <= 2020; ++$year) {
             $vacations[] = [
                 'vacationDays' => $vacationDays,
+                'vacationDaysCorrection' => $vacationDaysCorrection,
                 'year' => [
                     'year' => $year,
                 ],
@@ -275,12 +278,13 @@ class ApiTester extends \Codeception\Actor
         return $vacations;
     }
 
-    public function generateVacationsNormalizedUri($vacationDays) {
+    public function generateVacationsNormalizedUri($vacationDays, $vacationDaysCorrection) {
         $vacations = [];
 
         for ($year = 2018; $year <= 2020; ++$year) {
             $vacations[] = [
                 'vacationDays' => $vacationDays,
+                'vacationDaysCorrection' => $vacationDaysCorrection,
                 'year' => sprintf('/supported_years/%s', $year),
             ];
         }

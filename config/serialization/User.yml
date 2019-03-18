@@ -84,6 +84,7 @@ App\Entity\User:
                 - supervised_user_out_list
         yearStats:
             groups:
+                - user_out_detail
                 - user_out_list
         apiToken:
             groups:

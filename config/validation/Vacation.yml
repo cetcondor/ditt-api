@@ -13,3 +13,10 @@ App\Entity\Vacation:
             - Range:
                 min: 0
                 max: 365
+
+        vacationDaysCorrection:
+            - NotBlank: ~
+            - Type: numeric
+            - Range:
+                min: -365
+                max: 365

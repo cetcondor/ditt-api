@@ -20,6 +20,11 @@ class Vacation
     private $vacationDays;
 
     /**
+     * @var int
+     */
+    private $vacationDaysCorrection;
+
+    /**
      * @var int|null
      */
     private $remainingVacationDays;
@@ -27,6 +32,7 @@ class Vacation
     public function __construct()
     {
         $this->vacationDays = 0;
+        $this->vacationDaysCorrection = 0;
     }
 
     /**
@@ -82,6 +88,25 @@ class Vacation
     public function setVacationDays(int $vacationDays): Vacation
     {
         $this->vacationDays = $vacationDays;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getVacationDaysCorrection(): int
+    {
+        return $this->vacationDaysCorrection;
+    }
+
+    /**
+     * @param int $vacationDaysCorrection
+     * @return Vacation
+     */
+    public function setVacationDaysCorrection(int $vacationDaysCorrection): Vacation
+    {
+        $this->vacationDaysCorrection = $vacationDaysCorrection;
 
         return $this;
     }

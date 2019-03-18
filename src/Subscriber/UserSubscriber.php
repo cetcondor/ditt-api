@@ -181,6 +181,7 @@ class UserSubscriber implements EventSubscriberInterface
 
             if ($attachedVacation) {
                 $attachedVacation->setVacationDays($detachedVacation->getVacationDays());
+                $attachedVacation->setVacationDaysCorrection($detachedVacation->getVacationDaysCorrection());
             }
         }
 

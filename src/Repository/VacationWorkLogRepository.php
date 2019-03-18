@@ -211,15 +211,17 @@ class VacationWorkLogRepository
             ->getSingleScalarResult();
 
         $vacationDays = 0;
+        $vacationDaysCorrection = 0;
 
         foreach ($user->getVacations() as $vacation) {
             if ($vacation->getYear()->getYear() === $year->getYear()) {
                 $vacationDays = $vacation->getVacationDays();
+                $vacationDaysCorrection = $vacation->getVacationDaysCorrection();
 
                 break;
             }
         }
 
-        return $vacationDays - $vacationWorkLogsCount;
+        return ($vacationDays + $vacationDaysCorrection) - $vacationWorkLogsCount;
     }
 }

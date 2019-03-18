@@ -2,16 +2,21 @@ App\Entity\UserYearStats:
     attributes:
         id:
             groups:
+                - user_out_detail
                 - user_out_list
         year:
             groups:
+                - user_out_detail
                 - user_out_list
         requiredHours:
             groups:
+                - user_out_detail
                 - user_out_list
         workedHours:
             groups:
+                - user_out_detail
                 - user_out_list
         vacationDaysUsed:
             groups:
+                - user_out_detail
                 - user_out_list
