@@ -3,25 +3,29 @@
 namespace api\BusinessTripWorkLog;
 
 use App\Entity\BusinessTripWorkLog;
-use Prophecy\Prophet;
+use App\Entity\User;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class MarkBusinessTripWorkLogApprovedCest
 {
+    /**
+     * @var User|null
+     */
+    private $user;
+
     /**
      * @param \ApiTester $I
      */
     public function _before(\ApiTester $I)
     {
-        $prophet = new Prophet();
-        $user = $I->createUser(['email' => 'user1@example.com', 'employeeId' => 'id789']);
-        $token = $prophet->prophesize(TokenInterface::class);
-        $token->getUser()->willReturn($user);
-        $tokenStorage = $prophet->prophesize(TokenStorageInterface::class);
-        $tokenStorage->getToken()->willReturn($token->reveal());
-        $I->getContainer()->set(TokenStorageInterface::class, $tokenStorage->reveal());
+        $this->user = $I->createUser(['email' => 'user1@example.com', 'employeeId' => 'id789']);
+        $I->grabService('security.token_storage')->setToken(new UsernamePasswordToken(
+            $this->user,
+            null,
+            'main',
+            $this->user->getRoles()
+        ));
     }
 
     /**
@@ -30,7 +34,7 @@ class MarkBusinessTripWorkLogApprovedCest
      */
     public function testMarkApproved(\ApiTester $I): void
     {
-        $user = $I->createUser();
+        $user = $I->createUser(['supervisor' => $this->user]);
         $workMonth = $I->createWorkMonth(['user' => $user]);
         $workLog = $I->createBusinessTripWorkLog([
             'workMonth' => $workMonth,
@@ -60,7 +64,7 @@ class MarkBusinessTripWorkLogApprovedCest
     public function testAlreadyMarkedApproved(\ApiTester $I): void
     {
         $time = (new \DateTimeImmutable());
-        $user = $I->createUser();
+        $user = $I->createUser(['supervisor' => $this->user]);
         $workMonth = $I->createWorkMonth(['user' => $user]);
         $workLog = $I->createBusinessTripWorkLog([
             'timeApproved' => $time,
@@ -89,7 +93,7 @@ class MarkBusinessTripWorkLogApprovedCest
     public function testAlreadyMarkedRejected(\ApiTester $I): void
     {
         $time = (new \DateTimeImmutable());
-        $user = $I->createUser();
+        $user = $I->createUser(['supervisor' => $this->user]);
         $workMonth = $I->createWorkMonth(['user' => $user]);
         $workLog = $I->createBusinessTripWorkLog([
             'timeRejected' => $time,

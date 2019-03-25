@@ -3,25 +3,28 @@
 namespace api\HomeOfficeWorkLog;
 
 use App\Entity\HomeOfficeWorkLog;
-use Prophecy\Prophet;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class MarkHomeOfficeWorkLogRejectedCest
 {
+    /**
+     * @var User|null
+     */
+    private $user;
+
     /**
      * @param \ApiTester $I
      */
     public function _before(\ApiTester $I)
     {
-        $prophet = new Prophet();
-        $user = $I->createUser(['email' => 'user1@example.com', 'employeeId' => 'id123']);
-        $token = $prophet->prophesize(TokenInterface::class);
-        $token->getUser()->willReturn($user);
-        $tokenStorage = $prophet->prophesize(TokenStorageInterface::class);
-        $tokenStorage->getToken()->willReturn($token->reveal());
-        $I->getContainer()->set(TokenStorageInterface::class, $tokenStorage->reveal());
+        $this->user = $I->createUser(['email' => 'user1@example.com', 'employeeId' => 'id789']);
+        $I->grabService('security.token_storage')->setToken(new UsernamePasswordToken(
+            $this->user,
+            null,
+            'main',
+            $this->user->getRoles()
+        ));
     }
 
     /**
@@ -30,7 +33,7 @@ class MarkHomeOfficeWorkLogRejectedCest
      */
     public function testMarkRejected(\ApiTester $I): void
     {
-        $user = $I->createUser();
+        $user = $I->createUser(['supervisor' => $this->user]);
         $workMonth = $I->createWorkMonth(['user' => $user]);
         $workLog = $I->createHomeOfficeWorkLog([
             'workMonth' => $workMonth,
@@ -63,7 +66,7 @@ class MarkHomeOfficeWorkLogRejectedCest
     public function testAlreadyMarkedApproved(\ApiTester $I): void
     {
         $time = (new \DateTimeImmutable());
-        $user = $I->createUser();
+        $user = $I->createUser(['supervisor' => $this->user]);
         $workMonth = $I->createWorkMonth(['user' => $user]);
         $workLog = $I->createHomeOfficeWorkLog([
             'timeApproved' => $time,
@@ -95,7 +98,7 @@ class MarkHomeOfficeWorkLogRejectedCest
     public function testAlreadyMarkedRejected(\ApiTester $I): void
     {
         $time = (new \DateTimeImmutable());
-        $user = $I->createUser();
+        $user = $I->createUser(['supervisor' => $this->user]);
         $workMonth = $I->createWorkMonth(['user' => $user]);
         $workLog = $I->createHomeOfficeWorkLog([
             'timeRejected' => $time,

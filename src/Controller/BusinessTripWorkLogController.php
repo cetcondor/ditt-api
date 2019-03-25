@@ -65,6 +65,13 @@ class BusinessTripWorkLogController extends Controller
             throw $this->createNotFoundException(sprintf('Business trip work log with id %d was not found.', $id));
         }
 
+        if (
+            $workLog->getWorkMonth()->getUser()->getSupervisor() === null
+            || $workLog->getWorkMonth()->getUser()->getSupervisor() !== $this->getUser()
+        ) {
+            return JsonResponse::create(null, JsonResponse::HTTP_FORBIDDEN);
+        }
+
         if ($workLog->getTimeApproved()) {
             return JsonResponse::create(
                 ['detail' => 'Business trip work log month has been already approved.'], JsonResponse::HTTP_BAD_REQUEST
@@ -104,6 +111,13 @@ class BusinessTripWorkLogController extends Controller
         $workLog = $this->businessTripWorkLogRepository->getRepository()->find($id);
         if (!$workLog || !$workLog instanceof BusinessTripWorkLog) {
             throw $this->createNotFoundException(sprintf('Business trip work log with id %d was not found.', $id));
+        }
+
+        if (
+            $workLog->getWorkMonth()->getUser()->getSupervisor() === null
+            || $workLog->getWorkMonth()->getUser()->getSupervisor() !== $this->getUser()
+        ) {
+            return JsonResponse::create(null, JsonResponse::HTTP_FORBIDDEN);
         }
 
         if ($workLog->getTimeApproved()) {

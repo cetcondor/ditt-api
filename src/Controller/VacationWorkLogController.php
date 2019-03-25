@@ -219,6 +219,13 @@ class VacationWorkLogController extends Controller
         $workLogs = [];
 
         foreach ($this->vacationWorkLogRepository->findByIds($data->workLogIds) as $workLog) {
+            if (
+                $workLog->getWorkMonth()->getUser()->getSupervisor() === null
+                || $workLog->getWorkMonth()->getUser()->getSupervisor() !== $this->getUser()
+            ) {
+                return JsonResponse::create(null, JsonResponse::HTTP_FORBIDDEN);
+            }
+
             if ($workLog->getTimeApproved()) {
                 return JsonResponse::create(
                     ['detail' => sprintf('Vacation work log with id %d has been already approved.', $workLog->getId())],
@@ -281,6 +288,13 @@ class VacationWorkLogController extends Controller
         $workLogs = [];
 
         foreach ($this->vacationWorkLogRepository->findByIds($data->workLogIds) as $workLog) {
+            if (
+                $workLog->getWorkMonth()->getUser()->getSupervisor() === null
+                || $workLog->getWorkMonth()->getUser()->getSupervisor() !== $this->getUser()
+            ) {
+                return JsonResponse::create(null, JsonResponse::HTTP_FORBIDDEN);
+            }
+
             if ($workLog->getTimeApproved()) {
                 return JsonResponse::create(
                     ['detail' => sprintf('Vacation work log with id %d has been already approved.', $workLog->getId())],
@@ -333,6 +347,13 @@ class VacationWorkLogController extends Controller
             throw $this->createNotFoundException(sprintf('Vacation work log with id %d was not found.', $id));
         }
 
+        if (
+            $workLog->getWorkMonth()->getUser()->getSupervisor() === null
+            || $workLog->getWorkMonth()->getUser()->getSupervisor() !== $this->getUser()
+        ) {
+            return JsonResponse::create(null, JsonResponse::HTTP_FORBIDDEN);
+        }
+
         if ($workLog->getTimeApproved()) {
             return JsonResponse::create(
                 ['detail' => 'Vacation work log month has been already approved.'], JsonResponse::HTTP_BAD_REQUEST
@@ -372,6 +393,13 @@ class VacationWorkLogController extends Controller
         $workLog = $this->vacationWorkLogRepository->getRepository()->find($id);
         if (!$workLog || !$workLog instanceof VacationWorkLog) {
             throw $this->createNotFoundException(sprintf('Vacation work log with id %d was not found.', $id));
+        }
+
+        if (
+            $workLog->getWorkMonth()->getUser()->getSupervisor() === null
+            || $workLog->getWorkMonth()->getUser()->getSupervisor() !== $this->getUser()
+        ) {
+            return JsonResponse::create(null, JsonResponse::HTTP_FORBIDDEN);
         }
 
         if ($workLog->getTimeApproved()) {

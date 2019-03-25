@@ -65,6 +65,13 @@ class HomeOfficeWorkLogController extends Controller
             throw $this->createNotFoundException(sprintf('Home office work log with id %d was not found.', $id));
         }
 
+        if (
+            $workLog->getWorkMonth()->getUser()->getSupervisor() === null
+            || $workLog->getWorkMonth()->getUser()->getSupervisor() !== $this->getUser()
+        ) {
+            return JsonResponse::create(null, JsonResponse::HTTP_FORBIDDEN);
+        }
+
         if ($workLog->getTimeApproved()) {
             return JsonResponse::create(
                 ['detail' => 'Home office work log month has been already approved.'], JsonResponse::HTTP_BAD_REQUEST
@@ -103,6 +110,13 @@ class HomeOfficeWorkLogController extends Controller
         $workLog = $this->homeOfficeWorkLogRepository->getRepository()->find($id);
         if (!$workLog || !$workLog instanceof HomeOfficeWorkLog) {
             throw $this->createNotFoundException(sprintf('Home office work log with id %d was not found.', $id));
+        }
+
+        if (
+            $workLog->getWorkMonth()->getUser()->getSupervisor() === null
+            || $workLog->getWorkMonth()->getUser()->getSupervisor() !== $this->getUser()
+        ) {
+            return JsonResponse::create(null, JsonResponse::HTTP_FORBIDDEN);
         }
 
         if ($workLog->getTimeApproved()) {

@@ -65,6 +65,13 @@ class OvertimeWorkLogController extends Controller
             throw $this->createNotFoundException(sprintf('Overtime work log with id %d was not found.', $id));
         }
 
+        if (
+            $workLog->getWorkMonth()->getUser()->getSupervisor() === null
+            || $workLog->getWorkMonth()->getUser()->getSupervisor() !== $this->getUser()
+        ) {
+            return JsonResponse::create(null, JsonResponse::HTTP_FORBIDDEN);
+        }
+
         if ($workLog->getTimeApproved()) {
             return JsonResponse::create(
                 ['detail' => 'Overtime work log month has been already approved.'], JsonResponse::HTTP_BAD_REQUEST
@@ -104,6 +111,13 @@ class OvertimeWorkLogController extends Controller
         $workLog = $this->overtimeWorkLogRepository->getRepository()->find($id);
         if (!$workLog || !$workLog instanceof OvertimeWorkLog) {
             throw $this->createNotFoundException(sprintf('Overtime work log with id %d was not found.', $id));
+        }
+
+        if (
+            $workLog->getWorkMonth()->getUser()->getSupervisor() === null
+            || $workLog->getWorkMonth()->getUser()->getSupervisor() !== $this->getUser()
+        ) {
+            return JsonResponse::create(null, JsonResponse::HTTP_FORBIDDEN);
         }
 
         if ($workLog->getTimeApproved()) {

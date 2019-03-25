@@ -61,6 +61,7 @@ App\Entity\User:
                 - user_in
         supervisor:
             groups:
+                - special_approvals_out_list
                 - user_out_list
                 - user_out_detail
                 - user_in
