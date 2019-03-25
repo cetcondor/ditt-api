@@ -15,15 +15,15 @@ class WorkMonthApprovedEvent extends Event
     private $workMonth;
 
     /**
-     * @var User
+     * @var User|null
      */
     private $supervisor;
 
     /**
      * @param WorkMonth $workMonth
-     * @param User $supervisor
+     * @param User|null $supervisor
      */
-    public function __construct(WorkMonth $workMonth, User $supervisor)
+    public function __construct(WorkMonth $workMonth, ?User $supervisor)
     {
         $this->workMonth = $workMonth;
         $this->supervisor = $supervisor;
@@ -38,9 +38,9 @@ class WorkMonthApprovedEvent extends Event
     }
 
     /**
-     * @return User
+     * @return User|null
      */
-    public function getSupervisor(): User
+    public function getSupervisor(): ?User
     {
         return $this->supervisor;
     }

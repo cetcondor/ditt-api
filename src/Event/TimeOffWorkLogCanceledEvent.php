@@ -3,6 +3,7 @@
 namespace App\Event;
 
 use App\Entity\TimeOffWorkLog;
+use App\Entity\User;
 use Symfony\Component\EventDispatcher\Event;
 
 class TimeOffWorkLogCanceledEvent extends Event
@@ -13,13 +14,19 @@ class TimeOffWorkLogCanceledEvent extends Event
      * @var TimeOffWorkLog
      */
     private $timeOffWorkLog;
+    /**
+     * @var User|null
+     */
+    private $supervisor;
 
     /**
      * @param TimeOffWorkLog $timeOffWorkLog
+     * @param User|null $supervisor
      */
-    public function __construct(TimeOffWorkLog $timeOffWorkLog)
+    public function __construct(TimeOffWorkLog $timeOffWorkLog, ?User $supervisor)
     {
         $this->timeOffWorkLog = $timeOffWorkLog;
+        $this->supervisor = $supervisor;
     }
 
     /**
@@ -28,5 +35,13 @@ class TimeOffWorkLogCanceledEvent extends Event
     public function getTimeOffWorkLog(): TimeOffWorkLog
     {
         return $this->timeOffWorkLog;
+    }
+
+    /**
+     * @return User|null
+     */
+    public function getSupervisor(): ?User
+    {
+        return $this->supervisor;
     }
 }

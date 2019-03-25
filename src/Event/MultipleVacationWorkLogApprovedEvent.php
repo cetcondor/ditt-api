@@ -16,15 +16,15 @@ class MultipleVacationWorkLogApprovedEvent extends Event
     private $vacationWorkLogs;
 
     /**
-     * @var User
+     * @var User|null
      */
     private $supervisor;
 
     /**
      * @param VacationWorkLog[] $vacationWorkLogs
-     * @param User $supervisor
+     * @param User|null $supervisor
      */
-    public function __construct(array $vacationWorkLogs, User $supervisor)
+    public function __construct(array $vacationWorkLogs, ?User $supervisor)
     {
         $this->vacationWorkLogs = $vacationWorkLogs;
         $this->supervisor = $supervisor;
@@ -39,9 +39,9 @@ class MultipleVacationWorkLogApprovedEvent extends Event
     }
 
     /**
-     * @return User
+     * @return User|null
      */
-    public function getSupervisor(): User
+    public function getSupervisor(): ?User
     {
         return $this->supervisor;
     }

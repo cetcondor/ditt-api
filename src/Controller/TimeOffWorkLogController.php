@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\TimeOffWorkLog;
-use App\Entity\User;
 use App\Event\TimeOffWorkLogApprovedEvent;
 use App\Event\TimeOffWorkLogRejectedEvent;
 use App\Repository\TimeOffWorkLogRepository;
@@ -79,11 +78,7 @@ class TimeOffWorkLogController extends Controller
         }
 
         $this->timeOffWorkLogService->markApproved($workLog);
-
-        $supervisor = $this->getUser();
-        if (!$supervisor) {
-            $supervisor = new User();
-        }
+        $supervisor = $workLog->getWorkMonth()->getUser()->getSupervisor();
 
         $this->eventDispatcher->dispatch(
             TimeOffWorkLogApprovedEvent::APPROVED,
@@ -131,11 +126,7 @@ class TimeOffWorkLogController extends Controller
         }
 
         $this->timeOffWorkLogService->markRejected($workLog, $data->rejectionMessage);
-
-        $supervisor = $this->getUser();
-        if (!$supervisor) {
-            $supervisor = new User();
-        }
+        $supervisor = $workLog->getWorkMonth()->getUser()->getSupervisor();
 
         $this->eventDispatcher->dispatch(
             TimeOffWorkLogRejectedEvent::REJECTED,

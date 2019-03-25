@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\HomeOfficeWorkLog;
-use App\Entity\User;
 use App\Event\HomeOfficeWorkLogApprovedEvent;
 use App\Event\HomeOfficeWorkLogRejectedEvent;
 use App\Repository\HomeOfficeWorkLogRepository;
@@ -79,12 +78,7 @@ class HomeOfficeWorkLogController extends Controller
         }
 
         $this->homeOfficeWorkLogService->markApproved($workLog);
-
-        $supervisor = $this->getUser();
-        if (!$supervisor) {
-            $supervisor = new User();
-        }
-
+        $supervisor = $workLog->getWorkMonth()->getUser()->getSupervisor();
         $this->eventDispatcher->dispatch(
             HomeOfficeWorkLogApprovedEvent::APPROVED,
             new HomeOfficeWorkLogApprovedEvent($workLog, $supervisor)
@@ -131,11 +125,7 @@ class HomeOfficeWorkLogController extends Controller
         }
 
         $this->homeOfficeWorkLogService->markRejected($workLog, $data->rejectionMessage);
-
-        $supervisor = $this->getUser();
-        if (!$supervisor) {
-            $supervisor = new User();
-        }
+        $supervisor = $workLog->getWorkMonth()->getUser()->getSupervisor();
 
         $this->eventDispatcher->dispatch(
             HomeOfficeWorkLogRejectedEvent::REJECTED,

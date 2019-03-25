@@ -16,15 +16,15 @@ class BusinessTripWorkLogApprovedEvent extends Event
     private $businessTripWorkLog;
 
     /**
-     * @var User
+     * @var User|null
      */
     private $supervisor;
 
     /**
      * @param BusinessTripWorkLog $businessTripWorkLog
-     * @param User $supervisor
+     * @param User|null $supervisor
      */
-    public function __construct(BusinessTripWorkLog $businessTripWorkLog, User $supervisor)
+    public function __construct(BusinessTripWorkLog $businessTripWorkLog, ?User $supervisor)
     {
         $this->businessTripWorkLog = $businessTripWorkLog;
         $this->supervisor = $supervisor;
@@ -39,9 +39,9 @@ class BusinessTripWorkLogApprovedEvent extends Event
     }
 
     /**
-     * @return User
+     * @return User|null
      */
-    public function getSupervisor(): User
+    public function getSupervisor(): ?User
     {
         return $this->supervisor;
     }

@@ -13,7 +13,9 @@
         <p>
             <strong>Datum: </strong>{{ workLog.date | date('d. m. Y') }}<br>
             <strong>Betrifft: </strong>{{ workLog.workMonth.user.firstName }} {{ workLog.workMonth.user.lastName }}<br>
-            <strong>Gewährt durch: </strong>{{ supervisor.firstName }} {{ supervisor.lastName }}
+            {% if supervisor is not null %}
+                <strong>Gewährt durch: </strong>{{ supervisor.firstName }} {{ supervisor.lastName }}
+            {% endif %}
         </p>
     </body>
 </html>

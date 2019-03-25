@@ -240,10 +240,7 @@ class VacationWorkLogController extends Controller
             $this->vacationWorkLogService->markApproved($workLog);
         }
 
-        $supervisor = $this->getUser();
-        if (!$supervisor) {
-            $supervisor = new User();
-        }
+        $supervisor = $workLogs[0]->getWorkMonth()->getUser()->getSupervisor();
 
         $this->eventDispatcher->dispatch(
             MultipleVacationWorkLogApprovedEvent::APPROVED,
@@ -305,10 +302,7 @@ class VacationWorkLogController extends Controller
             $this->vacationWorkLogService->markRejected($workLog, $data->rejectionMessage);
         }
 
-        $supervisor = $this->getUser();
-        if (!$supervisor) {
-            $supervisor = new User();
-        }
+        $supervisor = $workLogs[0]->getWorkMonth()->getUser()->getSupervisor();
 
         $this->eventDispatcher->dispatch(
             MultipleVacationWorkLogRejectedEvent::REJECTED,
@@ -352,11 +346,7 @@ class VacationWorkLogController extends Controller
         }
 
         $this->vacationWorkLogService->markApproved($workLog);
-
-        $supervisor = $this->getUser();
-        if (!$supervisor) {
-            $supervisor = new User();
-        }
+        $supervisor = $workLog->getWorkMonth()->getUser()->getSupervisor();
 
         $this->eventDispatcher->dispatch(
             VacationWorkLogApprovedEvent::APPROVED,
@@ -404,11 +394,7 @@ class VacationWorkLogController extends Controller
         }
 
         $this->vacationWorkLogService->markRejected($workLog, $data->rejectionMessage);
-
-        $supervisor = $this->getUser();
-        if (!$supervisor) {
-            $supervisor = new User();
-        }
+        $supervisor = $workLog->getWorkMonth()->getUser()->getSupervisor();
 
         $this->eventDispatcher->dispatch(
             VacationWorkLogRejectedEvent::REJECTED,

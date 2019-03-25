@@ -13,7 +13,9 @@
         <p>
             <strong>Datum: </strong>{{ workLog.date | date('d. m. Y') }}<br>
             <strong>Betrifft: </strong>{{ workLog.workMonth.user.firstName }} {{ workLog.workMonth.user.lastName }}<br>
-            <strong>Abgelehnt durch: </strong>{{ supervisor.firstName }} {{ supervisor.lastName }}<br>
+            {% if supervisor is not null %}
+                <strong>Abgelehnt durch: </strong>{{ supervisor.firstName }} {{ supervisor.lastName }}<br>
+            {% endif %}
             <strong>Begründung: </strong>{{ workLog.rejectionMessage }}
         </p>
     </body>

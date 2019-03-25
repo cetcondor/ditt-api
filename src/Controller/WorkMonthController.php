@@ -457,10 +457,8 @@ class WorkMonthController extends Controller
         $this->userService->fullfilRemainingVacationDays($user);
         $workMonth->setUser($user);
 
-        $supervisor = $this->getUser();
-        if (!$supervisor) { // This needs to be here for tests to work. In production the condition will never be met.
-            $supervisor = new User();
-        }
+        $supervisor = $workMonth->getUser()->getSupervisor();
+
         $this->eventDispatcher->dispatch(
             WorkMonthApprovedEvent::APPROVED,
             new WorkMonthApprovedEvent($workMonth, $supervisor)

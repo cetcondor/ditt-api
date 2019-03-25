@@ -92,7 +92,7 @@ class WorkLogEmailNotificationListener
     public function onBusinessTripWorkLogCanceled(BusinessTripWorkLogCanceledEvent $event): void
     {
         $this->sendWorkLogMail(
-            null,
+            $event->getSupervisor(),
             $event->getBusinessTripWorkLog(),
             'Antrag auf Dienstreise storniert – %s',
             $event->getBusinessTripWorkLog()->getDate(),
@@ -146,7 +146,7 @@ class WorkLogEmailNotificationListener
     public function onHomeOfficeWorkLogCanceled(HomeOfficeWorkLogCanceledEvent $event)
     {
         $this->sendWorkLogMail(
-            null,
+            $event->getSupervisor(),
             $event->getHomeOfficeWorkLog(),
             'Antrag auf Mobile Arbeit storniert – %s',
             $event->getHomeOfficeWorkLog()->getDate(),
@@ -254,7 +254,7 @@ class WorkLogEmailNotificationListener
     public function onOvertimeWorkLogCanceled(OvertimeWorkLogCanceledEvent $event)
     {
         $this->sendWorkLogMail(
-            null,
+            $event->getSupervisor(),
             $event->getOvertimeWorkLog(),
             'Antrag auf Mehrarbeit storniert – %s',
             $event->getOvertimeWorkLog()->getDate(),
@@ -308,7 +308,7 @@ class WorkLogEmailNotificationListener
     public function onTimeOffWorkLogCanceled(TimeOffWorkLogCanceledEvent $event)
     {
         $this->sendWorkLogMail(
-            null,
+            $event->getSupervisor(),
             $event->getTimeOffWorkLog(),
             'Antrag auf Freizeitausgleich storniert – %s',
             $event->getTimeOffWorkLog()->getDate(),
@@ -362,7 +362,7 @@ class WorkLogEmailNotificationListener
     public function onVacationWorkLogCanceled(VacationWorkLogCanceledEvent $event)
     {
         $this->sendWorkLogMail(
-            null,
+            $event->getSupervisor(),
             $event->getVacationWorkLog(),
             'Antrag auf Urlaub storniert – %s',
             $event->getVacationWorkLog()->getDate(),
@@ -412,6 +412,10 @@ class WorkLogEmailNotificationListener
             $toEmails[] = $admin->getEmail();
         }
 
+        if ($supervisor && !in_array($supervisor->getEmail(), $toEmails)) {
+            $toEmails[] = $supervisor->getEmail();
+        }
+
         $subjectDate = '';
         if ($date) {
             $subjectDate = $date->format('d. m. Y');
@@ -428,7 +432,7 @@ class WorkLogEmailNotificationListener
     }
 
     /**
-     * @param User $supervisor
+     * @param User|null $supervisor
      * @param array $workLogs
      * @param string $emailSubject
      * @param \DateTimeImmutable|null $startDate
@@ -440,7 +444,7 @@ class WorkLogEmailNotificationListener
      * @throws \Twig_Error_Syntax
      */
     private function sendWorkLogsMail(
-        User $supervisor,
+        ?User $supervisor,
         array $workLogs,
         string $emailSubject,
         ?\DateTimeImmutable $startDate,
@@ -451,6 +455,10 @@ class WorkLogEmailNotificationListener
         $toEmails = [$workLogs[0]->getWorkMonth()->getUser()->getEmail()];
         foreach ($admins as $admin) {
             $toEmails[] = $admin->getEmail();
+        }
+
+        if ($supervisor && !in_array($supervisor->getEmail(), $toEmails)) {
+            $toEmails[] = $supervisor->getEmail();
         }
 
         $subjectStartDate = '';

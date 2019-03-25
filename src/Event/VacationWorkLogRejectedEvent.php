@@ -16,15 +16,15 @@ class VacationWorkLogRejectedEvent extends Event
     private $vacationWorkLog;
 
     /**
-     * @var User
+     * @var User|null
      */
     private $supervisor;
 
     /**
      * @param VacationWorkLog $vacationWorkLog
-     * @param User $supervisor
+     * @param User|null $supervisor
      */
-    public function __construct(VacationWorkLog $vacationWorkLog, User $supervisor)
+    public function __construct(VacationWorkLog $vacationWorkLog, ?User $supervisor)
     {
         $this->vacationWorkLog = $vacationWorkLog;
         $this->supervisor = $supervisor;
@@ -39,9 +39,9 @@ class VacationWorkLogRejectedEvent extends Event
     }
 
     /**
-     * @return User
+     * @return User|null
      */
-    public function getSupervisor(): User
+    public function getSupervisor(): ?User
     {
         return $this->supervisor;
     }

@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\OvertimeWorkLog;
-use App\Entity\User;
 use App\Event\OvertimeWorkLogApprovedEvent;
 use App\Event\OvertimeWorkLogRejectedEvent;
 use App\Repository\OvertimeWorkLogRepository;
@@ -79,11 +78,7 @@ class OvertimeWorkLogController extends Controller
         }
 
         $this->overtimeWorkLogService->markApproved($workLog);
-
-        $supervisor = $this->getUser();
-        if (!$supervisor) {
-            $supervisor = new User();
-        }
+        $supervisor = $workLog->getWorkMonth()->getUser()->getSupervisor();
 
         $this->eventDispatcher->dispatch(
             OvertimeWorkLogApprovedEvent::APPROVED,
@@ -131,11 +126,7 @@ class OvertimeWorkLogController extends Controller
         }
 
         $this->overtimeWorkLogService->markRejected($workLog, $data->rejectionMessage);
-
-        $supervisor = $this->getUser();
-        if (!$supervisor) {
-            $supervisor = new User();
-        }
+        $supervisor = $workLog->getWorkMonth()->getUser()->getSupervisor();
 
         $this->eventDispatcher->dispatch(
             OvertimeWorkLogRejectedEvent::REJECTED,

@@ -18,7 +18,9 @@
                 {% endfor %}
             </ul>
             <strong>Betrifft: </strong>{{ workLogs[0].workMonth.user.firstName }} {{ workLogs[0].workMonth.user.lastName }}<br>
-            <strong>Abgelehnt durch: </strong>{{ supervisor.firstName }} {{ supervisor.lastName }}<br>
+            {% if supervisor is not null %}
+                <strong>Abgelehnt durch: </strong>{{ supervisor.firstName }} {{ supervisor.lastName }}<br>
+            {% endif %}
             <strong>Begründung: </strong>{{ workLogs[0].rejectionMessage }}
         </p>
     </body>

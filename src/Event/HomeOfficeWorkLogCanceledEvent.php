@@ -3,6 +3,7 @@
 namespace App\Event;
 
 use App\Entity\HomeOfficeWorkLog;
+use App\Entity\User;
 use Symfony\Component\EventDispatcher\Event;
 
 class HomeOfficeWorkLogCanceledEvent extends Event
@@ -15,11 +16,18 @@ class HomeOfficeWorkLogCanceledEvent extends Event
     private $homeOfficeWorkLog;
 
     /**
-     * @param HomeOfficeWorkLog $homeOfficeWorkLog
+     * @var User|null
      */
-    public function __construct(HomeOfficeWorkLog $homeOfficeWorkLog)
+    private $supervisor;
+
+    /**
+     * @param HomeOfficeWorkLog $homeOfficeWorkLog
+     * @param User|null $supervisor
+     */
+    public function __construct(HomeOfficeWorkLog $homeOfficeWorkLog, ?User $supervisor)
     {
         $this->homeOfficeWorkLog = $homeOfficeWorkLog;
+        $this->supervisor = $supervisor;
     }
 
     /**
@@ -28,5 +36,13 @@ class HomeOfficeWorkLogCanceledEvent extends Event
     public function getHomeOfficeWorkLog(): HomeOfficeWorkLog
     {
         return $this->homeOfficeWorkLog;
+    }
+
+    /**
+     * @return User|null
+     */
+    public function getSupervisor(): ?User
+    {
+        return $this->supervisor;
     }
 }

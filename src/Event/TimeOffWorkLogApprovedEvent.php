@@ -16,15 +16,15 @@ class TimeOffWorkLogApprovedEvent extends Event
     private $timeOffWorkLog;
 
     /**
-     * @var User
+     * @var User|null
      */
     private $supervisor;
 
     /**
      * @param TimeOffWorkLog $timeOffWorkLog
-     * @param User $supervisor
+     * @param User|null $supervisor
      */
-    public function __construct(TimeOffWorkLog $timeOffWorkLog, User $supervisor)
+    public function __construct(TimeOffWorkLog $timeOffWorkLog, ?User $supervisor)
     {
         $this->timeOffWorkLog = $timeOffWorkLog;
         $this->supervisor = $supervisor;
@@ -39,9 +39,9 @@ class TimeOffWorkLogApprovedEvent extends Event
     }
 
     /**
-     * @return User
+     * @return User|null
      */
-    public function getSupervisor(): User
+    public function getSupervisor(): ?User
     {
         return $this->supervisor;
     }

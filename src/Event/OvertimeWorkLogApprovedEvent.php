@@ -16,15 +16,15 @@ class OvertimeWorkLogApprovedEvent extends Event
     private $overtimeWorkLog;
 
     /**
-     * @var User
+     * @var User|null
      */
     private $supervisor;
 
     /**
      * @param OvertimeWorkLog $overtimeWorkLog
-     * @param User $supervisor
+     * @param User|null $supervisor
      */
-    public function __construct(OvertimeWorkLog $overtimeWorkLog, User $supervisor)
+    public function __construct(OvertimeWorkLog $overtimeWorkLog, ?User $supervisor)
     {
         $this->overtimeWorkLog = $overtimeWorkLog;
         $this->supervisor = $supervisor;
@@ -39,9 +39,9 @@ class OvertimeWorkLogApprovedEvent extends Event
     }
 
     /**
-     * @return User
+     * @return User|null
      */
-    public function getSupervisor(): User
+    public function getSupervisor(): ?User
     {
         return $this->supervisor;
     }

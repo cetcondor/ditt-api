@@ -120,30 +120,32 @@ class WorkLogSubscriber implements EventSubscriberInterface
             return;
         }
 
+        $supervisor = $workLog->getWorkMonth()->getUser()->getSupervisor();
+
         if ($workLog instanceof BusinessTripWorkLog && $workLog->getTimeApproved() !== null) {
             $this->eventDispatcher->dispatch(
                 BusinessTripWorkLogCanceledEvent::CANCELED,
-                new BusinessTripWorkLogCanceledEvent($workLog)
+                new BusinessTripWorkLogCanceledEvent($workLog, $supervisor)
             );
         } elseif ($workLog instanceof HomeOfficeWorkLog && $workLog->getTimeApproved() !== null) {
             $this->eventDispatcher->dispatch(
                 HomeOfficeWorkLogCanceledEvent::CANCELED,
-                new HomeOfficeWorkLogCanceledEvent($workLog)
+                new HomeOfficeWorkLogCanceledEvent($workLog, $supervisor)
             );
         } elseif ($workLog instanceof OvertimeWorkLog && $workLog->getTimeApproved() !== null) {
             $this->eventDispatcher->dispatch(
                 OvertimeWorkLogCanceledEvent::CANCELED,
-                new OvertimeWorkLogCanceledEvent($workLog)
+                new OvertimeWorkLogCanceledEvent($workLog, $supervisor)
             );
         } elseif ($workLog instanceof TimeOffWorkLog && $workLog->getTimeApproved() !== null) {
             $this->eventDispatcher->dispatch(
                 TimeOffWorkLogCanceledEvent::CANCELED,
-                new TimeOffWorkLogCanceledEvent($workLog)
+                new TimeOffWorkLogCanceledEvent($workLog, $supervisor)
             );
         } elseif ($workLog instanceof VacationWorkLog && $workLog->getTimeApproved() !== null) {
             $this->eventDispatcher->dispatch(
                 VacationWorkLogCanceledEvent::CANCELED,
-                new VacationWorkLogCanceledEvent($workLog)
+                new VacationWorkLogCanceledEvent($workLog, $supervisor)
             );
         }
     }

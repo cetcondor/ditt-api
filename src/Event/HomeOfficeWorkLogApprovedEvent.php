@@ -16,15 +16,15 @@ class HomeOfficeWorkLogApprovedEvent extends Event
     private $homeOfficeWorkLog;
 
     /**
-     * @var User
+     * @var User|null
      */
     private $supervisor;
 
     /**
      * @param HomeOfficeWorkLog $homeOfficeWorkLog
-     * @param User $supervisor
+     * @param User|null $supervisor
      */
-    public function __construct(HomeOfficeWorkLog $homeOfficeWorkLog, User $supervisor)
+    public function __construct(HomeOfficeWorkLog $homeOfficeWorkLog, ?User $supervisor)
     {
         $this->homeOfficeWorkLog = $homeOfficeWorkLog;
         $this->supervisor = $supervisor;
@@ -39,9 +39,9 @@ class HomeOfficeWorkLogApprovedEvent extends Event
     }
 
     /**
-     * @return User
+     * @return User|null
      */
-    public function getSupervisor(): User
+    public function getSupervisor(): ?User
     {
         return $this->supervisor;
     }

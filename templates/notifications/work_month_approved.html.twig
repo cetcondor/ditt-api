@@ -13,7 +13,9 @@
         <p>
             <strong>Arbeitsmonat: </strong>{{ workMonth.month }}/{{ workMonth.year.year }}<br>
             <strong>Betrifft: </strong>{{ workMonth.user.firstName }} {{ workMonth.user.lastName }}<br>
-            <strong>Angenommen durch: </strong>{{ supervisor.firstName }} {{ supervisor.lastName }}
+            {% if supervisor is not null %}
+                <strong>Angenommen durch: </strong>{{ supervisor.firstName }} {{ supervisor.lastName }}
+            {% endif %}
         </p>
     </body>
 </html>

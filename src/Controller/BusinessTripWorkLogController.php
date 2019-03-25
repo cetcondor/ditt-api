@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\BusinessTripWorkLog;
-use App\Entity\User;
 use App\Event\BusinessTripWorkLogApprovedEvent;
 use App\Event\BusinessTripWorkLogRejectedEvent;
 use App\Repository\BusinessTripWorkLogRepository;
@@ -79,11 +78,7 @@ class BusinessTripWorkLogController extends Controller
         }
 
         $this->businessTripWorkLogService->markApproved($workLog);
-
-        $supervisor = $this->getUser();
-        if (!$supervisor) {
-            $supervisor = new User();
-        }
+        $supervisor = $workLog->getWorkMonth()->getUser()->getSupervisor();
 
         $this->eventDispatcher->dispatch(
             BusinessTripWorkLogApprovedEvent::APPROVED,
@@ -131,11 +126,7 @@ class BusinessTripWorkLogController extends Controller
         }
 
         $this->businessTripWorkLogService->markRejected($workLog, $data->rejectionMessage);
-
-        $supervisor = $this->getUser();
-        if (!$supervisor) {
-            $supervisor = new User();
-        }
+        $supervisor = $workLog->getWorkMonth()->getUser()->getSupervisor();
 
         $this->eventDispatcher->dispatch(
             BusinessTripWorkLogRejectedEvent::REJECTED,

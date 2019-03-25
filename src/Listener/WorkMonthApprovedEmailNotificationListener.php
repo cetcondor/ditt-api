@@ -60,6 +60,10 @@ class WorkMonthApprovedEmailNotificationListener
             $toEmails[] = $admin->getEmail();
         }
 
+        if ($supervisor && !in_array($supervisor->getEmail(), $toEmails)) {
+            $toEmails[] = $supervisor->getEmail();
+        }
+
         $this->sendMail(
             sprintf(
                 'Arbeitsmonat angenommen – %d/%d',

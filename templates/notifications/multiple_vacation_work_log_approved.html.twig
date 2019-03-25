@@ -18,7 +18,9 @@
                 {% endfor %}
             </ul>
             <strong>Betrifft: </strong>{{ workLogs[0].workMonth.user.firstName }} {{ workLogs[0].workMonth.user.lastName }}<br>
-            <strong>Gewährt durch: </strong>{{ supervisor.firstName }} {{ supervisor.lastName }}
+            {% if supervisor is not null %}
+                <strong>Gewährt durch: </strong>{{ supervisor.firstName }} {{ supervisor.lastName }}
+            {% endif %}
         </p>
     </body>
 </html>
