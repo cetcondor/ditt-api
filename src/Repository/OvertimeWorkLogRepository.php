@@ -85,9 +85,6 @@ class OvertimeWorkLogRepository
     public function findAllRecent(): array
     {
         $date = new \DateTime();
-        $currentMonth = $date->format('m');
-        $currentYear = $date->format('Y');
-
         $date->modify('-1 month');
         $previousMonth = $date->format('m');
         $previousYear = $date->format('Y');
@@ -98,18 +95,10 @@ class OvertimeWorkLogRepository
             ->select('owl')
             ->leftJoin('owl.workMonth', 'wm')
             ->leftJoin('wm.user', 'u')
-            ->where($qb->expr()->orX(
-                $qb->expr()->andX(
-                    $qb->expr()->eq('wm.month', ':currentMonth'),
-                    $qb->expr()->eq('wm.year', ':currentYear')
-                ),
-                $qb->expr()->andX(
-                    $qb->expr()->eq('wm.month', ':previousMonth'),
-                    $qb->expr()->eq('wm.year', ':previousYear')
-                )
+            ->where($qb->expr()->andX(
+                $qb->expr()->gte('wm.month', ':previousMonth'),
+                $qb->expr()->gte('wm.year', ':previousYear')
             ))
-            ->setParameter('currentMonth', $currentMonth)
-            ->setParameter('currentYear', $currentYear)
             ->setParameter('previousMonth', $previousMonth)
             ->setParameter('previousYear', $previousYear)
             ->orderBy('owl.date', 'desc')
@@ -124,9 +113,6 @@ class OvertimeWorkLogRepository
     public function findAllRecentBySupervisor(User $supervisor): array
     {
         $date = new \DateTime();
-        $currentMonth = $date->format('m');
-        $currentYear = $date->format('Y');
-
         $date->modify('-1 month');
         $previousMonth = $date->format('m');
         $previousYear = $date->format('Y');
@@ -139,20 +125,12 @@ class OvertimeWorkLogRepository
             ->leftJoin('wm.user', 'u')
             ->where($qb->expr()->andX(
                 $qb->expr()->eq('u.supervisor', ':supervisor'),
-                $qb->expr()->orX(
-                    $qb->expr()->andX(
-                        $qb->expr()->eq('wm.month', ':currentMonth'),
-                        $qb->expr()->eq('wm.year', ':currentYear')
-                    ),
-                    $qb->expr()->andX(
-                        $qb->expr()->eq('wm.month', ':previousMonth'),
-                        $qb->expr()->eq('wm.year', ':previousYear')
-                    )
+                $qb->expr()->andX(
+                    $qb->expr()->gte('wm.month', ':previousMonth'),
+                    $qb->expr()->gte('wm.year', ':previousYear')
                 )
             ))
             ->setParameter('supervisor', $supervisor)
-            ->setParameter('currentMonth', $currentMonth)
-            ->setParameter('currentYear', $currentYear)
             ->setParameter('previousMonth', $previousMonth)
             ->setParameter('previousYear', $previousYear)
             ->orderBy('owl.date', 'desc')
