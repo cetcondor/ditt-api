@@ -66,16 +66,23 @@ class BusinessTripWorkLogRepository
     {
         $qb = $this->repository->createQueryBuilder('btwl');
 
+        $supervisedUserIds = array_map(function (User $supervisedUser) {
+            return $supervisedUser->getId();
+        }, $supervisor->getAllSupervised());
+
+        if (count($supervisedUserIds) === 0) {
+            return [];
+        }
+
         return $qb
             ->select('btwl')
             ->leftJoin('btwl.workMonth', 'wm')
             ->leftJoin('wm.user', 'u')
             ->where($qb->expr()->andX(
-                $qb->expr()->eq('u.supervisor', ':supervisor'),
+                $qb->expr()->in('wm.user', $supervisedUserIds),
                 $qb->expr()->isNull('btwl.timeApproved'),
                 $qb->expr()->isNull('btwl.timeRejected')
             ))
-            ->setParameter('supervisor', $supervisor)
             ->getQuery()
             ->getResult();
     }
@@ -120,18 +127,23 @@ class BusinessTripWorkLogRepository
 
         $qb = $this->repository->createQueryBuilder('btwl');
 
+        $supervisedUserIds = array_map(function (User $supervisedUser) {
+            return $supervisedUser->getId();
+        }, $supervisor->getAllSupervised());
+
+        if (count($supervisedUserIds) === 0) {
+            return [];
+        }
+
         return $qb
             ->select('btwl')
             ->leftJoin('btwl.workMonth', 'wm')
             ->leftJoin('wm.user', 'u')
             ->where($qb->expr()->andX(
-                $qb->expr()->eq('u.supervisor', ':supervisor'),
-                $qb->expr()->andX(
-                    $qb->expr()->gte('wm.month', ':previousMonth'),
-                    $qb->expr()->gte('wm.year', ':previousYear')
-                )
+                $qb->expr()->in('wm.user', $supervisedUserIds),
+                $qb->expr()->gte('wm.month', ':previousMonth'),
+                $qb->expr()->gte('wm.year', ':previousYear')
             ))
-            ->setParameter('supervisor', $supervisor)
             ->setParameter('previousMonth', $previousMonth)
             ->setParameter('previousYear', $previousYear)
             ->orderBy('btwl.date', 'desc')

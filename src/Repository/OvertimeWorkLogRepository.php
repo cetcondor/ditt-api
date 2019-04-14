@@ -65,16 +65,23 @@ class OvertimeWorkLogRepository
     {
         $qb = $this->repository->createQueryBuilder('owl');
 
+        $supervisedUserIds = array_map(function (User $supervisedUser) {
+            return $supervisedUser->getId();
+        }, $supervisor->getAllSupervised());
+
+        if (count($supervisedUserIds) === 0) {
+            return [];
+        }
+
         return $qb
             ->select('owl')
             ->leftJoin('owl.workMonth', 'wm')
             ->leftJoin('wm.user', 'u')
             ->where($qb->expr()->andX(
-                $qb->expr()->eq('u.supervisor', ':supervisor'),
+                $qb->expr()->in('wm.user', $supervisedUserIds),
                 $qb->expr()->isNull('owl.timeApproved'),
                 $qb->expr()->isNull('owl.timeRejected')
             ))
-            ->setParameter('supervisor', $supervisor)
             ->getQuery()
             ->getResult();
     }
@@ -119,18 +126,23 @@ class OvertimeWorkLogRepository
 
         $qb = $this->repository->createQueryBuilder('owl');
 
+        $supervisedUserIds = array_map(function (User $supervisedUser) {
+            return $supervisedUser->getId();
+        }, $supervisor->getAllSupervised());
+
+        if (count($supervisedUserIds) === 0) {
+            return [];
+        }
+
         return $qb
             ->select('owl')
             ->leftJoin('owl.workMonth', 'wm')
             ->leftJoin('wm.user', 'u')
             ->where($qb->expr()->andX(
-                $qb->expr()->eq('u.supervisor', ':supervisor'),
-                $qb->expr()->andX(
-                    $qb->expr()->gte('wm.month', ':previousMonth'),
-                    $qb->expr()->gte('wm.year', ':previousYear')
-                )
+                $qb->expr()->in('wm.user', $supervisedUserIds),
+                $qb->expr()->gte('wm.month', ':previousMonth'),
+                $qb->expr()->gte('wm.year', ':previousYear')
             ))
-            ->setParameter('supervisor', $supervisor)
             ->setParameter('previousMonth', $previousMonth)
             ->setParameter('previousYear', $previousYear)
             ->orderBy('owl.date', 'desc')

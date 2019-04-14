@@ -218,17 +218,28 @@ class UserController extends Controller
             throw $this->createNotFoundException(sprintf('User with id %d was not found', $id));
         }
 
+        $supervisedUsers = $user->getAllSupervised();
         $order = $request->query->get('order') ?: [];
         $isActiveFilter = $request->query->get('isActive');
 
         if (boolval($isActiveFilter)) {
-            $users = $this->userRepository->getAllActiveUsersBySupervisor($user, $order);
-        } else {
-            $users = $this->userRepository->getAllUsersBySupervisor($user, $order);
+            $supervisedUsers = array_filter($supervisedUsers, function (User $supervisedUser) {
+                return $supervisedUser->getIsActive();
+            });
+        }
+
+        if (isset($order['lastName']) && in_array($order['lastName'], ['asc', 'desc'])) {
+            usort($supervisedUsers, function (User $a, User $b) use ($order) {
+                if ($order['lastName'] === 'desc') {
+                    return strcasecmp($b->getLastName(), $a->getLastName());
+                }
+
+                return strcasecmp($a->getLastName(), $b->getLastName());
+            });
         }
 
         $normalizedUsers = [];
-        foreach ($users as $user) {
+        foreach ($supervisedUsers as $user) {
             $normalizedUsers[] = $this->normalizer->normalize(
                 $user,
                 User::class,

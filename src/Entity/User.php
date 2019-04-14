@@ -347,6 +347,21 @@ class User implements UserInterface
     /**
      * @return User[]
      */
+    public function getAllSupervisors(): array
+    {
+        $supervisors = [];
+
+        if ($this->getSupervisor() !== null) {
+            $supervisors[] = $this->getSupervisor();
+            $supervisors = array_merge($supervisors, $this->getSupervisor()->getAllSupervisors());
+        }
+
+        return $supervisors;
+    }
+
+    /**
+     * @return User[]
+     */
     public function getSupervised(): array
     {
         if ($this->supervised instanceof Collection) {
@@ -365,6 +380,20 @@ class User implements UserInterface
         $this->supervised = $supervised;
 
         return $this;
+    }
+
+    /**
+     * @return User[]
+     */
+    public function getAllSupervised(): array
+    {
+        $supervised = $this->getSupervised();
+
+        foreach ($supervised as $supervisedUser) {
+            $supervised = array_merge($supervised, $supervisedUser->getAllSupervised());
+        }
+
+        return $supervised;
     }
 
     /**

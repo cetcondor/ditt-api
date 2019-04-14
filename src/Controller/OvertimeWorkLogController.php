@@ -65,10 +65,7 @@ class OvertimeWorkLogController extends Controller
             throw $this->createNotFoundException(sprintf('Overtime work log with id %d was not found.', $id));
         }
 
-        if (
-            $workLog->getWorkMonth()->getUser()->getSupervisor() === null
-            || $workLog->getWorkMonth()->getUser()->getSupervisor() !== $this->getUser()
-        ) {
+        if (!in_array($this->getUser(), $workLog->getWorkMonth()->getUser()->getAllSupervisors())) {
             return JsonResponse::create(null, JsonResponse::HTTP_FORBIDDEN);
         }
 
@@ -113,10 +110,7 @@ class OvertimeWorkLogController extends Controller
             throw $this->createNotFoundException(sprintf('Overtime work log with id %d was not found.', $id));
         }
 
-        if (
-            $workLog->getWorkMonth()->getUser()->getSupervisor() === null
-            || $workLog->getWorkMonth()->getUser()->getSupervisor() !== $this->getUser()
-        ) {
+        if (!in_array($this->getUser(), $workLog->getWorkMonth()->getUser()->getAllSupervisors())) {
             return JsonResponse::create(null, JsonResponse::HTTP_FORBIDDEN);
         }
 

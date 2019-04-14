@@ -219,10 +219,7 @@ class VacationWorkLogController extends Controller
         $workLogs = [];
 
         foreach ($this->vacationWorkLogRepository->findByIds($data->workLogIds) as $workLog) {
-            if (
-                $workLog->getWorkMonth()->getUser()->getSupervisor() === null
-                || $workLog->getWorkMonth()->getUser()->getSupervisor() !== $this->getUser()
-            ) {
+            if (!in_array($this->getUser(), $workLog->getWorkMonth()->getUser()->getAllSupervisors())) {
                 return JsonResponse::create(null, JsonResponse::HTTP_FORBIDDEN);
             }
 
@@ -288,10 +285,7 @@ class VacationWorkLogController extends Controller
         $workLogs = [];
 
         foreach ($this->vacationWorkLogRepository->findByIds($data->workLogIds) as $workLog) {
-            if (
-                $workLog->getWorkMonth()->getUser()->getSupervisor() === null
-                || $workLog->getWorkMonth()->getUser()->getSupervisor() !== $this->getUser()
-            ) {
+            if (!in_array($this->getUser(), $workLog->getWorkMonth()->getUser()->getAllSupervisors())) {
                 return JsonResponse::create(null, JsonResponse::HTTP_FORBIDDEN);
             }
 
@@ -347,10 +341,7 @@ class VacationWorkLogController extends Controller
             throw $this->createNotFoundException(sprintf('Vacation work log with id %d was not found.', $id));
         }
 
-        if (
-            $workLog->getWorkMonth()->getUser()->getSupervisor() === null
-            || $workLog->getWorkMonth()->getUser()->getSupervisor() !== $this->getUser()
-        ) {
+        if (!in_array($this->getUser(), $workLog->getWorkMonth()->getUser()->getAllSupervisors())) {
             return JsonResponse::create(null, JsonResponse::HTTP_FORBIDDEN);
         }
 
@@ -395,10 +386,7 @@ class VacationWorkLogController extends Controller
             throw $this->createNotFoundException(sprintf('Vacation work log with id %d was not found.', $id));
         }
 
-        if (
-            $workLog->getWorkMonth()->getUser()->getSupervisor() === null
-            || $workLog->getWorkMonth()->getUser()->getSupervisor() !== $this->getUser()
-        ) {
+        if (!in_array($this->getUser(), $workLog->getWorkMonth()->getUser()->getAllSupervisors())) {
             return JsonResponse::create(null, JsonResponse::HTTP_FORBIDDEN);
         }
 

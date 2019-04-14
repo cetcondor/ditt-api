@@ -41,6 +41,9 @@ App\Entity\User:
             nullable: true
 
     oneToMany:
+        supervised:
+            targetEntity: App\Entity\User
+            mappedBy: supervisor
         vacations:
             targetEntity: App\Entity\Vacation
             mappedBy: user
@@ -59,7 +62,7 @@ App\Entity\User:
     manyToOne:
         supervisor:
             targetEntity: App\Entity\User
-            mappedBy: supervised
+            inversedBy: supervised
             joinColumn:
                 name: supervisor_id
                 referencedColumnName: id

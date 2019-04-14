@@ -82,16 +82,23 @@ class VacationWorkLogRepository
     {
         $qb = $this->repository->createQueryBuilder('vwl');
 
+        $supervisedUserIds = array_map(function (User $supervisedUser) {
+            return $supervisedUser->getId();
+        }, $supervisor->getAllSupervised());
+
+        if (count($supervisedUserIds) === 0) {
+            return [];
+        }
+
         return $qb
             ->select('vwl')
             ->leftJoin('vwl.workMonth', 'wm')
             ->leftJoin('wm.user', 'u')
             ->where($qb->expr()->andX(
-                $qb->expr()->eq('u.supervisor', ':supervisor'),
+                $qb->expr()->in('wm.user', $supervisedUserIds),
                 $qb->expr()->isNull('vwl.timeApproved'),
                 $qb->expr()->isNull('vwl.timeRejected')
             ))
-            ->setParameter('supervisor', $supervisor)
             ->getQuery()
             ->getResult();
     }
@@ -136,18 +143,23 @@ class VacationWorkLogRepository
 
         $qb = $this->repository->createQueryBuilder('vwl');
 
+        $supervisedUserIds = array_map(function (User $supervisedUser) {
+            return $supervisedUser->getId();
+        }, $supervisor->getAllSupervised());
+
+        if (count($supervisedUserIds) === 0) {
+            return [];
+        }
+
         return $qb
             ->select('vwl')
             ->leftJoin('vwl.workMonth', 'wm')
             ->leftJoin('wm.user', 'u')
             ->where($qb->expr()->andX(
-                $qb->expr()->eq('u.supervisor', ':supervisor'),
-                $qb->expr()->andX(
-                    $qb->expr()->gte('wm.month', ':previousMonth'),
-                    $qb->expr()->gte('wm.year', ':previousYear')
-                )
+                $qb->expr()->in('wm.user', $supervisedUserIds),
+                $qb->expr()->gte('wm.month', ':previousMonth'),
+                $qb->expr()->gte('wm.year', ':previousYear')
             ))
-            ->setParameter('supervisor', $supervisor)
             ->setParameter('previousMonth', $previousMonth)
             ->setParameter('previousYear', $previousYear)
             ->orderBy('vwl.date', 'desc')
