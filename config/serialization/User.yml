@@ -94,6 +94,7 @@ App\Entity\User:
             groups:
                 - user_out_detail
                 - user_out_list
+                - work_month_out_detail
         apiToken:
             groups:
                 - user_out_detail

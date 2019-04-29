@@ -4,19 +4,24 @@ App\Entity\UserYearStats:
             groups:
                 - user_out_detail
                 - user_out_list
+                - work_month_out_detail
         year:
             groups:
                 - user_out_detail
                 - user_out_list
+                - work_month_out_detail
         requiredHours:
             groups:
                 - user_out_detail
                 - user_out_list
+                - work_month_out_detail
         workedHours:
             groups:
                 - user_out_detail
                 - user_out_list
+                - work_month_out_detail
         vacationDaysUsed:
             groups:
                 - user_out_detail
                 - user_out_list
+                - work_month_out_detail
