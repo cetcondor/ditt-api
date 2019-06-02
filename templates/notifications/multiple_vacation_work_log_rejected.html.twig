@@ -14,7 +14,7 @@
             <strong>Daten: </strong><br>
             <ul>
                 {% for workLog in workLogs %}
-                    <li>{{ workLog.date | date('d. m. Y') }}</li>
+                    <li>{{ workLog.date | date('m.d.Y') }}</li>
                 {% endfor %}
             </ul>
             <strong>Betrifft: </strong>{{ workLogs[0].workMonth.user.firstName }} {{ workLogs[0].workMonth.user.lastName }}<br>

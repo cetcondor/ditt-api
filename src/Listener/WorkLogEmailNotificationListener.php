@@ -418,7 +418,7 @@ class WorkLogEmailNotificationListener
 
         $subjectDate = '';
         if ($date) {
-            $subjectDate = $date->format('d. m. Y');
+            $subjectDate = $date->format('m.d.');
         }
 
         $this->sendMail(
@@ -464,10 +464,10 @@ class WorkLogEmailNotificationListener
         $subjectStartDate = '';
         $subjectEndDate = '';
         if ($startDate) {
-            $subjectStartDate = $startDate->format('d. m. Y');
+            $subjectStartDate = $startDate->format('mm.DD.');
         }
         if ($endDate) {
-            $subjectEndDate = $endDate->format('d. m. Y');
+            $subjectEndDate = $endDate->format('mm.DD.');
         }
 
         $this->sendMail(
