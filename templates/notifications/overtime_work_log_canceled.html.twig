@@ -11,7 +11,7 @@
     <body>
         <h1>Antrag auf Mehrarbeit storniert</h1>
         <p>
-            <strong>Datum: </strong>{{ workLog.date | date('m.d.Y') }}<br>
+            <strong>Datum: </strong>{{ workLog.date | date('d.m.Y') }}<br>
             <strong>Betrifft: </strong>{{ workLog.workMonth.user.firstName }} {{ workLog.workMonth.user.lastName }}<br>
         </p>
     </body>
