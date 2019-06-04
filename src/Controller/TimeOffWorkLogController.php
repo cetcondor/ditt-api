@@ -82,7 +82,7 @@ class TimeOffWorkLogController extends Controller
         }
 
         $this->timeOffWorkLogService->markApproved($workLog);
-        $supervisor = $workLog->getWorkMonth()->getUser()->getSupervisor();
+        $supervisor = $this->getUser();
 
         $this->eventDispatcher->dispatch(
             TimeOffWorkLogApprovedEvent::APPROVED,
@@ -134,7 +134,7 @@ class TimeOffWorkLogController extends Controller
         }
 
         $this->timeOffWorkLogService->markRejected($workLog, $data->rejectionMessage);
-        $supervisor = $workLog->getWorkMonth()->getUser()->getSupervisor();
+        $supervisor = $this->getUser();
 
         $this->eventDispatcher->dispatch(
             TimeOffWorkLogRejectedEvent::REJECTED,

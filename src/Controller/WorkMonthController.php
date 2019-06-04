@@ -457,7 +457,7 @@ class WorkMonthController extends Controller
         $this->userService->fullfilRemainingVacationDays($user);
         $workMonth->setUser($user);
 
-        $supervisor = $workMonth->getUser()->getSupervisor();
+        $supervisor = $this->getUser();
 
         $this->eventDispatcher->dispatch(
             WorkMonthApprovedEvent::APPROVED,

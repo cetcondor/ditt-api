@@ -82,7 +82,7 @@ class BusinessTripWorkLogController extends Controller
         }
 
         $this->businessTripWorkLogService->markApproved($workLog);
-        $supervisor = $workLog->getWorkMonth()->getUser()->getSupervisor();
+        $supervisor = $this->getUser();
 
         $this->eventDispatcher->dispatch(
             BusinessTripWorkLogApprovedEvent::APPROVED,
@@ -134,7 +134,7 @@ class BusinessTripWorkLogController extends Controller
         }
 
         $this->businessTripWorkLogService->markRejected($workLog, $data->rejectionMessage);
-        $supervisor = $workLog->getWorkMonth()->getUser()->getSupervisor();
+        $supervisor = $this->getUser();
 
         $this->eventDispatcher->dispatch(
             BusinessTripWorkLogRejectedEvent::REJECTED,

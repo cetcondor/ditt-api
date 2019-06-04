@@ -82,7 +82,7 @@ class HomeOfficeWorkLogController extends Controller
         }
 
         $this->homeOfficeWorkLogService->markApproved($workLog);
-        $supervisor = $workLog->getWorkMonth()->getUser()->getSupervisor();
+        $supervisor = $this->getUser();
         $this->eventDispatcher->dispatch(
             HomeOfficeWorkLogApprovedEvent::APPROVED,
             new HomeOfficeWorkLogApprovedEvent($workLog, $supervisor)
@@ -133,7 +133,7 @@ class HomeOfficeWorkLogController extends Controller
         }
 
         $this->homeOfficeWorkLogService->markRejected($workLog, $data->rejectionMessage);
-        $supervisor = $workLog->getWorkMonth()->getUser()->getSupervisor();
+        $supervisor = $this->getUser();
 
         $this->eventDispatcher->dispatch(
             HomeOfficeWorkLogRejectedEvent::REJECTED,

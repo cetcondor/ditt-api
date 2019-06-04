@@ -82,7 +82,7 @@ class OvertimeWorkLogController extends Controller
         }
 
         $this->overtimeWorkLogService->markApproved($workLog);
-        $supervisor = $workLog->getWorkMonth()->getUser()->getSupervisor();
+        $supervisor = $this->getUser();
 
         $this->eventDispatcher->dispatch(
             OvertimeWorkLogApprovedEvent::APPROVED,
@@ -134,7 +134,7 @@ class OvertimeWorkLogController extends Controller
         }
 
         $this->overtimeWorkLogService->markRejected($workLog, $data->rejectionMessage);
-        $supervisor = $workLog->getWorkMonth()->getUser()->getSupervisor();
+        $supervisor = $this->getUser();
 
         $this->eventDispatcher->dispatch(
             OvertimeWorkLogRejectedEvent::REJECTED,
