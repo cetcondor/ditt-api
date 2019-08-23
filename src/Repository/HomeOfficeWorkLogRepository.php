@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\HomeOfficeWorkLog;
 use App\Entity\User;
+use App\Entity\WorkMonth;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 
@@ -146,6 +147,21 @@ class HomeOfficeWorkLogRepository
             ->setParameter('previousMonth', $previousMonth)
             ->setParameter('previousYear', $previousYear)
             ->orderBy('howl.date', 'desc')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @param WorkMonth $workMonth
+     * @return HomeOfficeWorkLog[]
+     */
+    public function findAllApprovedByWorkMonth(WorkMonth $workMonth): array
+    {
+        return $this->repository->createQueryBuilder('howl')
+            ->select('howl')
+            ->where('howl.workMonth = :workMonth')
+            ->andWhere('howl.timeApproved IS NOT NULL')
+            ->setParameter('workMonth', $workMonth)
             ->getQuery()
             ->getResult();
     }

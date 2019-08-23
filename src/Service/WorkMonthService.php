@@ -3,11 +3,13 @@
 namespace App\Service;
 
 use App\Entity\BusinessTripWorkLog;
+use App\Entity\HomeOfficeWorkLog;
 use App\Entity\SickDayWorkLog;
 use App\Entity\VacationWorkLog;
 use App\Entity\WorkLog;
 use App\Entity\WorkMonth;
 use App\Repository\BusinessTripWorkLogRepository;
+use App\Repository\HomeOfficeWorkLogRepository;
 use App\Repository\SickDayWorkLogRepository;
 use App\Repository\UserYearStatsRepository;
 use App\Repository\VacationWorkLogRepository;
@@ -32,6 +34,11 @@ class WorkMonthService
      * @var BusinessTripWorkLogRepository
      */
     private $businessTripWorkLogRepository;
+
+    /**
+     * @var HomeOfficeWorkLogRepository
+     */
+    private $homeOfficeWorkLogRepository;
 
     /**
      * @var SickDayWorkLogRepository
@@ -60,7 +67,9 @@ class WorkMonthService
 
     /**
      * @param EntityManagerInterface $entityManager
+     * @param ConfigService $configService
      * @param BusinessTripWorkLogRepository $businessTripWorkLogRepository
+     * @param HomeOfficeWorkLogRepository $homeOfficeWorkLogRepository
      * @param SickDayWorkLogRepository $sickDayWorkLogRepository
      * @param UserYearStatsRepository $userYearStatsRepository
      * @param VacationWorkLogRepository $vacationWorkLogRepository
@@ -71,6 +80,7 @@ class WorkMonthService
         EntityManagerInterface $entityManager,
         ConfigService $configService,
         BusinessTripWorkLogRepository $businessTripWorkLogRepository,
+        HomeOfficeWorkLogRepository $homeOfficeWorkLogRepository,
         SickDayWorkLogRepository $sickDayWorkLogRepository,
         UserYearStatsRepository $userYearStatsRepository,
         VacationWorkLogRepository $vacationWorkLogRepository,
@@ -80,6 +90,7 @@ class WorkMonthService
         $this->entityManager = $entityManager;
         $this->configService = $configService;
         $this->businessTripWorkLogRepository = $businessTripWorkLogRepository;
+        $this->homeOfficeWorkLogRepository = $homeOfficeWorkLogRepository;
         $this->sickDayWorkLogRepository = $sickDayWorkLogRepository;
         $this->userYearStatsRepository = $userYearStatsRepository;
         $this->vacationWorkLogRepository = $vacationWorkLogRepository;
@@ -151,6 +162,7 @@ class WorkMonthService
         }
 
         $businessTripWorkLogs = $this->businessTripWorkLogRepository->findAllApprovedByWorkMonth($workMonth);
+        $homeOfficeWorkLogs = $this->homeOfficeWorkLogRepository->findAllApprovedByWorkMonth($workMonth);
         $sickDayWorkLogs = $this->sickDayWorkLogRepository->findAllByWorkMonth($workMonth);
         $vacationWorkLogs = $this->vacationWorkLogRepository->findAllApprovedByWorkMonth($workMonth);
         $workLogs = $this->workLogRepository->findAllByWorkMonth($workMonth);
@@ -158,6 +170,11 @@ class WorkMonthService
         foreach ($businessTripWorkLogs as $businessTripWorkLog) {
             $day = (int) $businessTripWorkLog->getDate()->format('d');
             $allWorkLogs[$day][] = $businessTripWorkLog;
+        }
+
+        foreach ($homeOfficeWorkLogs as $homeOfficeWorkLog) {
+            $day = (int) $homeOfficeWorkLog->getDate()->format('d');
+            $allWorkLogs[$day][] = $homeOfficeWorkLog;
         }
 
         foreach ($sickDayWorkLogs as $sickDayWorkLog) {
@@ -189,6 +206,7 @@ class WorkMonthService
             $workedHours = 0;
             $specialWorkedHours = 0;
             $containsBusinessDay = false;
+            $containsHomeDay = false;
 
             foreach ($allWorkLogsByDay as $workLog) {
                 if ($workLog instanceof WorkLog) {
@@ -198,6 +216,10 @@ class WorkMonthService
 
                 if ($workLog instanceof BusinessTripWorkLog && $workLog->getTimeApproved()) {
                     $containsBusinessDay = true;
+                }
+
+                if ($workLog instanceof HomeOfficeWorkLog && $workLog->getTimeApproved()) {
+                    $containsHomeDay = true;
                 }
 
                 if (
@@ -222,7 +244,7 @@ class WorkMonthService
                 $workedHours += ($upperLimit['changeBy'] / 3600);
             }
 
-            if ($containsBusinessDay && $workedHours < $workHours->getRequiredHours()) {
+            if (($containsBusinessDay || $containsHomeDay) && $workedHours < $workHours->getRequiredHours()) {
                 $workedHours = $workHours->getRequiredHours();
             }
 
