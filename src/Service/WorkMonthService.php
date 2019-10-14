@@ -204,9 +204,10 @@ class WorkMonthService
 
         foreach ($allWorkLogs as $day => $allWorkLogsByDay) {
             $workedHours = 0;
-            $specialWorkedHours = 0;
             $containsBusinessDay = false;
             $containsHomeDay = false;
+            $containsSickDay = false;
+            $containsVacationDay = false;
 
             foreach ($allWorkLogsByDay as $workLog) {
                 if ($workLog instanceof WorkLog) {
@@ -222,11 +223,12 @@ class WorkMonthService
                     $containsHomeDay = true;
                 }
 
-                if (
-                    $workLog instanceof SickDayWorkLog
-                    || $workLog instanceof VacationWorkLog && $workLog->getTimeApproved()
-                ) {
-                    $specialWorkedHours += $workHours->getRequiredHours();
+                if ($workLog instanceof SickDayWorkLog) {
+                    $containsSickDay = true;
+                }
+
+                if ($workLog instanceof VacationWorkLog && $workLog->getTimeApproved()) {
+                    $containsVacationDay = true;
                 }
             }
 
@@ -244,11 +246,14 @@ class WorkMonthService
                 $workedHours += ($upperLimit['changeBy'] / 3600);
             }
 
-            if (($containsBusinessDay || $containsHomeDay) && $workedHours < $workHours->getRequiredHours()) {
+            if (
+                $workedHours === 0
+                && ($containsBusinessDay || $containsHomeDay || $containsSickDay || $containsVacationDay)
+            ) {
                 $workedHours = $workHours->getRequiredHours();
             }
 
-            $allWorkLogWorkedHours[$day] = $workedHours + $specialWorkedHours;
+            $allWorkLogWorkedHours[$day] = $workedHours;
         }
 
         return array_sum($allWorkLogWorkedHours);

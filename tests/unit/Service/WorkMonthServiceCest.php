@@ -187,7 +187,7 @@ class WorkMonthServiceCest
 
         $service = $this->getWorkMonthService($prophet, $businessTripWorkLogs, [], [], [], $workLogs, $workHours);
 
-        $I->assertEquals(6, $service->calculateWorkedHours($workMonth));
+        $I->assertEquals(4, $service->calculateWorkedHours($workMonth));
     }
 
     /**
@@ -315,7 +315,7 @@ class WorkMonthServiceCest
 
         $service = $this->getWorkMonthService($prophet, [], $homeOfficeWorkLogs, [], [], $workLogs, $workHours);
 
-        $I->assertEquals(6, $service->calculateWorkedHours($workMonth));
+        $I->assertEquals(4, $service->calculateWorkedHours($workMonth));
     }
 
     /**
@@ -485,7 +485,7 @@ class WorkMonthServiceCest
             $workHours
         );
 
-        $I->assertEquals(18, $service->calculateWorkedHours($workMonth));
+        $I->assertEquals(5.75, $service->calculateWorkedHours($workMonth));
     }
 
     /**
