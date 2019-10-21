@@ -40,6 +40,12 @@ App\Entity\User:
             unique: true
             nullable: true
 
+    oneToOne:
+        notifications:
+            targetEntity: App\Entity\UserNotifications
+            mappedBy: user
+            cascade: [persist]
+
     oneToMany:
         supervised:
             targetEntity: App\Entity\User

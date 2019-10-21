@@ -1,0 +1,42 @@
+App\Entity\UserNotifications:
+    attributes:
+        id:
+            groups:
+                - user_out_detail
+                - user_in
+        supervisorInfoMondayTime:
+            groups:
+                - user_out_detail
+                - user_in
+        supervisorInfoTuesdayTime:
+            groups:
+                - user_out_detail
+                - user_in
+        supervisorInfoWednesdayTime:
+            groups:
+                - user_out_detail
+                - user_in
+        supervisorInfoThursdayTime:
+            groups:
+                - user_out_detail
+                - user_in
+        supervisorInfoFridayTime:
+            groups:
+                - user_out_detail
+                - user_in
+        supervisorInfoSaturdayTime:
+            groups:
+                - user_out_detail
+                - user_in
+        supervisorInfoSundayTime:
+            groups:
+                - user_out_detail
+                - user_in
+        supervisorInfoSendOnHolidays:
+            groups:
+                - user_out_detail
+                - user_in
+        supervisorInfoLastNotificationDateTime:
+            groups:
+                - user_out_detail
+

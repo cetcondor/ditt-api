@@ -73,6 +73,14 @@ services:
         autoconfigure: false
         public: false
 
+    # Commands
+
+    App\Command\NotificationsCommand:
+        class: App\Command\NotificationsCommand
+        arguments:
+            $clientSpecialApprovalsUrl: '%env(CLIENT_SPECIAL_APPROVALS_URL)%'
+            $mailSenderAddress: '%env(NOTIFICATION_EMAIL_SENDER)%'
+
     # Event listeners
 
     app.event.jwt_created_listener:

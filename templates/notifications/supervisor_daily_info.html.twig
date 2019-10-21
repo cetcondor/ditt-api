@@ -1,0 +1,18 @@
+<html lang="de">
+    <head>
+        <meta charset="utf-8" />
+        <style>
+            body {
+                font-family: helvetica, roboto, arial, sans-serif;
+            }
+        </style>
+    </head>
+
+    <body>
+        <h1>Tägliche Übersicht des Betreuers</h1>
+        <p>
+            Sie haben {{ waitingForApprovalCount }} {% if waitingForApprovalCount == 1 %}Prüfungsanfrage{% else %}Überprüfungsanträgen{% endif %}.
+            <a href="{{ clientSpecialApprovalsUrl }}">Klicken Sie hier</a>, um Anfragen anzuzeigen.
+        </p>
+    </body>
+</html>

@@ -40,3 +40,6 @@ App\Entity\User:
 
         workHours:
             - Valid: ~
+
+        notifications:
+            - Valid: ~

@@ -1,0 +1,18 @@
+App\Entity\UserNotifications:
+    properties:
+        supervisorInfoMondayTime:
+            - Time: ~
+        supervisorInfoTuesdayTime:
+            - Time: ~
+        supervisorInfoWednesdayTime:
+            - Time: ~
+        supervisorInfoThursdayTime:
+            - Time: ~
+        supervisorInfoFridayTime:
+            - Time: ~
+        supervisorInfoSaturdayTime:
+            - Time: ~
+        supervisorInfoSundayTime:
+            - Time: ~
+        supervisorInfoSendOnHolidays:
+            - NotNull: ~

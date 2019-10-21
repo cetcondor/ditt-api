@@ -1,0 +1,54 @@
+App\Entity\UserNotifications:
+    type: entity
+    table: app_user_notifications
+
+    id:
+        id:
+            type: integer
+            generator: { strategy: IDENTITY }
+
+    fields:
+        supervisorInfoMondayTime:
+            type: time_immutable
+            nullable: true
+
+        supervisorInfoTuesdayTime:
+            type: time_immutable
+            nullable: true
+
+        supervisorInfoWednesdayTime:
+            type: time_immutable
+            nullable: true
+
+        supervisorInfoThursdayTime:
+            type: time_immutable
+            nullable: true
+
+        supervisorInfoFridayTime:
+            type: time_immutable
+            nullable: true
+
+        supervisorInfoSaturdayTime:
+            type: time_immutable
+            nullable: true
+
+        supervisorInfoSundayTime:
+            type: time_immutable
+            nullable: true
+
+        supervisorInfoSendOnHolidays:
+            type: boolean
+
+        supervisorInfoLastNotificationDateTime:
+            type: datetime_immutable
+            nullable: true
+
+    oneToOne:
+        user:
+            targetEntity: App\Entity\User
+            inversedBy: notifications
+            joinColumn:
+                name: user_id
+                referencedColumnName: id
+                nullable: false
+                onDelete: CASCADE

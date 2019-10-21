@@ -95,6 +95,10 @@ App\Entity\User:
                 - user_out_detail
                 - user_out_list
                 - work_month_out_detail
+        notifications:
+            groups:
+                - user_out_detail
+                - user_in
         apiToken:
             groups:
                 - user_out_detail

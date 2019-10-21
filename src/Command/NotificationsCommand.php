@@ -1,0 +1,194 @@
+<?php
+
+namespace App\Command;
+
+use App\Entity\User;
+use App\Repository\BusinessTripWorkLogRepository;
+use App\Repository\HomeOfficeWorkLogRepository;
+use App\Repository\OvertimeWorkLogRepository;
+use App\Repository\TimeOffWorkLogRepository;
+use App\Repository\UserRepository;
+use App\Repository\VacationWorkLogRepository;
+use App\Service\ConfigService;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+
+class NotificationsCommand extends ContainerAwareCommand
+{
+    /**
+     * @var BusinessTripWorkLogRepository
+     */
+    private $businessTripWorkLogRepository;
+
+    /**
+     * @var HomeOfficeWorkLogRepository
+     */
+    private $homeOfficeWorkLogRepository;
+
+    /**
+     * @var OvertimeWorkLogRepository
+     */
+    private $overtimeWorkLogRepository;
+
+    /**
+     * @var TimeOffWorkLogRepository
+     */
+    private $timeOffWorkLogRepository;
+
+    /**
+     * @var VacationWorkLogRepository
+     */
+    private $vacationWorkLogRepository;
+
+    /**
+     * @var string
+     */
+    private $clientSpecialApprovalsUrl;
+
+    /**
+     * @var ConfigService
+     */
+    private $configService;
+
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    /**
+     * @var UserRepository
+     */
+    private $userRepository;
+
+    /**
+     * @var \Swift_Mailer
+     */
+    private $mailer;
+
+    /**
+     * @var string
+     */
+    private $mailSenderAddress;
+
+    /**
+     * @var \Twig_Environment
+     */
+    private $templating;
+
+    public function __construct(
+        BusinessTripWorkLogRepository $businessTripWorkLogRepository,
+        HomeOfficeWorkLogRepository $homeOfficeWorkLogRepository,
+        OvertimeWorkLogRepository $overtimeWorkLogRepository,
+        TimeOffWorkLogRepository $timeOffWorkLogRepository,
+        VacationWorkLogRepository $vacationWorkLogRepository,
+        string $clientSpecialApprovalsUrl,
+        ConfigService $configService,
+        EntityManagerInterface $entityManager,
+        UserRepository $userRepository,
+        \Swift_Mailer $mailer,
+        string $mailSenderAddress,
+        \Twig_Environment $templating
+    ) {
+        parent::__construct();
+
+        $this->businessTripWorkLogRepository = $businessTripWorkLogRepository;
+        $this->homeOfficeWorkLogRepository = $homeOfficeWorkLogRepository;
+        $this->overtimeWorkLogRepository = $overtimeWorkLogRepository;
+        $this->timeOffWorkLogRepository = $timeOffWorkLogRepository;
+        $this->vacationWorkLogRepository = $vacationWorkLogRepository;
+        $this->mailSenderAddress = $mailSenderAddress;
+        $this->clientSpecialApprovalsUrl = $clientSpecialApprovalsUrl;
+        $this->configService = $configService;
+        $this->entityManager = $entityManager;
+        $this->userRepository = $userRepository;
+        $this->mailer = $mailer;
+        $this->mailSenderAddress = $mailSenderAddress;
+        $this->templating = $templating;
+    }
+
+    protected function configure()
+    {
+        $this
+            ->setName('notifications:send')
+            ->setDescription('Send notifications to all users according to their notification settings');
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
+        $config = $this->configService->getConfig();
+        $isHolidayToday = $config->isHolidayToday();
+
+        $toNotify = [];
+
+        foreach ($this->userRepository->getRepository()->findAll() as $user) {
+            if (!$user->getNotifications()->canSendSupervisorInfo($isHolidayToday)) {
+                continue;
+            }
+
+            try {
+                $waitingCount = count($this->businessTripWorkLogRepository->findAllWaitingForApprovalBySupervisor($user))
+                    + count($this->homeOfficeWorkLogRepository->findAllWaitingForApprovalBySupervisor($user))
+                    + count($this->overtimeWorkLogRepository->findAllWaitingForApprovalBySupervisor($user))
+                    + count($this->timeOffWorkLogRepository->findAllWaitingForApprovalBySupervisor($user))
+                    + count($this->vacationWorkLogRepository->findAllWaitingForApprovalBySupervisor($user));
+            } catch (\Exception $ex) {
+                $waitingCount = 0;
+            }
+
+            if ($waitingCount > 0) {
+                $toNotify[] = new class($user, $waitingCount) {
+                    /**
+                     * @var User
+                     */
+                    public $user;
+                    /**
+                     * @var int
+                     */
+                    public $waitingForApprovalCount;
+
+                    /**
+                     * @param User $user
+                     * @param int $waitingForApprovalCount
+                     */
+                    public function __construct(User $user, int $waitingForApprovalCount)
+                    {
+                        $this->user = $user;
+                        $this->waitingForApprovalCount = $waitingForApprovalCount;
+                    }
+                };
+            }
+        }
+
+        foreach ($toNotify as $details) {
+            $htmlContent = $this->templating->render('notifications/supervisor_daily_info.html.twig', [
+                'waitingForApprovalCount' => $details->waitingForApprovalCount,
+                'clientSpecialApprovalsUrl' => $this->clientSpecialApprovalsUrl,
+            ]);
+            $message = (new \Swift_Message())
+                ->setSubject('Tägliche Übersicht des Betreuers')
+                ->setFrom([$this->mailSenderAddress => $this->mailSenderAddress])
+                ->setTo($details->user->getEmail())
+                ->setBody($htmlContent, 'text/html')
+                ->addPart((new \Html2Text\Html2Text($htmlContent))->getText(), 'text/plain');
+
+            $dateTime = new \DateTimeImmutable();
+
+            if (!$this->mailer->send($message)) {
+                $output->writeln(
+                    sprintf('[%s] %s | NOT SENT', $dateTime->format('Y-m-d H:i:s'), $details->user->getEmail())
+                );
+            } else {
+                /** @var User $user */
+                $user = $details->user;
+                $user->getNotifications()->setSupervisorInfoLastNotificationDateTime($dateTime);
+                $this->entityManager->flush();
+
+                $output->writeln(
+                    sprintf('[%s] %s | SENT', $dateTime->format('Y-m-d H:i:s'), $details->user->getEmail())
+                );
+            }
+        }
+    }
+}

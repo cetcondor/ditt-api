@@ -96,6 +96,11 @@ class User implements UserInterface
     private $yearStats;
 
     /**
+     * @var UserNotifications
+     */
+    private $notifications;
+
+    /**
      * @var string|null
      */
     private $apiToken;
@@ -114,6 +119,7 @@ class User implements UserInterface
         $this->workHours = new ArrayCollection();
         $this->workMonths = new ArrayCollection();
         $this->yearStats = new ArrayCollection();
+        $this->setNotifications(new UserNotifications());
     }
 
     /**
@@ -525,6 +531,26 @@ class User implements UserInterface
     public function setYearStats($yearStats)
     {
         $this->yearStats = $yearStats;
+
+        return $this;
+    }
+
+    /**
+     * @return UserNotifications
+     */
+    public function getNotifications(): UserNotifications
+    {
+        return $this->notifications;
+    }
+
+    /**
+     * @param UserNotifications $notifications
+     * @return User
+     */
+    public function setNotifications(UserNotifications $notifications): User
+    {
+        $this->notifications = $notifications;
+        $this->notifications->setUser($this);
 
         return $this;
     }

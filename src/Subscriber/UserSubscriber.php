@@ -6,6 +6,7 @@ use ApiPlatform\Core\EventListener\EventPriorities;
 use App\Entity\User;
 use App\Entity\UserYearStats;
 use App\Entity\WorkMonth;
+use App\Repository\UserNotificationsRepository;
 use App\Repository\VacationRepository;
 use App\Repository\WorkHoursRepository;
 use App\Service\ConfigService;
@@ -30,6 +31,11 @@ class UserSubscriber implements EventSubscriberInterface
      * @var ConfigService
      */
     private $configService;
+
+    /**
+     * @var UserNotificationsRepository
+     */
+    private $userNotificationsRepository;
 
     /**
      * @var UserService
@@ -59,6 +65,7 @@ class UserSubscriber implements EventSubscriberInterface
     /**
      * @param EntityManagerInterface $entityManager
      * @param ConfigService $configService
+     * @param UserNotificationsRepository $userNotificationsRepository
      * @param UserService $userService
      * @param UserYearStatsService $userYearStatsService
      * @param VacationRepository $vacationRepository
@@ -68,6 +75,7 @@ class UserSubscriber implements EventSubscriberInterface
     public function __construct(
         EntityManagerInterface $entityManager,
         ConfigService $configService,
+        UserNotificationsRepository $userNotificationsRepository,
         UserService $userService,
         UserYearStatsService $userYearStatsService,
         VacationRepository $vacationRepository,
@@ -77,6 +85,7 @@ class UserSubscriber implements EventSubscriberInterface
         $this->entityManager = $entityManager;
         $this->configService = $configService;
         $this->userService = $userService;
+        $this->userNotificationsRepository = $userNotificationsRepository;
         $this->userYearStatsService = $userYearStatsService;
         $this->vacationRepository = $vacationRepository;
         $this->workHoursRepository = $workHoursRepository;
@@ -197,6 +206,23 @@ class UserSubscriber implements EventSubscriberInterface
             }
         }
 
+        if ($user->getNotifications()->getId() !== null) {
+            $attachedUserNotifications = $this->userNotificationsRepository->findOne($user->getNotifications()->getId());
+
+            if ($attachedUserNotifications !== null) {
+                $attachedUserNotifications->setSupervisorInfoMondayTime($user->getNotifications()->getSupervisorInfoMondayTime());
+                $attachedUserNotifications->setSupervisorInfoTuesdayTime($user->getNotifications()->getSupervisorInfoTuesdayTime());
+                $attachedUserNotifications->setSupervisorInfoWednesdayTime($user->getNotifications()->getSupervisorInfoWednesdayTime());
+                $attachedUserNotifications->setSupervisorInfoThursdayTime($user->getNotifications()->getSupervisorInfoThursdayTime());
+                $attachedUserNotifications->setSupervisorInfoFridayTime($user->getNotifications()->getSupervisorInfoFridayTime());
+                $attachedUserNotifications->setSupervisorInfoSaturdayTime($user->getNotifications()->getSupervisorInfoSaturdayTime());
+                $attachedUserNotifications->setSupervisorInfoSundayTime($user->getNotifications()->getSupervisorInfoSundayTime());
+                $attachedUserNotifications->setSupervisorInfoSendOnHolidays($user->getNotifications()->isSupervisorInfoSendOnHolidays());
+
+                $user->setNotifications($attachedUserNotifications);
+            }
+        }
+
         $user->setWorkHours(new ArrayCollection());
         $user->setVacations(new ArrayCollection());
         $this->entityManager->flush();
@@ -214,7 +240,11 @@ class UserSubscriber implements EventSubscriberInterface
 
         $method = $event->getRequest()->getMethod();
 
-        if (Request::METHOD_GET !== $method) {
+        if (
+            Request::METHOD_GET !== $method
+            && Request::METHOD_POST !== $method
+            && Request::METHOD_PUT !== $method
+        ) {
             return;
         }
 

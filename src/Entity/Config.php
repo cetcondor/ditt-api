@@ -21,6 +21,26 @@ class Config
     }
 
     /**
+     * @return bool
+     */
+    public function isHolidayToday(): bool
+    {
+        $dateTime = new \DateTimeImmutable();
+
+        foreach ($this->getSupportedHolidays() as $supportedHoliday) {
+            if (
+                $supportedHoliday->getDay() === intval($dateTime->format('j'))
+                && $supportedHoliday->getMonth() === intval($dateTime->format('n'))
+                && $supportedHoliday->getYear()->getYear() === intval($dateTime->format('Y'))
+            ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * @return SupportedHoliday[]
      */
     public function getSupportedHolidays(): array
