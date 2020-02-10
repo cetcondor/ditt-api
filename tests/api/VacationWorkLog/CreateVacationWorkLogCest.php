@@ -17,9 +17,6 @@ class CreateVacationWorkLogCest
      */
     private $user;
 
-    /**
-     * @param \ApiTester $I
-     */
     public function _before(\ApiTester $I)
     {
         $prophet = new Prophet();
@@ -45,7 +42,6 @@ class CreateVacationWorkLogCest
     }
 
     /**
-     * @param \ApiTester $I
      * @throws \Exception
      */
     public function testCreateWithValidData(\ApiTester $I): void
@@ -73,7 +69,6 @@ class CreateVacationWorkLogCest
     }
 
     /**
-     * @param \ApiTester $I
      * @throws \Exception
      */
     public function testCreateWithExhaustedVacationDays(\ApiTester $I): void
@@ -109,7 +104,6 @@ class CreateVacationWorkLogCest
     }
 
     /**
-     * @param \ApiTester $I
      * @throws \Exception
      */
     public function testCreateWithClosedMonth(\ApiTester $I): void
@@ -140,7 +134,6 @@ class CreateVacationWorkLogCest
     }
 
     /**
-     * @param \ApiTester $I
      * @throws \Exception
      */
     public function testCreateWithInvalidData(\ApiTester $I): void

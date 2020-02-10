@@ -18,12 +18,12 @@ use App\Event\OvertimeWorkLogCanceledEvent;
 use App\Event\TimeOffWorkLogCanceledEvent;
 use App\Event\VacationWorkLogCanceledEvent;
 use App\Repository\WorkMonthRepository;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class WorkLogSubscriber implements EventSubscriberInterface
 {
@@ -42,11 +42,6 @@ class WorkLogSubscriber implements EventSubscriberInterface
      */
     private $workMonthRepository;
 
-    /**
-     * @param EventDispatcherInterface $eventDispatcher
-     * @param TokenStorageInterface $tokenStorage
-     * @param WorkMonthRepository $workMonthRepository
-     */
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
         TokenStorageInterface $tokenStorage,
@@ -57,9 +52,6 @@ class WorkLogSubscriber implements EventSubscriberInterface
         $this->workMonthRepository = $workMonthRepository;
     }
 
-    /**
-     * @return array
-     */
     public static function getSubscribedEvents(): array
     {
         return [
@@ -73,7 +65,6 @@ class WorkLogSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param GetResponseForControllerResultEvent $event
      * @throws InvalidArgumentException
      */
     public function addWorkMonth(GetResponseForControllerResultEvent $event): void
@@ -104,9 +95,6 @@ class WorkLogSubscriber implements EventSubscriberInterface
         $workLog->setWorkMonth($workMonth);
     }
 
-    /**
-     * @param GetResponseForControllerResultEvent $event
-     */
     public function deleteWorkLog(GetResponseForControllerResultEvent $event): void
     {
         $workLog = $event->getControllerResult();
@@ -124,34 +112,33 @@ class WorkLogSubscriber implements EventSubscriberInterface
 
         if ($workLog instanceof BusinessTripWorkLog && $workLog->getTimeApproved() !== null) {
             $this->eventDispatcher->dispatch(
-                BusinessTripWorkLogCanceledEvent::CANCELED,
-                new BusinessTripWorkLogCanceledEvent($workLog, $supervisor)
+                new BusinessTripWorkLogCanceledEvent($workLog, $supervisor),
+                BusinessTripWorkLogCanceledEvent::CANCELED
             );
         } elseif ($workLog instanceof HomeOfficeWorkLog && $workLog->getTimeApproved() !== null) {
             $this->eventDispatcher->dispatch(
-                HomeOfficeWorkLogCanceledEvent::CANCELED,
-                new HomeOfficeWorkLogCanceledEvent($workLog, $supervisor)
+                new HomeOfficeWorkLogCanceledEvent($workLog, $supervisor),
+                HomeOfficeWorkLogCanceledEvent::CANCELED
             );
         } elseif ($workLog instanceof OvertimeWorkLog && $workLog->getTimeApproved() !== null) {
             $this->eventDispatcher->dispatch(
-                OvertimeWorkLogCanceledEvent::CANCELED,
-                new OvertimeWorkLogCanceledEvent($workLog, $supervisor)
+                new OvertimeWorkLogCanceledEvent($workLog, $supervisor),
+                OvertimeWorkLogCanceledEvent::CANCELED
             );
         } elseif ($workLog instanceof TimeOffWorkLog && $workLog->getTimeApproved() !== null) {
             $this->eventDispatcher->dispatch(
-                TimeOffWorkLogCanceledEvent::CANCELED,
-                new TimeOffWorkLogCanceledEvent($workLog, $supervisor)
+                new TimeOffWorkLogCanceledEvent($workLog, $supervisor),
+                TimeOffWorkLogCanceledEvent::CANCELED
             );
         } elseif ($workLog instanceof VacationWorkLog && $workLog->getTimeApproved() !== null) {
             $this->eventDispatcher->dispatch(
-                VacationWorkLogCanceledEvent::CANCELED,
-                new VacationWorkLogCanceledEvent($workLog, $supervisor)
+                new VacationWorkLogCanceledEvent($workLog, $supervisor),
+                VacationWorkLogCanceledEvent::CANCELED
             );
         }
     }
 
     /**
-     * @param GetResponseForControllerResultEvent $event
      * @throws InvalidArgumentException
      */
     public function checkWorkMonthStatus(GetResponseForControllerResultEvent $event): void
@@ -172,9 +159,6 @@ class WorkLogSubscriber implements EventSubscriberInterface
         }
     }
 
-    /**
-     * @param GetResponseForControllerResultEvent $event
-     */
     public function resetWorkMonthStatus(GetResponseForControllerResultEvent $event): void
     {
         $workLog = $event->getControllerResult();

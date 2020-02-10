@@ -5,17 +5,17 @@ namespace App\Entity;
 class UserYearStats
 {
     /**
-     * @var null|int
+     * @var int|null
      */
     private $id;
 
     /**
-     * @var null|User
+     * @var User|null
      */
     private $user;
 
     /**
-     * @var null|SupportedYear
+     * @var SupportedYear|null
      */
     private $year;
 
@@ -44,18 +44,11 @@ class UserYearStats
         $this->vacationDaysUsed = 0;
     }
 
-    /**
-     * @return int|null
-     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @param int|null $id
-     * @return UserYearStats
-     */
     public function setId(?int $id): UserYearStats
     {
         $this->id = $id;
@@ -63,18 +56,11 @@ class UserYearStats
         return $this;
     }
 
-    /**
-     * @return User|null
-     */
     public function getUser(): ?User
     {
         return $this->user;
     }
 
-    /**
-     * @param User|null $user
-     * @return UserYearStats
-     */
     public function setUser(?User $user): UserYearStats
     {
         $this->user = $user;
@@ -82,18 +68,11 @@ class UserYearStats
         return $this;
     }
 
-    /**
-     * @return SupportedYear|null
-     */
     public function getYear(): ?SupportedYear
     {
         return $this->year;
     }
 
-    /**
-     * @param SupportedYear|null $year
-     * @return UserYearStats
-     */
     public function setYear(?SupportedYear $year): UserYearStats
     {
         $this->year = $year;
@@ -101,18 +80,11 @@ class UserYearStats
         return $this;
     }
 
-    /**
-     * @return float
-     */
     public function getWorkedHours(): float
     {
         return $this->workedHours;
     }
 
-    /**
-     * @param float $workedHours
-     * @return UserYearStats
-     */
     public function setWorkedHours(float $workedHours): UserYearStats
     {
         $this->workedHours = $workedHours;
@@ -120,18 +92,11 @@ class UserYearStats
         return $this;
     }
 
-    /**
-     * @return float
-     */
     public function getRequiredHours(): float
     {
         return $this->requiredHours;
     }
 
-    /**
-     * @param float $requiredHours
-     * @return UserYearStats
-     */
     public function setRequiredHours(float $requiredHours): UserYearStats
     {
         $this->requiredHours = $requiredHours;
@@ -139,18 +104,11 @@ class UserYearStats
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getVacationDaysUsed(): int
     {
         return $this->vacationDaysUsed;
     }
 
-    /**
-     * @param int $vacationDaysUsed
-     * @return UserYearStats
-     */
     public function setVacationDaysUsed(int $vacationDaysUsed): UserYearStats
     {
         $this->vacationDaysUsed = $vacationDaysUsed;

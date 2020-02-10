@@ -122,26 +122,16 @@ class User implements UserInterface
         $this->setNotifications(new UserNotifications());
     }
 
-    /**
-     * @return int|null
-     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
     public function getEmail(): string
     {
         return $this->email;
     }
 
-    /**
-     * @param string $email
-     * @return User
-     */
     public function setEmail(string $email): User
     {
         $this->email = $email;
@@ -149,18 +139,11 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getEmployeeId(): string
     {
         return $this->employeeId;
     }
 
-    /**
-     * @param string $employeeId
-     * @return User
-     */
     public function setEmployeeId(string $employeeId): User
     {
         $this->employeeId = $employeeId;
@@ -168,18 +151,11 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getFirstName(): string
     {
         return $this->firstName;
     }
 
-    /**
-     * @param string $firstName
-     * @return User
-     */
     public function setFirstName(string $firstName): User
     {
         $this->firstName = $firstName;
@@ -187,18 +163,11 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getLastName(): string
     {
         return $this->lastName;
     }
 
-    /**
-     * @param string $lastName
-     * @return User
-     */
     public function setLastName(string $lastName): User
     {
         $this->lastName = $lastName;
@@ -206,9 +175,6 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getPlainPassword(): ?string
     {
         return $this->plainPassword;
@@ -216,7 +182,6 @@ class User implements UserInterface
 
     /**
      * @param string $plainPassword
-     * @return User
      */
     public function setPlainPassword(?string $plainPassword): User
     {
@@ -225,18 +190,11 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getPassword(): string
     {
         return $this->password;
     }
 
-    /**
-     * @param string $password
-     * @return User
-     */
     public function setPassword(string $password): User
     {
         $this->password = $password;
@@ -244,18 +202,11 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function getIsActive(): bool
     {
         return $this->isActive;
     }
 
-    /**
-     * @param bool $isActive
-     * @return User
-     */
     public function setIsActive(bool $isActive): User
     {
         $this->isActive = $isActive;
@@ -271,10 +222,6 @@ class User implements UserInterface
         return $this->roles;
     }
 
-    /**
-     * @param array $roles
-     * @return User
-     */
     public function setRoles(array $roles): User
     {
         $this->roles = $roles;
@@ -282,21 +229,15 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @param string $role
-     * @return User
-     */
     public function addRole(string $role): User
     {
         if (!in_array($role, $this->roles)) {
             $this->roles[] = $role;
         }
+
+        return $this;
     }
 
-    /**
-     * @param string $roleToRemove
-     * @return User
-     */
     public function removeRole(string $roleToRemove): User
     {
         $keyToRemove = null;
@@ -312,18 +253,11 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @return null|string
-     */
     public function getResetPasswordToken(): ?string
     {
         return $this->resetPasswordToken;
     }
 
-    /**
-     * @param null|string $resetPasswordToken
-     * @return User
-     */
     public function setResetPasswordToken(?string $resetPasswordToken): User
     {
         $this->resetPasswordToken = $resetPasswordToken;
@@ -331,18 +265,11 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @return User|null
-     */
     public function getSupervisor(): ?User
     {
         return $this->supervisor;
     }
 
-    /**
-     * @param User|null $supervisor
-     * @return User
-     */
     public function setSupervisor(?User $supervisor): User
     {
         $this->supervisor = $supervisor;
@@ -379,7 +306,6 @@ class User implements UserInterface
 
     /**
      * @param User[]|Collection $supervised
-     * @return User
      */
     public function setSupervised($supervised): User
     {
@@ -416,7 +342,6 @@ class User implements UserInterface
 
     /**
      * @param Vacation[]|Collection $vacations
-     * @return User
      */
     public function setVacations($vacations): User
     {
@@ -443,7 +368,6 @@ class User implements UserInterface
 
     /**
      * @param WorkHours[]|Collection $workHours
-     * @return User
      */
     public function setWorkHours($workHours): User
     {
@@ -456,10 +380,6 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @param WorkHours $workHours
-     * @return User
-     */
     public function addWorkHours(WorkHours $workHours): User
     {
         if ($this->workHours instanceof Collection) {
@@ -486,7 +406,6 @@ class User implements UserInterface
 
     /**
      * @param WorkMonth[]|Collection $workMonths
-     * @return User
      */
     public function setWorkMonths($workMonths): User
     {
@@ -535,18 +454,11 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @return UserNotifications
-     */
     public function getNotifications(): UserNotifications
     {
         return $this->notifications;
     }
 
-    /**
-     * @param UserNotifications $notifications
-     * @return User
-     */
     public function setNotifications(UserNotifications $notifications): User
     {
         $this->notifications = $notifications;
@@ -555,18 +467,11 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getApiToken(): ?string
     {
         return $this->apiToken;
     }
 
-    /**
-     * @param string|null $apiToken
-     * @return User
-     */
     public function setApiToken(?string $apiToken): User
     {
         $this->apiToken = $apiToken;
@@ -576,7 +481,6 @@ class User implements UserInterface
 
     /**
      * @throws \Exception
-     * @return User
      */
     public function renewApiToken(): User
     {

@@ -33,9 +33,6 @@ class OverlapsFunction extends FunctionNode
      */
     private $endTimeColumn;
 
-    /**
-     * @param \Doctrine\ORM\Query\Parser $parser
-     */
     public function parse(Parser $parser): void
     {
         $parser->match(Lexer::T_IDENTIFIER);
@@ -50,10 +47,6 @@ class OverlapsFunction extends FunctionNode
         $parser->match(Lexer::T_CLOSE_PARENTHESIS);
     }
 
-    /**
-     * @param \Doctrine\ORM\Query\SqlWalker $sqlWalker
-     * @return string
-     */
     public function getSql(SqlWalker $sqlWalker): string
     {
         return sprintf(

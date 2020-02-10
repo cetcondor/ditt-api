@@ -3,6 +3,7 @@
 namespace App\Listener;
 
 use App\Entity\User;
+use App\Entity\VacationWorkLog;
 use App\Entity\WorkLogInterface;
 use App\Event\BusinessTripWorkLogApprovedEvent;
 use App\Event\BusinessTripWorkLogCanceledEvent;
@@ -23,6 +24,9 @@ use App\Event\VacationWorkLogCanceledEvent;
 use App\Event\VacationWorkLogRejectedEvent;
 use App\Exception\EmailNotSentException;
 use App\Repository\UserRepository;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 
 class WorkLogEmailNotificationListener
 {
@@ -42,21 +46,18 @@ class WorkLogEmailNotificationListener
     private $mailSenderAddress;
 
     /**
-     * @var \Twig_Environment
+     * @var \Twig\Environment
      */
     private $templating;
 
     /**
-     * @param \App\Repository\UserRepository $userRepository
-     * @param \Swift_Mailer $mailer
      * @param string $mailSenderAddress
-     * @param \Twig_Environment $templating
      */
     public function __construct(
         UserRepository $userRepository,
         \Swift_Mailer $mailer,
         $mailSenderAddress,
-        \Twig_Environment $templating
+        \Twig\Environment $templating
     ) {
         $this->userRepository = $userRepository;
         $this->mailer = $mailer;
@@ -65,11 +66,10 @@ class WorkLogEmailNotificationListener
     }
 
     /**
-     * @param BusinessTripWorkLogApprovedEvent $event
      * @throws EmailNotSentException
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
     public function onBusinessTripWorkLogApproved(BusinessTripWorkLogApprovedEvent $event): void
     {
@@ -83,11 +83,10 @@ class WorkLogEmailNotificationListener
     }
 
     /**
-     * @param BusinessTripWorkLogCanceledEvent $event
      * @throws EmailNotSentException
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
     public function onBusinessTripWorkLogCanceled(BusinessTripWorkLogCanceledEvent $event): void
     {
@@ -101,11 +100,10 @@ class WorkLogEmailNotificationListener
     }
 
     /**
-     * @param BusinessTripWorkLogRejectedEvent $event
      * @throws EmailNotSentException
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
     public function onBusinessTripWorkLogRejected(BusinessTripWorkLogRejectedEvent $event): void
     {
@@ -119,13 +117,12 @@ class WorkLogEmailNotificationListener
     }
 
     /**
-     * @param HomeOfficeWorkLogApprovedEvent $event
      * @throws EmailNotSentException
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
-    public function onHomeOfficeWorkLogApproved(HomeOfficeWorkLogApprovedEvent $event)
+    public function onHomeOfficeWorkLogApproved(HomeOfficeWorkLogApprovedEvent $event): void
     {
         $this->sendWorkLogMail(
             $event->getSupervisor(),
@@ -137,13 +134,12 @@ class WorkLogEmailNotificationListener
     }
 
     /**
-     * @param HomeOfficeWorkLogCanceledEvent $event
      * @throws EmailNotSentException
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
-    public function onHomeOfficeWorkLogCanceled(HomeOfficeWorkLogCanceledEvent $event)
+    public function onHomeOfficeWorkLogCanceled(HomeOfficeWorkLogCanceledEvent $event): void
     {
         $this->sendWorkLogMail(
             $event->getSupervisor(),
@@ -155,13 +151,12 @@ class WorkLogEmailNotificationListener
     }
 
     /**
-     * @param HomeOfficeWorkLogRejectedEvent $event
      * @throws EmailNotSentException
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
-    public function onHomeOfficeWorkLogRejected(HomeOfficeWorkLogRejectedEvent $event)
+    public function onHomeOfficeWorkLogRejected(HomeOfficeWorkLogRejectedEvent $event): void
     {
         $this->sendWorkLogMail(
             $event->getSupervisor(),
@@ -173,19 +168,18 @@ class WorkLogEmailNotificationListener
     }
 
     /**
-     * @param MultipleVacationWorkLogApprovedEvent $event
      * @throws EmailNotSentException
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
-    public function onMultipleVacationWorkLogApproved(MultipleVacationWorkLogApprovedEvent $event)
+    public function onMultipleVacationWorkLogApproved(MultipleVacationWorkLogApprovedEvent $event): void
     {
         $workLogs = $event->getVacationWorkLogs();
         $startDate = $workLogs[0]->getDate();
         $endDate = $workLogs[0]->getDate();
 
-        if (count($workLogs) > 1) {
+        if (count($workLogs) > 1 && end($workLogs) instanceof VacationWorkLog) {
             $endDate = end($workLogs)->getDate();
         }
 
@@ -200,19 +194,18 @@ class WorkLogEmailNotificationListener
     }
 
     /**
-     * @param MultipleVacationWorkLogRejectedEvent $event
      * @throws EmailNotSentException
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
-    public function onMultipleVacationWorkLogRejected(MultipleVacationWorkLogRejectedEvent $event)
+    public function onMultipleVacationWorkLogRejected(MultipleVacationWorkLogRejectedEvent $event): void
     {
         $workLogs = $event->getVacationWorkLogs();
         $startDate = $workLogs[0]->getDate();
         $endDate = $workLogs[0]->getDate();
 
-        if (count($workLogs) > 1) {
+        if (count($workLogs) > 1 && end($workLogs) instanceof VacationWorkLog) {
             $endDate = end($workLogs)->getDate();
         }
 
@@ -227,13 +220,12 @@ class WorkLogEmailNotificationListener
     }
 
     /**
-     * @param OvertimeWorkLogApprovedEvent $event
      * @throws EmailNotSentException
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
-    public function onOvertimeWorkLogApproved(OvertimeWorkLogApprovedEvent $event)
+    public function onOvertimeWorkLogApproved(OvertimeWorkLogApprovedEvent $event): void
     {
         $this->sendWorkLogMail(
             $event->getSupervisor(),
@@ -245,13 +237,12 @@ class WorkLogEmailNotificationListener
     }
 
     /**
-     * @param OvertimeWorkLogCanceledEvent $event
      * @throws EmailNotSentException
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
-    public function onOvertimeWorkLogCanceled(OvertimeWorkLogCanceledEvent $event)
+    public function onOvertimeWorkLogCanceled(OvertimeWorkLogCanceledEvent $event): void
     {
         $this->sendWorkLogMail(
             $event->getSupervisor(),
@@ -263,13 +254,12 @@ class WorkLogEmailNotificationListener
     }
 
     /**
-     * @param OvertimeWorkLogRejectedEvent $event
      * @throws EmailNotSentException
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
-    public function onOvertimeWorkLogRejected(OvertimeWorkLogRejectedEvent $event)
+    public function onOvertimeWorkLogRejected(OvertimeWorkLogRejectedEvent $event): void
     {
         $this->sendWorkLogMail(
             $event->getSupervisor(),
@@ -281,13 +271,12 @@ class WorkLogEmailNotificationListener
     }
 
     /**
-     * @param TimeOffWorkLogApprovedEvent $event
      * @throws EmailNotSentException
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
-    public function onTimeOffWorkLogApproved(TimeOffWorkLogApprovedEvent $event)
+    public function onTimeOffWorkLogApproved(TimeOffWorkLogApprovedEvent $event): void
     {
         $this->sendWorkLogMail(
             $event->getSupervisor(),
@@ -299,13 +288,12 @@ class WorkLogEmailNotificationListener
     }
 
     /**
-     * @param TimeOffWorkLogCanceledEvent $event
      * @throws EmailNotSentException
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
-    public function onTimeOffWorkLogCanceled(TimeOffWorkLogCanceledEvent $event)
+    public function onTimeOffWorkLogCanceled(TimeOffWorkLogCanceledEvent $event): void
     {
         $this->sendWorkLogMail(
             $event->getSupervisor(),
@@ -317,13 +305,12 @@ class WorkLogEmailNotificationListener
     }
 
     /**
-     * @param TimeOffWorkLogRejectedEvent $event
      * @throws EmailNotSentException
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
-    public function onTimeOffWorkLogRejected(TimeOffWorkLogRejectedEvent $event)
+    public function onTimeOffWorkLogRejected(TimeOffWorkLogRejectedEvent $event): void
     {
         $this->sendWorkLogMail(
             $event->getSupervisor(),
@@ -335,13 +322,12 @@ class WorkLogEmailNotificationListener
     }
 
     /**
-     * @param VacationWorkLogApprovedEvent $event
      * @throws EmailNotSentException
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
-    public function onVacationWorkLogApproved(VacationWorkLogApprovedEvent $event)
+    public function onVacationWorkLogApproved(VacationWorkLogApprovedEvent $event): void
     {
         $this->sendWorkLogMail(
             $event->getSupervisor(),
@@ -353,13 +339,12 @@ class WorkLogEmailNotificationListener
     }
 
     /**
-     * @param VacationWorkLogCanceledEvent $event
      * @throws EmailNotSentException
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
-    public function onVacationWorkLogCanceled(VacationWorkLogCanceledEvent $event)
+    public function onVacationWorkLogCanceled(VacationWorkLogCanceledEvent $event): void
     {
         $this->sendWorkLogMail(
             $event->getSupervisor(),
@@ -371,13 +356,12 @@ class WorkLogEmailNotificationListener
     }
 
     /**
-     * @param VacationWorkLogRejectedEvent $event
      * @throws EmailNotSentException
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
-    public function onVacationWorkLogRejected(VacationWorkLogRejectedEvent $event)
+    public function onVacationWorkLogRejected(VacationWorkLogRejectedEvent $event): void
     {
         $this->sendWorkLogMail(
             $event->getSupervisor(),
@@ -389,15 +373,10 @@ class WorkLogEmailNotificationListener
     }
 
     /**
-     * @param User|null $supervisor
-     * @param WorkLogInterface $workLog
-     * @param string $emailSubject
-     * @param \DateTimeImmutable|null $date
-     * @param string $emailTemplate
      * @throws EmailNotSentException
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
     private function sendWorkLogMail(
         ?User $supervisor,
@@ -405,7 +384,7 @@ class WorkLogEmailNotificationListener
         string $emailSubject,
         ?\DateTimeImmutable $date,
         string $emailTemplate
-    ) {
+    ): void {
         $admins = $this->userRepository->getAllAdmins();
         $toEmails = [$workLog->getWorkMonth()->getUser()->getEmail()];
         foreach ($admins as $admin) {
@@ -432,16 +411,10 @@ class WorkLogEmailNotificationListener
     }
 
     /**
-     * @param User|null $supervisor
-     * @param array $workLogs
-     * @param string $emailSubject
-     * @param \DateTimeImmutable|null $startDate
-     * @param \DateTimeImmutable|null $endDate
-     * @param string $emailTemplate
      * @throws EmailNotSentException
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
     private function sendWorkLogsMail(
         ?User $supervisor,
@@ -450,7 +423,7 @@ class WorkLogEmailNotificationListener
         ?\DateTimeImmutable $startDate,
         ?\DateTimeImmutable $endDate,
         string $emailTemplate
-    ) {
+    ): void {
         $admins = $this->userRepository->getAllAdmins();
         $toEmails = [$workLogs[0]->getWorkMonth()->getUser()->getEmail()];
         foreach ($admins as $admin) {
@@ -482,7 +455,6 @@ class WorkLogEmailNotificationListener
 
     /**
      * @param string $subject
-     * @param array $toEmail
      * @param string $htmlContent
      * @throws EmailNotSentException
      */

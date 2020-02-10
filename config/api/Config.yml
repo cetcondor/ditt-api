@@ -1,6 +1,9 @@
 App\Entity\Config:
+    properties:
+        id:
+            identifier: true
     collectionOperations:
-        get:
+        getConfig:
             method: GET
             route_name: api_config_get
             normalization_context:
@@ -15,4 +18,8 @@ App\Entity\Config:
             denormalization_context:
                 groups:
                     - config_in
-    itemOperations: []
+    itemOperations:
+        get:
+            controller: 'NotFoundAction::class'
+            read: false
+            output: false

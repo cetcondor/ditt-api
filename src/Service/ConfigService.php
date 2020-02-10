@@ -48,14 +48,6 @@ class ConfigService
      */
     private $userRepository;
 
-    /**
-     * @param DenormalizerInterface $denormalizer
-     * @param EntityManagerInterface $entityManager
-     * @param ValidatorInterface $validator
-     * @param SupportedYearRepository $supportedYearRepository
-     * @param SupportedHolidayRepository $supportedHolidayRepository
-     * @param UserRepository $userRepository
-     */
     public function __construct(
         DenormalizerInterface $denormalizer,
         EntityManagerInterface $entityManager,
@@ -72,9 +64,6 @@ class ConfigService
         $this->userRepository = $userRepository;
     }
 
-    /**
-     * @return Config
-     */
     public function getConfig(): Config
     {
         $config = new Config();
@@ -86,10 +75,7 @@ class ConfigService
     }
 
     /**
-     * @param array $supportedYearsNormalized
-     * @param array $supportedHolidaysNormalized
      * @throws \Doctrine\DBAL\DBALException|\InvalidArgumentException
-     * @return Config
      */
     public function saveConfig(array $supportedYearsNormalized, array $supportedHolidaysNormalized): Config
     {
@@ -191,10 +177,6 @@ class ConfigService
         return $this->getConfig();
     }
 
-    /**
-     * @param SupportedYear $supportedYear
-     * @return array
-     */
     private function generateNewEntitiesWithYear(SupportedYear $supportedYear): array
     {
         $users = $this->userRepository->getRepository()->findAll();

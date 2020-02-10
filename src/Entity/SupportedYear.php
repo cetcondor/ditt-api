@@ -20,18 +20,11 @@ class SupportedYear
         $this->supportedHolidays = [];
     }
 
-    /**
-     * @return int
-     */
     public function getYear(): int
     {
         return $this->year;
     }
 
-    /**
-     * @param int $year
-     * @return SupportedYear
-     */
     public function setYear(int $year): SupportedYear
     {
         $this->year = $year;
@@ -49,7 +42,6 @@ class SupportedYear
 
     /**
      * @param SupportedHoliday[] $supportedHolidays
-     * @return SupportedYear
      */
     public function setSupportedHolidays(array $supportedHolidays): SupportedYear
     {

@@ -17,9 +17,6 @@ class CreateSickDayWorkLogCest
      */
     private $user;
 
-    /**
-     * @param \ApiTester $I
-     */
     public function _before(\ApiTester $I)
     {
         $prophet = new Prophet();
@@ -32,7 +29,6 @@ class CreateSickDayWorkLogCest
     }
 
     /**
-     * @param \ApiTester $I
      * @throws \Exception
      */
     public function testCreateWithValidData(\ApiTester $I): void
@@ -63,7 +59,6 @@ class CreateSickDayWorkLogCest
     }
 
     /**
-     * @param \ApiTester $I
      * @throws \Exception
      */
     public function testCreateWithValidSickChildData(\ApiTester $I): void
@@ -100,7 +95,6 @@ class CreateSickDayWorkLogCest
     }
 
     /**
-     * @param \ApiTester $I
      * @throws \Exception
      */
     public function testCreateWithClosedMonth(\ApiTester $I): void
@@ -133,7 +127,6 @@ class CreateSickDayWorkLogCest
     }
 
     /**
-     * @param \ApiTester $I
      * @throws \Exception
      */
     public function testCreateWithInvalidData(\ApiTester $I): void
@@ -169,7 +162,6 @@ class CreateSickDayWorkLogCest
     }
 
     /**
-     * @param \ApiTester $I
      * @throws \Exception
      */
     public function testCreateWithInvalidSickDayData(\ApiTester $I): void

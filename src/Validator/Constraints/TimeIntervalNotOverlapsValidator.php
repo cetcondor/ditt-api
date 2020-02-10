@@ -14,9 +14,6 @@ class TimeIntervalNotOverlapsValidator extends ConstraintValidator
      */
     private $workLogRepository;
 
-    /**
-     * @param WorkLogRepository $workLogRepository
-     */
     public function __construct(WorkLogRepository $workLogRepository)
     {
         $this->workLogRepository = $workLogRepository;
@@ -24,7 +21,6 @@ class TimeIntervalNotOverlapsValidator extends ConstraintValidator
 
     /**
      * @param WorkLog $value
-     * @param \Symfony\Component\Validator\Constraint $constraint
      */
     public function validate($value, Constraint $constraint): void
     {

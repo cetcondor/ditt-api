@@ -5,6 +5,11 @@ namespace App\Entity;
 class Config
 {
     /**
+     * @var int
+     */
+    private $id = 1;
+
+    /**
      * @var SupportedHoliday[]
      */
     private $supportedHolidays;
@@ -20,9 +25,18 @@ class Config
         $this->supportedYears = [];
     }
 
-    /**
-     * @return bool
-     */
+    public function getId(): int
+    {
+        // Not used but cannot be removed because normalizer expects identifier
+        return 1;
+    }
+
+    public function setId(int $id): int
+    {
+        // Not used but cannot be removed because normalizer expects identifier
+        return 1;
+    }
+
     public function isHolidayToday(): bool
     {
         $dateTime = new \DateTimeImmutable();
@@ -50,7 +64,6 @@ class Config
 
     /**
      * @param SupportedHoliday[] $supportedHolidays
-     * @return Config
      */
     public function setSupportedHolidays(array $supportedHolidays): Config
     {
@@ -69,7 +82,6 @@ class Config
 
     /**
      * @param SupportedYear[] $supportedYears
-     * @return Config
      */
     public function setSupportedYears(array $supportedYears): Config
     {
@@ -78,17 +90,11 @@ class Config
         return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getWorkedHoursLimits(): array
     {
         return $this->getRawConfig()['workedHoursLimits'];
     }
 
-    /**
-     * @return array
-     */
     private function getRawConfig(): array
     {
         return include __DIR__ . '/../../config/config.php';

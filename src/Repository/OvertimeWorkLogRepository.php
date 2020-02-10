@@ -18,9 +18,6 @@ class OvertimeWorkLogRepository
      */
     private $repository;
 
-    /**
-     * @param EntityManagerInterface $entityManager
-     */
     public function __construct(EntityManagerInterface $entityManager)
     {
         /** @var EntityRepository $repository */
@@ -30,9 +27,6 @@ class OvertimeWorkLogRepository
         $this->repository = $repository;
     }
 
-    /**
-     * @return EntityRepository
-     */
     public function getRepository(): EntityRepository
     {
         return $this->repository;
@@ -58,7 +52,6 @@ class OvertimeWorkLogRepository
     }
 
     /**
-     * @param User $supervisor
      * @return mixed
      */
     public function findAllWaitingForApprovalBySupervisor(User $supervisor)
@@ -114,7 +107,6 @@ class OvertimeWorkLogRepository
     }
 
     /**
-     * @param User $supervisor
      * @return OvertimeWorkLog[]
      */
     public function findAllRecentBySupervisor(User $supervisor): array

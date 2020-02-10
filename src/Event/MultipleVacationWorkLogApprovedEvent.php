@@ -4,7 +4,7 @@ namespace App\Event;
 
 use App\Entity\User;
 use App\Entity\VacationWorkLog;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class MultipleVacationWorkLogApprovedEvent extends Event
 {
@@ -22,7 +22,6 @@ class MultipleVacationWorkLogApprovedEvent extends Event
 
     /**
      * @param VacationWorkLog[] $vacationWorkLogs
-     * @param User|null $supervisor
      */
     public function __construct(array $vacationWorkLogs, ?User $supervisor)
     {
@@ -38,9 +37,6 @@ class MultipleVacationWorkLogApprovedEvent extends Event
         return $this->vacationWorkLogs;
     }
 
-    /**
-     * @return User|null
-     */
     public function getSupervisor(): ?User
     {
         return $this->supervisor;

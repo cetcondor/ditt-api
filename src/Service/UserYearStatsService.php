@@ -13,9 +13,6 @@ class UserYearStatsService
      */
     private $entityManager;
 
-    /**
-     * @param EntityManagerInterface $entityManager
-     */
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;

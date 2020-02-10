@@ -3,11 +3,6 @@ App\Entity\WorkMonth:
         filters:
             - search_filter.work_month
     collectionOperations:
-        api_users_work_months_get_subresource:
-            method: GET
-            normalization_context:
-                groups:
-                    - work_month_out_list
         specialApprovals:
             method: GET
             route_name: api_work_months_special_approvals
@@ -56,3 +51,9 @@ App\Entity\WorkMonth:
                     - work_month_out_detail
             swagger_context:
                 summary: Marks the WorkMonth as waiting for approval.
+    subresourceOperations:
+        api_users_work_months_get_subresource:
+            method: GET
+            normalization_context:
+                groups:
+                    - work_month_out_list

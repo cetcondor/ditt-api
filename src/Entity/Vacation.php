@@ -35,18 +35,11 @@ class Vacation
         $this->vacationDaysCorrection = 0;
     }
 
-    /**
-     * @return User
-     */
     public function getUser(): User
     {
         return $this->user;
     }
 
-    /**
-     * @param User $user
-     * @return Vacation
-     */
     public function setUser(User $user): Vacation
     {
         $this->user = $user;
@@ -54,18 +47,11 @@ class Vacation
         return $this;
     }
 
-    /**
-     * @return SupportedYear
-     */
     public function getYear(): SupportedYear
     {
         return $this->year;
     }
 
-    /**
-     * @param SupportedYear $year
-     * @return Vacation
-     */
     public function setYear(SupportedYear $year): Vacation
     {
         $this->year = $year;
@@ -73,18 +59,11 @@ class Vacation
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getVacationDays(): int
     {
         return $this->vacationDays;
     }
 
-    /**
-     * @param int $vacationDays
-     * @return Vacation
-     */
     public function setVacationDays(int $vacationDays): Vacation
     {
         $this->vacationDays = $vacationDays;
@@ -92,18 +71,11 @@ class Vacation
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getVacationDaysCorrection(): int
     {
         return $this->vacationDaysCorrection;
     }
 
-    /**
-     * @param int $vacationDaysCorrection
-     * @return Vacation
-     */
     public function setVacationDaysCorrection(int $vacationDaysCorrection): Vacation
     {
         $this->vacationDaysCorrection = $vacationDaysCorrection;
@@ -111,18 +83,11 @@ class Vacation
         return $this;
     }
 
-    /**
-     * @return int|null
-     */
     public function getRemainingVacationDays(): ?int
     {
         return $this->remainingVacationDays;
     }
 
-    /**
-     * @param int|null $remainingVacationDays
-     * @return Vacation
-     */
     public function setRemainingVacationDays(?int $remainingVacationDays): Vacation
     {
         $this->remainingVacationDays = $remainingVacationDays;

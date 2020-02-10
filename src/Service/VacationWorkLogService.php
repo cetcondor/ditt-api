@@ -13,9 +13,6 @@ class VacationWorkLogService
      */
     private $entityManager;
 
-    /**
-     * @param EntityManagerInterface $entityManager
-     */
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
@@ -37,19 +34,12 @@ class VacationWorkLogService
         });
     }
 
-    /**
-     * @param VacationWorkLog $vacationWorkLog
-     */
     public function markApproved(VacationWorkLog $vacationWorkLog): void
     {
         $vacationWorkLog->markApproved();
         $this->entityManager->flush();
     }
 
-    /**
-     * @param VacationWorkLog $vacationWorkLog
-     * @param string $rejectionMessage
-     */
     public function markRejected(VacationWorkLog $vacationWorkLog, string $rejectionMessage): void
     {
         $vacationWorkLog->markRejected($rejectionMessage);

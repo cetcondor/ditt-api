@@ -65,17 +65,6 @@ class WorkMonthService
      */
     private $workHoursRepository;
 
-    /**
-     * @param EntityManagerInterface $entityManager
-     * @param ConfigService $configService
-     * @param BusinessTripWorkLogRepository $businessTripWorkLogRepository
-     * @param HomeOfficeWorkLogRepository $homeOfficeWorkLogRepository
-     * @param SickDayWorkLogRepository $sickDayWorkLogRepository
-     * @param UserYearStatsRepository $userYearStatsRepository
-     * @param VacationWorkLogRepository $vacationWorkLogRepository
-     * @param WorkLogRepository $workLogRepository
-     * @param WorkHoursRepository $workHoursRepository
-     */
     public function __construct(
         EntityManagerInterface $entityManager,
         ConfigService $configService,
@@ -115,10 +104,9 @@ class WorkMonthService
     }
 
     /**
-     * @param WorkMonth $workMonth
      * @throws \Exception
      */
-    public function markApproved(WorkMonth $workMonth)
+    public function markApproved(WorkMonth $workMonth): void
     {
         $workMonth->markApproved();
 
@@ -137,9 +125,6 @@ class WorkMonthService
         $this->entityManager->flush();
     }
 
-    /**
-     * @param WorkMonth $workMonth
-     */
     public function markWaitingForApproval(WorkMonth $workMonth): void
     {
         $workMonth->markWaitingForApproval();
@@ -147,9 +132,7 @@ class WorkMonthService
     }
 
     /**
-     * @param WorkMonth $workMonth
      * @throws \Exception
-     * @return float
      */
     public function calculateWorkedHours(WorkMonth $workMonth): float
     {
@@ -260,9 +243,7 @@ class WorkMonthService
     }
 
     /**
-     * @param WorkMonth $workMonth
      * @throws \Exception
-     * @return float
      */
     public function calculateRequiredHours(WorkMonth $workMonth): float
     {

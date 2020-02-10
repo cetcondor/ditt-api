@@ -25,11 +25,6 @@ class UserService
      */
     private $vacationWorkLogRepository;
 
-    /**
-     * @param EntityManagerInterface $entityManager
-     * @param ConfigService $configService
-     * @param VacationWorkLogRepository $vacationWorkLogRepository
-     */
     public function __construct(
         EntityManagerInterface $entityManager,
         ConfigService $configService,
@@ -41,7 +36,6 @@ class UserService
     }
 
     /**
-     * @param User $user
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function fullfilRemainingVacationDays(User &$user): void
@@ -69,7 +63,6 @@ class UserService
     }
 
     /**
-     * @param User $user
      * @throws \Exception
      */
     public function renewApiToken(User $user): void
@@ -79,7 +72,6 @@ class UserService
     }
 
     /**
-     * @param User $user
      * @throws \Exception
      */
     public function resetApiToken(User $user): void
@@ -89,7 +81,6 @@ class UserService
     }
 
     /**
-     * @param User $user
      * @throws \Exception
      */
     public function setResetPasswordToken(User $user): void
@@ -100,10 +91,6 @@ class UserService
         $this->entityManager->flush();
     }
 
-    /**
-     * @param User $user
-     * @param string $newPassword
-     */
     public function setNewPassword(User $user, string $newPassword): void
     {
         $user->setPlainPassword($newPassword);

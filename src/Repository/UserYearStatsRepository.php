@@ -19,9 +19,6 @@ class UserYearStatsRepository
      */
     private $repository;
 
-    /**
-     * @param EntityManagerInterface $entityManager
-     */
     public function __construct(EntityManagerInterface $entityManager)
     {
         /** @var EntityRepository $repository */
@@ -31,19 +28,11 @@ class UserYearStatsRepository
         $this->repository = $repository;
     }
 
-    /**
-     * @return EntityRepository
-     */
     public function getRepository(): EntityRepository
     {
         return $this->repository;
     }
 
-    /**
-     * @param User $user
-     * @param SupportedYear $year
-     * @return UserYearStats|null
-     */
     public function findByUserAndYear(User $user, SupportedYear $year): ?UserYearStats
     {
         /** @var UserYearStats|null $user */

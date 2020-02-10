@@ -8,11 +8,11 @@ use App\Event\BusinessTripWorkLogRejectedEvent;
 use App\Repository\BusinessTripWorkLogRepository;
 use App\Service\BusinessTripWorkLogService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class BusinessTripWorkLogController extends Controller
 {
@@ -36,12 +36,6 @@ class BusinessTripWorkLogController extends Controller
      */
     private $eventDispatcher;
 
-    /**
-     * @param NormalizerInterface $normalizer
-     * @param BusinessTripWorkLogRepository $businessTripWorkLogRepository
-     * @param BusinessTripWorkLogService $businessTripWorkLogService
-     * @param EventDispatcherInterface $eventDispatcher
-     */
     public function __construct(
         NormalizerInterface $normalizer,
         BusinessTripWorkLogRepository $businessTripWorkLogRepository,
@@ -54,10 +48,6 @@ class BusinessTripWorkLogController extends Controller
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    /**
-     * @param int $id
-     * @return Response
-     */
     public function markApproved(int $id): Response
     {
         $workLog = $this->businessTripWorkLogRepository->getRepository()->find($id);
@@ -85,8 +75,8 @@ class BusinessTripWorkLogController extends Controller
         $supervisor = $this->getUser();
 
         $this->eventDispatcher->dispatch(
-            BusinessTripWorkLogApprovedEvent::APPROVED,
-            new BusinessTripWorkLogApprovedEvent($workLog, $supervisor)
+            new BusinessTripWorkLogApprovedEvent($workLog, $supervisor),
+            BusinessTripWorkLogApprovedEvent::APPROVED
         );
 
         return JsonResponse::create(
@@ -98,11 +88,6 @@ class BusinessTripWorkLogController extends Controller
         );
     }
 
-    /**
-     * @param Request $request
-     * @param int $id
-     * @return Response
-     */
     public function markRejected(Request $request, int $id): Response
     {
         $workLog = $this->businessTripWorkLogRepository->getRepository()->find($id);
@@ -137,8 +122,8 @@ class BusinessTripWorkLogController extends Controller
         $supervisor = $this->getUser();
 
         $this->eventDispatcher->dispatch(
-            BusinessTripWorkLogRejectedEvent::REJECTED,
-            new BusinessTripWorkLogRejectedEvent($workLog, $supervisor)
+            new BusinessTripWorkLogRejectedEvent($workLog, $supervisor),
+            BusinessTripWorkLogRejectedEvent::REJECTED
         );
 
         return JsonResponse::create(

@@ -1,5 +1,9 @@
 App\Entity\Config:
     attributes:
+        id:
+            groups:
+                - config_out
+                - config_in
         supportedHolidays:
             groups:
                 - config_out

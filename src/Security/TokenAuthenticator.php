@@ -20,16 +20,12 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
      */
     private $userRepository;
 
-    /**
-     * @param UserRepository $userRepository
-     */
     public function __construct(UserRepository $userRepository)
     {
         $this->userRepository = $userRepository;
     }
 
     /**
-     * @param Request $request
      * @return bool
      */
     public function supports(Request $request)
@@ -38,7 +34,6 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
     }
 
     /**
-     * @param Request $request
      * @return array
      */
     public function getCredentials(Request $request)
@@ -50,7 +45,6 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
 
     /**
      * @param mixed $credentials
-     * @param UserProviderInterface $userProvider
      * @return User|null
      */
     public function getUser($credentials, UserProviderInterface $userProvider)
@@ -66,7 +60,6 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
 
     /**
      * @param mixed $credentials
-     * @param UserInterface $user
      * @return bool
      */
     public function checkCredentials($credentials, UserInterface $user)
@@ -75,8 +68,6 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
     }
 
     /**
-     * @param Request $request
-     * @param TokenInterface $token
      * @param string $providerKey
      * @return JsonResponse|Response|null
      */
@@ -114,8 +105,6 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
     }
 
     /**
-     * @param Request $request
-     * @param AuthenticationException $exception
      * @return Response
      */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
@@ -128,8 +117,6 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
     }
 
     /**
-     * @param Request $request
-     * @param AuthenticationException|null $authException
      * @return JsonResponse
      */
     public function start(Request $request, AuthenticationException $authException = null)

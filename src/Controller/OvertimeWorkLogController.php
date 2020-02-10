@@ -8,11 +8,11 @@ use App\Event\OvertimeWorkLogRejectedEvent;
 use App\Repository\OvertimeWorkLogRepository;
 use App\Service\OvertimeWorkLogService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class OvertimeWorkLogController extends Controller
 {
@@ -36,12 +36,6 @@ class OvertimeWorkLogController extends Controller
      */
     private $eventDispatcher;
 
-    /**
-     * @param NormalizerInterface $normalizer
-     * @param OvertimeWorkLogRepository $overtimeWorkLogRepository
-     * @param OvertimeWorkLogService $overtimeWorkLogService
-     * @param EventDispatcherInterface $eventDispatcher
-     */
     public function __construct(
         NormalizerInterface $normalizer,
         OvertimeWorkLogRepository $overtimeWorkLogRepository,
@@ -54,10 +48,6 @@ class OvertimeWorkLogController extends Controller
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    /**
-     * @param int $id
-     * @return Response
-     */
     public function markApproved(int $id): Response
     {
         $workLog = $this->overtimeWorkLogRepository->getRepository()->find($id);
@@ -85,8 +75,8 @@ class OvertimeWorkLogController extends Controller
         $supervisor = $this->getUser();
 
         $this->eventDispatcher->dispatch(
-            OvertimeWorkLogApprovedEvent::APPROVED,
-            new OvertimeWorkLogApprovedEvent($workLog, $supervisor)
+            new OvertimeWorkLogApprovedEvent($workLog, $supervisor),
+            OvertimeWorkLogApprovedEvent::APPROVED
         );
 
         return JsonResponse::create(
@@ -98,11 +88,6 @@ class OvertimeWorkLogController extends Controller
         );
     }
 
-    /**
-     * @param Request $request
-     * @param int $id
-     * @return Response
-     */
     public function markRejected(Request $request, int $id): Response
     {
         $workLog = $this->overtimeWorkLogRepository->getRepository()->find($id);
@@ -137,8 +122,8 @@ class OvertimeWorkLogController extends Controller
         $supervisor = $this->getUser();
 
         $this->eventDispatcher->dispatch(
-            OvertimeWorkLogRejectedEvent::REJECTED,
-            new OvertimeWorkLogRejectedEvent($workLog, $supervisor)
+            new OvertimeWorkLogRejectedEvent($workLog, $supervisor),
+            OvertimeWorkLogRejectedEvent::REJECTED
         );
 
         return JsonResponse::create(

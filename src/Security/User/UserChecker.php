@@ -10,29 +10,23 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class UserChecker implements UserCheckerInterface
 {
-    public function checkPreAuth(UserInterface $user)
+    public function checkPreAuth(UserInterface $user): User
     {
         if (!$user instanceof User) {
-            throw new UnsupportedUserException(
-                sprintf('Instances of "%s" are not supported.', get_class($user))
-            );
+            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', get_class($user)));
         }
 
         if (!$user->getIsActive()) {
-            throw new AccountDisabledException(
-                sprintf('User "%s" is not active.', $user->getUsername())
-            );
+            throw new AccountDisabledException(sprintf('User "%s" is not active.', $user->getUsername()));
         }
 
         return $user;
     }
 
-    public function checkPostAuth(UserInterface $user)
+    public function checkPostAuth(UserInterface $user): User
     {
         if (!$user instanceof User) {
-            throw new UnsupportedUserException(
-                sprintf('Instances of "%s" are not supported.', get_class($user))
-            );
+            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', get_class($user)));
         }
 
         return $user;

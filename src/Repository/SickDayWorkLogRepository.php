@@ -14,9 +14,6 @@ class SickDayWorkLogRepository
      */
     private $repository;
 
-    /**
-     * @param EntityManagerInterface $entityManager
-     */
     public function __construct(EntityManagerInterface $entityManager)
     {
         /** @var EntityRepository $repository */
@@ -25,16 +22,12 @@ class SickDayWorkLogRepository
         $this->repository = $repository;
     }
 
-    /**
-     * @return EntityRepository
-     */
     public function getRepository(): EntityRepository
     {
         return $this->repository;
     }
 
     /**
-     * @param WorkMonth $workMonth
      * @return SickDayWorkLog[]
      */
     public function findAllByWorkMonth(WorkMonth $workMonth): array

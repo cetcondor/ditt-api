@@ -18,9 +18,6 @@ class UserNotificationsRepository
      */
     private $entityManager;
 
-    /**
-     * @param EntityManagerInterface $entityManager
-     */
     public function __construct(EntityManagerInterface $entityManager)
     {
         /** @var EntityRepository $repository */
@@ -29,18 +26,11 @@ class UserNotificationsRepository
         $this->entityManager = $entityManager;
     }
 
-    /**
-     * @return EntityRepository
-     */
     public function getRepository(): EntityRepository
     {
         return $this->repository;
     }
 
-    /**
-     * @param int $id
-     * @return UserNotifications|null
-     */
     public function findOne(int $id): ?UserNotifications
     {
         $userNotifications = $this->repository->find($id);

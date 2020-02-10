@@ -15,7 +15,6 @@ use App\Repository\VacationWorkLogRepository;
 use App\Repository\WorkMonthRepository;
 use App\Service\VacationWorkLogService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,6 +23,7 @@ use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class VacationWorkLogController extends Controller
 {
@@ -72,17 +72,6 @@ class VacationWorkLogController extends Controller
      */
     private $tokenStorage;
 
-    /**
-     * @param NormalizerInterface $normalizer
-     * @param DenormalizerInterface $denormalizer
-     * @param SupportedYearRepository $supportedYearRepository
-     * @param VacationWorkLogRepository $vacationWorkLogRepository
-     * @param VacationWorkLogService $vacationWorkLogService
-     * @param WorkMonthRepository $workMonthRepository
-     * @param EventDispatcherInterface $eventDispatcher
-     * @param ValidatorInterface $validator
-     * @param TokenStorageInterface $tokenStorage
-     */
     public function __construct(
         NormalizerInterface $normalizer,
         DenormalizerInterface $denormalizer,
@@ -203,10 +192,6 @@ class VacationWorkLogController extends Controller
         return JsonResponse::create($normalizedVacationWorkLogs, JsonResponse::HTTP_CREATED);
     }
 
-    /**
-     * @param Request $request
-     * @return Response
-     */
     public function bulkMarkApproved(Request $request): Response
     {
         $data = json_decode((string) $request->getContent());
@@ -247,8 +232,8 @@ class VacationWorkLogController extends Controller
         $supervisor = $this->getUser();
 
         $this->eventDispatcher->dispatch(
-            MultipleVacationWorkLogApprovedEvent::APPROVED,
-            new MultipleVacationWorkLogApprovedEvent($workLogs, $supervisor)
+            new MultipleVacationWorkLogApprovedEvent($workLogs, $supervisor),
+            MultipleVacationWorkLogApprovedEvent::APPROVED
         );
 
         $normalizedWorkLogs = [];
@@ -264,10 +249,6 @@ class VacationWorkLogController extends Controller
         return JsonResponse::create($normalizedWorkLogs, JsonResponse::HTTP_OK);
     }
 
-    /**
-     * @param Request $request
-     * @return Response
-     */
     public function bulkMarkRejected(Request $request): Response
     {
         $data = json_decode((string) $request->getContent());
@@ -313,8 +294,8 @@ class VacationWorkLogController extends Controller
         $supervisor = $this->getUser();
 
         $this->eventDispatcher->dispatch(
-            MultipleVacationWorkLogRejectedEvent::REJECTED,
-            new MultipleVacationWorkLogRejectedEvent($workLogs, $supervisor)
+            new MultipleVacationWorkLogRejectedEvent($workLogs, $supervisor),
+            MultipleVacationWorkLogRejectedEvent::REJECTED
         );
 
         $normalizedWorkLogs = [];
@@ -330,10 +311,6 @@ class VacationWorkLogController extends Controller
         return JsonResponse::create($normalizedWorkLogs, JsonResponse::HTTP_OK);
     }
 
-    /**
-     * @param int $id
-     * @return Response
-     */
     public function markApproved(int $id): Response
     {
         $workLog = $this->vacationWorkLogRepository->getRepository()->find($id);
@@ -361,8 +338,8 @@ class VacationWorkLogController extends Controller
         $supervisor = $this->getUser();
 
         $this->eventDispatcher->dispatch(
-            VacationWorkLogApprovedEvent::APPROVED,
-            new VacationWorkLogApprovedEvent($workLog, $supervisor)
+            new VacationWorkLogApprovedEvent($workLog, $supervisor),
+            VacationWorkLogApprovedEvent::APPROVED
         );
 
         return JsonResponse::create(
@@ -374,11 +351,6 @@ class VacationWorkLogController extends Controller
         );
     }
 
-    /**
-     * @param Request $request
-     * @param int $id
-     * @return Response
-     */
     public function markRejected(Request $request, int $id): Response
     {
         $workLog = $this->vacationWorkLogRepository->getRepository()->find($id);
@@ -413,8 +385,8 @@ class VacationWorkLogController extends Controller
         $supervisor = $this->getUser();
 
         $this->eventDispatcher->dispatch(
-            VacationWorkLogRejectedEvent::REJECTED,
-            new VacationWorkLogRejectedEvent($workLog, $supervisor)
+            new VacationWorkLogRejectedEvent($workLog, $supervisor),
+            VacationWorkLogRejectedEvent::REJECTED
         );
 
         return JsonResponse::create(

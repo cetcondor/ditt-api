@@ -24,21 +24,18 @@ class WorkMonthApprovedEmailNotificationListener
     private $mailSenderAddress;
 
     /**
-     * @var \Twig_Environment
+     * @var \Twig\Environment
      */
     private $templating;
 
     /**
-     * @param \App\Repository\UserRepository $userRepository
-     * @param \Swift_Mailer $mailer
      * @param string $mailSenderAddress
-     * @param \Twig_Environment $templating
      */
     public function __construct(
         UserRepository $userRepository,
         \Swift_Mailer $mailer,
         $mailSenderAddress,
-        \Twig_Environment $templating
+        \Twig\Environment $templating
     ) {
         $this->userRepository = $userRepository;
         $this->mailer = $mailer;
@@ -47,10 +44,9 @@ class WorkMonthApprovedEmailNotificationListener
     }
 
     /**
-     * @param WorkMonthApprovedEvent $event
      * @throws \Exception
      */
-    public function onApprove(WorkMonthApprovedEvent $event)
+    public function onApprove(WorkMonthApprovedEvent $event): void
     {
         $workMonth = $event->getWorkMonth();
         $supervisor = $event->getSupervisor();
@@ -80,11 +76,10 @@ class WorkMonthApprovedEmailNotificationListener
 
     /**
      * @param string $subject
-     * @param array $toEmail
      * @param string $htmlContent
      * @throws EmailNotSentException
      */
-    private function sendMail($subject, array $toEmail, $htmlContent)
+    private function sendMail($subject, array $toEmail, $htmlContent): void
     {
         $message = (new \Swift_Message())
             ->setSubject($subject)

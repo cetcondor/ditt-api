@@ -19,9 +19,6 @@ class BusinessTripWorkLogRepository
      */
     private $repository;
 
-    /**
-     * @param EntityManagerInterface $entityManager
-     */
     public function __construct(EntityManagerInterface $entityManager)
     {
         /** @var EntityRepository $repository */
@@ -31,9 +28,6 @@ class BusinessTripWorkLogRepository
         $this->repository = $repository;
     }
 
-    /**
-     * @return EntityRepository
-     */
     public function getRepository(): EntityRepository
     {
         return $this->repository;
@@ -59,7 +53,6 @@ class BusinessTripWorkLogRepository
     }
 
     /**
-     * @param User $supervisor
      * @return mixed
      */
     public function findAllWaitingForApprovalBySupervisor(User $supervisor)
@@ -115,7 +108,6 @@ class BusinessTripWorkLogRepository
     }
 
     /**
-     * @param User $supervisor
      * @return BusinessTripWorkLog[]
      */
     public function findAllRecentBySupervisor(User $supervisor): array
@@ -152,7 +144,6 @@ class BusinessTripWorkLogRepository
     }
 
     /**
-     * @param WorkMonth $workMonth
      * @return BusinessTripWorkLog[]
      */
     public function findAllApprovedByWorkMonth(WorkMonth $workMonth): array

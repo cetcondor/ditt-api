@@ -73,7 +73,7 @@ class NotificationsCommand extends ContainerAwareCommand
     private $mailSenderAddress;
 
     /**
-     * @var \Twig_Environment
+     * @var \Twig\Environment
      */
     private $templating;
 
@@ -89,7 +89,7 @@ class NotificationsCommand extends ContainerAwareCommand
         UserRepository $userRepository,
         \Swift_Mailer $mailer,
         string $mailSenderAddress,
-        \Twig_Environment $templating
+        \Twig\Environment $templating
     ) {
         parent::__construct();
 
@@ -108,14 +108,14 @@ class NotificationsCommand extends ContainerAwareCommand
         $this->templating = $templating;
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('notifications:send')
             ->setDescription('Send notifications to all users according to their notification settings');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $config = $this->configService->getConfig();
         $isHolidayToday = $config->isHolidayToday();
@@ -148,10 +148,6 @@ class NotificationsCommand extends ContainerAwareCommand
                      */
                     public $waitingForApprovalCount;
 
-                    /**
-                     * @param User $user
-                     * @param int $waitingForApprovalCount
-                     */
                     public function __construct(User $user, int $waitingForApprovalCount)
                     {
                         $this->user = $user;
@@ -190,5 +186,7 @@ class NotificationsCommand extends ContainerAwareCommand
                 );
             }
         }
+
+        return 0;
     }
 }

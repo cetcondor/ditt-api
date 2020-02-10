@@ -18,9 +18,6 @@ class SupportedHolidayRepository
      */
     private $entityManager;
 
-    /**
-     * @param EntityManagerInterface $entityManager
-     */
     public function __construct(EntityManagerInterface $entityManager)
     {
         /** @var EntityRepository $repository */
@@ -30,9 +27,6 @@ class SupportedHolidayRepository
         $this->entityManager = $entityManager;
     }
 
-    /**
-     * @return EntityRepository
-     */
     public function getRepository(): EntityRepository
     {
         return $this->repository;

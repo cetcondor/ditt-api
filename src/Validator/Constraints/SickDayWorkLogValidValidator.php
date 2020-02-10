@@ -10,7 +10,6 @@ class SickDayWorkLogValidValidator extends ConstraintValidator
 {
     /**
      * @param SickDayWorkLog $value
-     * @param \Symfony\Component\Validator\Constraint $constraint
      */
     public function validate($value, Constraint $constraint): void
     {

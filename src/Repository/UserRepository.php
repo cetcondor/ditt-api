@@ -19,9 +19,6 @@ class UserRepository
      */
     private $entityManager;
 
-    /**
-     * @param EntityManagerInterface $entityManager
-     */
     public function __construct(EntityManagerInterface $entityManager)
     {
         /** @var EntityRepository $repository */
@@ -30,18 +27,11 @@ class UserRepository
         $this->entityManager = $entityManager;
     }
 
-    /**
-     * @return EntityRepository
-     */
     public function getRepository(): EntityRepository
     {
         return $this->repository;
     }
 
-    /**
-     * @param string $apiToken
-     * @return User|null
-     */
     public function getByApiToken(string $apiToken): ?User
     {
         /** @var User|null $user */
@@ -50,10 +40,6 @@ class UserRepository
         return $user;
     }
 
-    /**
-     * @param string $email
-     * @return User|null
-     */
     public function getByEmail(string $email): ?User
     {
         /** @var User|null $user */
@@ -62,10 +48,6 @@ class UserRepository
         return $user;
     }
 
-    /**
-     * @param string $resetPasswordToken
-     * @return User|null
-     */
     public function getByResetPasswordToken(string $resetPasswordToken): ?User
     {
         /** @var User|null $user */

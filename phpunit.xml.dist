@@ -22,6 +22,7 @@
         <env name="JWT_PUBLIC_KEY_PATH" value="config/jwt/public.pem"/>
         <env name="JWT_PASSPHRASE" value="2a01d2b305fca1f64cd6933f393d5ef4"/>
         <!-- ###- lexik/jwt-authentication-bundle ### -->
+        <env name="SYMFONY_DEPRECATIONS_HELPER" value="disabled" />
     </php>
 
     <testsuites>

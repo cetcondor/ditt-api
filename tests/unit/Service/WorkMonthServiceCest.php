@@ -28,7 +28,6 @@ use Prophecy\Prophet;
 class WorkMonthServiceCest
 {
     /**
-     * @param \UnitTester $I
      * @throws \Exception
      */
     public function testCalculateNoWorkLogs(\UnitTester $I): void
@@ -43,7 +42,6 @@ class WorkMonthServiceCest
     }
 
     /**
-     * @param \UnitTester $I
      * @throws \Exception
      */
     public function testCalculateWorkLogs(\UnitTester $I): void
@@ -69,7 +67,6 @@ class WorkMonthServiceCest
     }
 
     /**
-     * @param \UnitTester $I
      * @throws \Exception
      */
     public function testCalculateWorkLogsAboveLowerLimit(\UnitTester $I): void
@@ -95,7 +92,6 @@ class WorkMonthServiceCest
     }
 
     /**
-     * @param \UnitTester $I
      * @throws \Exception
      */
     public function testCalculateWorkLogsAboveUpperLimit(\UnitTester $I): void
@@ -121,7 +117,6 @@ class WorkMonthServiceCest
     }
 
     /**
-     * @param \UnitTester $I
      * @throws \Exception
      */
     public function testCalculateApprovedBusinessTripWorkLogsWithoutWorkLogs(\UnitTester $I): void
@@ -142,7 +137,6 @@ class WorkMonthServiceCest
     }
 
     /**
-     * @param \UnitTester $I
      * @throws \Exception
      */
     public function testCalculateUnapprovedBusinessTripWorkLogsWithoutWorkLogs(\UnitTester $I): void
@@ -162,7 +156,6 @@ class WorkMonthServiceCest
     }
 
     /**
-     * @param \UnitTester $I
      * @throws \Exception
      */
     public function testCalculateApprovedBusinessTripWorkLogs(\UnitTester $I): void
@@ -191,7 +184,6 @@ class WorkMonthServiceCest
     }
 
     /**
-     * @param \UnitTester $I
      * @throws \Exception
      */
     public function testCalculateApprovedBusinessTripWorkLogsAboveLowerLimit(\UnitTester $I): void
@@ -220,7 +212,6 @@ class WorkMonthServiceCest
     }
 
     /**
-     * @param \UnitTester $I
      * @throws \Exception
      */
     public function testCalculateApprovedBusinessTripWorkLogsAboveUpperLimit(\UnitTester $I): void
@@ -249,7 +240,6 @@ class WorkMonthServiceCest
     }
 
     /**
-     * @param \UnitTester $I
      * @throws \Exception
      */
     public function testCalculateApprovedHomeOfficeWorkLogsWithoutWorkLogs(\UnitTester $I): void
@@ -270,7 +260,6 @@ class WorkMonthServiceCest
     }
 
     /**
-     * @param \UnitTester $I
      * @throws \Exception
      */
     public function testCalculateUnapprovedHomeOfficeWorkLogsWithoutWorkLogs(\UnitTester $I): void
@@ -290,7 +279,6 @@ class WorkMonthServiceCest
     }
 
     /**
-     * @param \UnitTester $I
      * @throws \Exception
      */
     public function testCalculateApprovedHomeOfficeWorkLogs(\UnitTester $I): void
@@ -319,7 +307,6 @@ class WorkMonthServiceCest
     }
 
     /**
-     * @param \UnitTester $I
      * @throws \Exception
      */
     public function testCalculateApprovedHomeOfficeWorkLogsAboveLowerLimit(\UnitTester $I): void
@@ -348,7 +335,6 @@ class WorkMonthServiceCest
     }
 
     /**
-     * @param \UnitTester $I
      * @throws \Exception
      */
     public function testCalculateApprovedHomeOfficeWorkLogsAboveUpperLimit(\UnitTester $I): void
@@ -377,7 +363,6 @@ class WorkMonthServiceCest
     }
 
     /**
-     * @param \UnitTester $I
      * @throws \Exception
      */
     public function testCalculateSickDayWorkLogs(\UnitTester $I): void
@@ -397,7 +382,6 @@ class WorkMonthServiceCest
     }
 
     /**
-     * @param \UnitTester $I
      * @throws \Exception
      */
     public function testCalculateApprovedVacationWorkLogs(\UnitTester $I): void
@@ -418,7 +402,6 @@ class WorkMonthServiceCest
     }
 
     /**
-     * @param \UnitTester $I
      * @throws \Exception
      */
     public function testCalculateUnapprovedVacationWorkLogs(\UnitTester $I): void
@@ -438,7 +421,6 @@ class WorkMonthServiceCest
     }
 
     /**
-     * @param \UnitTester $I
      * @throws \Exception
      */
     public function testAll(\UnitTester $I): void
@@ -488,10 +470,6 @@ class WorkMonthServiceCest
         $I->assertEquals(5.75, $service->calculateWorkedHours($workMonth));
     }
 
-    /**
-     * @param Prophet $prophet
-     * @return WorkMonth
-     */
     private function getWorkMonth(Prophet $prophet): WorkMonth
     {
         $workMonth = $prophet->prophesize(WorkMonth::class);
@@ -502,10 +480,6 @@ class WorkMonthServiceCest
         return $workMonth->reveal();
     }
 
-    /**
-     * @param Prophet $prophet
-     * @return WorkHours
-     */
     private function getWorkHours(Prophet $prophet): WorkHours
     {
         $workMonth = $prophet->prophesize(WorkHours::class);
@@ -517,10 +491,6 @@ class WorkMonthServiceCest
         return $workMonth->reveal();
     }
 
-    /**
-     * @param Prophet $prophet
-     * @return EntityManager
-     */
     private function getEntityManager(Prophet $prophet): EntityManager
     {
         $entityManager = $prophet->prophesize(EntityManager::class);
@@ -529,7 +499,6 @@ class WorkMonthServiceCest
     }
 
     /**
-     * @param Prophet $prophet
      * @return BusinessTripWorkLogRepository
      */
     private function getConfigService(Prophet $prophet): ConfigService
@@ -552,11 +521,6 @@ class WorkMonthServiceCest
         return $service->reveal();
     }
 
-    /**
-     * @param Prophet $prophet
-     * @param array $workLogs
-     * @return BusinessTripWorkLogRepository
-     */
     private function getBusinessTripWorkLogRepository(Prophet $prophet, array $workLogs): BusinessTripWorkLogRepository
     {
         $repository = $prophet->prophesize(BusinessTripWorkLogRepository::class);
@@ -565,11 +529,6 @@ class WorkMonthServiceCest
         return $repository->reveal();
     }
 
-    /**
-     * @param Prophet $prophet
-     * @param array $workLogs
-     * @return HomeOfficeWorkLogRepository
-     */
     private function getHomeOfficeWorkLogRepository(Prophet $prophet, array $workLogs): HomeOfficeWorkLogRepository
     {
         $repository = $prophet->prophesize(HomeOfficeWorkLogRepository::class);
@@ -578,11 +537,6 @@ class WorkMonthServiceCest
         return $repository->reveal();
     }
 
-    /**
-     * @param Prophet $prophet
-     * @param array $workLogs
-     * @return SickDayWorkLogRepository
-     */
     private function getSickDayWorkLogRepository(Prophet $prophet, array $workLogs): SickDayWorkLogRepository
     {
         $repository = $prophet->prophesize(SickDayWorkLogRepository::class);
@@ -591,10 +545,6 @@ class WorkMonthServiceCest
         return $repository->reveal();
     }
 
-    /**
-     * @param Prophet $prophet
-     * @return UserYearStatsRepository
-     */
     private function getUserYearStatsRepository(Prophet $prophet): UserYearStatsRepository
     {
         $repository = $prophet->prophesize(UserYearStatsRepository::class);
@@ -602,11 +552,6 @@ class WorkMonthServiceCest
         return $repository->reveal();
     }
 
-    /**
-     * @param Prophet $prophet
-     * @param array $workLogs
-     * @return VacationWorkLogRepository
-     */
     private function getVacationWorkLogRepository(Prophet $prophet, array $workLogs): VacationWorkLogRepository
     {
         $repository = $prophet->prophesize(VacationWorkLogRepository::class);
@@ -615,11 +560,6 @@ class WorkMonthServiceCest
         return $repository->reveal();
     }
 
-    /**
-     * @param Prophet $prophet
-     * @param array $workLogs
-     * @return WorkLogRepository
-     */
     private function getWorkLogRepository(Prophet $prophet, array $workLogs): WorkLogRepository
     {
         $repository = $prophet->prophesize(WorkLogRepository::class);
@@ -628,11 +568,6 @@ class WorkMonthServiceCest
         return $repository->reveal();
     }
 
-    /**
-     * @param Prophet $prophet
-     * @param WorkHours $workHours
-     * @return WorkHoursRepository
-     */
     private function getWorkHoursRepository(Prophet $prophet, WorkHours $workHours): WorkHoursRepository
     {
         $repository = $prophet->prophesize(WorkHoursRepository::class);
@@ -646,14 +581,11 @@ class WorkMonthServiceCest
     }
 
     /**
-     * @param Prophet $prophet
      * @param BusinessTripWorkLog[] $businessTripWorkLogs
      * @param HomeOfficeWorkLog[] $homeOfficeWorkLogs
      * @param SickDayWorkLog[] $sickDayWorkLogs
      * @param VacationWorkLog[] $vacationWorkLogs
      * @param WorkLog[] $workLogs
-     * @param WorkHours $workHours
-     * @return WorkMonthService
      */
     private function getWorkMonthService(
         Prophet $prophet,

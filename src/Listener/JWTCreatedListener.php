@@ -13,17 +13,11 @@ class JWTCreatedListener
      */
     private $tokenStorage;
 
-    /**
-     * @param TokenStorageInterface $tokenStorage
-     */
     public function __construct(TokenStorageInterface $tokenStorage)
     {
         $this->tokenStorage = $tokenStorage;
     }
 
-    /**
-     * @param JWTCreatedEvent $event
-     */
     public function onJWTCreated(JWTCreatedEvent $event): void
     {
         $payload = $event->getData();

@@ -8,11 +8,11 @@ use App\Event\HomeOfficeWorkLogRejectedEvent;
 use App\Repository\HomeOfficeWorkLogRepository;
 use App\Service\HomeOfficeWorkLogService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class HomeOfficeWorkLogController extends Controller
 {
@@ -36,12 +36,6 @@ class HomeOfficeWorkLogController extends Controller
      */
     private $eventDispatcher;
 
-    /**
-     * @param NormalizerInterface $normalizer
-     * @param HomeOfficeWorkLogRepository $homeOfficeWorkLogRepository
-     * @param HomeOfficeWorkLogService $homeOfficeWorkLogService
-     * @param EventDispatcherInterface $eventDispatcher
-     */
     public function __construct(
         NormalizerInterface $normalizer,
         HomeOfficeWorkLogRepository $homeOfficeWorkLogRepository,
@@ -54,10 +48,6 @@ class HomeOfficeWorkLogController extends Controller
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    /**
-     * @param int $id
-     * @return Response
-     */
     public function markApproved(int $id): Response
     {
         $workLog = $this->homeOfficeWorkLogRepository->getRepository()->find($id);
@@ -84,8 +74,8 @@ class HomeOfficeWorkLogController extends Controller
         $this->homeOfficeWorkLogService->markApproved($workLog);
         $supervisor = $this->getUser();
         $this->eventDispatcher->dispatch(
-            HomeOfficeWorkLogApprovedEvent::APPROVED,
-            new HomeOfficeWorkLogApprovedEvent($workLog, $supervisor)
+            new HomeOfficeWorkLogApprovedEvent($workLog, $supervisor),
+            HomeOfficeWorkLogApprovedEvent::APPROVED
         );
 
         return JsonResponse::create(
@@ -97,11 +87,6 @@ class HomeOfficeWorkLogController extends Controller
         );
     }
 
-    /**
-     * @param Request $request
-     * @param int $id
-     * @return Response
-     */
     public function markRejected(Request $request, int $id): Response
     {
         $workLog = $this->homeOfficeWorkLogRepository->getRepository()->find($id);
@@ -136,8 +121,8 @@ class HomeOfficeWorkLogController extends Controller
         $supervisor = $this->getUser();
 
         $this->eventDispatcher->dispatch(
-            HomeOfficeWorkLogRejectedEvent::REJECTED,
-            new HomeOfficeWorkLogRejectedEvent($workLog, $supervisor)
+            new HomeOfficeWorkLogRejectedEvent($workLog, $supervisor),
+            HomeOfficeWorkLogRejectedEvent::REJECTED
         );
 
         return JsonResponse::create(

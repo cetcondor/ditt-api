@@ -1,10 +1,5 @@
 App\Entity\WorkHours:
     collectionOperations:
-        api_users_work_hours_get_subresource:
-            method: GET
-            normalization_context:
-                groups:
-                    - work_hours_out_list
         get:
             method: GET
             normalization_context:
@@ -16,3 +11,9 @@ App\Entity\WorkHours:
             normalization_context:
                 groups:
                     - work_hours_out_detail
+    subresourceOperations:
+        api_users_work_hours_get_subresource:
+            method: GET
+            normalization_context:
+                groups:
+                    - work_hours_out_list

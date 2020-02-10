@@ -20,10 +20,6 @@ class VacationPresentValidator extends ConstraintValidator
      */
     private $workLogRepository;
 
-    /**
-     * @param ConfigService $configService
-     * @param WorkLogRepository $workLogRepository
-     */
     public function __construct(
         ConfigService $configService,
         WorkLogRepository $workLogRepository
@@ -34,7 +30,6 @@ class VacationPresentValidator extends ConstraintValidator
 
     /**
      * @param User $value
-     * @param \Symfony\Component\Validator\Constraint $constraint
      */
     public function validate($value, Constraint $constraint): void
     {

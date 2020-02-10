@@ -13,9 +13,6 @@ class MarkHomeOfficeWorkLogApprovedCest
      */
     private $user;
 
-    /**
-     * @param \ApiTester $I
-     */
     public function _before(\ApiTester $I)
     {
         $this->user = $I->createUser(['email' => 'user1@example.com', 'employeeId' => 'id789']);
@@ -28,7 +25,6 @@ class MarkHomeOfficeWorkLogApprovedCest
     }
 
     /**
-     * @param \ApiTester $I
      * @throws \Exception
      */
     public function testMarkApproved(\ApiTester $I): void
@@ -57,7 +53,6 @@ class MarkHomeOfficeWorkLogApprovedCest
     }
 
     /**
-     * @param \ApiTester $I
      * @throws \Exception
      */
     public function testAlreadyMarkedApproved(\ApiTester $I): void
@@ -86,7 +81,6 @@ class MarkHomeOfficeWorkLogApprovedCest
     }
 
     /**
-     * @param \ApiTester $I
      * @throws \Exception
      */
     public function testAlreadyMarkedRejected(\ApiTester $I): void

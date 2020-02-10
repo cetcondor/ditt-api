@@ -13,9 +13,6 @@ class BulkMarkVacationWorkLogRejectedCest
      */
     private $user;
 
-    /**
-     * @param \ApiTester $I
-     */
     public function _before(\ApiTester $I)
     {
         $this->user = $I->createUser(['email' => 'user1@example.com', 'employeeId' => 'id789']);
@@ -28,7 +25,6 @@ class BulkMarkVacationWorkLogRejectedCest
     }
 
     /**
-     * @param \ApiTester $I
      * @throws \Exception
      */
     public function testMarkRejected(\ApiTester $I): void
@@ -72,7 +68,6 @@ class BulkMarkVacationWorkLogRejectedCest
     }
 
     /**
-     * @param \ApiTester $I
      * @throws \Exception
      */
     public function testAlreadyMarkedApproved(\ApiTester $I): void
@@ -110,7 +105,6 @@ class BulkMarkVacationWorkLogRejectedCest
     }
 
     /**
-     * @param \ApiTester $I
      * @throws \Exception
      */
     public function testAlreadyMarkedRejected(\ApiTester $I): void

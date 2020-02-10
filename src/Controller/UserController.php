@@ -7,12 +7,12 @@ use App\Event\UserPasswordResetEvent;
 use App\Repository\UserRepository;
 use App\Service\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class UserController extends Controller
 {
@@ -41,13 +41,6 @@ class UserController extends Controller
      */
     private $eventDispatcher;
 
-    /**
-     * @param NormalizerInterface $normalizer
-     * @param UserRepository $userRepository
-     * @param UserService $userService
-     * @param ValidatorInterface $validator
-     * @param EventDispatcherInterface $eventDispatcher
-     */
     public function __construct(
         NormalizerInterface $normalizer,
         UserRepository $userRepository,
@@ -62,10 +55,6 @@ class UserController extends Controller
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    /**
-     * @param string $apiToken
-     * @return Response
-     */
     public function getUserByApiToken(string $apiToken): Response
     {
         $user = $this->userRepository->getByApiToken($apiToken);
@@ -119,10 +108,6 @@ class UserController extends Controller
         return JsonResponse::create(null, JsonResponse::HTTP_OK);
     }
 
-    /**
-     * @param Request $request
-     * @return Response
-     */
     public function resetPassword(Request $request): Response
     {
         $data = json_decode((string) $request->getContent());
@@ -149,18 +134,15 @@ class UserController extends Controller
         }
 
         $this->eventDispatcher->dispatch(
-            UserPasswordResetEvent::RESET,
-            new UserPasswordResetEvent($user)
+            new UserPasswordResetEvent($user),
+            UserPasswordResetEvent::RESET
         );
 
         return JsonResponse::create(null, JsonResponse::HTTP_OK);
     }
 
     /**
-     * @param Request $request
-     * @param int $id
      * @throws \Exception
-     * @return Response
      */
     public function renewApiToken(Request $request, int $id): Response
     {
@@ -182,10 +164,7 @@ class UserController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @param int $id
      * @throws \Exception
-     * @return Response
      */
     public function resetApiToken(Request $request, int $id): Response
     {
@@ -206,11 +185,6 @@ class UserController extends Controller
         );
     }
 
-    /**
-     * @param Request $request
-     * @param int $id
-     * @return Response
-     */
     public function supervisedUsers(Request $request, int $id): Response
     {
         $user = $this->userRepository->getRepository()->find($id);

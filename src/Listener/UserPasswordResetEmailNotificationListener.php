@@ -23,20 +23,15 @@ class UserPasswordResetEmailNotificationListener
     private $clientNewPasswordUrl;
 
     /**
-     * @var \Twig_Environment
+     * @var \Twig\Environment
      */
     private $templating;
 
-    /**
-     * @param \Swift_Mailer $mailer
-     * @param string $mailSenderAddress
-     * @param \Twig_Environment $templating
-     */
     public function __construct(
         \Swift_Mailer $mailer,
-        $mailSenderAddress,
-        $clientNewPasswordUrl,
-        \Twig_Environment $templating
+        string $mailSenderAddress,
+        string $clientNewPasswordUrl,
+        \Twig\Environment $templating
     ) {
         $this->mailer = $mailer;
         $this->mailSenderAddress = $mailSenderAddress;
@@ -45,10 +40,9 @@ class UserPasswordResetEmailNotificationListener
     }
 
     /**
-     * @param UserPasswordResetEvent $event
      * @throws \Exception
      */
-    public function onReset(UserPasswordResetEvent $event)
+    public function onReset(UserPasswordResetEvent $event): void
     {
         $user = $event->getUser();
 
@@ -64,11 +58,10 @@ class UserPasswordResetEmailNotificationListener
 
     /**
      * @param string $subject
-     * @param array $toEmail
      * @param string $htmlContent
      * @throws EmailNotSentException
      */
-    private function sendMail($subject, array $toEmail, $htmlContent)
+    private function sendMail($subject, array $toEmail, $htmlContent): void
     {
         $message = (new \Swift_Message())
             ->setSubject($subject)

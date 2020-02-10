@@ -14,9 +14,6 @@ class VacationDaysNotExhaustedValidator extends ConstraintValidator
      */
     private $vacationWorkLogRepository;
 
-    /**
-     * @param VacationWorkLogRepository $vacationWorkLogRepository
-     */
     public function __construct(VacationWorkLogRepository $vacationWorkLogRepository)
     {
         $this->vacationWorkLogRepository = $vacationWorkLogRepository;
@@ -24,7 +21,6 @@ class VacationDaysNotExhaustedValidator extends ConstraintValidator
 
     /**
      * @param VacationWorkLog $value
-     * @param \Symfony\Component\Validator\Constraint $constraint
      */
     public function validate($value, Constraint $constraint): void
     {

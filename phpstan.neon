@@ -21,3 +21,5 @@ parameters:
 		- SimpleXMLElement
 	earlyTerminatingMethodCalls: []
 	memoryLimitFile: %tmpDir%/.memory_limit
+	checkMissingIterableValueType: false
+	checkGenericClassInNonGenericObjectType: false

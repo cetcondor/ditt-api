@@ -11,9 +11,6 @@ class VacationPresent extends Constraint
      */
     public $message = 'Vacations are required for each supported year.';
 
-    /**
-     * @return string
-     */
     public function getTargets(): string
     {
         return self::CLASS_CONSTRAINT;

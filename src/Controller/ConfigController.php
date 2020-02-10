@@ -22,10 +22,6 @@ class ConfigController extends Controller
      */
     private $configService;
 
-    /**
-     * @param NormalizerInterface $normalizer
-     * @param ConfigService $configService
-     */
     public function __construct(
         NormalizerInterface $normalizer,
         ConfigService $configService
@@ -34,9 +30,6 @@ class ConfigController extends Controller
         $this->configService = $configService;
     }
 
-    /**
-     * @return Response
-     */
     public function getConfig(): Response
     {
         $config = $this->configService->getConfig();
@@ -50,10 +43,6 @@ class ConfigController extends Controller
         return JsonResponse::create($normalizedConfig, JsonResponse::HTTP_OK);
     }
 
-    /**
-     * @param Request $request
-     * @return Response
-     */
     public function saveConfig(Request $request): Response
     {
         $data = json_decode((string) $request->getContent(), true);

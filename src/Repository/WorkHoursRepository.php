@@ -15,9 +15,6 @@ class WorkHoursRepository
      */
     private $repository;
 
-    /**
-     * @param EntityManagerInterface $entityManager
-     */
     public function __construct(EntityManagerInterface $entityManager)
     {
         /** @var EntityRepository $repository */
@@ -25,12 +22,6 @@ class WorkHoursRepository
         $this->repository = $repository;
     }
 
-    /**
-     * @param SupportedYear $year
-     * @param int $month
-     * @param User $user
-     * @return WorkHours|null
-     */
     public function findOne(SupportedYear $year, int $month, User $user): ?WorkHours
     {
         $workHours = $this->repository->findOneBy([

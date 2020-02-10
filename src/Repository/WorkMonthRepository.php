@@ -20,9 +20,6 @@ class WorkMonthRepository
      */
     private $repository;
 
-    /**
-     * @param EntityManagerInterface $entityManager
-     */
     public function __construct(EntityManagerInterface $entityManager)
     {
         /** @var EntityRepository $repository */
@@ -32,19 +29,11 @@ class WorkMonthRepository
         $this->repository = $repository;
     }
 
-    /**
-     * @return EntityRepository
-     */
     public function getRepository(): EntityRepository
     {
         return $this->repository;
     }
 
-    /**
-     * @param WorkLogInterface $workLog
-     * @param User $user
-     * @return WorkMonth|null
-     */
     public function findByWorkLogAndUser(WorkLogInterface $workLog, User $user): ?WorkMonth
     {
         try {

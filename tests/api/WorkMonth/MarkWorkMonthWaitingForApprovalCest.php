@@ -16,9 +16,6 @@ class MarkWorkMonthWaitingForApprovalCest
      */
     private $user;
 
-    /**
-     * @param \ApiTester $I
-     */
     public function _before(\ApiTester $I)
     {
         $prophet = new Prophet();
@@ -31,7 +28,6 @@ class MarkWorkMonthWaitingForApprovalCest
     }
 
     /**
-     * @param \ApiTester $I
      * @throws \Exception
      */
     public function testMarkWaitingForApproval(\ApiTester $I): void
@@ -60,7 +56,6 @@ class MarkWorkMonthWaitingForApprovalCest
     }
 
     /**
-     * @param \ApiTester $I
      * @throws \Exception
      */
     public function testAlreadyMarkedWaitingForApproval(\ApiTester $I): void
@@ -88,7 +83,6 @@ class MarkWorkMonthWaitingForApprovalCest
     }
 
     /**
-     * @param \ApiTester $I
      * @throws \Exception
      */
     public function testAlreadyMarkedApproved(\ApiTester $I): void

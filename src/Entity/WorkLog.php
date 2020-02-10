@@ -30,18 +30,11 @@ class WorkLog implements WorkLogInterface
         $this->endTime = new \DateTimeImmutable();
     }
 
-    /**
-     * @return int|null
-     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @param int|null $id
-     * @return WorkLog
-     */
     public function setId(?int $id): WorkLog
     {
         $this->id = $id;
@@ -49,18 +42,11 @@ class WorkLog implements WorkLogInterface
         return $this;
     }
 
-    /**
-     * @return \DateTimeImmutable
-     */
     public function getStartTime(): \DateTimeImmutable
     {
         return $this->startTime;
     }
 
-    /**
-     * @param \DateTimeImmutable $startTime
-     * @return WorkLog
-     */
     public function setStartTime(\DateTimeImmutable $startTime): WorkLog
     {
         $this->startTime = $startTime;
@@ -68,18 +54,11 @@ class WorkLog implements WorkLogInterface
         return $this;
     }
 
-    /**
-     * @return \DateTimeImmutable
-     */
     public function getEndTime(): \DateTimeImmutable
     {
         return $this->endTime;
     }
 
-    /**
-     * @param \DateTimeImmutable $endTime
-     * @return WorkLog
-     */
     public function setEndTime(\DateTimeImmutable $endTime): WorkLog
     {
         $this->endTime = $endTime;
@@ -87,16 +66,12 @@ class WorkLog implements WorkLogInterface
         return $this;
     }
 
-    /**
-     * @return WorkMonth
-     */
     public function getWorkMonth(): WorkMonth
     {
         return $this->workMonth;
     }
 
     /**
-     * @param WorkMonth $workMonth
      * @return WorkLog
      */
     public function setWorkMonth(WorkMonth $workMonth): WorkLogInterface
@@ -106,17 +81,11 @@ class WorkLog implements WorkLogInterface
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function resolveWorkLogMonth(): int
     {
         return (int) $this->startTime->format('m');
     }
 
-    /**
-     * @return int
-     */
     public function resolveWorkLogYear(): int
     {
         return (int) $this->startTime->format('Y');

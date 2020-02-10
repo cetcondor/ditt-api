@@ -8,11 +8,11 @@ use App\Event\TimeOffWorkLogRejectedEvent;
 use App\Repository\TimeOffWorkLogRepository;
 use App\Service\TimeOffWorkLogService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class TimeOffWorkLogController extends Controller
 {
@@ -36,12 +36,6 @@ class TimeOffWorkLogController extends Controller
      */
     private $eventDispatcher;
 
-    /**
-     * @param NormalizerInterface $normalizer
-     * @param TimeOffWorkLogRepository $timeOffWorkLogRepository
-     * @param TimeOffWorkLogService $timeOffWorkLogService
-     * @param EventDispatcherInterface $eventDispatcher
-     */
     public function __construct(
         NormalizerInterface $normalizer,
         TimeOffWorkLogRepository $timeOffWorkLogRepository,
@@ -54,10 +48,6 @@ class TimeOffWorkLogController extends Controller
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    /**
-     * @param int $id
-     * @return Response
-     */
     public function markApproved(int $id): Response
     {
         $workLog = $this->timeOffWorkLogRepository->getRepository()->find($id);
@@ -85,8 +75,8 @@ class TimeOffWorkLogController extends Controller
         $supervisor = $this->getUser();
 
         $this->eventDispatcher->dispatch(
-            TimeOffWorkLogApprovedEvent::APPROVED,
-            new TimeOffWorkLogApprovedEvent($workLog, $supervisor)
+            new TimeOffWorkLogApprovedEvent($workLog, $supervisor),
+            TimeOffWorkLogApprovedEvent::APPROVED
         );
 
         return JsonResponse::create(
@@ -98,11 +88,6 @@ class TimeOffWorkLogController extends Controller
         );
     }
 
-    /**
-     * @param Request $request
-     * @param int $id
-     * @return Response
-     */
     public function markRejected(Request $request, int $id): Response
     {
         $workLog = $this->timeOffWorkLogRepository->getRepository()->find($id);
@@ -137,8 +122,8 @@ class TimeOffWorkLogController extends Controller
         $supervisor = $this->getUser();
 
         $this->eventDispatcher->dispatch(
-            TimeOffWorkLogRejectedEvent::REJECTED,
-            new TimeOffWorkLogRejectedEvent($workLog, $supervisor)
+            new TimeOffWorkLogRejectedEvent($workLog, $supervisor),
+            TimeOffWorkLogRejectedEvent::REJECTED
         );
 
         return JsonResponse::create(

@@ -21,11 +21,11 @@ use App\Service\UserService;
 use App\Service\WorkMonthService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class WorkMonthController extends Controller
 {
@@ -89,20 +89,6 @@ class WorkMonthController extends Controller
      */
     private $loggedUser;
 
-    /**
-     * @param NormalizerInterface $normalizer
-     * @param UserRepository $userRepository
-     * @param UserService $userService
-     * @param WorkMonthRepository $workMonthRepository
-     * @param WorkMonthService $workMonthService
-     * @param BusinessTripWorkLogRepository $businessTripWorkLogRepository
-     * @param HomeOfficeWorkLogRepository $homeOfficeWorkLogRepository
-     * @param OvertimeWorkLogRepository $overtimeWorkLogRepository
-     * @param TimeOffWorkLogRepository $timeOffWorkLogRepository
-     * @param VacationWorkLogRepository $vacationWorkLogRepository
-     * @param EventDispatcherInterface $eventDispatcher
-     * @param TokenStorageInterface $tokenStorage
-     */
     public function __construct(
         NormalizerInterface $normalizer,
         UserRepository $userRepository,
@@ -134,10 +120,6 @@ class WorkMonthController extends Controller
         }
     }
 
-    /**
-     * @param int $id
-     * @return Response
-     */
     public function getWorkMonthDetail(int $id): Response
     {
         $workMonth = $this->workMonthRepository->getRepository()->find($id);
@@ -172,10 +154,6 @@ class WorkMonthController extends Controller
         );
     }
 
-    /**
-     * @param int $supervisorId
-     * @return Response
-     */
     public function specialApprovals(int $supervisorId): Response
     {
         $supervisor = $this->userRepository->getRepository()->find($supervisorId);
@@ -281,10 +259,6 @@ class WorkMonthController extends Controller
         return JsonResponse::create($response, JsonResponse::HTTP_OK);
     }
 
-    /**
-     * @param int $supervisorId
-     * @return Response
-     */
     public function recentSpecialApprovals(int $supervisorId): Response
     {
         $supervisor = $this->userRepository->getRepository()->find($supervisorId);
@@ -390,10 +364,6 @@ class WorkMonthController extends Controller
         return JsonResponse::create($response, JsonResponse::HTTP_OK);
     }
 
-    /**
-     * @param int $id
-     * @return Response
-     */
     public function markWaitingForApproval(int $id): Response
     {
         $workMonth = $this->workMonthRepository->getRepository()->find($id);
@@ -428,10 +398,6 @@ class WorkMonthController extends Controller
         );
     }
 
-    /**
-     * @param int $id
-     * @return Response
-     */
     public function markApproved(int $id): Response
     {
         $workMonth = $this->workMonthRepository->getRepository()->find($id);
@@ -460,8 +426,8 @@ class WorkMonthController extends Controller
         $supervisor = $this->getUser();
 
         $this->eventDispatcher->dispatch(
-            WorkMonthApprovedEvent::APPROVED,
-            new WorkMonthApprovedEvent($workMonth, $supervisor)
+            new WorkMonthApprovedEvent($workMonth, $supervisor),
+            WorkMonthApprovedEvent::APPROVED
         );
 
         return JsonResponse::create(

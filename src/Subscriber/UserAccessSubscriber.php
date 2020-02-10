@@ -24,17 +24,11 @@ class UserAccessSubscriber implements EventSubscriberInterface
      */
     private $authorizationChecker;
 
-    /**
-     * @param AuthorizationCheckerInterface $authorizationChecker
-     */
     public function __construct(AuthorizationCheckerInterface $authorizationChecker)
     {
         $this->authorizationChecker = $authorizationChecker;
     }
 
-    /**
-     * @return array
-     */
     public static function getSubscribedEvents(): array
     {
         return [
@@ -45,7 +39,6 @@ class UserAccessSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param GetResponseEvent $event
      * @throws AccessDeniedException
      */
     public function checkPermissions(GetResponseEvent $event): void

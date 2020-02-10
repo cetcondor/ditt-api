@@ -21,9 +21,6 @@ class VacationWorkLogRepository
      */
     private $repository;
 
-    /**
-     * @param EntityManagerInterface $entityManager
-     */
     public function __construct(EntityManagerInterface $entityManager)
     {
         /** @var EntityRepository $repository */
@@ -33,9 +30,6 @@ class VacationWorkLogRepository
         $this->repository = $repository;
     }
 
-    /**
-     * @return EntityRepository
-     */
     public function getRepository(): EntityRepository
     {
         return $this->repository;
@@ -75,7 +69,6 @@ class VacationWorkLogRepository
     }
 
     /**
-     * @param User $supervisor
      * @return mixed
      */
     public function findAllWaitingForApprovalBySupervisor(User $supervisor)
@@ -131,7 +124,6 @@ class VacationWorkLogRepository
     }
 
     /**
-     * @param User $supervisor
      * @return VacationWorkLog[]
      */
     public function findAllRecentBySupervisor(User $supervisor): array
@@ -168,7 +160,6 @@ class VacationWorkLogRepository
     }
 
     /**
-     * @param WorkMonth $workMonth
      * @return VacationWorkLog[]
      */
     public function findAllApprovedByWorkMonth(WorkMonth $workMonth): array
@@ -183,10 +174,7 @@ class VacationWorkLogRepository
     }
 
     /**
-     * @param User $user
-     * @param SupportedYear $year
      * @throws NonUniqueResultException
-     * @return int
      */
     public function getRemainingVacationDays(User $user, SupportedYear $year): int
     {

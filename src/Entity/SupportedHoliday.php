@@ -25,18 +25,11 @@ class SupportedHoliday
         $this->month = (int) date('n');
     }
 
-    /**
-     * @return int
-     */
     public function getDay(): int
     {
         return $this->day;
     }
 
-    /**
-     * @param int $day
-     * @return SupportedHoliday
-     */
     public function setDay(int $day): SupportedHoliday
     {
         $this->day = $day;
@@ -44,18 +37,11 @@ class SupportedHoliday
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getMonth(): int
     {
         return $this->month;
     }
 
-    /**
-     * @param int $month
-     * @return SupportedHoliday
-     */
     public function setMonth(int $month): SupportedHoliday
     {
         $this->month = $month;
@@ -63,18 +49,11 @@ class SupportedHoliday
         return $this;
     }
 
-    /**
-     * @return SupportedYear
-     */
     public function getYear(): SupportedYear
     {
         return $this->year;
     }
 
-    /**
-     * @param SupportedYear $year
-     * @return SupportedHoliday
-     */
     public function setYear(SupportedYear $year): SupportedHoliday
     {
         $this->year = $year;
@@ -84,7 +63,6 @@ class SupportedHoliday
 
     /**
      * @throws \Exception
-     * @return \DateTimeImmutable
      */
     public function getDate(): \DateTimeImmutable
     {

@@ -30,18 +30,11 @@ class WorkHours
         $this->requiredHours = 0;
     }
 
-    /**
-     * @return SupportedYear
-     */
     public function getYear(): SupportedYear
     {
         return $this->year;
     }
 
-    /**
-     * @param SupportedYear $year
-     * @return WorkHours
-     */
     public function setYear(SupportedYear $year): WorkHours
     {
         $this->year = $year;
@@ -49,18 +42,11 @@ class WorkHours
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getMonth(): int
     {
         return $this->month;
     }
 
-    /**
-     * @param int $month
-     * @return WorkHours
-     */
     public function setMonth(int $month): WorkHours
     {
         $this->month = $month;
@@ -68,18 +54,11 @@ class WorkHours
         return $this;
     }
 
-    /**
-     * @return float
-     */
     public function getRequiredHours(): float
     {
         return $this->requiredHours;
     }
 
-    /**
-     * @param float $requiredHours
-     * @return WorkHours
-     */
     public function setRequiredHours(float $requiredHours): WorkHours
     {
         $this->requiredHours = $requiredHours;
@@ -87,18 +66,11 @@ class WorkHours
         return $this;
     }
 
-    /**
-     * @return User
-     */
     public function getUser(): User
     {
         return $this->user;
     }
 
-    /**
-     * @param User $user
-     * @return WorkHours
-     */
     public function setUser(User $user): WorkHours
     {
         $this->user = $user;

@@ -24,7 +24,6 @@ class ResourceVoter extends Voter
 
     /**
      * ResourceVoter constructor.
-     * @param AccessDecisionManagerInterface $decisionManager
      */
     public function __construct(AccessDecisionManagerInterface $decisionManager)
     {
@@ -34,7 +33,6 @@ class ResourceVoter extends Voter
     /**
      * @param string $attribute
      * @param mixed $subject
-     * @return bool
      */
     protected function supports($attribute, $subject): bool
     {
@@ -68,9 +66,7 @@ class ResourceVoter extends Voter
     /**
      * @param string $attribute
      * @param mixed $subject
-     * @param TokenInterface $token
      * @throws \LogicException
-     * @return bool
      */
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token): bool
     {
@@ -86,18 +82,13 @@ class ResourceVoter extends Voter
             return $this->canEdit($subject, $user, $token);
         }
 
-        throw new \LogicException(
-            sprintf('Invalid attribute for voter. Allowed are %s and %s', self::VIEW, self::EDIT)
-        );
+        throw new \LogicException(sprintf('Invalid attribute for voter. Allowed are %s and %s', self::VIEW, self::EDIT));
     }
 
     // VIEW
 
     /**
      * @param mixed $subject
-     * @param User $user
-     * @param TokenInterface $token
-     * @return bool
      */
     private function canView($subject, User $user, TokenInterface $token): bool
     {
@@ -124,12 +115,6 @@ class ResourceVoter extends Voter
         return false;
     }
 
-    /**
-     * @param User $subject
-     * @param User $user
-     * @param TokenInterface $token
-     * @return bool
-     */
     private function canViewUser(User $subject, User $user, TokenInterface $token): bool
     {
         return $subject === $user
@@ -137,12 +122,6 @@ class ResourceVoter extends Voter
             || $this->decisionManager->decide($token, [User::ROLE_ADMIN]);
     }
 
-    /**
-     * @param Vacation $vacation
-     * @param User $user
-     * @param TokenInterface $token
-     * @return bool
-     */
     private function canViewVacation(Vacation $vacation, User $user, TokenInterface $token): bool
     {
         return $vacation->getUser() === $user
@@ -150,12 +129,6 @@ class ResourceVoter extends Voter
             || $this->decisionManager->decide($token, [User::ROLE_ADMIN]);
     }
 
-    /**
-     * @param WorkHours $workHours
-     * @param User $user
-     * @param TokenInterface $token
-     * @return bool
-     */
     private function canViewWorkHour(WorkHours $workHours, User $user, TokenInterface $token): bool
     {
         return $workHours->getUser() === $user
@@ -163,12 +136,6 @@ class ResourceVoter extends Voter
             || $this->decisionManager->decide($token, [User::ROLE_ADMIN]);
     }
 
-    /**
-     * @param WorkLogInterface $workLog
-     * @param User $user
-     * @param TokenInterface $token
-     * @return bool
-     */
     private function canViewWorkLog(WorkLogInterface $workLog, User $user, TokenInterface $token): bool
     {
         return $workLog->getWorkMonth()->getUser() === $user
@@ -176,12 +143,6 @@ class ResourceVoter extends Voter
             || $this->decisionManager->decide($token, [User::ROLE_SUPER_ADMIN]);
     }
 
-    /**
-     * @param WorkMonth $workMonth
-     * @param User $user
-     * @param TokenInterface $token
-     * @return bool
-     */
     private function canViewWorkMonth(WorkMonth $workMonth, User $user, TokenInterface $token): bool
     {
         return $workMonth->getUser() === $user
@@ -191,9 +152,6 @@ class ResourceVoter extends Voter
 
     /**
      * @param mixed $subject
-     * @param User $user
-     * @param TokenInterface $token
-     * @return bool
      */
     private function canEdit($subject, User $user, TokenInterface $token): bool
     {
@@ -220,23 +178,11 @@ class ResourceVoter extends Voter
         return false;
     }
 
-    /**
-     * @param User $subject
-     * @param User $user
-     * @param TokenInterface $token
-     * @return bool
-     */
     private function canEditUser(User $subject, User $user, TokenInterface $token): bool
     {
         return $this->decisionManager->decide($token, [User::ROLE_ADMIN]);
     }
 
-    /**
-     * @param Vacation $vacation
-     * @param User $user
-     * @param TokenInterface $token
-     * @return bool
-     */
     private function canEditVacation(Vacation $vacation, User $user, TokenInterface $token): bool
     {
         try {
@@ -246,12 +192,6 @@ class ResourceVoter extends Voter
         }
     }
 
-    /**
-     * @param WorkHours $workHours
-     * @param User $user
-     * @param TokenInterface $token
-     * @return bool
-     */
     private function canEditWorkHours(WorkHours $workHours, User $user, TokenInterface $token): bool
     {
         try {
@@ -261,11 +201,6 @@ class ResourceVoter extends Voter
         }
     }
 
-    /**
-     * @param WorkLogInterface $workLog
-     * @param User $user
-     * @return bool
-     */
     private function canEditWorkLog(WorkLogInterface $workLog, User $user): bool
     {
         try {
@@ -275,12 +210,6 @@ class ResourceVoter extends Voter
         }
     }
 
-    /**
-     * @param WorkMonth $workMonth
-     * @param User $user
-     * @param TokenInterface $token
-     * @return bool
-     */
     private function canEditWorkMonth(WorkMonth $workMonth, User $user, TokenInterface $token): bool
     {
         try {

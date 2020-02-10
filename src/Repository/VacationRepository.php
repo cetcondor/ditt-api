@@ -15,9 +15,6 @@ class VacationRepository
      */
     private $repository;
 
-    /**
-     * @param EntityManagerInterface $entityManager
-     */
     public function __construct(EntityManagerInterface $entityManager)
     {
         /** @var EntityRepository $repository */
@@ -25,11 +22,6 @@ class VacationRepository
         $this->repository = $repository;
     }
 
-    /**
-     * @param SupportedYear $year
-     * @param User $user
-     * @return Vacation|null
-     */
     public function findOne(SupportedYear $year, User $user): ?Vacation
     {
         $vacation = $this->repository->findOneBy([

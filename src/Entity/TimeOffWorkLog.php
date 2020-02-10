@@ -44,18 +44,11 @@ class TimeOffWorkLog implements WorkLogInterface
         $this->date = (new \DateTimeImmutable())->setTime(0, 0, 0, 0);
     }
 
-    /**
-     * @return int|null
-     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @param int|null $id
-     * @return TimeOffWorkLog
-     */
     public function setId(?int $id): TimeOffWorkLog
     {
         $this->id = $id;
@@ -63,18 +56,11 @@ class TimeOffWorkLog implements WorkLogInterface
         return $this;
     }
 
-    /**
-     * @return \DateTimeImmutable
-     */
     public function getDate(): \DateTimeImmutable
     {
         return $this->date;
     }
 
-    /**
-     * @param \DateTimeImmutable $date
-     * @return TimeOffWorkLog
-     */
     public function setDate(\DateTimeImmutable $date): TimeOffWorkLog
     {
         $this->date = $date;
@@ -82,18 +68,11 @@ class TimeOffWorkLog implements WorkLogInterface
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getComment(): ?string
     {
         return $this->comment;
     }
 
-    /**
-     * @param string|null $comment
-     * @return TimeOffWorkLog
-     */
     public function setComment(?string $comment): TimeOffWorkLog
     {
         $this->comment = $comment;
@@ -101,18 +80,11 @@ class TimeOffWorkLog implements WorkLogInterface
         return $this;
     }
 
-    /**
-     * @return \DateTimeImmutable|null
-     */
     public function getTimeApproved(): ?\DateTimeImmutable
     {
         return $this->timeApproved;
     }
 
-    /**
-     * @param \DateTimeImmutable|null $timeApproved
-     * @return TimeOffWorkLog
-     */
     public function setTimeApproved(?\DateTimeImmutable $timeApproved): TimeOffWorkLog
     {
         $this->timeApproved = $timeApproved;
@@ -120,9 +92,6 @@ class TimeOffWorkLog implements WorkLogInterface
         return $this;
     }
 
-    /**
-     * @return TimeOffWorkLog
-     */
     public function markApproved(): TimeOffWorkLog
     {
         $this->timeApproved = new \DateTimeImmutable();
@@ -130,10 +99,6 @@ class TimeOffWorkLog implements WorkLogInterface
         return $this;
     }
 
-    /**
-     * @param string $rejectionMessage
-     * @return TimeOffWorkLog
-     */
     public function markRejected(string $rejectionMessage): TimeOffWorkLog
     {
         $this->rejectionMessage = $rejectionMessage;
@@ -142,18 +107,11 @@ class TimeOffWorkLog implements WorkLogInterface
         return $this;
     }
 
-    /**
-     * @return \DateTimeImmutable|null
-     */
     public function getTimeRejected(): ?\DateTimeImmutable
     {
         return $this->timeRejected;
     }
 
-    /**
-     * @param \DateTimeImmutable|null $timeRejected
-     * @return TimeOffWorkLog
-     */
     public function setTimeRejected(?\DateTimeImmutable $timeRejected): TimeOffWorkLog
     {
         $this->timeRejected = $timeRejected;
@@ -161,18 +119,11 @@ class TimeOffWorkLog implements WorkLogInterface
         return $this;
     }
 
-    /**
-     * @return null|string
-     */
     public function getRejectionMessage(): ?string
     {
         return $this->rejectionMessage;
     }
 
-    /**
-     * @param null|string $rejectionMessage
-     * @return TimeOffWorkLog
-     */
     public function setRejectionMessage(?string $rejectionMessage): TimeOffWorkLog
     {
         $this->rejectionMessage = $rejectionMessage;
@@ -180,16 +131,12 @@ class TimeOffWorkLog implements WorkLogInterface
         return $this;
     }
 
-    /**
-     * @return WorkMonth
-     */
     public function getWorkMonth(): WorkMonth
     {
         return $this->workMonth;
     }
 
     /**
-     * @param WorkMonth $workMonth
      * @return TimeOffWorkLog
      */
     public function setWorkMonth(WorkMonth $workMonth): WorkLogInterface
@@ -199,17 +146,11 @@ class TimeOffWorkLog implements WorkLogInterface
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function resolveWorkLogMonth(): int
     {
         return (int) $this->date->format('m');
     }
 
-    /**
-     * @return int
-     */
     public function resolveWorkLogYear(): int
     {
         return (int) $this->date->format('Y');

@@ -63,15 +63,6 @@ class GetWorkMonthDetailCest
         $I->getContainer()->set(TokenStorageInterface::class, $tokenStorage->reveal());
     }
 
-    /**
-     * @param \ApiTester $I
-     * @param \DateTimeImmutable $startTime1
-     * @param \DateTimeImmutable $endTime1
-     * @param \DateTimeImmutable $startTime2
-     * @param \DateTimeImmutable $endTime2
-     * @param string $workMonthStatus
-     * @return array
-     */
     private function prepareData(
         \ApiTester $I,
         \DateTimeImmutable $startTime1,

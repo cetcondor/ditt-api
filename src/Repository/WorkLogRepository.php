@@ -15,9 +15,6 @@ class WorkLogRepository
      */
     private $repository;
 
-    /**
-     * @param EntityManagerInterface $entityManager
-     */
     public function __construct(EntityManagerInterface $entityManager)
     {
         /** @var EntityRepository $repository */
@@ -26,7 +23,6 @@ class WorkLogRepository
     }
 
     /**
-     * @param WorkMonth $workMonth
      * @return WorkLog[]
      */
     public function findAllByWorkMonth(WorkMonth $workMonth): array
@@ -39,10 +35,6 @@ class WorkLogRepository
             ->getResult();
     }
 
-    /**
-     * @param WorkLog $workLog
-     * @return bool
-     */
     public function getOverlaps(WorkLog $workLog): bool
     {
         try {

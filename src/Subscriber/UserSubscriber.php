@@ -62,16 +62,6 @@ class UserSubscriber implements EventSubscriberInterface
      */
     private $workMonthService;
 
-    /**
-     * @param EntityManagerInterface $entityManager
-     * @param ConfigService $configService
-     * @param UserNotificationsRepository $userNotificationsRepository
-     * @param UserService $userService
-     * @param UserYearStatsService $userYearStatsService
-     * @param VacationRepository $vacationRepository
-     * @param WorkHoursRepository $workHoursRepository
-     * @param WorkMonthService $workMonthService
-     */
     public function __construct(
         EntityManagerInterface $entityManager,
         ConfigService $configService,
@@ -92,9 +82,6 @@ class UserSubscriber implements EventSubscriberInterface
         $this->workMonthService = $workMonthService;
     }
 
-    /**
-     * @return array
-     */
     public static function getSubscribedEvents(): array
     {
         return [
@@ -107,9 +94,6 @@ class UserSubscriber implements EventSubscriberInterface
         ];
     }
 
-    /**
-     * @param GetResponseForControllerResultEvent $event
-     */
     public function createYearStats(GetResponseForControllerResultEvent $event): void
     {
         $user = $event->getControllerResult();
@@ -135,9 +119,6 @@ class UserSubscriber implements EventSubscriberInterface
         $this->userYearStatsService->createUserYearStats($userYearStats);
     }
 
-    /**
-     * @param GetResponseForControllerResultEvent $event
-     */
     public function createWorkMonths(GetResponseForControllerResultEvent $event): void
     {
         $user = $event->getControllerResult();
@@ -166,9 +147,6 @@ class UserSubscriber implements EventSubscriberInterface
         $this->workMonthService->createWorkMonths($workMonths);
     }
 
-    /**
-     * @param GetResponseForControllerResultEvent $event
-     */
     public function editUser(GetResponseForControllerResultEvent $event): void
     {
         $user = $event->getControllerResult();
@@ -228,9 +206,6 @@ class UserSubscriber implements EventSubscriberInterface
         $this->entityManager->flush();
     }
 
-    /**
-     * @param GetResponseForControllerResultEvent $event
-     */
     public function fullfilRemainingVacationDays(GetResponseForControllerResultEvent $event): void
     {
         $user = $event->getControllerResult();

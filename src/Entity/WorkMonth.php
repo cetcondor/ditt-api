@@ -90,18 +90,11 @@ class WorkMonth
         $this->status = self::STATUS_OPENED;
     }
 
-    /**
-     * @return int
-     */
     public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     * @return WorkMonth
-     */
     public function setId(int $id): WorkMonth
     {
         $this->id = $id;
@@ -109,18 +102,11 @@ class WorkMonth
         return $this;
     }
 
-    /**
-     * @return SupportedYear
-     */
     public function getYear(): SupportedYear
     {
         return $this->year;
     }
 
-    /**
-     * @param SupportedYear $year
-     * @return WorkMonth
-     */
     public function setYear(SupportedYear $year): WorkMonth
     {
         $this->year = $year;
@@ -128,18 +114,11 @@ class WorkMonth
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getMonth(): int
     {
         return $this->month;
     }
 
-    /**
-     * @param int $month
-     * @return WorkMonth
-     */
     public function setMonth(int $month): WorkMonth
     {
         $this->month = $month;
@@ -161,7 +140,6 @@ class WorkMonth
 
     /**
      * @param BusinessTripWorkLog[]|Collection $businessTripWorkLogs
-     * @return WorkMonth
      */
     public function setBusinessTripWorkLogs($businessTripWorkLogs): WorkMonth
     {
@@ -184,7 +162,6 @@ class WorkMonth
 
     /**
      * @param HomeOfficeWorkLog[]|Collection $homeOfficeWorkLogs
-     * @return WorkMonth
      */
     public function setHomeOfficeWorkLogs($homeOfficeWorkLogs): WorkMonth
     {
@@ -207,7 +184,6 @@ class WorkMonth
 
     /**
      * @param OvertimeWorkLog[]|Collection $overtimeWorkLogs
-     * @return WorkMonth
      */
     public function setOvertimeWorkLogs($overtimeWorkLogs): WorkMonth
     {
@@ -230,7 +206,6 @@ class WorkMonth
 
     /**
      * @param SickDayWorkLog[]|Collection $sickDayWorkLogs
-     * @return WorkMonth
      */
     public function setSickDayWorkLogs($sickDayWorkLogs): WorkMonth
     {
@@ -253,7 +228,6 @@ class WorkMonth
 
     /**
      * @param TimeOffWorkLog[]|Collection $timeOffWorkLogs
-     * @return WorkMonth
      */
     public function setTimeOffWorkLogs($timeOffWorkLogs): WorkMonth
     {
@@ -276,7 +250,6 @@ class WorkMonth
 
     /**
      * @param VacationWorkLog[]|Collection $vacationWorkLogs
-     * @return WorkMonth
      */
     public function setVacationWorkLogs($vacationWorkLogs): WorkMonth
     {
@@ -299,7 +272,6 @@ class WorkMonth
 
     /**
      * @param WorkLog[]|Collection $workLogs
-     * @return WorkMonth
      */
     public function setWorkLogs($workLogs): WorkMonth
     {
@@ -308,18 +280,11 @@ class WorkMonth
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getStatus(): string
     {
         return $this->status;
     }
 
-    /**
-     * @param string $status
-     * @return WorkMonth
-     */
     public function setStatus(string $status): WorkMonth
     {
         $this->status = $status;
@@ -327,9 +292,6 @@ class WorkMonth
         return $this;
     }
 
-    /**
-     * @return WorkMonth
-     */
     public function markApproved(): WorkMonth
     {
         $this->status = self::STATUS_APPROVED;
@@ -337,9 +299,6 @@ class WorkMonth
         return $this;
     }
 
-    /**
-     * @return WorkMonth
-     */
     public function markWaitingForApproval(): WorkMonth
     {
         $this->status = self::STATUS_WAITING_FOR_APPROVAL;
@@ -347,18 +306,11 @@ class WorkMonth
         return $this;
     }
 
-    /**
-     * @return User
-     */
     public function getUser(): User
     {
         return $this->user;
     }
 
-    /**
-     * @param User $user
-     * @return WorkMonth
-     */
     public function setUser(User $user): WorkMonth
     {
         $this->user = $user;

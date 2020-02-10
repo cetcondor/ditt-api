@@ -17,9 +17,6 @@ class CreateTimeOffWorkLogCest
      */
     private $user;
 
-    /**
-     * @param \ApiTester $I
-     */
     public function _before(\ApiTester $I)
     {
         $prophet = new Prophet();
@@ -32,7 +29,6 @@ class CreateTimeOffWorkLogCest
     }
 
     /**
-     * @param \ApiTester $I
      * @throws \Exception
      */
     public function testCreateWithValidData(\ApiTester $I): void
@@ -63,7 +59,6 @@ class CreateTimeOffWorkLogCest
     }
 
     /**
-     * @param \ApiTester $I
      * @throws \Exception
      */
     public function testCreateWithClosedMonth(\ApiTester $I): void
@@ -96,7 +91,6 @@ class CreateTimeOffWorkLogCest
     }
 
     /**
-     * @param \ApiTester $I
      * @throws \Exception
      */
     public function testCreateWithInvalidData(\ApiTester $I): void
