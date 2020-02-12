@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\TimeOffWorkLog;
 use App\Entity\User;
+use App\Entity\WorkMonth;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 
@@ -138,6 +139,20 @@ class TimeOffWorkLogRepository
             ->setParameter('previousMonth', $previousMonth)
             ->setParameter('previousYear', $previousYear)
             ->orderBy('towl.date', 'desc')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @return TimeOffWorkLog[]
+     */
+    public function findAllApprovedByWorkMonth(WorkMonth $workMonth): array
+    {
+        return $this->repository->createQueryBuilder('towl')
+            ->select('towl')
+            ->where('towl.workMonth = :workMonth')
+            ->andWhere('towl.timeApproved IS NOT NULL')
+            ->setParameter('workMonth', $workMonth)
             ->getQuery()
             ->getResult();
     }

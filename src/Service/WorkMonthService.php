@@ -5,12 +5,14 @@ namespace App\Service;
 use App\Entity\BusinessTripWorkLog;
 use App\Entity\HomeOfficeWorkLog;
 use App\Entity\SickDayWorkLog;
+use App\Entity\TimeOffWorkLog;
 use App\Entity\VacationWorkLog;
 use App\Entity\WorkLog;
 use App\Entity\WorkMonth;
 use App\Repository\BusinessTripWorkLogRepository;
 use App\Repository\HomeOfficeWorkLogRepository;
 use App\Repository\SickDayWorkLogRepository;
+use App\Repository\TimeOffWorkLogRepository;
 use App\Repository\UserYearStatsRepository;
 use App\Repository\VacationWorkLogRepository;
 use App\Repository\WorkHoursRepository;
@@ -46,6 +48,11 @@ class WorkMonthService
     private $sickDayWorkLogRepository;
 
     /**
+     * @var TimeOffWorkLogRepository
+     */
+    private $timeOffWorkLogRepository;
+
+    /**
      * @var UserYearStatsRepository
      */
     private $userYearStatsRepository;
@@ -71,6 +78,7 @@ class WorkMonthService
         BusinessTripWorkLogRepository $businessTripWorkLogRepository,
         HomeOfficeWorkLogRepository $homeOfficeWorkLogRepository,
         SickDayWorkLogRepository $sickDayWorkLogRepository,
+        TimeOffWorkLogRepository $timeOffWorkLogRepository,
         UserYearStatsRepository $userYearStatsRepository,
         VacationWorkLogRepository $vacationWorkLogRepository,
         WorkLogRepository $workLogRepository,
@@ -81,6 +89,7 @@ class WorkMonthService
         $this->businessTripWorkLogRepository = $businessTripWorkLogRepository;
         $this->homeOfficeWorkLogRepository = $homeOfficeWorkLogRepository;
         $this->sickDayWorkLogRepository = $sickDayWorkLogRepository;
+        $this->timeOffWorkLogRepository = $timeOffWorkLogRepository;
         $this->userYearStatsRepository = $userYearStatsRepository;
         $this->vacationWorkLogRepository = $vacationWorkLogRepository;
         $this->workLogRepository = $workLogRepository;
@@ -136,19 +145,35 @@ class WorkMonthService
      */
     public function calculateWorkedHours(WorkMonth $workMonth): float
     {
+        $workHours = $this->workHoursRepository->findOne(
+            $workMonth->getYear(),
+            $workMonth->getMonth(),
+            $workMonth->getUser()
+        );
+
+        if (!$workHours) {
+            throw new \Exception('Work hours has not been found.');
+        }
+
         $allWorkLogs = [];
-        $allWorkLogWorkedHours = [];
+        $allWorkLogWorkTime = [];
 
         for ($day = 1; $day < 32; ++$day) {
             $allWorkLogs[$day] = [];
-            $allWorkLogWorkedHours[$day] = 0;
+            $allWorkLogWorkTime[$day] = 0;
         }
 
+        $standardWorkLogs = $this->workLogRepository->findAllByWorkMonth($workMonth);
         $businessTripWorkLogs = $this->businessTripWorkLogRepository->findAllApprovedByWorkMonth($workMonth);
         $homeOfficeWorkLogs = $this->homeOfficeWorkLogRepository->findAllApprovedByWorkMonth($workMonth);
         $sickDayWorkLogs = $this->sickDayWorkLogRepository->findAllByWorkMonth($workMonth);
+        $timeOffWorkLogs = $this->timeOffWorkLogRepository->findAllApprovedByWorkMonth($workMonth);
         $vacationWorkLogs = $this->vacationWorkLogRepository->findAllApprovedByWorkMonth($workMonth);
-        $workLogs = $this->workLogRepository->findAllByWorkMonth($workMonth);
+
+        foreach ($standardWorkLogs as $standardWorkLog) {
+            $day = (int) $standardWorkLog->getStartTime()->format('d');
+            $allWorkLogs[$day][] = $standardWorkLog;
+        }
 
         foreach ($businessTripWorkLogs as $businessTripWorkLog) {
             $day = (int) $businessTripWorkLog->getDate()->format('d');
@@ -165,81 +190,129 @@ class WorkMonthService
             $allWorkLogs[$day][] = $sickDayWorkLog;
         }
 
+        foreach ($timeOffWorkLogs as $timeOffWorkLog) {
+            $day = (int) $timeOffWorkLog->getDate()->format('d');
+            $allWorkLogs[$day][] = $timeOffWorkLog;
+        }
+
         foreach ($vacationWorkLogs as $vacationWorkLog) {
             $day = (int) $vacationWorkLog->getDate()->format('d');
             $allWorkLogs[$day][] = $vacationWorkLog;
         }
 
-        foreach ($workLogs as $workLog) {
-            $day = (int) $workLog->getStartTime()->format('d');
-            $allWorkLogs[$day][] = $workLog;
-        }
-
-        $workHours = $this->workHoursRepository->findOne(
-            $workMonth->getYear(),
-            $workMonth->getMonth(),
-            $workMonth->getUser()
-        );
-
-        if (!$workHours) {
-            throw new \Exception('Work hours has not been found.');
-        }
-
+        // Calculate work time for each separately
         foreach ($allWorkLogs as $day => $allWorkLogsByDay) {
-            $workedHours = 0;
             $containsBusinessDay = false;
             $containsHomeDay = false;
             $containsSickDay = false;
+            $containsTimeOffDay = false;
             $containsVacationDay = false;
 
-            foreach ($allWorkLogsByDay as $workLog) {
-                if ($workLog instanceof WorkLog) {
-                    $timeDiff = $workLog->getEndTime()->diff($workLog->getStartTime());
-                    $workedHours += $timeDiff->h + ($timeDiff->i / 60);
-                }
+            $standardWorkLogs = [];
 
-                if ($workLog instanceof BusinessTripWorkLog && $workLog->getTimeApproved()) {
+            $workTime = 0;
+            $workTimeWithoutCorrection = 0;
+            $breakTime = 0;
+
+            // Split work logs into groups by its type and calculate work time of standard work logs.
+            foreach ($allWorkLogsByDay as $standardWorkLog) {
+                if ($standardWorkLog instanceof WorkLog) {
+                    $standardWorkLogs[] = $standardWorkLog;
+
+                    // Get work time of current work log
+                    $currentWorkTimeDiff = $standardWorkLog->getEndTime()->diff($standardWorkLog->getStartTime());
+                    $currentWorkTime = $currentWorkTimeDiff->h + ($currentWorkTimeDiff->i / 60);
+
+                    // Add work time of current work log to total work time.
+                    $workTimeWithoutCorrection += $currentWorkTime;
+
+                    // If current work log is longer that 6 hours, 15 minutes break is added.
+                    if ($currentWorkTime > 6) {
+                        $workTime += $currentWorkTime - 0.25;
+                        $breakTime += 0.25;
+                    } else {
+                        $workTime += $currentWorkTime;
+                    }
+                } elseif ($standardWorkLog instanceof BusinessTripWorkLog && $standardWorkLog->getTimeApproved()) {
                     $containsBusinessDay = true;
-                }
-
-                if ($workLog instanceof HomeOfficeWorkLog && $workLog->getTimeApproved()) {
+                } elseif ($standardWorkLog instanceof HomeOfficeWorkLog && $standardWorkLog->getTimeApproved()) {
                     $containsHomeDay = true;
-                }
-
-                if ($workLog instanceof SickDayWorkLog) {
+                } elseif ($standardWorkLog instanceof SickDayWorkLog) {
                     $containsSickDay = true;
-                }
-
-                if ($workLog instanceof VacationWorkLog && $workLog->getTimeApproved()) {
+                } elseif ($standardWorkLog instanceof TimeOffWorkLog && $standardWorkLog->getTimeApproved()) {
+                    $containsTimeOffDay = true;
+                } elseif ($standardWorkLog instanceof VacationWorkLog && $standardWorkLog->getTimeApproved()) {
                     $containsVacationDay = true;
                 }
             }
 
-            $config = $this->configService->getConfig();
+            // Calculate break time between standard work logs if there is more than one
+            if (count($standardWorkLogs) > 1) {
+                // Sort standard work logs by its start time
+                usort($standardWorkLogs, function (WorkLog $a, WorkLog $b) {
+                    if ($a->getStartTime() === $b->getStartTime()) {
+                        return 0;
+                    }
 
-            $lowerLimit = $config->getWorkedHoursLimits()['lowerLimit'];
-            $upperLimit = $config->getWorkedHoursLimits()['upperLimit'];
+                    return $a->getStartTime() < $b->getStartTime() ? -1 : 1;
+                });
 
-            if (
-                $workedHours > $lowerLimit['limit'] / 3600
-                && $workedHours <= $upperLimit['limit'] / 3600
-            ) {
-                $workedHours += ($lowerLimit['changeBy'] / 3600);
-            } elseif ($workedHours > $upperLimit['limit'] / 3600) {
-                $workedHours += ($upperLimit['changeBy'] / 3600);
+                // Split standard work logs to first element and rest of array
+                $previousWorkLog = $standardWorkLogs[0];
+                $otherWorkLogs = array_slice($standardWorkLogs, 1);
+
+                // Calculate break time between standard work logs
+                foreach ($otherWorkLogs as $standardWorkLog) {
+                    $currentBreakTimeDiff = $standardWorkLog->getStartTime()->diff($previousWorkLog->getEndTime());
+                    $currentBreakTime = $currentBreakTimeDiff->h + ($currentBreakTimeDiff->i / 60);
+
+                    // Take in account only current break time that is equal or longer that 15 minutes
+                    if ($currentBreakTime >= 0.25) {
+                        $breakTime += $currentBreakTime;
+                    }
+
+                    $previousWorkLog = $standardWorkLog;
+                }
+            }
+
+            // Correct work and break times according to necessary breaks
+            if (count($standardWorkLogs) > 0) {
+                $config = $this->configService->getConfig();
+
+                $lowerLimit = $config->getWorkedHoursLimits()['lowerLimit'];
+                $upperLimit = $config->getWorkedHoursLimits()['upperLimit'];
+
+                if (
+                    $workTimeWithoutCorrection > $lowerLimit['limit'] / 3600
+                    && $workTimeWithoutCorrection <= $upperLimit['limit'] / 3600
+                    && $breakTime < abs($lowerLimit['changeBy'] / 3600)
+                ) {
+                    $timeToDeduct = abs($lowerLimit['changeBy'] / 3600) - $breakTime;
+                    $workTime -= $timeToDeduct;
+                } elseif (
+                    $workTimeWithoutCorrection > $upperLimit['limit'] / 3600
+                    && $breakTime < abs($upperLimit['changeBy'] / 3600)
+                ) {
+                    $timeToDeduct = abs($upperLimit['changeBy'] / 3600) - $breakTime;
+                    $workTime -= $timeToDeduct;
+                }
             }
 
             if (
-                $workedHours === 0
-                && ($containsBusinessDay || $containsHomeDay || $containsSickDay || $containsVacationDay)
+                (
+                    count($standardWorkLogs) === 0
+                    && ($containsBusinessDay || $containsHomeDay || $containsSickDay || $containsTimeOffDay)
+                ) || $containsVacationDay
             ) {
-                $workedHours = $workHours->getRequiredHours();
+                $workTime = $workHours->getRequiredHours();
+            } elseif ($containsSickDay && count($standardWorkLogs) > 0) {
+                $workTime = min($workTimeWithoutCorrection, $workHours->getRequiredHours());
             }
 
-            $allWorkLogWorkedHours[$day] = $workedHours;
+            $allWorkLogWorkTime[$day] = $workTime;
         }
 
-        return array_sum($allWorkLogWorkedHours);
+        return array_sum($allWorkLogWorkTime);
     }
 
     /**
