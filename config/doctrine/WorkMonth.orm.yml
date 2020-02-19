@@ -25,6 +25,9 @@ App\Entity\WorkMonth:
         overtimeWorkLogs:
             targetEntity: App\Entity\OvertimeWorkLog
             mappedBy: workMonth
+        parentalLeaveWorkLogs:
+            targetEntity: App\Entity\ParentalLeaveWorkLog
+            mappedBy: workMonth
         sickDayWorkLogs:
             targetEntity: App\Entity\SickDayWorkLog
             mappedBy: workMonth

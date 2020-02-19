@@ -1,0 +1,23 @@
+App\Entity\ParentalLeaveWorkLog:
+    collectionOperations:
+        post:
+            method: POST
+            normalization_context:
+                groups:
+                    - parental_leave_work_log_out_detail
+            denormalization_context:
+                groups:
+                    - parental_leave_work_log_in
+        bulkCreate:
+            method: POST
+            route_name: api_parental_leave_work_log_bulk_create
+            swagger_context:
+                summary: Creates multiple ParentalLeaveWorkLog resources.
+    itemOperations:
+        delete:
+            method: DELETE
+        get:
+            method: GET
+            normalization_context:
+                groups:
+                    - parental_leave_work_log_out_detail

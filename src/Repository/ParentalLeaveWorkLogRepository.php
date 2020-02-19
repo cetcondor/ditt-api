@@ -2,12 +2,12 @@
 
 namespace App\Repository;
 
-use App\Entity\MaternityProtectionWorkLog;
+use App\Entity\ParentalLeaveWorkLog;
 use App\Entity\WorkMonth;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 
-class MaternityProtectionWorkLogRepository
+class ParentalLeaveWorkLogRepository
 {
     /**
      * @var EntityManagerInterface
@@ -21,7 +21,7 @@ class MaternityProtectionWorkLogRepository
     public function __construct(EntityManagerInterface $entityManager)
     {
         /** @var EntityRepository $repository */
-        $repository = $entityManager->getRepository(MaternityProtectionWorkLog::class);
+        $repository = $entityManager->getRepository(ParentalLeaveWorkLog::class);
 
         $this->entityManager = $entityManager;
         $this->repository = $repository;
@@ -34,26 +34,26 @@ class MaternityProtectionWorkLogRepository
 
     /**
      * @param int[] $ids
-     * @return MaternityProtectionWorkLog[]
+     * @return ParentalLeaveWorkLog[]
      */
     public function findByIds(array $ids): array
     {
-        $qb = $this->repository->createQueryBuilder('mpwl');
+        $qb = $this->repository->createQueryBuilder('plwl');
 
-        return $qb->select('mpwl')
-            ->where($qb->expr()->in('mpwl.id', $ids))
+        return $qb->select('plwl')
+            ->where($qb->expr()->in('plwl.id', $ids))
             ->getQuery()
             ->getResult();
     }
 
     /**
-     * @return MaternityProtectionWorkLog[]
+     * @return ParentalLeaveWorkLog[]
      */
     public function findAllByWorkMonth(WorkMonth $workMonth): array
     {
-        return $this->repository->createQueryBuilder('mpwl')
-            ->select('mpwl')
-            ->where('mpwl.workMonth = :workMonth')
+        return $this->repository->createQueryBuilder('plwl')
+            ->select('plwl')
+            ->where('plwl.workMonth = :workMonth')
             ->setParameter('workMonth', $workMonth)
             ->getQuery()
             ->getResult();

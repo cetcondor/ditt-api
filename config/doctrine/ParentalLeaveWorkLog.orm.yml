@@ -1,0 +1,20 @@
+App\Entity\ParentalLeaveWorkLog:
+    type: entity
+
+    id:
+        id:
+            type: integer
+            generator: { strategy: IDENTITY }
+
+    fields:
+        date:
+            type: datetime_immutable
+
+    manyToOne:
+        workMonth:
+            targetEntity: App\Entity\WorkMonth
+            inversedBy: parentalLeaveWorkLogs
+            joinColumn:
+                name: work_month_id
+                referencedColumnName: id
+                nullable: false

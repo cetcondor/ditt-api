@@ -1,0 +1,8 @@
+App\Entity\ParentalLeaveWorkLog:
+    properties:
+        date:
+            - NotBlank: ~
+            - DateTime: ~
+
+        workMonth:
+            - NotBlank: ~

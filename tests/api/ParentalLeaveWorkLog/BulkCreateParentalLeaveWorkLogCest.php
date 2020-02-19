@@ -2,7 +2,7 @@
 
 namespace api\TimeOffWorkLog;
 
-use App\Entity\MaternityProtectionWorkLog;
+use App\Entity\ParentalLeaveWorkLog;
 use App\Entity\User;
 use Doctrine\ORM\NoResultException;
 use Prophecy\Prophet;
@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
-class CreateMaternityProtectionWorkLogCest
+class BulkCreateParentalLeaveWorkLogCest
 {
     /**
      * @var User
@@ -37,28 +37,38 @@ class CreateMaternityProtectionWorkLogCest
     /**
      * @throws \Exception
      */
-    public function testCreateWithValidData(\ApiTester $I): void
+    public function testBulkCreateWithValidData(\ApiTester $I): void
     {
         $date = new \DateTimeImmutable('2019-06-01T12:00:00');
-        $workMonth = $I->createWorkMonth([
+        $date2 = $date->add(new \DateInterval('P1D'));
+        $I->createWorkMonth([
             'month' => $date->format('m'),
             'user' => $this->user2,
             'year' => $I->getSupportedYear($date->format('Y')),
         ]);
 
         $I->haveHttpHeader('Content-Type', 'application/json');
-        $I->sendPOST('/maternity_protection_work_logs.json', [
-            'date' => $date->format(\DateTime::RFC3339),
-            'workMonth' => sprintf('/work_months/%s', $workMonth->getId()),
+        $I->sendPOST('/parental_leave_work_logs/bulk', [
+            'user' => [
+              'id' => $this->user2->getId(),
+            ],
+            'workLogs' => [
+                ['date' => $date->format(\DateTime::RFC3339)],
+                ['date' => $date2->format(\DateTime::RFC3339)],
+            ],
         ]);
 
-        $I->seeHttpHeader('Content-Type', 'application/json; charset=utf-8');
+        $I->seeHttpHeader('Content-Type', 'application/json');
         $I->seeResponseCodeIs(Response::HTTP_CREATED);
         $I->seeResponseContainsJson([
-            'date' => $date->format(\DateTime::RFC3339),
+            ['date' => $date->format(\DateTime::RFC3339)],
+            ['date' => $date2->format(\DateTime::RFC3339)],
         ]);
-        $I->grabEntityFromRepository(MaternityProtectionWorkLog::class, [
+        $I->grabEntityFromRepository(ParentalLeaveWorkLog::class, [
             'date' => $date,
+        ]);
+        $I->grabEntityFromRepository(ParentalLeaveWorkLog::class, [
+            'date' => $date2,
         ]);
     }
 
@@ -68,7 +78,7 @@ class CreateMaternityProtectionWorkLogCest
     public function testCreateWithClosedMonth(\ApiTester $I): void
     {
         $date = new \DateTimeImmutable('2019-06-01T12:00:00');
-        $workMonth = $I->createWorkMonth([
+        $I->createWorkMonth([
             'month' => $date->format('m'),
             'status' => 'APPROVED',
             'user' => $this->user2,
@@ -76,18 +86,21 @@ class CreateMaternityProtectionWorkLogCest
         ]);
 
         $I->haveHttpHeader('Content-Type', 'application/json');
-        $I->sendPOST('/maternity_protection_work_logs.json', [
-            'date' => $date->format(\DateTime::RFC3339),
-            'workMonth' => sprintf('/work_months/%s', $workMonth->getId()),
+        $I->sendPOST('/parental_leave_work_logs/bulk', [
+            'user' => [
+                'id' => $this->user2->getId(),
+            ],
+            'workLogs' => [
+                ['date' => $date->format(\DateTime::RFC3339)],
+            ],
         ]);
 
-        $I->seeHttpHeader('Content-Type', 'application/problem+json; charset=utf-8');
         $I->seeResponseCodeIs(Response::HTTP_BAD_REQUEST);
         $I->seeResponseContainsJson([
-            'detail' => 'Cannot add or delete work log to closed work month.',
+            'detail' => 'Cannot add work log to closed work month.',
         ]);
         $I->expectException(NoResultException::class, function () use ($I, $date) {
-            $I->grabEntityFromRepository(MaternityProtectionWorkLog::class, [
+            $I->grabEntityFromRepository(ParentalLeaveWorkLog::class, [
                 'date' => $date,
             ]);
         });
@@ -99,27 +112,29 @@ class CreateMaternityProtectionWorkLogCest
     public function testCreateWithInvalidData(\ApiTester $I): void
     {
         $date = new \DateTimeImmutable('2019-06-01T12:00:00');
-        $workMonth = $I->createWorkMonth([
+        $I->createWorkMonth([
             'month' => $date->format('m'),
             'user' => $this->user2,
             'year' => $I->getSupportedYear($date->format('Y')),
         ]);
 
         $I->haveHttpHeader('Content-Type', 'application/json');
-        $I->sendPOST('/maternity_protection_work_logs.json', [
-            'date' => null,
-            'workMonth' => sprintf('/work_months/%s', $workMonth->getId()),
+        $I->sendPOST('/parental_leave_work_logs/bulk', [
+            'user' => [
+                'id' => $this->user2->getId(),
+            ],
+            'workLogs' => [
+                ['date' => null],
+            ],
         ]);
 
-        $I->seeHttpHeader('Content-Type', 'application/problem+json; charset=utf-8');
         $I->seeResponseCodeIs(Response::HTTP_BAD_REQUEST);
         $I->seeResponseContainsJson([
-            'detail' => 'The data is either an empty string or null, you should pass a string '
-            . 'that can be parsed with the passed format or a valid DateTime string.',
+            'detail' => 'Cannot denormalize work log.',
         ]);
 
         $I->expectException(NoResultException::class, function () use ($I, $date) {
-            $I->grabEntityFromRepository(MaternityProtectionWorkLog::class, [
+            $I->grabEntityFromRepository(ParentalLeaveWorkLog::class, [
                 'date' => $date,
             ]);
         });

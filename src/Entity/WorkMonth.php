@@ -53,6 +53,11 @@ class WorkMonth
     private $overtimeWorkLogs;
 
     /**
+     * @var ParentalLeaveWorkLog[]|Collection
+     */
+    private $parentalLeaveWorkLogs;
+
+    /**
      * @var SickDayWorkLog[]|Collection
      */
     private $sickDayWorkLogs;
@@ -89,6 +94,7 @@ class WorkMonth
         $this->homeOfficeWorkLogs = new ArrayCollection();
         $this->maternityProtectionWorkLogs = new ArrayCollection();
         $this->overtimeWorkLogs = new ArrayCollection();
+        $this->parentalLeaveWorkLogs = new ArrayCollection();
         $this->sickDayWorkLogs = new ArrayCollection();
         $this->timeOffWorkLogs = new ArrayCollection();
         $this->vacationWorkLogs = new ArrayCollection();
@@ -216,6 +222,28 @@ class WorkMonth
     public function setOvertimeWorkLogs($overtimeWorkLogs): WorkMonth
     {
         $this->overtimeWorkLogs = $overtimeWorkLogs;
+
+        return $this;
+    }
+
+    /**
+     * @return ParentalLeaveWorkLog[]
+     */
+    public function getParentalLeaveWorkLogs(): array
+    {
+        if ($this->parentalLeaveWorkLogs instanceof Collection) {
+            return $this->parentalLeaveWorkLogs->toArray();
+        }
+
+        return $this->parentalLeaveWorkLogs;
+    }
+
+    /**
+     * @param ParentalLeaveWorkLog[]|Collection $parentalLeaveWorkLogs
+     */
+    public function setParentalLeaveWorkLogs($parentalLeaveWorkLogs): WorkMonth
+    {
+        $this->parentalLeaveWorkLogs = $parentalLeaveWorkLogs;
 
         return $this;
     }

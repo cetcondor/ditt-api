@@ -2,7 +2,7 @@
 
 namespace api\TimeOffWorkLog;
 
-use App\Entity\MaternityProtectionWorkLog;
+use App\Entity\ParentalLeaveWorkLog;
 use App\Entity\User;
 use Doctrine\ORM\NoResultException;
 use Prophecy\Prophet;
@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
-class CreateMaternityProtectionWorkLogCest
+class CreateParentalLeaveWorkLogCest
 {
     /**
      * @var User
@@ -47,7 +47,7 @@ class CreateMaternityProtectionWorkLogCest
         ]);
 
         $I->haveHttpHeader('Content-Type', 'application/json');
-        $I->sendPOST('/maternity_protection_work_logs.json', [
+        $I->sendPOST('/parental_leave_work_logs.json', [
             'date' => $date->format(\DateTime::RFC3339),
             'workMonth' => sprintf('/work_months/%s', $workMonth->getId()),
         ]);
@@ -57,7 +57,7 @@ class CreateMaternityProtectionWorkLogCest
         $I->seeResponseContainsJson([
             'date' => $date->format(\DateTime::RFC3339),
         ]);
-        $I->grabEntityFromRepository(MaternityProtectionWorkLog::class, [
+        $I->grabEntityFromRepository(ParentalLeaveWorkLog::class, [
             'date' => $date,
         ]);
     }
@@ -76,7 +76,7 @@ class CreateMaternityProtectionWorkLogCest
         ]);
 
         $I->haveHttpHeader('Content-Type', 'application/json');
-        $I->sendPOST('/maternity_protection_work_logs.json', [
+        $I->sendPOST('/parental_leave_work_logs.json', [
             'date' => $date->format(\DateTime::RFC3339),
             'workMonth' => sprintf('/work_months/%s', $workMonth->getId()),
         ]);
@@ -87,7 +87,7 @@ class CreateMaternityProtectionWorkLogCest
             'detail' => 'Cannot add or delete work log to closed work month.',
         ]);
         $I->expectException(NoResultException::class, function () use ($I, $date) {
-            $I->grabEntityFromRepository(MaternityProtectionWorkLog::class, [
+            $I->grabEntityFromRepository(ParentalLeaveWorkLog::class, [
                 'date' => $date,
             ]);
         });
@@ -106,7 +106,7 @@ class CreateMaternityProtectionWorkLogCest
         ]);
 
         $I->haveHttpHeader('Content-Type', 'application/json');
-        $I->sendPOST('/maternity_protection_work_logs.json', [
+        $I->sendPOST('/parental_leave_work_logs.json', [
             'date' => null,
             'workMonth' => sprintf('/work_months/%s', $workMonth->getId()),
         ]);
@@ -119,7 +119,7 @@ class CreateMaternityProtectionWorkLogCest
         ]);
 
         $I->expectException(NoResultException::class, function () use ($I, $date) {
-            $I->grabEntityFromRepository(MaternityProtectionWorkLog::class, [
+            $I->grabEntityFromRepository(ParentalLeaveWorkLog::class, [
                 'date' => $date,
             ]);
         });

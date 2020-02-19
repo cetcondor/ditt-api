@@ -48,6 +48,9 @@ App\Entity\WorkMonth:
         overtimeWorkLogs:
             groups:
                 - work_month_out_detail
+        parentalLeaveWorkLogs:
+            groups:
+                - work_month_out_detail
         sickDayWorkLogs:
             groups:
                 - work_month_out_detail

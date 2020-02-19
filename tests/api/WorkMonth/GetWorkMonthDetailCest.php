@@ -110,6 +110,14 @@ class GetWorkMonthDetailCest
             'date' => $endTime1,
             'workMonth' => $data['workMonth'],
         ]);
+        $data['parentalLeaveWorkLog1'] = $I->createParentalLeaveWorkLog([
+            'date' => $startTime1,
+            'workMonth' => $data['workMonth'],
+        ]);
+        $data['parentalLeaveWorkLog2'] = $I->createParentalLeaveWorkLog([
+            'date' => $endTime1,
+            'workMonth' => $data['workMonth'],
+        ]);
         $data['sickDayWorkLog1'] = $I->createSickDayWorkLog([
             'date' => $startTime1,
             'variant' => 'WITHOUT_NOTE',
@@ -151,6 +159,7 @@ class GetWorkMonthDetailCest
         $data['workMonth']->setHomeOfficeWorkLogs([$data['homeOfficeWorkLog1'], $data['homeOfficeWorkLog2']]);
         $data['workMonth']->setMaternityProtectionWorkLogs([$data['maternityProtectionWorkLog1'], $data['maternityProtectionWorkLog2']]);
         $data['workMonth']->setOvertimeWorkLogs([$data['overtimeWorkLog1'], $data['overtimeWorkLog2']]);
+        $data['workMonth']->setParentalLeaveWorkLogs([$data['parentalLeaveWorkLog1'], $data['parentalLeaveWorkLog2']]);
         $data['workMonth']->setSickDayWorkLogs([$data['sickDayWorkLog1'], $data['sickDayWorkLog2']]);
         $data['workMonth']->setTimeOffWorkLogs([$data['timeOffWorkLog1'], $data['timeOffWorkLog2']]);
         $data['workMonth']->setVacationWorkLogs([$data['vacationWorkLog1'], $data['vacationWorkLog2']]);
@@ -220,6 +229,16 @@ class GetWorkMonthDetailCest
                 [
                     'date' => $endTime1->format(\DateTime::RFC3339),
                     'id' => $data['overtimeWorkLog2']->getId(),
+                ],
+            ],
+            'parentalLeaveWorkLogs' => [
+                [
+                    'date' => $startTime1->format(\DateTime::RFC3339),
+                    'id' => $data['parentalLeaveWorkLog1']->getId(),
+                ],
+                [
+                    'date' => $endTime1->format(\DateTime::RFC3339),
+                    'id' => $data['parentalLeaveWorkLog2']->getId(),
                 ],
             ],
             'status' => 'OPENED',
@@ -335,6 +354,16 @@ class GetWorkMonthDetailCest
                     'id' => $data['overtimeWorkLog2']->getId(),
                 ],
             ],
+            'parentalLeaveWorkLogs' => [
+                [
+                    'date' => $startTime1->format(\DateTime::RFC3339),
+                    'id' => $data['parentalLeaveWorkLog1']->getId(),
+                ],
+                [
+                    'date' => $endTime1->format(\DateTime::RFC3339),
+                    'id' => $data['parentalLeaveWorkLog2']->getId(),
+                ],
+            ],
             'status' => 'WAITING_FOR_APPROVAL',
             'sickDayWorkLogs' => [
                 [
@@ -421,6 +450,16 @@ class GetWorkMonthDetailCest
             ],
             'month' => $data['workMonth']->getMonth(),
             'overtimeWorkLogs' => [],
+            'parentalLeaveWorkLogs' => [
+                [
+                    'date' => $startTime1->format(\DateTime::RFC3339),
+                    'id' => $data['parentalLeaveWorkLog1']->getId(),
+                ],
+                [
+                    'date' => $endTime1->format(\DateTime::RFC3339),
+                    'id' => $data['parentalLeaveWorkLog2']->getId(),
+                ],
+            ],
             'status' => 'OPENED',
             'sickDayWorkLogs' => [],
             'timeOffWorkLogs' => [],
@@ -492,6 +531,16 @@ class GetWorkMonthDetailCest
                 [
                     'date' => $endTime1->format(\DateTime::RFC3339),
                     'id' => $data['overtimeWorkLog2']->getId(),
+                ],
+            ],
+            'parentalLeaveWorkLogs' => [
+                [
+                    'date' => $startTime1->format(\DateTime::RFC3339),
+                    'id' => $data['parentalLeaveWorkLog1']->getId(),
+                ],
+                [
+                    'date' => $endTime1->format(\DateTime::RFC3339),
+                    'id' => $data['parentalLeaveWorkLog2']->getId(),
                 ],
             ],
             'status' => 'WAITING_FOR_APPROVAL',
@@ -580,6 +629,16 @@ class GetWorkMonthDetailCest
             ],
             'month' => $data['workMonth']->getMonth(),
             'overtimeWorkLogs' => [],
+            'parentalLeaveWorkLogs' => [
+                [
+                    'date' => $startTime1->format(\DateTime::RFC3339),
+                    'id' => $data['parentalLeaveWorkLog1']->getId(),
+                ],
+                [
+                    'date' => $endTime1->format(\DateTime::RFC3339),
+                    'id' => $data['parentalLeaveWorkLog2']->getId(),
+                ],
+            ],
             'status' => 'OPENED',
             'sickDayWorkLogs' => [],
             'timeOffWorkLogs' => [],
@@ -651,6 +710,16 @@ class GetWorkMonthDetailCest
                 [
                     'date' => $endTime1->format(\DateTime::RFC3339),
                     'id' => $data['overtimeWorkLog2']->getId(),
+                ],
+            ],
+            'parentalLeaveWorkLogs' => [
+                [
+                    'date' => $startTime1->format(\DateTime::RFC3339),
+                    'id' => $data['parentalLeaveWorkLog1']->getId(),
+                ],
+                [
+                    'date' => $endTime1->format(\DateTime::RFC3339),
+                    'id' => $data['parentalLeaveWorkLog2']->getId(),
                 ],
             ],
             'status' => 'WAITING_FOR_APPROVAL',
