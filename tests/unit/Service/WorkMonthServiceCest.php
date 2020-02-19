@@ -5,6 +5,8 @@ namespace unit\Service;
 use App\Entity\BusinessTripWorkLog;
 use App\Entity\Config;
 use App\Entity\HomeOfficeWorkLog;
+use App\Entity\MaternityProtectionWorkLog;
+use App\Entity\ParentalLeaveWorkLog;
 use App\Entity\SickDayWorkLog;
 use App\Entity\SupportedYear;
 use App\Entity\TimeOffWorkLog;
@@ -15,6 +17,8 @@ use App\Entity\WorkLog;
 use App\Entity\WorkMonth;
 use App\Repository\BusinessTripWorkLogRepository;
 use App\Repository\HomeOfficeWorkLogRepository;
+use App\Repository\MaternityProtectionWorkLogRepository;
+use App\Repository\ParentalLeaveWorkLogRepository;
 use App\Repository\SickDayWorkLogRepository;
 use App\Repository\TimeOffWorkLogRepository;
 use App\Repository\UserYearStatsRepository;
@@ -38,7 +42,7 @@ class WorkMonthServiceCest
         $workMonth = $this->getWorkMonth($prophet);
         $workHours = $this->getWorkHours($prophet);
 
-        $service = $this->getWorkMonthService($prophet, [], [], [], [], [], [], $workHours);
+        $service = $this->getWorkMonthService($prophet, [], [], [], [], [], [], [], [], $workHours);
 
         $I->assertEquals(0, $service->calculateWorkedHours($workMonth));
     }
@@ -63,7 +67,7 @@ class WorkMonthServiceCest
                 ->setEndTime(new \DateTimeImmutable('2018-01-01 14:05:00')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, [], [], [], [], [], $workLogs, $workHours);
+        $service = $this->getWorkMonthService($prophet, [], [], [], [], [], [], [], $workLogs, $workHours);
 
         $I->assertEquals(4, $service->calculateWorkedHours($workMonth));
     }
@@ -92,7 +96,7 @@ class WorkMonthServiceCest
                 ->setEndTime(new \DateTimeImmutable('2018-01-01 17:00:00')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, [], [], [], [], [], $workLogs, $workHours);
+        $service = $this->getWorkMonthService($prophet, [], [], [], [], [], [], [], $workLogs, $workHours);
 
         $I->assertEquals(4, $service->calculateWorkedHours($workMonth));
     }
@@ -113,7 +117,7 @@ class WorkMonthServiceCest
                 ->setEndTime(new \DateTimeImmutable('2018-01-01 18:20:00')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, [], [], [], [], [], $workLogs, $workHours);
+        $service = $this->getWorkMonthService($prophet, [], [], [], [], [], [], [], $workLogs, $workHours);
 
         $I->assertEquals(5 + (50 / 60), $service->calculateWorkedHours($workMonth));
     }
@@ -138,7 +142,7 @@ class WorkMonthServiceCest
                 ->setEndTime(new \DateTimeImmutable('2018-01-01 15:05:00')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, [], [], [], [], [], $workLogs, $workHours);
+        $service = $this->getWorkMonthService($prophet, [], [], [], [], [], [], [], $workLogs, $workHours);
 
         $I->assertEquals(6.5, $service->calculateWorkedHours($workMonth));
     }
@@ -167,7 +171,7 @@ class WorkMonthServiceCest
                 ->setEndTime(new \DateTimeImmutable('2018-01-01 15:20:00')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, [], [], [], [], [], $workLogs, $workHours);
+        $service = $this->getWorkMonthService($prophet, [], [], [], [], [], [], [], $workLogs, $workHours);
 
         $I->assertEquals(6.75, $service->calculateWorkedHours($workMonth));
     }
@@ -196,7 +200,7 @@ class WorkMonthServiceCest
                 ->setEndTime(new \DateTimeImmutable('2018-01-01 18:00:00')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, [], [], [], [], [], $workLogs, $workHours);
+        $service = $this->getWorkMonthService($prophet, [], [], [], [], [], [], [], $workLogs, $workHours);
 
         $I->assertEquals(7, $service->calculateWorkedHours($workMonth));
     }
@@ -221,7 +225,7 @@ class WorkMonthServiceCest
                 ->setEndTime(new \DateTimeImmutable('2018-01-01 18:05:00')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, [], [], [], [], [], $workLogs, $workHours);
+        $service = $this->getWorkMonthService($prophet, [], [], [], [], [], [], [], $workLogs, $workHours);
 
         $I->assertEquals(9.25, $service->calculateWorkedHours($workMonth));
     }
@@ -250,7 +254,7 @@ class WorkMonthServiceCest
                 ->setEndTime(new \DateTimeImmutable('2018-01-01 18:20:00')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, [], [], [], [], [], $workLogs, $workHours);
+        $service = $this->getWorkMonthService($prophet, [], [], [], [], [], [], [], $workLogs, $workHours);
 
         $I->assertEquals(9.5, $service->calculateWorkedHours($workMonth));
     }
@@ -279,7 +283,7 @@ class WorkMonthServiceCest
                 ->setEndTime(new \DateTimeImmutable('2018-01-01 21:00:00')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, [], [], [], [], [], $workLogs, $workHours);
+        $service = $this->getWorkMonthService($prophet, [], [], [], [], [], [], [], $workLogs, $workHours);
 
         $I->assertEquals(10, $service->calculateWorkedHours($workMonth));
     }
@@ -301,7 +305,7 @@ class WorkMonthServiceCest
                 ->setTimeApproved(new \DateTimeImmutable('2018-01-01 23:59:59')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, $businessTripWorkLogs, [], [], [], [], [], $workHours);
+        $service = $this->getWorkMonthService($prophet, $businessTripWorkLogs, [], [], [], [], [], [], [], $workHours);
 
         $I->assertEquals(6, $service->calculateWorkedHours($workMonth));
     }
@@ -320,7 +324,7 @@ class WorkMonthServiceCest
                 ->setDate(new \DateTimeImmutable('2018-01-01')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, $businessTripWorkLogs, [], [], [], [], [], $workHours);
+        $service = $this->getWorkMonthService($prophet, $businessTripWorkLogs, [], [], [], [], [], [], [], $workHours);
 
         $I->assertEquals(0, $service->calculateWorkedHours($workMonth));
     }
@@ -350,7 +354,7 @@ class WorkMonthServiceCest
                 ->setEndTime(new \DateTimeImmutable('2018-01-01 14:05:00')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, $businessTripWorkLogs, [], [], [], [], $workLogs, $workHours);
+        $service = $this->getWorkMonthService($prophet, $businessTripWorkLogs, [], [], [], [], [], [], $workLogs, $workHours);
 
         $I->assertEquals(4, $service->calculateWorkedHours($workMonth));
     }
@@ -380,7 +384,7 @@ class WorkMonthServiceCest
                 ->setEndTime(new \DateTimeImmutable('2018-01-01 16:00:00')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, $businessTripWorkLogs, [], [], [], [], $workLogs, $workHours);
+        $service = $this->getWorkMonthService($prophet, $businessTripWorkLogs, [], [], [], [], [], [], $workLogs, $workHours);
 
         $I->assertEquals(4, $service->calculateWorkedHours($workMonth));
     }
@@ -406,7 +410,7 @@ class WorkMonthServiceCest
                 ->setEndTime(new \DateTimeImmutable('2018-01-01 18:20:00')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, $businessTripWorkLogs, [], [], [], [], $workLogs, $workHours);
+        $service = $this->getWorkMonthService($prophet, $businessTripWorkLogs, [], [], [], [], [], [], $workLogs, $workHours);
 
         $I->assertEquals(5 + (50 / 60), $service->calculateWorkedHours($workMonth));
     }
@@ -436,7 +440,7 @@ class WorkMonthServiceCest
                 ->setEndTime(new \DateTimeImmutable('2018-01-01 15:05:00')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, $businessTripWorkLogs, [], [], [], [], $workLogs, $workHours);
+        $service = $this->getWorkMonthService($prophet, $businessTripWorkLogs, [], [], [], [], [], [], $workLogs, $workHours);
 
         $I->assertEquals(6.5, $service->calculateWorkedHours($workMonth));
     }
@@ -470,7 +474,7 @@ class WorkMonthServiceCest
                 ->setEndTime(new \DateTimeImmutable('2018-01-01 15:20:00')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, $businessTripWorkLogs, [], [], [], [], $workLogs, $workHours);
+        $service = $this->getWorkMonthService($prophet, $businessTripWorkLogs, [], [], [], [], [], [], $workLogs, $workHours);
 
         $I->assertEquals(6.75, $service->calculateWorkedHours($workMonth));
     }
@@ -504,7 +508,7 @@ class WorkMonthServiceCest
                 ->setEndTime(new \DateTimeImmutable('2018-01-01 18:00:00')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, $businessTripWorkLogs, [], [], [], [], $workLogs, $workHours);
+        $service = $this->getWorkMonthService($prophet, $businessTripWorkLogs, [], [], [], [], [], [], $workLogs, $workHours);
 
         $I->assertEquals(7, $service->calculateWorkedHours($workMonth));
     }
@@ -534,7 +538,7 @@ class WorkMonthServiceCest
                 ->setEndTime(new \DateTimeImmutable('2018-01-01 18:05:00')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, $businessTripWorkLogs, [], [], [], [], $workLogs, $workHours);
+        $service = $this->getWorkMonthService($prophet, $businessTripWorkLogs, [], [], [], [], [], [], $workLogs, $workHours);
 
         $I->assertEquals(9.25, $service->calculateWorkedHours($workMonth));
     }
@@ -568,7 +572,7 @@ class WorkMonthServiceCest
                 ->setEndTime(new \DateTimeImmutable('2018-01-01 18:20:00')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, $businessTripWorkLogs, [], [], [], [], $workLogs, $workHours);
+        $service = $this->getWorkMonthService($prophet, $businessTripWorkLogs, [], [], [], [], [], [], $workLogs, $workHours);
 
         $I->assertEquals(9.5, $service->calculateWorkedHours($workMonth));
     }
@@ -602,7 +606,7 @@ class WorkMonthServiceCest
                 ->setEndTime(new \DateTimeImmutable('2018-01-01 21:00:00')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, $businessTripWorkLogs, [], [], [], [], $workLogs, $workHours);
+        $service = $this->getWorkMonthService($prophet, $businessTripWorkLogs, [], [], [], [], [], [], $workLogs, $workHours);
 
         $I->assertEquals(10, $service->calculateWorkedHours($workMonth));
     }
@@ -624,7 +628,7 @@ class WorkMonthServiceCest
                 ->setTimeApproved(new \DateTimeImmutable('2018-01-01 23:59:59')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, [], $homeOfficeWorkLogs, [], [], [], [], $workHours);
+        $service = $this->getWorkMonthService($prophet, [], $homeOfficeWorkLogs, [], [], [], [], [], [], $workHours);
 
         $I->assertEquals(6, $service->calculateWorkedHours($workMonth));
     }
@@ -643,7 +647,7 @@ class WorkMonthServiceCest
                 ->setDate(new \DateTimeImmutable('2018-01-01')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, [], $homeOfficeWorkLogs, [], [], [], [], $workHours);
+        $service = $this->getWorkMonthService($prophet, [], $homeOfficeWorkLogs, [], [], [], [], [], [], $workHours);
 
         $I->assertEquals(0, $service->calculateWorkedHours($workMonth));
     }
@@ -673,7 +677,7 @@ class WorkMonthServiceCest
                 ->setEndTime(new \DateTimeImmutable('2018-01-01 14:05:00')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, [], $homeOfficeWorkLogs, [], [], [], $workLogs, $workHours);
+        $service = $this->getWorkMonthService($prophet, [], $homeOfficeWorkLogs, [], [], [], [], [], $workLogs, $workHours);
 
         $I->assertEquals(4, $service->calculateWorkedHours($workMonth));
     }
@@ -703,7 +707,7 @@ class WorkMonthServiceCest
                 ->setEndTime(new \DateTimeImmutable('2018-01-01 16:00:00')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, [], $homeOfficeWorkLogs, [], [], [], $workLogs, $workHours);
+        $service = $this->getWorkMonthService($prophet, [], $homeOfficeWorkLogs, [], [], [], [], [], $workLogs, $workHours);
 
         $I->assertEquals(4, $service->calculateWorkedHours($workMonth));
     }
@@ -729,7 +733,7 @@ class WorkMonthServiceCest
                 ->setEndTime(new \DateTimeImmutable('2018-01-01 18:20:00')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, [], $homeOfficeWorkLogs, [], [], [], $workLogs, $workHours);
+        $service = $this->getWorkMonthService($prophet, [], $homeOfficeWorkLogs, [], [], [], [], [], $workLogs, $workHours);
 
         $I->assertEquals(5 + (50 / 60), $service->calculateWorkedHours($workMonth));
     }
@@ -759,7 +763,7 @@ class WorkMonthServiceCest
                 ->setEndTime(new \DateTimeImmutable('2018-01-01 15:05:00')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, [], $homeOfficeWorkLogs, [], [], [], $workLogs, $workHours);
+        $service = $this->getWorkMonthService($prophet, [], $homeOfficeWorkLogs, [], [], [], [], [], $workLogs, $workHours);
 
         $I->assertEquals(6.5, $service->calculateWorkedHours($workMonth));
     }
@@ -793,7 +797,7 @@ class WorkMonthServiceCest
                 ->setEndTime(new \DateTimeImmutable('2018-01-01 15:20:00')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, [], $homeOfficeWorkLogs, [], [], [], $workLogs, $workHours);
+        $service = $this->getWorkMonthService($prophet, [], $homeOfficeWorkLogs, [], [], [], [], [], $workLogs, $workHours);
 
         $I->assertEquals(6.75, $service->calculateWorkedHours($workMonth));
     }
@@ -827,7 +831,7 @@ class WorkMonthServiceCest
                 ->setEndTime(new \DateTimeImmutable('2018-01-01 18:00:00')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, [], $homeOfficeWorkLogs, [], [], [], $workLogs, $workHours);
+        $service = $this->getWorkMonthService($prophet, [], $homeOfficeWorkLogs, [], [], [], [], [], $workLogs, $workHours);
 
         $I->assertEquals(7, $service->calculateWorkedHours($workMonth));
     }
@@ -857,7 +861,7 @@ class WorkMonthServiceCest
                 ->setEndTime(new \DateTimeImmutable('2018-01-01 18:05:00')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, [], $homeOfficeWorkLogs, [], [], [], $workLogs, $workHours);
+        $service = $this->getWorkMonthService($prophet, [], $homeOfficeWorkLogs, [], [], [], [], [], $workLogs, $workHours);
 
         $I->assertEquals(9.25, $service->calculateWorkedHours($workMonth));
     }
@@ -891,7 +895,7 @@ class WorkMonthServiceCest
                 ->setEndTime(new \DateTimeImmutable('2018-01-01 18:20:00')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, [], $homeOfficeWorkLogs, [], [], [], $workLogs, $workHours);
+        $service = $this->getWorkMonthService($prophet, [], $homeOfficeWorkLogs, [], [], [], [], [], $workLogs, $workHours);
 
         $I->assertEquals(9.5, $service->calculateWorkedHours($workMonth));
     }
@@ -925,9 +929,597 @@ class WorkMonthServiceCest
                 ->setEndTime(new \DateTimeImmutable('2018-01-01 21:00:00')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, [], $homeOfficeWorkLogs, [], [], [], $workLogs, $workHours);
+        $service = $this->getWorkMonthService($prophet, [], $homeOfficeWorkLogs, [], [], [], [], [], $workLogs, $workHours);
 
         $I->assertEquals(10, $service->calculateWorkedHours($workMonth));
+    }
+
+    // Maternity protection work logs
+
+    /**
+     * @throws \Exception
+     */
+    public function testCalculateMaternityProtectionWorkLogsWithoutWorkLogs(\UnitTester $I): void
+    {
+        $prophet = new Prophet();
+        $workMonth = $this->getWorkMonth($prophet);
+        $workHours = $this->getWorkHours($prophet);
+
+        $maternityProtectionWorkLogs = [
+            (new MaternityProtectionWorkLog())
+                ->setDate(new \DateTimeImmutable('2018-01-01')),
+        ];
+
+        $service = $this->getWorkMonthService($prophet, [], [], $maternityProtectionWorkLogs, [], [], [], [], [], $workHours);
+
+        $I->assertEquals(6, $service->calculateWorkedHours($workMonth));
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function testCalculateMaternityProtectionWorkLogsWithoutBreak(\UnitTester $I): void
+    {
+        $prophet = new Prophet();
+        $workMonth = $this->getWorkMonth($prophet);
+        $workHours = $this->getWorkHours($prophet);
+
+        $maternityProtectionWorkLogs = [
+            (new MaternityProtectionWorkLog())
+                ->setDate(new \DateTimeImmutable('2018-01-01')),
+        ];
+        $workLogs = [
+            (new WorkLog())
+                ->setWorkMonth($workMonth)
+                ->setStartTime(new \DateTimeImmutable('2018-01-01 10:00:00'))
+                ->setEndTime(new \DateTimeImmutable('2018-01-01 12:00:00')),
+            (new WorkLog())
+                ->setWorkMonth($workMonth)
+                ->setStartTime(new \DateTimeImmutable('2018-01-01 12:05:00'))
+                ->setEndTime(new \DateTimeImmutable('2018-01-01 14:05:00')),
+        ];
+
+        $service = $this->getWorkMonthService($prophet, [], [], $maternityProtectionWorkLogs, [], [], [], [], $workLogs, $workHours);
+
+        $I->assertEquals(6, $service->calculateWorkedHours($workMonth));
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function testCalculateMaternityProtectionWorkLogsWithLongBreak(\UnitTester $I): void
+    {
+        $prophet = new Prophet();
+        $workMonth = $this->getWorkMonth($prophet);
+        $workHours = $this->getWorkHours($prophet);
+
+        $maternityProtectionWorkLogs = [
+            (new MaternityProtectionWorkLog())
+                ->setDate(new \DateTimeImmutable('2018-01-01')),
+        ];
+        $workLogs = [
+            (new WorkLog())
+                ->setWorkMonth($workMonth)
+                ->setStartTime(new \DateTimeImmutable('2018-01-01 10:00:00'))
+                ->setEndTime(new \DateTimeImmutable('2018-01-01 12:00:00')),
+            (new WorkLog())
+                ->setWorkMonth($workMonth)
+                ->setStartTime(new \DateTimeImmutable('2018-01-01 14:00:00'))
+                ->setEndTime(new \DateTimeImmutable('2018-01-01 16:00:00')),
+        ];
+
+        $service = $this->getWorkMonthService($prophet, [], [], $maternityProtectionWorkLogs, [], [], [], [], $workLogs, $workHours);
+
+        $I->assertEquals(6, $service->calculateWorkedHours($workMonth));
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function testCalculateMaternityProtectionWorkLogsWithOneStandardWorkLogMoreThan6HoursLong(\UnitTester $I): void
+    {
+        $prophet = new Prophet();
+        $workMonth = $this->getWorkMonth($prophet);
+        $workHours = $this->getWorkHours($prophet);
+
+        $maternityProtectionWorkLogs = [
+            (new MaternityProtectionWorkLog())
+                ->setDate(new \DateTimeImmutable('2018-01-01')),
+        ];
+        $workLogs = [
+            (new WorkLog())
+                ->setWorkMonth($workMonth)
+                ->setStartTime(new \DateTimeImmutable('2018-01-01 12:00:00'))
+                ->setEndTime(new \DateTimeImmutable('2018-01-01 18:20:00')),
+        ];
+
+        $service = $this->getWorkMonthService($prophet, [], [], $maternityProtectionWorkLogs, [], [], [], [], $workLogs, $workHours);
+
+        $I->assertEquals(6, $service->calculateWorkedHours($workMonth));
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function testCalculateMaternityProtectionWorkLogsAboveLowerLimitWithoutBreak(\UnitTester $I): void
+    {
+        $prophet = new Prophet();
+        $workMonth = $this->getWorkMonth($prophet);
+        $workHours = $this->getWorkHours($prophet);
+
+        $maternityProtectionWorkLogs = [
+            (new MaternityProtectionWorkLog())
+                ->setDate(new \DateTimeImmutable('2018-01-01')),
+        ];
+        $workLogs = [
+            (new WorkLog())
+                ->setWorkMonth($workMonth)
+                ->setStartTime(new \DateTimeImmutable('2018-01-01 08:00:00'))
+                ->setEndTime(new \DateTimeImmutable('2018-01-01 12:00:00')),
+            (new WorkLog())
+                ->setWorkMonth($workMonth)
+                ->setStartTime(new \DateTimeImmutable('2018-01-01 12:05:00'))
+                ->setEndTime(new \DateTimeImmutable('2018-01-01 15:05:00')),
+        ];
+
+        $service = $this->getWorkMonthService($prophet, [], [], $maternityProtectionWorkLogs, [], [], [], [], $workLogs, $workHours);
+
+        $I->assertEquals(6, $service->calculateWorkedHours($workMonth));
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function testCalculateMaternityProtectionWorkLogsAboveLowerLimitWithShortBreak(\UnitTester $I): void
+    {
+        $prophet = new Prophet();
+        $workMonth = $this->getWorkMonth($prophet);
+        $workHours = $this->getWorkHours($prophet);
+
+        $maternityProtectionWorkLogs = [
+            (new MaternityProtectionWorkLog())
+                ->setDate(new \DateTimeImmutable('2018-01-01')),
+        ];
+        $workLogs = [
+            (new WorkLog())
+                ->setWorkMonth($workMonth)
+                ->setStartTime(new \DateTimeImmutable('2018-01-01 08:00:00'))
+                ->setEndTime(new \DateTimeImmutable('2018-01-01 11:00:00')),
+            (new WorkLog())
+                ->setWorkMonth($workMonth)
+                ->setStartTime(new \DateTimeImmutable('2018-01-01 11:05:00'))
+                ->setEndTime(new \DateTimeImmutable('2018-01-01 12:05:00')),
+            (new WorkLog())
+                ->setWorkMonth($workMonth)
+                ->setStartTime(new \DateTimeImmutable('2018-01-01 12:20:00'))
+                ->setEndTime(new \DateTimeImmutable('2018-01-01 15:20:00')),
+        ];
+
+        $service = $this->getWorkMonthService($prophet, [], [], $maternityProtectionWorkLogs, [], [], [], [], $workLogs, $workHours);
+
+        $I->assertEquals(6, $service->calculateWorkedHours($workMonth));
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function testCalculateMaternityProtectionWorkLogsAboveLowerLimitWithLongBreak(\UnitTester $I): void
+    {
+        $prophet = new Prophet();
+        $workMonth = $this->getWorkMonth($prophet);
+        $workHours = $this->getWorkHours($prophet);
+
+        $maternityProtectionWorkLogs = [
+            (new MaternityProtectionWorkLog())
+                ->setDate(new \DateTimeImmutable('2018-01-01')),
+        ];
+        $workLogs = [
+            (new WorkLog())
+                ->setWorkMonth($workMonth)
+                ->setStartTime(new \DateTimeImmutable('2018-01-01 08:00:00'))
+                ->setEndTime(new \DateTimeImmutable('2018-01-01 12:00:00')),
+            (new WorkLog())
+                ->setWorkMonth($workMonth)
+                ->setStartTime(new \DateTimeImmutable('2018-01-01 14:00:00'))
+                ->setEndTime(new \DateTimeImmutable('2018-01-01 17:00:00')),
+            (new WorkLog())
+                ->setWorkMonth($workMonth)
+                ->setStartTime(new \DateTimeImmutable('2018-01-01 18:00:00'))
+                ->setEndTime(new \DateTimeImmutable('2018-01-01 19:00:00')),
+        ];
+
+        $service = $this->getWorkMonthService($prophet, [], [], $maternityProtectionWorkLogs, [], [], [], [], $workLogs, $workHours);
+
+        $I->assertEquals(6, $service->calculateWorkedHours($workMonth));
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function testCalculateMaternityProtectionWorkLogsAboveUpperLimitWithoutBreak(\UnitTester $I): void
+    {
+        $prophet = new Prophet();
+        $workMonth = $this->getWorkMonth($prophet);
+        $workHours = $this->getWorkHours($prophet);
+
+        $maternityProtectionWorkLogs = [
+            (new MaternityProtectionWorkLog())
+                ->setDate(new \DateTimeImmutable('2018-01-01')),
+        ];
+        $workLogs = [
+            (new WorkLog())
+                ->setWorkMonth($workMonth)
+                ->setStartTime(new \DateTimeImmutable('2018-01-01 08:00:00'))
+                ->setEndTime(new \DateTimeImmutable('2018-01-01 12:00:00')),
+            (new WorkLog())
+                ->setWorkMonth($workMonth)
+                ->setStartTime(new \DateTimeImmutable('2018-01-01 12:05:00'))
+                ->setEndTime(new \DateTimeImmutable('2018-01-01 18:05:00')),
+        ];
+
+        $service = $this->getWorkMonthService($prophet, [], [], $maternityProtectionWorkLogs, [], [], [], [], $workLogs, $workHours);
+
+        $I->assertEquals(6, $service->calculateWorkedHours($workMonth));
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function testCalculateMaternityProtectionWorkLogsAboveUpperLimitWithShortBreak(\UnitTester $I): void
+    {
+        $prophet = new Prophet();
+        $workMonth = $this->getWorkMonth($prophet);
+        $workHours = $this->getWorkHours($prophet);
+
+        $maternityProtectionWorkLogs = [
+            (new MaternityProtectionWorkLog())
+                ->setDate(new \DateTimeImmutable('2018-01-01')),
+        ];
+        $workLogs = [
+            (new WorkLog())
+                ->setWorkMonth($workMonth)
+                ->setStartTime(new \DateTimeImmutable('2018-01-01 08:00:00'))
+                ->setEndTime(new \DateTimeImmutable('2018-01-01 11:00:00')),
+            (new WorkLog())
+                ->setWorkMonth($workMonth)
+                ->setStartTime(new \DateTimeImmutable('2018-01-01 11:05:00'))
+                ->setEndTime(new \DateTimeImmutable('2018-01-01 12:05:00')),
+            (new WorkLog())
+                ->setWorkMonth($workMonth)
+                ->setStartTime(new \DateTimeImmutable('2018-01-01 12:20:00'))
+                ->setEndTime(new \DateTimeImmutable('2018-01-01 18:20:00')),
+        ];
+
+        $service = $this->getWorkMonthService($prophet, [], [], $maternityProtectionWorkLogs, [], [], [], [], $workLogs, $workHours);
+
+        $I->assertEquals(6, $service->calculateWorkedHours($workMonth));
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function testCalculateMaternityProtectionWorkLogsAboveUpperLimitWithLongBreak(\UnitTester $I): void
+    {
+        $prophet = new Prophet();
+        $workMonth = $this->getWorkMonth($prophet);
+        $workHours = $this->getWorkHours($prophet);
+
+        $maternityProtectionWorkLogs = [
+            (new MaternityProtectionWorkLog())
+                ->setDate(new \DateTimeImmutable('2018-01-01')),
+        ];
+        $workLogs = [
+            (new WorkLog())
+                ->setWorkMonth($workMonth)
+                ->setStartTime(new \DateTimeImmutable('2018-01-01 08:00:00'))
+                ->setEndTime(new \DateTimeImmutable('2018-01-01 12:00:00')),
+            (new WorkLog())
+                ->setWorkMonth($workMonth)
+                ->setStartTime(new \DateTimeImmutable('2018-01-01 14:00:00'))
+                ->setEndTime(new \DateTimeImmutable('2018-01-01 19:00:00')),
+            (new WorkLog())
+                ->setWorkMonth($workMonth)
+                ->setStartTime(new \DateTimeImmutable('2018-01-01 20:00:00'))
+                ->setEndTime(new \DateTimeImmutable('2018-01-01 21:00:00')),
+        ];
+
+        $service = $this->getWorkMonthService($prophet, [], [], $maternityProtectionWorkLogs, [], [], [], [], $workLogs, $workHours);
+
+        $I->assertEquals(6, $service->calculateWorkedHours($workMonth));
+    }
+
+    // Parental leave work logs
+
+    /**
+     * @throws \Exception
+     */
+    public function testCalculateParentalLeaveWorkLogsWithoutWorkLogs(\UnitTester $I): void
+    {
+        $prophet = new Prophet();
+        $workMonth = $this->getWorkMonth($prophet);
+        $workHours = $this->getWorkHours($prophet);
+
+        $parentalLeaveWorkLogs = [
+            (new ParentalLeaveWorkLog())
+                ->setDate(new \DateTimeImmutable('2018-01-01')),
+        ];
+
+        $service = $this->getWorkMonthService($prophet, [], [], [], $parentalLeaveWorkLogs, [], [], [], [], $workHours);
+
+        $I->assertEquals(6, $service->calculateWorkedHours($workMonth));
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function testCalculateParentalLeaveWorkLogsWithoutBreak(\UnitTester $I): void
+    {
+        $prophet = new Prophet();
+        $workMonth = $this->getWorkMonth($prophet);
+        $workHours = $this->getWorkHours($prophet);
+
+        $parentalLeaveWorkLogs = [
+            (new ParentalLeaveWorkLog())
+                ->setDate(new \DateTimeImmutable('2018-01-01')),
+        ];
+        $workLogs = [
+            (new WorkLog())
+                ->setWorkMonth($workMonth)
+                ->setStartTime(new \DateTimeImmutable('2018-01-01 10:00:00'))
+                ->setEndTime(new \DateTimeImmutable('2018-01-01 12:00:00')),
+            (new WorkLog())
+                ->setWorkMonth($workMonth)
+                ->setStartTime(new \DateTimeImmutable('2018-01-01 12:05:00'))
+                ->setEndTime(new \DateTimeImmutable('2018-01-01 14:05:00')),
+        ];
+
+        $service = $this->getWorkMonthService($prophet, [], [], [], $parentalLeaveWorkLogs, [], [], [], $workLogs, $workHours);
+
+        $I->assertEquals(6, $service->calculateWorkedHours($workMonth));
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function testCalculateParentalLeaveWorkLogsWithLongBreak(\UnitTester $I): void
+    {
+        $prophet = new Prophet();
+        $workMonth = $this->getWorkMonth($prophet);
+        $workHours = $this->getWorkHours($prophet);
+
+        $parentalLeaveWorkLogs = [
+            (new ParentalLeaveWorkLog())
+                ->setDate(new \DateTimeImmutable('2018-01-01')),
+        ];
+        $workLogs = [
+            (new WorkLog())
+                ->setWorkMonth($workMonth)
+                ->setStartTime(new \DateTimeImmutable('2018-01-01 10:00:00'))
+                ->setEndTime(new \DateTimeImmutable('2018-01-01 12:00:00')),
+            (new WorkLog())
+                ->setWorkMonth($workMonth)
+                ->setStartTime(new \DateTimeImmutable('2018-01-01 14:00:00'))
+                ->setEndTime(new \DateTimeImmutable('2018-01-01 16:00:00')),
+        ];
+
+        $service = $this->getWorkMonthService($prophet, [], [], [], $parentalLeaveWorkLogs, [], [], [], $workLogs, $workHours);
+
+        $I->assertEquals(6, $service->calculateWorkedHours($workMonth));
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function testCalculateParentalLeaveWorkLogsWithOneStandardWorkLogMoreThan6HoursLong(\UnitTester $I): void
+    {
+        $prophet = new Prophet();
+        $workMonth = $this->getWorkMonth($prophet);
+        $workHours = $this->getWorkHours($prophet);
+
+        $parentalLeaveWorkLogs = [
+            (new ParentalLeaveWorkLog())
+                ->setDate(new \DateTimeImmutable('2018-01-01')),
+        ];
+        $workLogs = [
+            (new WorkLog())
+                ->setWorkMonth($workMonth)
+                ->setStartTime(new \DateTimeImmutable('2018-01-01 12:00:00'))
+                ->setEndTime(new \DateTimeImmutable('2018-01-01 18:20:00')),
+        ];
+
+        $service = $this->getWorkMonthService($prophet, [], [], [], $parentalLeaveWorkLogs, [], [], [], $workLogs, $workHours);
+
+        $I->assertEquals(6, $service->calculateWorkedHours($workMonth));
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function testCalculateParentalLeaveWorkLogsAboveLowerLimitWithoutBreak(\UnitTester $I): void
+    {
+        $prophet = new Prophet();
+        $workMonth = $this->getWorkMonth($prophet);
+        $workHours = $this->getWorkHours($prophet);
+
+        $parentalLeaveWorkLogs = [
+            (new ParentalLeaveWorkLog())
+                ->setDate(new \DateTimeImmutable('2018-01-01')),
+        ];
+        $workLogs = [
+            (new WorkLog())
+                ->setWorkMonth($workMonth)
+                ->setStartTime(new \DateTimeImmutable('2018-01-01 08:00:00'))
+                ->setEndTime(new \DateTimeImmutable('2018-01-01 12:00:00')),
+            (new WorkLog())
+                ->setWorkMonth($workMonth)
+                ->setStartTime(new \DateTimeImmutable('2018-01-01 12:05:00'))
+                ->setEndTime(new \DateTimeImmutable('2018-01-01 15:05:00')),
+        ];
+
+        $service = $this->getWorkMonthService($prophet, [], [], [], $parentalLeaveWorkLogs, [], [], [], $workLogs, $workHours);
+
+        $I->assertEquals(6, $service->calculateWorkedHours($workMonth));
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function testCalculateParentalLeaveWorkLogsAboveLowerLimitWithShortBreak(\UnitTester $I): void
+    {
+        $prophet = new Prophet();
+        $workMonth = $this->getWorkMonth($prophet);
+        $workHours = $this->getWorkHours($prophet);
+
+        $parentalLeaveWorkLogs = [
+            (new ParentalLeaveWorkLog())
+                ->setDate(new \DateTimeImmutable('2018-01-01')),
+        ];
+        $workLogs = [
+            (new WorkLog())
+                ->setWorkMonth($workMonth)
+                ->setStartTime(new \DateTimeImmutable('2018-01-01 08:00:00'))
+                ->setEndTime(new \DateTimeImmutable('2018-01-01 11:00:00')),
+            (new WorkLog())
+                ->setWorkMonth($workMonth)
+                ->setStartTime(new \DateTimeImmutable('2018-01-01 11:05:00'))
+                ->setEndTime(new \DateTimeImmutable('2018-01-01 12:05:00')),
+            (new WorkLog())
+                ->setWorkMonth($workMonth)
+                ->setStartTime(new \DateTimeImmutable('2018-01-01 12:20:00'))
+                ->setEndTime(new \DateTimeImmutable('2018-01-01 15:20:00')),
+        ];
+
+        $service = $this->getWorkMonthService($prophet, [], [], [], $parentalLeaveWorkLogs, [], [], [], $workLogs, $workHours);
+
+        $I->assertEquals(6, $service->calculateWorkedHours($workMonth));
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function testCalculateParentalLeaveWorkLogsAboveLowerLimitWithLongBreak(\UnitTester $I): void
+    {
+        $prophet = new Prophet();
+        $workMonth = $this->getWorkMonth($prophet);
+        $workHours = $this->getWorkHours($prophet);
+
+        $parentalLeaveWorkLogs = [
+            (new ParentalLeaveWorkLog())
+                ->setDate(new \DateTimeImmutable('2018-01-01')),
+        ];
+        $workLogs = [
+            (new WorkLog())
+                ->setWorkMonth($workMonth)
+                ->setStartTime(new \DateTimeImmutable('2018-01-01 08:00:00'))
+                ->setEndTime(new \DateTimeImmutable('2018-01-01 12:00:00')),
+            (new WorkLog())
+                ->setWorkMonth($workMonth)
+                ->setStartTime(new \DateTimeImmutable('2018-01-01 14:00:00'))
+                ->setEndTime(new \DateTimeImmutable('2018-01-01 17:00:00')),
+            (new WorkLog())
+                ->setWorkMonth($workMonth)
+                ->setStartTime(new \DateTimeImmutable('2018-01-01 18:00:00'))
+                ->setEndTime(new \DateTimeImmutable('2018-01-01 19:00:00')),
+        ];
+
+        $service = $this->getWorkMonthService($prophet, [], [], [], $parentalLeaveWorkLogs, [], [], [], $workLogs, $workHours);
+
+        $I->assertEquals(6, $service->calculateWorkedHours($workMonth));
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function testCalculateParentalLeaveWorkLogsAboveUpperLimitWithoutBreak(\UnitTester $I): void
+    {
+        $prophet = new Prophet();
+        $workMonth = $this->getWorkMonth($prophet);
+        $workHours = $this->getWorkHours($prophet);
+
+        $parentalLeaveWorkLogs = [
+            (new ParentalLeaveWorkLog())
+                ->setDate(new \DateTimeImmutable('2018-01-01')),
+        ];
+        $workLogs = [
+            (new WorkLog())
+                ->setWorkMonth($workMonth)
+                ->setStartTime(new \DateTimeImmutable('2018-01-01 08:00:00'))
+                ->setEndTime(new \DateTimeImmutable('2018-01-01 12:00:00')),
+            (new WorkLog())
+                ->setWorkMonth($workMonth)
+                ->setStartTime(new \DateTimeImmutable('2018-01-01 12:05:00'))
+                ->setEndTime(new \DateTimeImmutable('2018-01-01 18:05:00')),
+        ];
+
+        $service = $this->getWorkMonthService($prophet, [], [], [], $parentalLeaveWorkLogs, [], [], [], $workLogs, $workHours);
+
+        $I->assertEquals(6, $service->calculateWorkedHours($workMonth));
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function testCalculateParentalLeaveWorkLogsAboveUpperLimitWithShortBreak(\UnitTester $I): void
+    {
+        $prophet = new Prophet();
+        $workMonth = $this->getWorkMonth($prophet);
+        $workHours = $this->getWorkHours($prophet);
+
+        $parentalLeaveWorkLogs = [
+            (new ParentalLeaveWorkLog())
+                ->setDate(new \DateTimeImmutable('2018-01-01')),
+        ];
+        $workLogs = [
+            (new WorkLog())
+                ->setWorkMonth($workMonth)
+                ->setStartTime(new \DateTimeImmutable('2018-01-01 08:00:00'))
+                ->setEndTime(new \DateTimeImmutable('2018-01-01 11:00:00')),
+            (new WorkLog())
+                ->setWorkMonth($workMonth)
+                ->setStartTime(new \DateTimeImmutable('2018-01-01 11:05:00'))
+                ->setEndTime(new \DateTimeImmutable('2018-01-01 12:05:00')),
+            (new WorkLog())
+                ->setWorkMonth($workMonth)
+                ->setStartTime(new \DateTimeImmutable('2018-01-01 12:20:00'))
+                ->setEndTime(new \DateTimeImmutable('2018-01-01 18:20:00')),
+        ];
+
+        $service = $this->getWorkMonthService($prophet, [], [], [], $parentalLeaveWorkLogs, [], [], [], $workLogs, $workHours);
+
+        $I->assertEquals(6, $service->calculateWorkedHours($workMonth));
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function testCalculateParentalLeaveWorkLogsAboveUpperLimitWithLongBreak(\UnitTester $I): void
+    {
+        $prophet = new Prophet();
+        $workMonth = $this->getWorkMonth($prophet);
+        $workHours = $this->getWorkHours($prophet);
+
+        $parentalLeaveWorkLogs = [
+            (new ParentalLeaveWorkLog())
+                ->setDate(new \DateTimeImmutable('2018-01-01')),
+        ];
+        $workLogs = [
+            (new WorkLog())
+                ->setWorkMonth($workMonth)
+                ->setStartTime(new \DateTimeImmutable('2018-01-01 08:00:00'))
+                ->setEndTime(new \DateTimeImmutable('2018-01-01 12:00:00')),
+            (new WorkLog())
+                ->setWorkMonth($workMonth)
+                ->setStartTime(new \DateTimeImmutable('2018-01-01 14:00:00'))
+                ->setEndTime(new \DateTimeImmutable('2018-01-01 19:00:00')),
+            (new WorkLog())
+                ->setWorkMonth($workMonth)
+                ->setStartTime(new \DateTimeImmutable('2018-01-01 20:00:00'))
+                ->setEndTime(new \DateTimeImmutable('2018-01-01 21:00:00')),
+        ];
+
+        $service = $this->getWorkMonthService($prophet, [], [], [], $parentalLeaveWorkLogs, [], [], [], $workLogs, $workHours);
+
+        $I->assertEquals(6, $service->calculateWorkedHours($workMonth));
     }
 
     // Sick day work logs
@@ -946,7 +1538,7 @@ class WorkMonthServiceCest
                 ->setDate(new \DateTimeImmutable('2018-01-01')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, [], [], $sickDayWorkLogs, [], [], [], $workHours);
+        $service = $this->getWorkMonthService($prophet, [], [], [], [], $sickDayWorkLogs, [], [], [], $workHours);
 
         $I->assertEquals(6, $service->calculateWorkedHours($workMonth));
     }
@@ -975,7 +1567,7 @@ class WorkMonthServiceCest
                 ->setEndTime(new \DateTimeImmutable('2018-01-01 12:15:00')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, [], [], $sickDayWorkLogs, [], [], $workLogs, $workHours);
+        $service = $this->getWorkMonthService($prophet, [], [], [], [], $sickDayWorkLogs, [], [], $workLogs, $workHours);
 
         $I->assertEquals(4, $service->calculateWorkedHours($workMonth));
     }
@@ -1008,7 +1600,7 @@ class WorkMonthServiceCest
                 ->setEndTime(new \DateTimeImmutable('2018-01-01 15:20:00')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, [], [], $sickDayWorkLogs, [], [], $workLogs, $workHours);
+        $service = $this->getWorkMonthService($prophet, [], [], [], [], $sickDayWorkLogs, [], [], $workLogs, $workHours);
 
         $I->assertEquals(6, $service->calculateWorkedHours($workMonth));
     }
@@ -1030,7 +1622,7 @@ class WorkMonthServiceCest
                 ->setTimeApproved(new \DateTimeImmutable('2018-01-01 23:59:59')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, [], [], [], $timeOffWorkLogs, [], [], $workHours);
+        $service = $this->getWorkMonthService($prophet, [], [], [], [], [], $timeOffWorkLogs, [], [], $workHours);
 
         $I->assertEquals(6, $service->calculateWorkedHours($workMonth));
     }
@@ -1049,7 +1641,7 @@ class WorkMonthServiceCest
                 ->setDate(new \DateTimeImmutable('2018-01-01')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, [], [], [], $timeOffWorkLogs, [], [], $workHours);
+        $service = $this->getWorkMonthService($prophet, [], [], [], [], [], $timeOffWorkLogs, [], [], $workHours);
 
         $I->assertEquals(0, $service->calculateWorkedHours($workMonth));
     }
@@ -1079,7 +1671,7 @@ class WorkMonthServiceCest
                 ->setEndTime(new \DateTimeImmutable('2018-01-01 14:05:00')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, [], [], [], $timeOffWorkLogs, [], $workLogs, $workHours);
+        $service = $this->getWorkMonthService($prophet, [], [], [], [], [], $timeOffWorkLogs, [], $workLogs, $workHours);
 
         $I->assertEquals(4, $service->calculateWorkedHours($workMonth));
     }
@@ -1109,7 +1701,7 @@ class WorkMonthServiceCest
                 ->setEndTime(new \DateTimeImmutable('2018-01-01 16:00:00')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, [], [], [], $timeOffWorkLogs, [], $workLogs, $workHours);
+        $service = $this->getWorkMonthService($prophet, [], [], [], [], [], $timeOffWorkLogs, [], $workLogs, $workHours);
 
         $I->assertEquals(4, $service->calculateWorkedHours($workMonth));
     }
@@ -1135,7 +1727,7 @@ class WorkMonthServiceCest
                 ->setEndTime(new \DateTimeImmutable('2018-01-01 18:20:00')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, [], [], [], $timeOffWorkLogs, [], $workLogs, $workHours);
+        $service = $this->getWorkMonthService($prophet, [], [], [], [], [], $timeOffWorkLogs, [], $workLogs, $workHours);
 
         $I->assertEquals(5 + (50 / 60), $service->calculateWorkedHours($workMonth));
     }
@@ -1165,7 +1757,7 @@ class WorkMonthServiceCest
                 ->setEndTime(new \DateTimeImmutable('2018-01-01 15:05:00')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, [], [], [], $timeOffWorkLogs, [], $workLogs, $workHours);
+        $service = $this->getWorkMonthService($prophet, [], [], [], [], [], $timeOffWorkLogs, [], $workLogs, $workHours);
 
         $I->assertEquals(6.5, $service->calculateWorkedHours($workMonth));
     }
@@ -1199,7 +1791,7 @@ class WorkMonthServiceCest
                 ->setEndTime(new \DateTimeImmutable('2018-01-01 15:20:00')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, [], [], [], $timeOffWorkLogs, [], $workLogs, $workHours);
+        $service = $this->getWorkMonthService($prophet, [], [], [], [], [], $timeOffWorkLogs, [], $workLogs, $workHours);
 
         $I->assertEquals(6.75, $service->calculateWorkedHours($workMonth));
     }
@@ -1233,7 +1825,7 @@ class WorkMonthServiceCest
                 ->setEndTime(new \DateTimeImmutable('2018-01-01 18:00:00')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, [], [], [], $timeOffWorkLogs, [], $workLogs, $workHours);
+        $service = $this->getWorkMonthService($prophet, [], [], [], [], [], $timeOffWorkLogs, [], $workLogs, $workHours);
 
         $I->assertEquals(7, $service->calculateWorkedHours($workMonth));
     }
@@ -1263,7 +1855,7 @@ class WorkMonthServiceCest
                 ->setEndTime(new \DateTimeImmutable('2018-01-01 18:05:00')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, [], [], [], $timeOffWorkLogs, [], $workLogs, $workHours);
+        $service = $this->getWorkMonthService($prophet, [], [], [], [], [], $timeOffWorkLogs, [], $workLogs, $workHours);
 
         $I->assertEquals(9.25, $service->calculateWorkedHours($workMonth));
     }
@@ -1297,7 +1889,7 @@ class WorkMonthServiceCest
                 ->setEndTime(new \DateTimeImmutable('2018-01-01 18:20:00')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, [], [], [], $timeOffWorkLogs, [], $workLogs, $workHours);
+        $service = $this->getWorkMonthService($prophet, [], [], [], [], [], $timeOffWorkLogs, [], $workLogs, $workHours);
 
         $I->assertEquals(9.5, $service->calculateWorkedHours($workMonth));
     }
@@ -1331,7 +1923,7 @@ class WorkMonthServiceCest
                 ->setEndTime(new \DateTimeImmutable('2018-01-01 21:00:00')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, [], [], [], $timeOffWorkLogs, [], $workLogs, $workHours);
+        $service = $this->getWorkMonthService($prophet, [], [], [], [], [], $timeOffWorkLogs, [], $workLogs, $workHours);
 
         $I->assertEquals(10, $service->calculateWorkedHours($workMonth));
     }
@@ -1353,7 +1945,7 @@ class WorkMonthServiceCest
                 ->setTimeApproved(new \DateTimeImmutable('2018-01-01 23:59:59')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, [], [], [], [], $vacationWorkLogs, [], $workHours);
+        $service = $this->getWorkMonthService($prophet, [], [], [], [], [], [], $vacationWorkLogs, [], $workHours);
 
         $I->assertEquals(6, $service->calculateWorkedHours($workMonth));
     }
@@ -1372,7 +1964,7 @@ class WorkMonthServiceCest
                 ->setDate(new \DateTimeImmutable('2018-01-01')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, [], [], [], [], $vacationWorkLogs, [], $workHours);
+        $service = $this->getWorkMonthService($prophet, [], [], [], [], [], [], $vacationWorkLogs, [], $workHours);
 
         $I->assertEquals(0, $service->calculateWorkedHours($workMonth));
     }
@@ -1402,7 +1994,7 @@ class WorkMonthServiceCest
                 ->setEndTime(new \DateTimeImmutable('2018-01-01 14:05:00')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, [], [], [], [], $vacationWorkLogs, $workLogs, $workHours);
+        $service = $this->getWorkMonthService($prophet, [], [], [], [], [], [], $vacationWorkLogs, $workLogs, $workHours);
 
         $I->assertEquals(6, $service->calculateWorkedHours($workMonth));
     }
@@ -1432,7 +2024,7 @@ class WorkMonthServiceCest
                 ->setEndTime(new \DateTimeImmutable('2018-01-01 16:00:00')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, [], [], [], [], $vacationWorkLogs, $workLogs, $workHours);
+        $service = $this->getWorkMonthService($prophet, [], [], [], [], [], [], $vacationWorkLogs, $workLogs, $workHours);
 
         $I->assertEquals(6, $service->calculateWorkedHours($workMonth));
     }
@@ -1458,7 +2050,7 @@ class WorkMonthServiceCest
                 ->setEndTime(new \DateTimeImmutable('2018-01-01 18:20:00')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, [], [], [], [], $vacationWorkLogs, $workLogs, $workHours);
+        $service = $this->getWorkMonthService($prophet, [], [], [], [], [], [], $vacationWorkLogs, $workLogs, $workHours);
 
         $I->assertEquals(6, $service->calculateWorkedHours($workMonth));
     }
@@ -1488,7 +2080,7 @@ class WorkMonthServiceCest
                 ->setEndTime(new \DateTimeImmutable('2018-01-01 15:05:00')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, [], [], [], [], $vacationWorkLogs, $workLogs, $workHours);
+        $service = $this->getWorkMonthService($prophet, [], [], [], [], [], [], $vacationWorkLogs, $workLogs, $workHours);
 
         $I->assertEquals(6, $service->calculateWorkedHours($workMonth));
     }
@@ -1522,7 +2114,7 @@ class WorkMonthServiceCest
                 ->setEndTime(new \DateTimeImmutable('2018-01-01 15:20:00')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, [], [], [], [], $vacationWorkLogs, $workLogs, $workHours);
+        $service = $this->getWorkMonthService($prophet, [], [], [], [], [], [], $vacationWorkLogs, $workLogs, $workHours);
 
         $I->assertEquals(6, $service->calculateWorkedHours($workMonth));
     }
@@ -1556,7 +2148,7 @@ class WorkMonthServiceCest
                 ->setEndTime(new \DateTimeImmutable('2018-01-01 19:00:00')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, [], [], [], [], $vacationWorkLogs, $workLogs, $workHours);
+        $service = $this->getWorkMonthService($prophet, [], [], [], [], [], [], $vacationWorkLogs, $workLogs, $workHours);
 
         $I->assertEquals(6, $service->calculateWorkedHours($workMonth));
     }
@@ -1586,7 +2178,7 @@ class WorkMonthServiceCest
                 ->setEndTime(new \DateTimeImmutable('2018-01-01 18:05:00')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, [], [], [], [], $vacationWorkLogs, $workLogs, $workHours);
+        $service = $this->getWorkMonthService($prophet, [], [], [], [], [], [], $vacationWorkLogs, $workLogs, $workHours);
 
         $I->assertEquals(6, $service->calculateWorkedHours($workMonth));
     }
@@ -1620,7 +2212,7 @@ class WorkMonthServiceCest
                 ->setEndTime(new \DateTimeImmutable('2018-01-01 18:20:00')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, [], [], [], [], $vacationWorkLogs, $workLogs, $workHours);
+        $service = $this->getWorkMonthService($prophet, [], [], [], [], [], [], $vacationWorkLogs, $workLogs, $workHours);
 
         $I->assertEquals(6, $service->calculateWorkedHours($workMonth));
     }
@@ -1654,7 +2246,7 @@ class WorkMonthServiceCest
                 ->setEndTime(new \DateTimeImmutable('2018-01-01 21:00:00')),
         ];
 
-        $service = $this->getWorkMonthService($prophet, [], [], [], [], $vacationWorkLogs, $workLogs, $workHours);
+        $service = $this->getWorkMonthService($prophet, [], [], [], [], [], [], $vacationWorkLogs, $workLogs, $workHours);
 
         $I->assertEquals(6, $service->calculateWorkedHours($workMonth));
     }
@@ -1726,6 +2318,22 @@ class WorkMonthServiceCest
         return $repository->reveal();
     }
 
+    private function getMaternityProtectionWorkLogRepository(Prophet $prophet, array $workLogs): MaternityProtectionWorkLogRepository
+    {
+        $repository = $prophet->prophesize(MaternityProtectionWorkLogRepository::class);
+        $repository->findAllByWorkMonth(Argument::type(WorkMonth::class))->willReturn($workLogs);
+
+        return $repository->reveal();
+    }
+
+    private function getParentalLeaveWorkLogRepository(Prophet $prophet, array $workLogs): ParentalLeaveWorkLogRepository
+    {
+        $repository = $prophet->prophesize(ParentalLeaveWorkLogRepository::class);
+        $repository->findAllByWorkMonth(Argument::type(WorkMonth::class))->willReturn($workLogs);
+
+        return $repository->reveal();
+    }
+
     private function getSickDayWorkLogRepository(Prophet $prophet, array $workLogs): SickDayWorkLogRepository
     {
         $repository = $prophet->prophesize(SickDayWorkLogRepository::class);
@@ -1781,6 +2389,8 @@ class WorkMonthServiceCest
         Prophet $prophet,
         array $businessTripWorkLogs,
         array $homeOfficeWorkLogs,
+        array $maternityProtectionWorkLogs,
+        array $parentalLeaveWorkLogs,
         array $sickDayWorkLogs,
         array $timeOffWorkLogs,
         array $vacationWorkLogs,
@@ -1792,6 +2402,8 @@ class WorkMonthServiceCest
             $this->getConfigService($prophet),
             $this->getBusinessTripWorkLogRepository($prophet, $businessTripWorkLogs),
             $this->getHomeOfficeWorkLogRepository($prophet, $homeOfficeWorkLogs),
+            $this->getMaternityProtectionWorkLogRepository($prophet, $maternityProtectionWorkLogs),
+            $this->getParentalLeaveWorkLogRepository($prophet, $parentalLeaveWorkLogs),
             $this->getSickDayWorkLogRepository($prophet, $sickDayWorkLogs),
             $this->getTimeOffWorkLogRepository($prophet, $timeOffWorkLogs),
             $this->getUserYearStatsRepository($prophet),

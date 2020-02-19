@@ -4,6 +4,8 @@ namespace App\Service;
 
 use App\Entity\BusinessTripWorkLog;
 use App\Entity\HomeOfficeWorkLog;
+use App\Entity\MaternityProtectionWorkLog;
+use App\Entity\ParentalLeaveWorkLog;
 use App\Entity\SickDayWorkLog;
 use App\Entity\TimeOffWorkLog;
 use App\Entity\VacationWorkLog;
@@ -11,6 +13,8 @@ use App\Entity\WorkLog;
 use App\Entity\WorkMonth;
 use App\Repository\BusinessTripWorkLogRepository;
 use App\Repository\HomeOfficeWorkLogRepository;
+use App\Repository\MaternityProtectionWorkLogRepository;
+use App\Repository\ParentalLeaveWorkLogRepository;
 use App\Repository\SickDayWorkLogRepository;
 use App\Repository\TimeOffWorkLogRepository;
 use App\Repository\UserYearStatsRepository;
@@ -41,6 +45,16 @@ class WorkMonthService
      * @var HomeOfficeWorkLogRepository
      */
     private $homeOfficeWorkLogRepository;
+
+    /**
+     * @var MaternityProtectionWorkLogRepository
+     */
+    private $maternityProtectionWorkLogRepository;
+
+    /**
+     * @var ParentalLeaveWorkLogRepository
+     */
+    private $parentalLeaveWorkLogRepository;
 
     /**
      * @var SickDayWorkLogRepository
@@ -77,6 +91,8 @@ class WorkMonthService
         ConfigService $configService,
         BusinessTripWorkLogRepository $businessTripWorkLogRepository,
         HomeOfficeWorkLogRepository $homeOfficeWorkLogRepository,
+        MaternityProtectionWorkLogRepository $maternityProtectionWorkLogRepository,
+        ParentalLeaveWorkLogRepository $parentalLeaveWorkLogRepository,
         SickDayWorkLogRepository $sickDayWorkLogRepository,
         TimeOffWorkLogRepository $timeOffWorkLogRepository,
         UserYearStatsRepository $userYearStatsRepository,
@@ -88,6 +104,8 @@ class WorkMonthService
         $this->configService = $configService;
         $this->businessTripWorkLogRepository = $businessTripWorkLogRepository;
         $this->homeOfficeWorkLogRepository = $homeOfficeWorkLogRepository;
+        $this->maternityProtectionWorkLogRepository = $maternityProtectionWorkLogRepository;
+        $this->parentalLeaveWorkLogRepository = $parentalLeaveWorkLogRepository;
         $this->sickDayWorkLogRepository = $sickDayWorkLogRepository;
         $this->timeOffWorkLogRepository = $timeOffWorkLogRepository;
         $this->userYearStatsRepository = $userYearStatsRepository;
@@ -166,6 +184,8 @@ class WorkMonthService
         $standardWorkLogs = $this->workLogRepository->findAllByWorkMonth($workMonth);
         $businessTripWorkLogs = $this->businessTripWorkLogRepository->findAllApprovedByWorkMonth($workMonth);
         $homeOfficeWorkLogs = $this->homeOfficeWorkLogRepository->findAllApprovedByWorkMonth($workMonth);
+        $maternityProtectionWorkLogs = $this->maternityProtectionWorkLogRepository->findAllByWorkMonth($workMonth);
+        $parentalLeaveWorkLogs = $this->parentalLeaveWorkLogRepository->findAllByWorkMonth($workMonth);
         $sickDayWorkLogs = $this->sickDayWorkLogRepository->findAllByWorkMonth($workMonth);
         $timeOffWorkLogs = $this->timeOffWorkLogRepository->findAllApprovedByWorkMonth($workMonth);
         $vacationWorkLogs = $this->vacationWorkLogRepository->findAllApprovedByWorkMonth($workMonth);
@@ -183,6 +203,16 @@ class WorkMonthService
         foreach ($homeOfficeWorkLogs as $homeOfficeWorkLog) {
             $day = (int) $homeOfficeWorkLog->getDate()->format('d');
             $allWorkLogs[$day][] = $homeOfficeWorkLog;
+        }
+
+        foreach ($maternityProtectionWorkLogs as $maternityProtectionWorkLog) {
+            $day = (int) $maternityProtectionWorkLog->getDate()->format('d');
+            $allWorkLogs[$day][] = $maternityProtectionWorkLog;
+        }
+
+        foreach ($parentalLeaveWorkLogs as $parentalLeaveWorkLog) {
+            $day = (int) $parentalLeaveWorkLog->getDate()->format('d');
+            $allWorkLogs[$day][] = $parentalLeaveWorkLog;
         }
 
         foreach ($sickDayWorkLogs as $sickDayWorkLog) {
@@ -204,6 +234,8 @@ class WorkMonthService
         foreach ($allWorkLogs as $day => $allWorkLogsByDay) {
             $containsBusinessDay = false;
             $containsHomeDay = false;
+            $containsMaternityProtection = false;
+            $containsParentalLeave = false;
             $containsSickDay = false;
             $containsTimeOffDay = false;
             $containsVacationDay = false;
@@ -215,12 +247,12 @@ class WorkMonthService
             $breakTime = 0;
 
             // Split work logs into groups by its type and calculate work time of standard work logs.
-            foreach ($allWorkLogsByDay as $standardWorkLog) {
-                if ($standardWorkLog instanceof WorkLog) {
-                    $standardWorkLogs[] = $standardWorkLog;
+            foreach ($allWorkLogsByDay as $workLog) {
+                if ($workLog instanceof WorkLog) {
+                    $standardWorkLogs[] = $workLog;
 
                     // Get work time of current work log
-                    $currentWorkTimeDiff = $standardWorkLog->getEndTime()->diff($standardWorkLog->getStartTime());
+                    $currentWorkTimeDiff = $workLog->getEndTime()->diff($workLog->getStartTime());
                     $currentWorkTime = $currentWorkTimeDiff->h + ($currentWorkTimeDiff->i / 60);
 
                     // Add work time of current work log to total work time.
@@ -233,15 +265,19 @@ class WorkMonthService
                     } else {
                         $workTime += $currentWorkTime;
                     }
-                } elseif ($standardWorkLog instanceof BusinessTripWorkLog && $standardWorkLog->getTimeApproved()) {
+                } elseif ($workLog instanceof BusinessTripWorkLog && $workLog->getTimeApproved()) {
                     $containsBusinessDay = true;
-                } elseif ($standardWorkLog instanceof HomeOfficeWorkLog && $standardWorkLog->getTimeApproved()) {
+                } elseif ($workLog instanceof HomeOfficeWorkLog && $workLog->getTimeApproved()) {
                     $containsHomeDay = true;
-                } elseif ($standardWorkLog instanceof SickDayWorkLog) {
+                } elseif ($workLog instanceof MaternityProtectionWorkLog) {
+                    $containsMaternityProtection = true;
+                } elseif ($workLog instanceof ParentalLeaveWorkLog) {
+                    $containsParentalLeave = true;
+                } elseif ($workLog instanceof SickDayWorkLog) {
                     $containsSickDay = true;
-                } elseif ($standardWorkLog instanceof TimeOffWorkLog && $standardWorkLog->getTimeApproved()) {
+                } elseif ($workLog instanceof TimeOffWorkLog && $workLog->getTimeApproved()) {
                     $containsTimeOffDay = true;
-                } elseif ($standardWorkLog instanceof VacationWorkLog && $standardWorkLog->getTimeApproved()) {
+                } elseif ($workLog instanceof VacationWorkLog && $workLog->getTimeApproved()) {
                     $containsVacationDay = true;
                 }
             }
@@ -262,8 +298,8 @@ class WorkMonthService
                 $otherWorkLogs = array_slice($standardWorkLogs, 1);
 
                 // Calculate break time between standard work logs
-                foreach ($otherWorkLogs as $standardWorkLog) {
-                    $currentBreakTimeDiff = $standardWorkLog->getStartTime()->diff($previousWorkLog->getEndTime());
+                foreach ($otherWorkLogs as $otherWorkLog) {
+                    $currentBreakTimeDiff = $otherWorkLog->getStartTime()->diff($previousWorkLog->getEndTime());
                     $currentBreakTime = $currentBreakTimeDiff->h + ($currentBreakTimeDiff->i / 60);
 
                     // Take in account only current break time that is equal or longer that 15 minutes
@@ -271,7 +307,7 @@ class WorkMonthService
                         $breakTime += $currentBreakTime;
                     }
 
-                    $previousWorkLog = $standardWorkLog;
+                    $previousWorkLog = $otherWorkLog;
                 }
             }
 
@@ -302,7 +338,7 @@ class WorkMonthService
                 (
                     count($standardWorkLogs) === 0
                     && ($containsBusinessDay || $containsHomeDay || $containsSickDay || $containsTimeOffDay)
-                ) || $containsVacationDay
+                ) || $containsMaternityProtection || $containsParentalLeave || $containsVacationDay
             ) {
                 $workTime = $workHours->getRequiredHours();
             } elseif ($containsSickDay && count($standardWorkLogs) > 0) {
