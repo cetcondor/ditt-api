@@ -5,7 +5,7 @@ parameters:
 doctrine:
     dbal:
         driver: pdo_pgsql
-        server_version: 9.4
+        server_version: 11.7
         charset:  UTF8
         url: '%env(resolve:DATABASE_URL)%'
     orm:
