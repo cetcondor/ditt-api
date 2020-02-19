@@ -66,6 +66,13 @@ api_home_office_work_log_mark_rejected:
     defaults:
         _api_collection_operation_name: 'markRejected'
 
+api_maternity_protection_work_log_bulk_create:
+    path: /maternity_protection_work_logs/bulk
+    methods: [POST]
+    controller: App\Controller\MaternityProtectionWorkLogController::bulkCreate
+    defaults:
+        _api_collection_operation_name: 'bulkCreate'
+
 api_overtime_work_log_mark_approved:
     path: /overtime_work_logs/{id}/mark_approved
     methods: [PUT]

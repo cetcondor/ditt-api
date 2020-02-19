@@ -19,6 +19,9 @@ App\Entity\WorkMonth:
         homeOfficeWorkLogs:
             targetEntity: App\Entity\HomeOfficeWorkLog
             mappedBy: workMonth
+        maternityProtectionWorkLogs:
+            targetEntity: App\Entity\MaternityProtectionWorkLog
+            mappedBy: workMonth
         overtimeWorkLogs:
             targetEntity: App\Entity\OvertimeWorkLog
             mappedBy: workMonth

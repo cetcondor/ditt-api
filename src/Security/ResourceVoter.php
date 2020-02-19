@@ -2,6 +2,7 @@
 
 namespace App\Security;
 
+use App\Entity\SupervisorWorkLogInterface;
 use App\Entity\User;
 use App\Entity\Vacation;
 use App\Entity\WorkHours;
@@ -38,6 +39,10 @@ class ResourceVoter extends Voter
     {
         if (!in_array($attribute, [self::VIEW, self::EDIT])) {
             return false;
+        }
+
+        if ($subject instanceof SupervisorWorkLogInterface) {
+            return true;
         }
 
         if ($subject instanceof User) {
@@ -155,6 +160,10 @@ class ResourceVoter extends Voter
      */
     private function canEdit($subject, User $user, TokenInterface $token): bool
     {
+        if ($subject instanceof SupervisorWorkLogInterface) {
+            return $this->canEditSupervisorWorkLog($subject, $user, $token);
+        }
+
         if ($subject instanceof User) {
             return $this->canEditUser($subject, $user, $token);
         }
@@ -176,6 +185,19 @@ class ResourceVoter extends Voter
         }
 
         return false;
+    }
+
+    private function canEditSupervisorWorkLog(SupervisorWorkLogInterface $workLog, User $user, TokenInterface $token): bool
+    {
+        try {
+            return $workLog->getWorkMonth()->getUser()->getId() !== $user->getId()
+                && (
+                    in_array($user, $workLog->getWorkMonth()->getUser()->getAllSupervisors())
+                    || $this->decisionManager->decide($token, [User::ROLE_SUPER_ADMIN])
+                );
+        } catch (\TypeError $e) {
+            return true;
+        }
     }
 
     private function canEditUser(User $subject, User $user, TokenInterface $token): bool

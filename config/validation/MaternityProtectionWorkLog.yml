@@ -1,0 +1,8 @@
+App\Entity\MaternityProtectionWorkLog:
+    properties:
+        date:
+            - NotBlank: ~
+            - DateTime: ~
+
+        workMonth:
+            - NotBlank: ~

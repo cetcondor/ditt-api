@@ -1,0 +1,23 @@
+App\Entity\MaternityProtectionWorkLog:
+    collectionOperations:
+        post:
+            method: POST
+            normalization_context:
+                groups:
+                    - maternity_protection_work_log_out_detail
+            denormalization_context:
+                groups:
+                    - maternity_protection_work_log_in
+        bulkCreate:
+            method: POST
+            route_name: api_maternity_protection_work_log_bulk_create
+            swagger_context:
+                summary: Creates multiple MaternityProtectionWorkLog resources.
+    itemOperations:
+        delete:
+            method: DELETE
+        get:
+            method: GET
+            normalization_context:
+                groups:
+                    - maternity_protection_work_log_out_detail

@@ -94,6 +94,14 @@ class GetWorkMonthDetailCest
             'date' => $endTime1,
             'workMonth' => $data['workMonth'],
         ]);
+        $data['maternityProtectionWorkLog1'] = $I->createMaternityProtectionWorkLog([
+            'date' => $startTime1,
+            'workMonth' => $data['workMonth'],
+        ]);
+        $data['maternityProtectionWorkLog2'] = $I->createMaternityProtectionWorkLog([
+            'date' => $endTime1,
+            'workMonth' => $data['workMonth'],
+        ]);
         $data['overtimeWorkLog1'] = $I->createOvertimeWorkLog([
             'date' => $startTime1,
             'workMonth' => $data['workMonth'],
@@ -141,6 +149,7 @@ class GetWorkMonthDetailCest
 
         $data['workMonth']->setBusinessTripWorkLogs([$data['businessTripWorkLog1'], $data['businessTripWorkLog2']]);
         $data['workMonth']->setHomeOfficeWorkLogs([$data['homeOfficeWorkLog1'], $data['homeOfficeWorkLog2']]);
+        $data['workMonth']->setMaternityProtectionWorkLogs([$data['maternityProtectionWorkLog1'], $data['maternityProtectionWorkLog2']]);
         $data['workMonth']->setOvertimeWorkLogs([$data['overtimeWorkLog1'], $data['overtimeWorkLog2']]);
         $data['workMonth']->setSickDayWorkLogs([$data['sickDayWorkLog1'], $data['sickDayWorkLog2']]);
         $data['workMonth']->setTimeOffWorkLogs([$data['timeOffWorkLog1'], $data['timeOffWorkLog2']]);
@@ -190,6 +199,16 @@ class GetWorkMonthDetailCest
                 [
                     'date' => $endTime1->format(\DateTime::RFC3339),
                     'id' => $data['homeOfficeWorkLog2']->getId(),
+                ],
+            ],
+            'maternityProtectionWorkLogs' => [
+                [
+                    'date' => $startTime1->format(\DateTime::RFC3339),
+                    'id' => $data['maternityProtectionWorkLog1']->getId(),
+                ],
+                [
+                    'date' => $endTime1->format(\DateTime::RFC3339),
+                    'id' => $data['maternityProtectionWorkLog2']->getId(),
                 ],
             ],
             'month' => $data['workMonth']->getMonth(),
@@ -295,6 +314,16 @@ class GetWorkMonthDetailCest
                     'id' => $data['homeOfficeWorkLog2']->getId(),
                 ],
             ],
+            'maternityProtectionWorkLogs' => [
+                [
+                    'date' => $startTime1->format(\DateTime::RFC3339),
+                    'id' => $data['maternityProtectionWorkLog1']->getId(),
+                ],
+                [
+                    'date' => $endTime1->format(\DateTime::RFC3339),
+                    'id' => $data['maternityProtectionWorkLog2']->getId(),
+                ],
+            ],
             'month' => $data['workMonth']->getMonth(),
             'overtimeWorkLogs' => [
                 [
@@ -380,6 +409,16 @@ class GetWorkMonthDetailCest
             'id' => $data['workMonth']->getId(),
             'businessTripWorkLogs' => [],
             'homeOfficeWorkLogs' => [],
+            'maternityProtectionWorkLogs' => [
+                [
+                    'date' => $startTime1->format(\DateTime::RFC3339),
+                    'id' => $data['maternityProtectionWorkLog1']->getId(),
+                ],
+                [
+                    'date' => $endTime1->format(\DateTime::RFC3339),
+                    'id' => $data['maternityProtectionWorkLog2']->getId(),
+                ],
+            ],
             'month' => $data['workMonth']->getMonth(),
             'overtimeWorkLogs' => [],
             'status' => 'OPENED',
@@ -432,6 +471,16 @@ class GetWorkMonthDetailCest
                 [
                     'date' => $endTime1->format(\DateTime::RFC3339),
                     'id' => $data['homeOfficeWorkLog2']->getId(),
+                ],
+            ],
+            'maternityProtectionWorkLogs' => [
+                [
+                    'date' => $startTime1->format(\DateTime::RFC3339),
+                    'id' => $data['maternityProtectionWorkLog1']->getId(),
+                ],
+                [
+                    'date' => $endTime1->format(\DateTime::RFC3339),
+                    'id' => $data['maternityProtectionWorkLog2']->getId(),
                 ],
             ],
             'month' => $data['workMonth']->getMonth(),
@@ -519,6 +568,16 @@ class GetWorkMonthDetailCest
             'id' => $data['workMonth']->getId(),
             'businessTripWorkLogs' => [],
             'homeOfficeWorkLogs' => [],
+            'maternityProtectionWorkLogs' => [
+                [
+                    'date' => $startTime1->format(\DateTime::RFC3339),
+                    'id' => $data['maternityProtectionWorkLog1']->getId(),
+                ],
+                [
+                    'date' => $endTime1->format(\DateTime::RFC3339),
+                    'id' => $data['maternityProtectionWorkLog2']->getId(),
+                ],
+            ],
             'month' => $data['workMonth']->getMonth(),
             'overtimeWorkLogs' => [],
             'status' => 'OPENED',
@@ -571,6 +630,16 @@ class GetWorkMonthDetailCest
                 [
                     'date' => $endTime1->format(\DateTime::RFC3339),
                     'id' => $data['homeOfficeWorkLog2']->getId(),
+                ],
+            ],
+            'maternityProtectionWorkLogs' => [
+                [
+                    'date' => $startTime1->format(\DateTime::RFC3339),
+                    'id' => $data['maternityProtectionWorkLog1']->getId(),
+                ],
+                [
+                    'date' => $endTime1->format(\DateTime::RFC3339),
+                    'id' => $data['maternityProtectionWorkLog2']->getId(),
                 ],
             ],
             'month' => $data['workMonth']->getMonth(),

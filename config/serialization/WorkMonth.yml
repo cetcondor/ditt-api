@@ -42,6 +42,9 @@ App\Entity\WorkMonth:
         homeOfficeWorkLogs:
             groups:
                 - work_month_out_detail
+        maternityProtectionWorkLogs:
+            groups:
+                - work_month_out_detail
         overtimeWorkLogs:
             groups:
                 - work_month_out_detail

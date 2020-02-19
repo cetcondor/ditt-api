@@ -43,6 +43,11 @@ class WorkMonth
     private $homeOfficeWorkLogs;
 
     /**
+     * @var MaternityProtectionWorkLog[]|Collection
+     */
+    private $maternityProtectionWorkLogs;
+
+    /**
      * @var OvertimeWorkLog[]|Collection
      */
     private $overtimeWorkLogs;
@@ -82,6 +87,7 @@ class WorkMonth
         $this->month = 0;
         $this->businessTripWorkLogs = new ArrayCollection();
         $this->homeOfficeWorkLogs = new ArrayCollection();
+        $this->maternityProtectionWorkLogs = new ArrayCollection();
         $this->overtimeWorkLogs = new ArrayCollection();
         $this->sickDayWorkLogs = new ArrayCollection();
         $this->timeOffWorkLogs = new ArrayCollection();
@@ -166,6 +172,28 @@ class WorkMonth
     public function setHomeOfficeWorkLogs($homeOfficeWorkLogs): WorkMonth
     {
         $this->homeOfficeWorkLogs = $homeOfficeWorkLogs;
+
+        return $this;
+    }
+
+    /**
+     * @return MaternityProtectionWorkLog[]
+     */
+    public function getMaternityProtectionWorkLogs(): array
+    {
+        if ($this->maternityProtectionWorkLogs instanceof Collection) {
+            return $this->maternityProtectionWorkLogs->toArray();
+        }
+
+        return $this->maternityProtectionWorkLogs;
+    }
+
+    /**
+     * @param MaternityProtectionWorkLog[]|Collection $maternityProtectionWorkLogs
+     */
+    public function setMaternityProtectionWorkLogs($maternityProtectionWorkLogs): WorkMonth
+    {
+        $this->maternityProtectionWorkLogs = $maternityProtectionWorkLogs;
 
         return $this;
     }

@@ -7,6 +7,7 @@ use ApiPlatform\Core\Exception\InvalidArgumentException;
 use App\Entity\BusinessTripWorkLog;
 use App\Entity\HomeOfficeWorkLog;
 use App\Entity\OvertimeWorkLog;
+use App\Entity\SupervisorWorkLogInterface;
 use App\Entity\TimeOffWorkLog;
 use App\Entity\User;
 use App\Entity\VacationWorkLog;
@@ -70,7 +71,7 @@ class WorkLogSubscriber implements EventSubscriberInterface
     public function addWorkMonth(GetResponseForControllerResultEvent $event): void
     {
         $workLog = $event->getControllerResult();
-        if (!$workLog instanceof WorkLogInterface) {
+        if (!$workLog instanceof WorkLogInterface || $workLog instanceof SupervisorWorkLogInterface) {
             return;
         }
 
