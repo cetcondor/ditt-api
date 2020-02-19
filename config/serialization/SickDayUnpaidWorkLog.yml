@@ -1,0 +1,15 @@
+App\Entity\SickDayUnpaidWorkLog:
+    attributes:
+        id:
+            groups:
+                - sick_day_unpaid_work_log_out_detail
+                - work_month_out_detail
+        date:
+            groups:
+                - sick_day_unpaid_work_log_out_detail
+                - work_month_out_detail
+                - sick_day_unpaid_work_log_in
+        workMonth:
+            groups:
+                - sick_day_unpaid_work_log_out_detail
+                - sick_day_unpaid_work_log_in

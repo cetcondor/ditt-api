@@ -1,0 +1,8 @@
+App\Entity\SickDayUnpaidWorkLog:
+    properties:
+        date:
+            - NotBlank: ~
+            - DateTime: ~
+
+        workMonth:
+            - NotBlank: ~

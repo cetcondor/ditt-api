@@ -51,6 +51,9 @@ App\Entity\WorkMonth:
         parentalLeaveWorkLogs:
             groups:
                 - work_month_out_detail
+        sickDayUnpaidWorkLogs:
+            groups:
+                - work_month_out_detail
         sickDayWorkLogs:
             groups:
                 - work_month_out_detail

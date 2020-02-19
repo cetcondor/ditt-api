@@ -94,6 +94,13 @@ api_parental_leave_work_log_bulk_create:
     defaults:
         _api_collection_operation_name: 'bulkCreate'
 
+api_sick_day_unpaid_work_log_bulk_create:
+    path: /sick_day_unpaid_work_logs/bulk
+    methods: [POST]
+    controller: App\Controller\SickDayUnpaidWorkLogController::bulkCreate
+    defaults:
+        _api_collection_operation_name: 'bulkCreate'
+
 api_time_off_work_log_mark_approved:
     path: /time_off_work_logs/{id}/mark_approved
     methods: [PUT]

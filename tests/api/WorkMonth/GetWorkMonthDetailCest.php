@@ -118,6 +118,14 @@ class GetWorkMonthDetailCest
             'date' => $endTime1,
             'workMonth' => $data['workMonth'],
         ]);
+        $data['sickDayUnpaidWorkLog1'] = $I->createSickDayUnpaidWorkLog([
+            'date' => $startTime1,
+            'workMonth' => $data['workMonth'],
+        ]);
+        $data['sickDayUnpaidWorkLog2'] = $I->createSickDayUnpaidWorkLog([
+            'date' => $endTime1,
+            'workMonth' => $data['workMonth'],
+        ]);
         $data['sickDayWorkLog1'] = $I->createSickDayWorkLog([
             'date' => $startTime1,
             'variant' => 'WITHOUT_NOTE',
@@ -160,6 +168,7 @@ class GetWorkMonthDetailCest
         $data['workMonth']->setMaternityProtectionWorkLogs([$data['maternityProtectionWorkLog1'], $data['maternityProtectionWorkLog2']]);
         $data['workMonth']->setOvertimeWorkLogs([$data['overtimeWorkLog1'], $data['overtimeWorkLog2']]);
         $data['workMonth']->setParentalLeaveWorkLogs([$data['parentalLeaveWorkLog1'], $data['parentalLeaveWorkLog2']]);
+        $data['workMonth']->setSickDayUnpaidWorkLogs([$data['sickDayUnpaidWorkLog1'], $data['sickDayUnpaidWorkLog2']]);
         $data['workMonth']->setSickDayWorkLogs([$data['sickDayWorkLog1'], $data['sickDayWorkLog2']]);
         $data['workMonth']->setTimeOffWorkLogs([$data['timeOffWorkLog1'], $data['timeOffWorkLog2']]);
         $data['workMonth']->setVacationWorkLogs([$data['vacationWorkLog1'], $data['vacationWorkLog2']]);
@@ -242,6 +251,16 @@ class GetWorkMonthDetailCest
                 ],
             ],
             'status' => 'OPENED',
+            'sickDayUnpaidWorkLogs' => [
+                [
+                    'date' => $startTime1->format(\DateTime::RFC3339),
+                    'id' => $data['sickDayUnpaidWorkLog1']->getId(),
+                ],
+                [
+                    'date' => $endTime1->format(\DateTime::RFC3339),
+                    'id' => $data['sickDayUnpaidWorkLog2']->getId(),
+                ],
+            ],
             'sickDayWorkLogs' => [
                 [
                     'date' => $startTime1->format(\DateTime::RFC3339),
@@ -365,6 +384,16 @@ class GetWorkMonthDetailCest
                 ],
             ],
             'status' => 'WAITING_FOR_APPROVAL',
+            'sickDayUnpaidWorkLogs' => [
+                [
+                    'date' => $startTime1->format(\DateTime::RFC3339),
+                    'id' => $data['sickDayUnpaidWorkLog1']->getId(),
+                ],
+                [
+                    'date' => $endTime1->format(\DateTime::RFC3339),
+                    'id' => $data['sickDayUnpaidWorkLog2']->getId(),
+                ],
+            ],
             'sickDayWorkLogs' => [
                 [
                     'date' => $startTime1->format(\DateTime::RFC3339),
@@ -461,6 +490,16 @@ class GetWorkMonthDetailCest
                 ],
             ],
             'status' => 'OPENED',
+            'sickDayUnpaidWorkLogs' => [
+                [
+                    'date' => $startTime1->format(\DateTime::RFC3339),
+                    'id' => $data['sickDayUnpaidWorkLog1']->getId(),
+                ],
+                [
+                    'date' => $endTime1->format(\DateTime::RFC3339),
+                    'id' => $data['sickDayUnpaidWorkLog2']->getId(),
+                ],
+            ],
             'sickDayWorkLogs' => [],
             'timeOffWorkLogs' => [],
             'user' => ['id' => $this->user->getId()],
@@ -544,6 +583,16 @@ class GetWorkMonthDetailCest
                 ],
             ],
             'status' => 'WAITING_FOR_APPROVAL',
+            'sickDayUnpaidWorkLogs' => [
+                [
+                    'date' => $startTime1->format(\DateTime::RFC3339),
+                    'id' => $data['sickDayUnpaidWorkLog1']->getId(),
+                ],
+                [
+                    'date' => $endTime1->format(\DateTime::RFC3339),
+                    'id' => $data['sickDayUnpaidWorkLog2']->getId(),
+                ],
+            ],
             'sickDayWorkLogs' => [
                 [
                     'date' => $startTime1->format(\DateTime::RFC3339),
@@ -640,6 +689,16 @@ class GetWorkMonthDetailCest
                 ],
             ],
             'status' => 'OPENED',
+            'sickDayUnpaidWorkLogs' => [
+                [
+                    'date' => $startTime1->format(\DateTime::RFC3339),
+                    'id' => $data['sickDayUnpaidWorkLog1']->getId(),
+                ],
+                [
+                    'date' => $endTime1->format(\DateTime::RFC3339),
+                    'id' => $data['sickDayUnpaidWorkLog2']->getId(),
+                ],
+            ],
             'sickDayWorkLogs' => [],
             'timeOffWorkLogs' => [],
             'user' => ['id' => $this->user->getId()],
@@ -723,6 +782,16 @@ class GetWorkMonthDetailCest
                 ],
             ],
             'status' => 'WAITING_FOR_APPROVAL',
+            'sickDayUnpaidWorkLogs' => [
+                [
+                    'date' => $startTime1->format(\DateTime::RFC3339),
+                    'id' => $data['sickDayUnpaidWorkLog1']->getId(),
+                ],
+                [
+                    'date' => $endTime1->format(\DateTime::RFC3339),
+                    'id' => $data['sickDayUnpaidWorkLog2']->getId(),
+                ],
+            ],
             'sickDayWorkLogs' => [
                 [
                     'date' => $startTime1->format(\DateTime::RFC3339),
