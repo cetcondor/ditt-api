@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Repository\BusinessTripWorkLogRepository;
 use App\Repository\HomeOfficeWorkLogRepository;
 use App\Repository\OvertimeWorkLogRepository;
+use App\Repository\SpecialLeaveWorkLogRepository;
 use App\Repository\TimeOffWorkLogRepository;
 use App\Repository\UserRepository;
 use App\Repository\VacationWorkLogRepository;
@@ -31,6 +32,11 @@ class NotificationsCommand extends ContainerAwareCommand
      * @var OvertimeWorkLogRepository
      */
     private $overtimeWorkLogRepository;
+
+    /**
+     * @var SpecialLeaveWorkLogRepository
+     */
+    private $specialLeaveWorkLogRepository;
 
     /**
      * @var TimeOffWorkLogRepository
@@ -81,6 +87,7 @@ class NotificationsCommand extends ContainerAwareCommand
         BusinessTripWorkLogRepository $businessTripWorkLogRepository,
         HomeOfficeWorkLogRepository $homeOfficeWorkLogRepository,
         OvertimeWorkLogRepository $overtimeWorkLogRepository,
+        SpecialLeaveWorkLogRepository $specialLeaveWorkLogRepository,
         TimeOffWorkLogRepository $timeOffWorkLogRepository,
         VacationWorkLogRepository $vacationWorkLogRepository,
         string $clientSpecialApprovalsUrl,
@@ -96,6 +103,7 @@ class NotificationsCommand extends ContainerAwareCommand
         $this->businessTripWorkLogRepository = $businessTripWorkLogRepository;
         $this->homeOfficeWorkLogRepository = $homeOfficeWorkLogRepository;
         $this->overtimeWorkLogRepository = $overtimeWorkLogRepository;
+        $this->specialLeaveWorkLogRepository = $specialLeaveWorkLogRepository;
         $this->timeOffWorkLogRepository = $timeOffWorkLogRepository;
         $this->vacationWorkLogRepository = $vacationWorkLogRepository;
         $this->mailSenderAddress = $mailSenderAddress;
@@ -131,6 +139,7 @@ class NotificationsCommand extends ContainerAwareCommand
                 $waitingCount = count($this->businessTripWorkLogRepository->findAllWaitingForApprovalBySupervisor($user))
                     + count($this->homeOfficeWorkLogRepository->findAllWaitingForApprovalBySupervisor($user))
                     + count($this->overtimeWorkLogRepository->findAllWaitingForApprovalBySupervisor($user))
+                    + count($this->specialLeaveWorkLogRepository->findAllWaitingForApprovalBySupervisor($user))
                     + count($this->timeOffWorkLogRepository->findAllWaitingForApprovalBySupervisor($user))
                     + count($this->vacationWorkLogRepository->findAllWaitingForApprovalBySupervisor($user));
             } catch (\Exception $ex) {
