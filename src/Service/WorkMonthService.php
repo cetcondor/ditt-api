@@ -172,6 +172,7 @@ class WorkMonthService
      */
     public function calculateWorkedHours(WorkMonth $workMonth): float
     {
+        $config = $this->configService->getConfig();
         $workHours = $this->workHoursRepository->findOne(
             $workMonth->getYear(),
             $workMonth->getMonth(),
@@ -247,6 +248,8 @@ class WorkMonthService
 
         // Calculate work time for each separately
         foreach ($allWorkLogs as $day => $allWorkLogsByDay) {
+            $currentDate = (new \DateTimeImmutable())->setDate($workMonth->getYear()->getYear(), $workMonth->getMonth(), $day);
+
             $containsBusinessDay = false;
             $containsHomeDay = false;
             $containsMaternityProtection = false;
@@ -361,6 +364,23 @@ class WorkMonthService
                 $workTime = $workHours->getRequiredHours();
             } elseif ($containsSickDay && count($standardWorkLogs) > 0) {
                 $workTime = min($workTimeWithoutCorrection, $workHours->getRequiredHours());
+            }
+
+            $isHoliday = function ($date) use ($config) {
+                foreach ($config->getSupportedHolidays() as $supportedHoliday) {
+                    if ($supportedHoliday->getDate()->format('Y-m-d') === $date->format('Y-m-d')) {
+                        return true;
+                    }
+                }
+
+                return false;
+            };
+
+            // Increase times during sundays and public holidays
+            if ($isHoliday($currentDate)) {
+                $workTime *= 1.35;
+            } elseif ($currentDate->format('l') === 'Sunday') {
+                $workTime *= 1.25;
             }
 
             $allWorkLogWorkTime[$day] = $workTime;
