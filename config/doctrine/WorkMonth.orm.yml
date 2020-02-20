@@ -34,6 +34,9 @@ App\Entity\WorkMonth:
         sickDayWorkLogs:
             targetEntity: App\Entity\SickDayWorkLog
             mappedBy: workMonth
+        specialLeaveWorkLogs:
+            targetEntity: App\Entity\SpecialLeaveWorkLog
+            mappedBy: workMonth
         timeOffWorkLogs:
             targetEntity: App\Entity\TimeOffWorkLog
             mappedBy: workMonth

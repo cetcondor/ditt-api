@@ -136,6 +136,14 @@ class GetWorkMonthDetailCest
             'variant' => 'SICK_CHILD',
             'workMonth' => $data['workMonth'],
         ]);
+        $data['specialLeaveWorkLog1'] = $I->createSpecialLeaveWorkLog([
+            'date' => $startTime1,
+            'workMonth' => $data['workMonth'],
+        ]);
+        $data['specialLeaveWorkLog2'] = $I->createSpecialLeaveWorkLog([
+            'date' => $endTime1,
+            'workMonth' => $data['workMonth'],
+        ]);
         $data['timeOffWorkLog1'] = $I->createTimeOffWorkLog([
             'date' => $startTime1,
             'workMonth' => $data['workMonth'],
@@ -170,6 +178,7 @@ class GetWorkMonthDetailCest
         $data['workMonth']->setParentalLeaveWorkLogs([$data['parentalLeaveWorkLog1'], $data['parentalLeaveWorkLog2']]);
         $data['workMonth']->setSickDayUnpaidWorkLogs([$data['sickDayUnpaidWorkLog1'], $data['sickDayUnpaidWorkLog2']]);
         $data['workMonth']->setSickDayWorkLogs([$data['sickDayWorkLog1'], $data['sickDayWorkLog2']]);
+        $data['workMonth']->setSpecialLeaveWorkLogs([$data['specialLeaveWorkLog1'], $data['specialLeaveWorkLog2']]);
         $data['workMonth']->setTimeOffWorkLogs([$data['timeOffWorkLog1'], $data['timeOffWorkLog2']]);
         $data['workMonth']->setVacationWorkLogs([$data['vacationWorkLog1'], $data['vacationWorkLog2']]);
         $data['workMonth']->setWorkLogs([$data['workLog1'], $data['workLog2']]);
@@ -271,6 +280,16 @@ class GetWorkMonthDetailCest
                     'date' => $endTime1->format(\DateTime::RFC3339),
                     'id' => $data['sickDayWorkLog2']->getId(),
                     'variant' => $data['sickDayWorkLog2']->getVariant(),
+                ],
+            ],
+            'specialLeaveWorkLogs' => [
+                [
+                    'date' => $startTime1->format(\DateTime::RFC3339),
+                    'id' => $data['specialLeaveWorkLog1']->getId(),
+                ],
+                [
+                    'date' => $endTime1->format(\DateTime::RFC3339),
+                    'id' => $data['specialLeaveWorkLog2']->getId(),
                 ],
             ],
             'timeOffWorkLogs' => [
@@ -406,6 +425,16 @@ class GetWorkMonthDetailCest
                     'variant' => $data['sickDayWorkLog2']->getVariant(),
                 ],
             ],
+            'specialLeaveWorkLogs' => [
+                [
+                    'date' => $startTime1->format(\DateTime::RFC3339),
+                    'id' => $data['specialLeaveWorkLog1']->getId(),
+                ],
+                [
+                    'date' => $endTime1->format(\DateTime::RFC3339),
+                    'id' => $data['specialLeaveWorkLog2']->getId(),
+                ],
+            ],
             'timeOffWorkLogs' => [
                 [
                     'date' => $startTime1->format(\DateTime::RFC3339),
@@ -501,6 +530,7 @@ class GetWorkMonthDetailCest
                 ],
             ],
             'sickDayWorkLogs' => [],
+            'specialLeaveWorkLogs' => [],
             'timeOffWorkLogs' => [],
             'user' => ['id' => $this->user->getId()],
             'vacationWorkLogs' => [],
@@ -605,6 +635,16 @@ class GetWorkMonthDetailCest
                     'variant' => $data['sickDayWorkLog2']->getVariant(),
                 ],
             ],
+            'specialLeaveWorkLogs' => [
+                [
+                    'date' => $startTime1->format(\DateTime::RFC3339),
+                    'id' => $data['specialLeaveWorkLog1']->getId(),
+                ],
+                [
+                    'date' => $endTime1->format(\DateTime::RFC3339),
+                    'id' => $data['specialLeaveWorkLog2']->getId(),
+                ],
+            ],
             'timeOffWorkLogs' => [
                 [
                     'date' => $startTime1->format(\DateTime::RFC3339),
@@ -700,6 +740,7 @@ class GetWorkMonthDetailCest
                 ],
             ],
             'sickDayWorkLogs' => [],
+            'specialLeaveWorkLogs' => [],
             'timeOffWorkLogs' => [],
             'user' => ['id' => $this->user->getId()],
             'vacationWorkLogs' => [],
@@ -802,6 +843,16 @@ class GetWorkMonthDetailCest
                     'date' => $endTime1->format(\DateTime::RFC3339),
                     'id' => $data['sickDayWorkLog2']->getId(),
                     'variant' => $data['sickDayWorkLog2']->getVariant(),
+                ],
+            ],
+            'specialLeaveWorkLogs' => [
+                [
+                    'date' => $startTime1->format(\DateTime::RFC3339),
+                    'id' => $data['specialLeaveWorkLog1']->getId(),
+                ],
+                [
+                    'date' => $endTime1->format(\DateTime::RFC3339),
+                    'id' => $data['specialLeaveWorkLog2']->getId(),
                 ],
             ],
             'timeOffWorkLogs' => [

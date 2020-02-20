@@ -1,0 +1,29 @@
+App\Entity\SpecialLeaveWorkLog:
+    type: entity
+
+    id:
+        id:
+            type: integer
+            generator: { strategy: IDENTITY }
+
+    fields:
+        date:
+            type: datetime_immutable
+        timeApproved:
+            type: datetime_immutable
+            nullable: true
+        timeRejected:
+            type: datetime_immutable
+            nullable: true
+        rejectionMessage:
+            type: text
+            nullable: true
+
+    manyToOne:
+        workMonth:
+            targetEntity: App\Entity\WorkMonth
+            inversedBy: specialLeaveWorkLogs
+            joinColumn:
+                name: work_month_id
+                referencedColumnName: id
+                nullable: false

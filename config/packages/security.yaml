@@ -34,7 +34,19 @@ security:
             roles:
                 - !php/const App\Entity\User::ROLE_EMPLOYEE
                 - !php/const App\Entity\User::ROLE_ADMIN
+        -   path: ^/maternity_protection_work_logs
+            roles:
+                - !php/const App\Entity\User::ROLE_EMPLOYEE
+                - !php/const App\Entity\User::ROLE_ADMIN
         -   path: ^/overtime_work_logs
+            roles:
+                - !php/const App\Entity\User::ROLE_EMPLOYEE
+                - !php/const App\Entity\User::ROLE_ADMIN
+        -   path: ^/parental_leave_work_logs
+            roles:
+                - !php/const App\Entity\User::ROLE_EMPLOYEE
+                - !php/const App\Entity\User::ROLE_ADMIN
+        -   path: ^/sick_day_unpaid_work_logs
             roles:
                 - !php/const App\Entity\User::ROLE_EMPLOYEE
                 - !php/const App\Entity\User::ROLE_ADMIN
@@ -43,6 +55,10 @@ security:
                 - !php/const App\Entity\User::ROLE_EMPLOYEE
                 - !php/const App\Entity\User::ROLE_ADMIN
         -   path: '^/special_approvals/[0-9]+'
+            roles:
+                - !php/const App\Entity\User::ROLE_EMPLOYEE
+                - !php/const App\Entity\User::ROLE_ADMIN
+        -   path: ^/special_leave_work_logs
             roles:
                 - !php/const App\Entity\User::ROLE_EMPLOYEE
                 - !php/const App\Entity\User::ROLE_ADMIN

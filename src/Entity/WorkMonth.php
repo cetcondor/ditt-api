@@ -68,6 +68,11 @@ class WorkMonth
     private $sickDayWorkLogs;
 
     /**
+     * @var SpecialLeaveWorkLog[]|Collection
+     */
+    private $specialLeaveWorkLogs;
+
+    /**
      * @var TimeOffWorkLog[]|Collection
      */
     private $timeOffWorkLogs;
@@ -102,6 +107,7 @@ class WorkMonth
         $this->parentalLeaveWorkLogs = new ArrayCollection();
         $this->sickDayUnpaidWorkLogs = new ArrayCollection();
         $this->sickDayWorkLogs = new ArrayCollection();
+        $this->specialLeaveWorkLogs = new ArrayCollection();
         $this->timeOffWorkLogs = new ArrayCollection();
         $this->vacationWorkLogs = new ArrayCollection();
         $this->workLogs = new ArrayCollection();
@@ -294,6 +300,28 @@ class WorkMonth
     public function setSickDayWorkLogs($sickDayWorkLogs): WorkMonth
     {
         $this->sickDayWorkLogs = $sickDayWorkLogs;
+
+        return $this;
+    }
+
+    /**
+     * @return SpecialLeaveWorkLog[]
+     */
+    public function getSpecialLeaveWorkLogs(): array
+    {
+        if ($this->specialLeaveWorkLogs instanceof Collection) {
+            return $this->specialLeaveWorkLogs->toArray();
+        }
+
+        return $this->specialLeaveWorkLogs;
+    }
+
+    /**
+     * @param SpecialLeaveWorkLog[]|Collection $specialLeaveWorkLogs
+     */
+    public function setSpecialLeaveWorkLogs($specialLeaveWorkLogs): WorkMonth
+    {
+        $this->specialLeaveWorkLogs = $specialLeaveWorkLogs;
 
         return $this;
     }

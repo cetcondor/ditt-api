@@ -101,6 +101,41 @@ api_sick_day_unpaid_work_log_bulk_create:
     defaults:
         _api_collection_operation_name: 'bulkCreate'
 
+api_special_leave_work_log_bulk_create:
+    path: /special_leave_work_logs/bulk
+    methods: [POST]
+    controller: App\Controller\SpecialLeaveWorkLogController::bulkCreate
+    defaults:
+        _api_collection_operation_name: 'bulkCreate'
+
+api_special_leave_work_log_bulk_mark_approved:
+    path: /special_leave_work_logs/bulk/mark_approved
+    methods: [PUT]
+    controller: App\Controller\SpecialLeaveWorkLogController::bulkMarkApproved
+    defaults:
+        _api_collection_operation_name: 'bulkMarkApproved'
+
+api_special_leave_work_log_bulk_mark_rejected:
+    path: /special_leave_work_logs/bulk/mark_rejected
+    methods: [PUT]
+    controller: App\Controller\SpecialLeaveWorkLogController::bulkMarkRejected
+    defaults:
+        _api_collection_operation_name: 'bulkMarkRejected'
+
+api_special_leave_work_log_mark_approved:
+    path: /special_leave_work_logs/{id}/mark_approved
+    methods: [PUT]
+    controller: App\Controller\SpecialLeaveWorkLogController::markApproved
+    defaults:
+        _api_collection_operation_name: 'markApproved'
+
+api_special_leave_work_log_mark_rejected:
+    path: /special_leave_work_logs/{id}/mark_rejected
+    methods: [PUT]
+    controller: App\Controller\SpecialLeaveWorkLogController::markRejected
+    defaults:
+        _api_collection_operation_name: 'markRejected'
+
 api_time_off_work_log_mark_approved:
     path: /time_off_work_logs/{id}/mark_approved
     methods: [PUT]

@@ -140,6 +140,24 @@ class ApiTester extends \Codeception\Actor
         ]);
     }
 
+    public function createSpecialLeaveWorkLog(array $params = [])
+    {
+        $specialLeaveWorkLog = $this->populateEntity(new \App\Entity\SpecialLeaveWorkLog(), [
+            'workMonth' => function () {
+                return $this->createWorkMonth();
+            },
+            'date' => new DateTimeImmutable(),
+            'timeApproved' => null,
+            'timeRejected' => null,
+        ], $params);
+
+        $this->persistEntity($specialLeaveWorkLog);
+
+        return $this->grabEntityFromRepository(\App\Entity\SpecialLeaveWorkLog::class, [
+            'id' => $specialLeaveWorkLog->getId(),
+        ]);
+    }
+
     public function createSickDayWorkLog(array $params = [])
     {
         $sickDayWorkLog = $this->populateEntity(new \App\Entity\SickDayWorkLog(), [

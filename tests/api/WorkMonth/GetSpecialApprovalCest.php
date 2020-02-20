@@ -380,6 +380,25 @@ class GetSpecialApprovalCest
             'workMonth' => $workMonth1,
         ]);
 
+        $specialLeaveWorkLog1 = $I->createSpecialLeaveWorkLog([
+            'date' => new \DateTimeImmutable(),
+            'workMonth' => $workMonth2,
+        ]);
+        $specialLeaveWorkLog2 = $I->createSpecialLeaveWorkLog([
+            'date' => new \DateTimeImmutable(),
+            'timeApproved' => new \DateTimeImmutable(),
+            'workMonth' => $workMonth2,
+        ]);
+        $specialLeaveWorkLog3 = $I->createSpecialLeaveWorkLog([
+            'date' => new \DateTimeImmutable(),
+            'timeRejected' => new \DateTimeImmutable(),
+            'workMonth' => $workMonth1,
+        ]);
+        $specialLeaveWorkLog4 = $I->createSpecialLeaveWorkLog([
+            'date' => new \DateTimeImmutable(),
+            'workMonth' => $workMonth1,
+        ]);
+
         $timeOffWorkLog1 = $I->createTimeOffWorkLog([
             'date' => new \DateTimeImmutable(),
             'workMonth' => $workMonth2,
@@ -551,6 +570,48 @@ class GetSpecialApprovalCest
                     ],
                 ],
             ],
+            'specialLeaveWorkLogs' => [
+                [
+                    'date' => $specialLeaveWorkLog1->getDate()->format(\DateTime::RFC3339),
+                    'id' => $specialLeaveWorkLog1->getId(),
+                    'timeApproved' => null,
+                    'timeRejected' => null,
+                    'workMonth' => [
+                        'id' => $workMonth2->getId(),
+                        'month' => $workMonth2->getMonth(),
+                        'status' => $workMonth2->getStatus(),
+                        'user' => [
+                            'email' => $user2->getEmail(),
+                            'firstName' => $user2->getFirstName(),
+                            'lastName' => $user2->getLastName(),
+                            'id' => $user2->getId(),
+                        ],
+                        'year' => [
+                            'year' => $workMonth2->getYear()->getYear(),
+                        ],
+                    ],
+                ],
+                [
+                    'date' => $specialLeaveWorkLog4->getDate()->format(\DateTime::RFC3339),
+                    'id' => $specialLeaveWorkLog4->getId(),
+                    'timeApproved' => null,
+                    'timeRejected' => null,
+                    'workMonth' => [
+                        'id' => $workMonth1->getId(),
+                        'month' => $workMonth1->getMonth(),
+                        'status' => $workMonth1->getStatus(),
+                        'user' => [
+                            'email' => $user1->getEmail(),
+                            'firstName' => $user1->getFirstName(),
+                            'lastName' => $user1->getLastName(),
+                            'id' => $user1->getId(),
+                        ],
+                        'year' => [
+                            'year' => $workMonth1->getYear()->getYear(),
+                        ],
+                    ],
+                ],
+            ],
             'timeOffWorkLogs' => [
                 [
                     'date' => $timeOffWorkLog1->getDate()->format(\DateTime::RFC3339),
@@ -648,6 +709,10 @@ class GetSpecialApprovalCest
             'overTimeWorkLogs' => [
                 ['id' => $overTimeWorkLog2->getId()],
                 ['id' => $overTimeWorkLog3->getId()],
+            ],
+            'specialLeaveWorkLogs' => [
+                ['id' => $specialLeaveWorkLog2->getId()],
+                ['id' => $specialLeaveWorkLog3->getId()],
             ],
             'timeOffWorkLogs' => [
                 ['id' => $timeOffWorkLog2->getId()],

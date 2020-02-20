@@ -7,6 +7,7 @@ use ApiPlatform\Core\Exception\InvalidArgumentException;
 use App\Entity\BusinessTripWorkLog;
 use App\Entity\HomeOfficeWorkLog;
 use App\Entity\OvertimeWorkLog;
+use App\Entity\SpecialLeaveWorkLog;
 use App\Entity\SupervisorWorkLogInterface;
 use App\Entity\TimeOffWorkLog;
 use App\Entity\User;
@@ -16,6 +17,7 @@ use App\Entity\WorkMonth;
 use App\Event\BusinessTripWorkLogCanceledEvent;
 use App\Event\HomeOfficeWorkLogCanceledEvent;
 use App\Event\OvertimeWorkLogCanceledEvent;
+use App\Event\SpecialLeaveWorkLogCanceledEvent;
 use App\Event\TimeOffWorkLogCanceledEvent;
 use App\Event\VacationWorkLogCanceledEvent;
 use App\Repository\WorkMonthRepository;
@@ -125,6 +127,11 @@ class WorkLogSubscriber implements EventSubscriberInterface
             $this->eventDispatcher->dispatch(
                 new OvertimeWorkLogCanceledEvent($workLog, $supervisor),
                 OvertimeWorkLogCanceledEvent::CANCELED
+            );
+        } elseif ($workLog instanceof SpecialLeaveWorkLog && $workLog->getTimeApproved() !== null) {
+            $this->eventDispatcher->dispatch(
+                new SpecialLeaveWorkLogCanceledEvent($workLog, $supervisor),
+                SpecialLeaveWorkLogCanceledEvent::CANCELED
             );
         } elseif ($workLog instanceof TimeOffWorkLog && $workLog->getTimeApproved() !== null) {
             $this->eventDispatcher->dispatch(

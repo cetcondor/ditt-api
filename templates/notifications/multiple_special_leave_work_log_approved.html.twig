@@ -1,0 +1,26 @@
+<html lang="de">
+    <head>
+        <meta charset="utf-8" />
+        <style>
+            body {
+                font-family: helvetica, roboto, arial, sans-serif;
+            }
+        </style>
+    </head>
+
+    <body>
+        <h1>Antrag auf mehrtägigen Sonderurlaub gewährt</h1>
+        <p>
+            <strong>Daten: </strong><br>
+            <ul>
+                {% for workLog in workLogs %}
+                    <li>{{ workLog.date | date('d.m.Y') }}</li>
+                {% endfor %}
+            </ul>
+            <strong>Betrifft: </strong>{{ workLogs[0].workMonth.user.firstName }} {{ workLogs[0].workMonth.user.lastName }}<br>
+            {% if supervisor is not null %}
+                <strong>Gewährt durch: </strong>{{ supervisor.firstName }} {{ supervisor.lastName }}
+            {% endif %}
+        </p>
+    </body>
+</html>

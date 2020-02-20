@@ -2,6 +2,7 @@
 
 namespace App\Listener;
 
+use App\Entity\SpecialLeaveWorkLog;
 use App\Entity\User;
 use App\Entity\VacationWorkLog;
 use App\Entity\WorkLogInterface;
@@ -11,11 +12,16 @@ use App\Event\BusinessTripWorkLogRejectedEvent;
 use App\Event\HomeOfficeWorkLogApprovedEvent;
 use App\Event\HomeOfficeWorkLogCanceledEvent;
 use App\Event\HomeOfficeWorkLogRejectedEvent;
+use App\Event\MultipleSpecialLeaveWorkLogApprovedEvent;
+use App\Event\MultipleSpecialLeaveWorkLogRejectedEvent;
 use App\Event\MultipleVacationWorkLogApprovedEvent;
 use App\Event\MultipleVacationWorkLogRejectedEvent;
 use App\Event\OvertimeWorkLogApprovedEvent;
 use App\Event\OvertimeWorkLogCanceledEvent;
 use App\Event\OvertimeWorkLogRejectedEvent;
+use App\Event\SpecialLeaveWorkLogApprovedEvent;
+use App\Event\SpecialLeaveWorkLogCanceledEvent;
+use App\Event\SpecialLeaveWorkLogRejectedEvent;
 use App\Event\TimeOffWorkLogApprovedEvent;
 use App\Event\TimeOffWorkLogCanceledEvent;
 use App\Event\TimeOffWorkLogRejectedEvent;
@@ -173,6 +179,58 @@ class WorkLogEmailNotificationListener
      * @throws RuntimeError
      * @throws SyntaxError
      */
+    public function onMultipleSpecialLeaveWorkLogApproved(MultipleSpecialLeaveWorkLogApprovedEvent $event): void
+    {
+        $workLogs = $event->getSpecialLeaveWorkLogs();
+        $startDate = $workLogs[0]->getDate();
+        $endDate = $workLogs[0]->getDate();
+
+        if (count($workLogs) > 1 && end($workLogs) instanceof SpecialLeaveWorkLog) {
+            $endDate = end($workLogs)->getDate();
+        }
+
+        $this->sendWorkLogsMail(
+            $event->getSupervisor(),
+            $workLogs,
+            'Antrag auf mehrtägigen Sonderurlaub gewährt – %s bis %s',
+            $startDate,
+            $endDate,
+            'notifications/multiple_special_leave_work_log_approved.html.twig'
+        );
+    }
+
+    /**
+     * @throws EmailNotSentException
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
+     */
+    public function onMultipleSpecialLeaveWorkLogRejected(MultipleSpecialLeaveWorkLogRejectedEvent $event): void
+    {
+        $workLogs = $event->getSpecialLeaveWorkLogs();
+        $startDate = $workLogs[0]->getDate();
+        $endDate = $workLogs[0]->getDate();
+
+        if (count($workLogs) > 1 && end($workLogs) instanceof SpecialLeaveWorkLog) {
+            $endDate = end($workLogs)->getDate();
+        }
+
+        $this->sendWorkLogsMail(
+            $event->getSupervisor(),
+            $workLogs,
+            'Antrag auf mehrtägigen Sonderurlaub abgelehnt – %s bis %s',
+            $startDate,
+            $endDate,
+            'notifications/multiple_special_leave_work_log_rejected.html.twig'
+        );
+    }
+
+    /**
+     * @throws EmailNotSentException
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
+     */
     public function onMultipleVacationWorkLogApproved(MultipleVacationWorkLogApprovedEvent $event): void
     {
         $workLogs = $event->getVacationWorkLogs();
@@ -267,6 +325,57 @@ class WorkLogEmailNotificationListener
             'Antrag auf Mehrarbeit abgelehnt – %s',
             $event->getOvertimeWorkLog()->getDate(),
             'notifications/overtime_work_log_rejected.html.twig'
+        );
+    }
+
+    /**
+     * @throws EmailNotSentException
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
+     */
+    public function onSpecialLeaveWorkLogApproved(SpecialLeaveWorkLogApprovedEvent $event): void
+    {
+        $this->sendWorkLogMail(
+            $event->getSupervisor(),
+            $event->getSpecialLeaveWorkLog(),
+            'Antrag auf Sonderurlaub gewährt – %s',
+            $event->getSpecialLeaveWorkLog()->getDate(),
+            'notifications/special_leave_work_log_approved.html.twig'
+        );
+    }
+
+    /**
+     * @throws EmailNotSentException
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
+     */
+    public function onSpecialLeaveWorkLogCanceled(SpecialLeaveWorkLogCanceledEvent $event): void
+    {
+        $this->sendWorkLogMail(
+            $event->getSupervisor(),
+            $event->getSpecialLeaveWorkLog(),
+            'Antrag auf Sonderurlaub storniert – %s',
+            $event->getSpecialLeaveWorkLog()->getDate(),
+            'notifications/special_leave_work_log_canceled.html.twig'
+        );
+    }
+
+    /**
+     * @throws EmailNotSentException
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
+     */
+    public function onSpecialLeaveWorkLogRejected(SpecialLeaveWorkLogRejectedEvent $event): void
+    {
+        $this->sendWorkLogMail(
+            $event->getSupervisor(),
+            $event->getSpecialLeaveWorkLog(),
+            'Antrag auf Sonderurlaub abgelehnt – %s',
+            $event->getSpecialLeaveWorkLog()->getDate(),
+            'notifications/special_leave_work_log_rejected.html.twig'
         );
     }
 

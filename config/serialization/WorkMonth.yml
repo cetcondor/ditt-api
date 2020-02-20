@@ -57,6 +57,9 @@ App\Entity\WorkMonth:
         sickDayWorkLogs:
             groups:
                 - work_month_out_detail
+        specialLeaveWorkLogs:
+            groups:
+                - work_month_out_detail
         timeOffWorkLogs:
             groups:
                 - work_month_out_detail

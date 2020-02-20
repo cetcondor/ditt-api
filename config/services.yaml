@@ -125,6 +125,12 @@ services:
               event: !php/const App\Event\HomeOfficeWorkLogRejectedEvent::REJECTED
               method: onHomeOfficeWorkLogRejected
             - name: kernel.event_listener
+              event: !php/const App\Event\MultipleSpecialLeaveWorkLogApprovedEvent::APPROVED
+              method: onMultipleSpecialLeaveWorkLogApproved
+            - name: kernel.event_listener
+              event: !php/const App\Event\MultipleSpecialLeaveWorkLogRejectedEvent::REJECTED
+              method: onMultipleSpecialLeaveWorkLogRejected
+            - name: kernel.event_listener
               event: !php/const App\Event\MultipleVacationWorkLogApprovedEvent::APPROVED
               method: onMultipleVacationWorkLogApproved
             - name: kernel.event_listener
@@ -139,6 +145,15 @@ services:
             - name: kernel.event_listener
               event: !php/const App\Event\OvertimeWorkLogRejectedEvent::REJECTED
               method: onOvertimeWorkLogRejected
+            - name: kernel.event_listener
+              event: !php/const App\Event\SpecialLeaveWorkLogApprovedEvent::APPROVED
+              method: onSpecialLeaveWorkLogApproved
+            - name: kernel.event_listener
+              event: !php/const App\Event\SpecialLeaveWorkLogCanceledEvent::CANCELED
+              method: onSpecialLeaveWorkLogCanceled
+            - name: kernel.event_listener
+              event: !php/const App\Event\SpecialLeaveWorkLogRejectedEvent::REJECTED
+              method: onSpecialLeaveWorkLogRejected
             - name: kernel.event_listener
               event: !php/const App\Event\TimeOffWorkLogApprovedEvent::APPROVED
               method: onTimeOffWorkLogApproved
