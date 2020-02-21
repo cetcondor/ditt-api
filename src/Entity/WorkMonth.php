@@ -33,6 +33,11 @@ class WorkMonth
     private $month;
 
     /**
+     * @var BanWorkLog[]|Collection
+     */
+    private $banWorkLogs;
+
+    /**
      * @var BusinessTripWorkLog[]|Collection
      */
     private $businessTripWorkLogs;
@@ -105,6 +110,7 @@ class WorkMonth
     public function __construct()
     {
         $this->month = 0;
+        $this->banWorkLogs = new ArrayCollection();
         $this->businessTripWorkLogs = new ArrayCollection();
         $this->homeOfficeWorkLogs = new ArrayCollection();
         $this->maternityProtectionWorkLogs = new ArrayCollection();
@@ -152,6 +158,24 @@ class WorkMonth
     public function setMonth(int $month): WorkMonth
     {
         $this->month = $month;
+
+        return $this;
+    }
+
+    /**
+     * @return BanWorkLog[]|Collection
+     */
+    public function getBanWorkLogs()
+    {
+        return $this->banWorkLogs;
+    }
+
+    /**
+     * @param BanWorkLog[]|Collection $banWorkLogs
+     */
+    public function setBanWorkLogs($banWorkLogs): BanWorkLog
+    {
+        $this->banWorkLogs = $banWorkLogs;
 
         return $this;
     }

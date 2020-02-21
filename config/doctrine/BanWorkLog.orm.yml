@@ -1,0 +1,22 @@
+App\Entity\BanWorkLog:
+    type: entity
+
+    id:
+        id:
+            type: integer
+            generator: { strategy: IDENTITY }
+
+    fields:
+        date:
+            type: datetime_immutable
+        workTimeLimit:
+            type: integer
+
+    manyToOne:
+        workMonth:
+            targetEntity: App\Entity\WorkMonth
+            inversedBy: banWorkLogs
+            joinColumn:
+                name: work_month_id
+                referencedColumnName: id
+                nullable: false

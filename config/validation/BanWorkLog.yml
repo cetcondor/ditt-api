@@ -1,0 +1,15 @@
+App\Entity\BanWorkLog:
+    properties:
+        date:
+            - NotBlank: ~
+            - DateTime: ~
+
+        workTimeLimit:
+            - NotBlank: ~
+            - Type: numeric
+            - Range:
+                min: 0
+                max: 86400
+
+        workMonth:
+            - NotBlank: ~

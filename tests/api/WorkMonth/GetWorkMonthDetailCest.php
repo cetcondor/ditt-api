@@ -78,6 +78,14 @@ class GetWorkMonthDetailCest
             'year' => $I->getSupportedYear($startTime1->format('Y')),
         ]);
 
+        $data['banWorkLog1'] = $I->createBanWorkLog([
+            'date' => $startTime1,
+            'workMonth' => $data['workMonth'],
+        ]);
+        $data['banWorkLog2'] = $I->createBanWorkLog([
+            'date' => $endTime1,
+            'workMonth' => $data['workMonth'],
+        ]);
         $data['businessTripWorkLog1'] = $I->createBusinessTripWorkLog([
             'date' => $startTime1,
             'workMonth' => $data['workMonth'],
@@ -171,6 +179,7 @@ class GetWorkMonthDetailCest
             'workMonth' => $data['workMonth'],
         ]);
 
+        $data['workMonth']->setBanWorkLogs([$data['banWorkLog1'], $data['banWorkLog2']]);
         $data['workMonth']->setBusinessTripWorkLogs([$data['businessTripWorkLog1'], $data['businessTripWorkLog2']]);
         $data['workMonth']->setHomeOfficeWorkLogs([$data['homeOfficeWorkLog1'], $data['homeOfficeWorkLog2']]);
         $data['workMonth']->setMaternityProtectionWorkLogs([$data['maternityProtectionWorkLog1'], $data['maternityProtectionWorkLog2']]);
@@ -208,6 +217,18 @@ class GetWorkMonthDetailCest
         $I->seeResponseCodeIs(Response::HTTP_OK);
         $I->seeResponseContainsJson([
             'id' => $data['workMonth']->getId(),
+            'banWorkLogs' => [
+                [
+                    'date' => $startTime1->format(\DateTime::RFC3339),
+                    'id' => $data['banWorkLog1']->getId(),
+                    'workTimeLimit' => $data['banWorkLog1']->getWorkTimeLimit(),
+                ],
+                [
+                    'date' => $endTime1->format(\DateTime::RFC3339),
+                    'id' => $data['banWorkLog2']->getId(),
+                    'workTimeLimit' => $data['banWorkLog2']->getWorkTimeLimit(),
+                ],
+            ],
             'businessTripWorkLogs' => [
                 [
                     'date' => $startTime1->format(\DateTime::RFC3339),
@@ -351,6 +372,18 @@ class GetWorkMonthDetailCest
         $I->seeResponseCodeIs(Response::HTTP_OK);
         $I->seeResponseContainsJson([
             'id' => $data['workMonth']->getId(),
+            'banWorkLogs' => [
+                [
+                    'date' => $startTime1->format(\DateTime::RFC3339),
+                    'id' => $data['banWorkLog1']->getId(),
+                    'workTimeLimit' => $data['banWorkLog1']->getWorkTimeLimit(),
+                ],
+                [
+                    'date' => $endTime1->format(\DateTime::RFC3339),
+                    'id' => $data['banWorkLog2']->getId(),
+                    'workTimeLimit' => $data['banWorkLog2']->getWorkTimeLimit(),
+                ],
+            ],
             'businessTripWorkLogs' => [
                 [
                     'date' => $startTime1->format(\DateTime::RFC3339),
@@ -561,6 +594,18 @@ class GetWorkMonthDetailCest
         $I->seeResponseCodeIs(Response::HTTP_OK);
         $I->seeResponseContainsJson([
             'id' => $data['workMonth']->getId(),
+            'banWorkLogs' => [
+                [
+                    'date' => $startTime1->format(\DateTime::RFC3339),
+                    'id' => $data['banWorkLog1']->getId(),
+                    'workTimeLimit' => $data['banWorkLog1']->getWorkTimeLimit(),
+                ],
+                [
+                    'date' => $endTime1->format(\DateTime::RFC3339),
+                    'id' => $data['banWorkLog2']->getId(),
+                    'workTimeLimit' => $data['banWorkLog2']->getWorkTimeLimit(),
+                ],
+            ],
             'businessTripWorkLogs' => [
                 [
                     'date' => $startTime1->format(\DateTime::RFC3339),
@@ -704,6 +749,18 @@ class GetWorkMonthDetailCest
         $I->seeResponseCodeIs(Response::HTTP_OK);
         $I->seeResponseContainsJson([
             'id' => $data['workMonth']->getId(),
+            'banWorkLogs' => [
+                [
+                    'date' => $startTime1->format(\DateTime::RFC3339),
+                    'id' => $data['banWorkLog1']->getId(),
+                    'workTimeLimit' => $data['banWorkLog1']->getWorkTimeLimit(),
+                ],
+                [
+                    'date' => $endTime1->format(\DateTime::RFC3339),
+                    'id' => $data['banWorkLog2']->getId(),
+                    'workTimeLimit' => $data['banWorkLog2']->getWorkTimeLimit(),
+                ],
+            ],
             'businessTripWorkLogs' => [],
             'homeOfficeWorkLogs' => [],
             'maternityProtectionWorkLogs' => [
@@ -771,6 +828,18 @@ class GetWorkMonthDetailCest
         $I->seeResponseCodeIs(Response::HTTP_OK);
         $I->seeResponseContainsJson([
             'id' => $data['workMonth']->getId(),
+            'banWorkLogs' => [
+                [
+                    'date' => $startTime1->format(\DateTime::RFC3339),
+                    'id' => $data['banWorkLog1']->getId(),
+                    'workTimeLimit' => $data['banWorkLog1']->getWorkTimeLimit(),
+                ],
+                [
+                    'date' => $endTime1->format(\DateTime::RFC3339),
+                    'id' => $data['banWorkLog2']->getId(),
+                    'workTimeLimit' => $data['banWorkLog2']->getWorkTimeLimit(),
+                ],
+            ],
             'businessTripWorkLogs' => [
                 [
                     'date' => $startTime1->format(\DateTime::RFC3339),

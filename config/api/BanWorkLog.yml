@@ -1,0 +1,23 @@
+App\Entity\BanWorkLog:
+    collectionOperations:
+        post:
+            method: POST
+            normalization_context:
+                groups:
+                    - ban_work_log_out_detail
+            denormalization_context:
+                groups:
+                    - ban_work_log_in
+        bulkCreate:
+            method: POST
+            route_name: api_ban_work_log_bulk_create
+            swagger_context:
+                summary: Creates multiple BanWorkLog resources.
+    itemOperations:
+        delete:
+            method: DELETE
+        get:
+            method: GET
+            normalization_context:
+                groups:
+                    - ban_work_log_out_detail

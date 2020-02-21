@@ -15,6 +15,9 @@ App\Entity\WorkMonth:
             type: integer
 
     oneToMany:
+        banWorkLogs:
+            targetEntity: App\Entity\BanWorkLog
+            mappedBy: workMonth
         businessTripWorkLogs:
             targetEntity: App\Entity\BusinessTripWorkLog
             mappedBy: workMonth

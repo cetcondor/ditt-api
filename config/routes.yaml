@@ -24,6 +24,13 @@ api_new_password:
     defaults:
         _api_collection_operation_name: 'newPassword'
 
+api_ban_work_log_bulk_create:
+    path: /ban_work_logs/bulk
+    methods: [POST]
+    controller: App\Controller\BanWorkLogController::bulkCreate
+    defaults:
+        _api_collection_operation_name: 'bulkCreate'
+
 api_business_trip_work_log_mark_approved:
     path: /business_trip_work_logs/{id}/mark_approved
     methods: [PUT]

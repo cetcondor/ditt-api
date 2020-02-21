@@ -1,0 +1,20 @@
+App\Entity\BanWorkLog:
+    attributes:
+        id:
+            groups:
+                - ban_work_log_out_detail
+                - work_month_out_detail
+        date:
+            groups:
+                - ban_work_log_out_detail
+                - work_month_out_detail
+                - ban_work_log_in
+        workTimeLimit:
+            groups:
+                - ban_work_log_out_detail
+                - work_month_out_detail
+                - ban_work_log_in
+        workMonth:
+            groups:
+                - ban_work_log_out_detail
+                - ban_work_log_in

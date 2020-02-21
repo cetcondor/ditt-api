@@ -36,6 +36,9 @@ App\Entity\WorkMonth:
                 - work_month_out_list
                 - work_month_out_detail
                 - special_approvals_out_list
+        banWorkLogs:
+            groups:
+                - work_month_out_detail
         businessTripWorkLogs:
             groups:
                 - work_month_out_detail

@@ -31,6 +31,23 @@ class ApiTester extends \Codeception\Actor
         ]);
     }
 
+    public function createBanWorkLog(array $params = [])
+    {
+        $banWorkLog = $this->populateEntity(new \App\Entity\BanWorkLog(), [
+            'workTimeLimit' => (5.5 * 3600),
+            'workMonth' => function () {
+                return $this->createWorkMonth();
+            },
+            'date' => new DateTimeImmutable(),
+        ], $params);
+
+        $this->persistEntity($banWorkLog);
+
+        return $this->grabEntityFromRepository(\App\Entity\BanWorkLog::class, [
+            'id' => $banWorkLog->getId(),
+        ]);
+    }
+
     public function createBusinessTripWorkLog(array $params = [])
     {
         $businessTripWorkLog = $this->populateEntity(new \App\Entity\BusinessTripWorkLog(), [

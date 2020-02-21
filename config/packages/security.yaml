@@ -17,6 +17,10 @@ security:
         -   path: ^/$
             roles:
                 - IS_AUTHENTICATED_ANONYMOUSLY
+        -   path: ^/ban_work_logs
+            roles:
+                - !php/const App\Entity\User::ROLE_EMPLOYEE
+                - !php/const App\Entity\User::ROLE_ADMIN
         -   path: ^/business_trip_work_logs
             roles:
                 - !php/const App\Entity\User::ROLE_EMPLOYEE
