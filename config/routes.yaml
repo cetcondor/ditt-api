@@ -248,3 +248,9 @@ api_work_months_mark_waiting_for_approval:
     defaults:
         _api_collection_operation_name: 'markWaitingForApproval'
 
+api_work_months_set_work_time_correction:
+    path: /work_months/{id}/set_work_time_correction
+    methods: [PUT]
+    controller: App\Controller\WorkMonthController::setWorkTimeCorrection
+    defaults:
+        _api_collection_operation_name: 'setWorkTimeCorrection'

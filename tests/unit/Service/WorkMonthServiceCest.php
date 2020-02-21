@@ -290,6 +290,58 @@ class WorkMonthServiceCest
         $I->assertEquals(10, $service->calculateWorkedHours($workMonth));
     }
 
+    // Standard work log with work month work time correction
+
+    /**
+     * @throws \Exception
+     */
+    public function testCalculateShortStandardWorkLogsWithoutBreakWithPositiveWorkTimeCorrection(\UnitTester $I): void
+    {
+        $prophet = new Prophet();
+        $workMonth = $this->getWorkMonth($prophet, 3600);
+        $workHours = $this->getWorkHours($prophet);
+
+        $workLogs = [
+            (new WorkLog())
+                ->setWorkMonth($workMonth)
+                ->setStartTime(new \DateTimeImmutable('2018-01-02 10:00:00'))
+                ->setEndTime(new \DateTimeImmutable('2018-01-02 12:00:00')),
+            (new WorkLog())
+                ->setWorkMonth($workMonth)
+                ->setStartTime(new \DateTimeImmutable('2018-01-02 12:05:00'))
+                ->setEndTime(new \DateTimeImmutable('2018-01-02 14:05:00')),
+        ];
+
+        $service = $this->getWorkMonthService($prophet, [], [], [], [], [], [], [], [], $workLogs, $workHours);
+
+        $I->assertEquals(4 + 1, $service->calculateWorkedHours($workMonth));
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function testCalculateShortStandardWorkLogsWithoutBreakWithNegativeWorkTimeCorrection(\UnitTester $I): void
+    {
+        $prophet = new Prophet();
+        $workMonth = $this->getWorkMonth($prophet, -3600);
+        $workHours = $this->getWorkHours($prophet);
+
+        $workLogs = [
+            (new WorkLog())
+                ->setWorkMonth($workMonth)
+                ->setStartTime(new \DateTimeImmutable('2018-01-02 10:00:00'))
+                ->setEndTime(new \DateTimeImmutable('2018-01-02 12:00:00')),
+            (new WorkLog())
+                ->setWorkMonth($workMonth)
+                ->setStartTime(new \DateTimeImmutable('2018-01-02 12:05:00'))
+                ->setEndTime(new \DateTimeImmutable('2018-01-02 14:05:00')),
+        ];
+
+        $service = $this->getWorkMonthService($prophet, [], [], [], [], [], [], [], [], $workLogs, $workHours);
+
+        $I->assertEquals(4 - 1, $service->calculateWorkedHours($workMonth));
+    }
+
     // Standard work log during public holidays
 
     /**
@@ -2496,12 +2548,18 @@ class WorkMonthServiceCest
         $I->assertEquals(6, $service->calculateWorkedHours($workMonth));
     }
 
-    private function getWorkMonth(Prophet $prophet): WorkMonth
+    private function getWorkMonth(Prophet $prophet, ?int $workTimeCorrection = null): WorkMonth
     {
         $workMonth = $prophet->prophesize(WorkMonth::class);
         $workMonth->getYear()->willReturn((new SupportedYear())->setYear(2018));
         $workMonth->getMonth()->willReturn(1);
         $workMonth->getUser()->willReturn(new User());
+
+        if ($workTimeCorrection) {
+            $workMonth->getWorkTimeCorrection()->willReturn($workTimeCorrection);
+        } else {
+            $workMonth->getWorkTimeCorrection()->willReturn(0);
+        }
 
         return $workMonth->reveal();
     }

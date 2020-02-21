@@ -13,3 +13,6 @@ App\Entity\WorkMonth:
                 callback: getConstantStatuses
         user:
             - NotBlank: ~
+        workTimeCorrection:
+            - NotBlank: ~
+            - Type: numeric

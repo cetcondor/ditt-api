@@ -24,6 +24,7 @@ use App\Service\WorkMonthService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -163,6 +164,69 @@ class WorkMonthController extends Controller
             ), JsonResponse::HTTP_OK
         );
     }
+
+    public function setWorkTimeCorrection(Request $request, int $id)
+    {
+        $workMonth = $this->workMonthRepository->getRepository()->find($id);
+        if (!$workMonth || !$workMonth instanceof  WorkMonth) {
+            throw $this->createNotFoundException(sprintf('Work month with id %d was not found', $id));
+        }
+
+        if (
+        !(
+            $this->loggedUser !== $workMonth->getUser()
+            && (
+                in_array($this->loggedUser, $workMonth->getUser()->getAllSupervisors())
+                || in_array(User::ROLE_SUPER_ADMIN, $this->loggedUser->getRoles())
+            )
+        )
+        ) {
+            throw $this->createAccessDeniedException('Not allowed to change work time correction.');
+        }
+
+        if ($workMonth->getStatus() === WorkMonth::STATUS_APPROVED) {
+            return JsonResponse::create(
+                ['detail' => 'Cannot set work time correction to closed work month.'], JsonResponse::HTTP_BAD_REQUEST
+            );
+        }
+
+        $data = json_decode((string) $request->getContent());
+        if (!isset($data->workTimeCorrection) || !is_numeric($data->workTimeCorrection)) {
+            return JsonResponse::create(
+                ['detail' => 'Work time correction is missing or it is not a number.'], JsonResponse::HTTP_BAD_REQUEST
+            );
+        }
+
+        $this->workMonthService->setWorkTimeCorrection($workMonth, (int) $data->workTimeCorrection);
+
+        if (
+            $workMonth->getUser()->getId() !== $this->loggedUser->getId()
+            && WorkMonth::STATUS_OPENED === $workMonth->getStatus()
+        ) {
+            $emptyCollection = new ArrayCollection();
+            $workMonth->setBusinessTripWorkLogs($emptyCollection);
+            $workMonth->setHomeOfficeWorkLogs($emptyCollection);
+            $workMonth->setOvertimeWorkLogs($emptyCollection);
+            $workMonth->setSickDayWorkLogs($emptyCollection);
+            $workMonth->setSpecialLeaveWorkLogs($emptyCollection);
+            $workMonth->setTimeOffWorkLogs($emptyCollection);
+            $workMonth->setVacationWorkLogs($emptyCollection);
+            $workMonth->setWorkLogs($emptyCollection);
+        }
+
+        $user = $workMonth->getUser();
+        $this->userService->fullfilRemainingVacationDays($user);
+        $workMonth->setUser($user);
+
+        return JsonResponse::create(
+            $this->normalizer->normalize(
+                $workMonth,
+                WorkMonth::class,
+                ['groups' => ['work_month_out_detail']]
+            ), JsonResponse::HTTP_OK
+        );
+    }
+
 
     public function specialApprovals(int $supervisorId): Response
     {

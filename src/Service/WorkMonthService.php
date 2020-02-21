@@ -167,6 +167,12 @@ class WorkMonthService
         $this->entityManager->flush();
     }
 
+    public function setWorkTimeCorrection(WorkMonth $workMonth, int $workTimeCorrection): void
+    {
+        $workMonth->setWorkTimeCorrection($workTimeCorrection);
+        $this->entityManager->flush();
+    }
+
     /**
      * @throws \Exception
      */
@@ -386,7 +392,8 @@ class WorkMonthService
             $allWorkLogWorkTime[$day] = $workTime;
         }
 
-        return array_sum($allWorkLogWorkTime);
+        // Apply work time correction for whole work month
+        return array_sum($allWorkLogWorkTime) + ($workMonth->getWorkTimeCorrection() / 3600);
     }
 
     /**

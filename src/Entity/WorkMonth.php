@@ -88,6 +88,11 @@ class WorkMonth
     private $workLogs;
 
     /**
+     * @var int
+     */
+    private $workTimeCorrection;
+
+    /**
      * @var string
      */
     private $status;
@@ -111,6 +116,7 @@ class WorkMonth
         $this->timeOffWorkLogs = new ArrayCollection();
         $this->vacationWorkLogs = new ArrayCollection();
         $this->workLogs = new ArrayCollection();
+        $this->workTimeCorrection = 0;
         $this->status = self::STATUS_OPENED;
     }
 
@@ -388,6 +394,18 @@ class WorkMonth
     public function setWorkLogs($workLogs): WorkMonth
     {
         $this->workLogs = $workLogs;
+
+        return $this;
+    }
+
+    public function getWorkTimeCorrection(): int
+    {
+        return $this->workTimeCorrection;
+    }
+
+    public function setWorkTimeCorrection(int $workTimeCorrection): WorkMonth
+    {
+        $this->workTimeCorrection = $workTimeCorrection;
 
         return $this;
     }

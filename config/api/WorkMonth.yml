@@ -35,6 +35,20 @@ App\Entity\WorkMonth:
                     - work_month_out_detail
             swagger_context:
                 summary: Retrieves a WorkMonth resource with work logs.
+        setWorkTimeCorrection:
+            method: PUT
+            route_name: api_work_months_set_work_time_correction
+            normalization_context:
+                groups:
+                    - work_month_out_detail
+            swagger_context:
+                summary: Set work time correction of the WorkMont.
+                parameters:
+                    -   name: workTimeCorrection
+                        description: 'Work time correction'
+                        type: int
+                        in: body
+                        required: true
         markApproved:
             method: PUT
             route_name: api_work_months_mark_approved

@@ -11,6 +11,8 @@ App\Entity\WorkMonth:
             type: integer
         status:
             type: text
+        workTimeCorrection:
+            type: integer
 
     oneToMany:
         businessTripWorkLogs:
