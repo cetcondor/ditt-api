@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\BanWorkLog;
 use App\Entity\BusinessTripWorkLog;
 use App\Entity\HomeOfficeWorkLog;
 use App\Entity\MaternityProtectionWorkLog;
@@ -12,6 +13,7 @@ use App\Entity\TimeOffWorkLog;
 use App\Entity\VacationWorkLog;
 use App\Entity\WorkLog;
 use App\Entity\WorkMonth;
+use App\Repository\BanWorkLogRepository;
 use App\Repository\BusinessTripWorkLogRepository;
 use App\Repository\HomeOfficeWorkLogRepository;
 use App\Repository\MaternityProtectionWorkLogRepository;
@@ -37,6 +39,11 @@ class WorkMonthService
      * @var ConfigService
      */
     private $configService;
+
+    /**
+     * @var BanWorkLogRepository
+     */
+    private $banWorkLogRepository;
 
     /**
      * @var BusinessTripWorkLogRepository
@@ -96,6 +103,7 @@ class WorkMonthService
     public function __construct(
         EntityManagerInterface $entityManager,
         ConfigService $configService,
+        BanWorkLogRepository $banWorkLogRepository,
         BusinessTripWorkLogRepository $businessTripWorkLogRepository,
         HomeOfficeWorkLogRepository $homeOfficeWorkLogRepository,
         MaternityProtectionWorkLogRepository $maternityProtectionWorkLogRepository,
@@ -110,6 +118,7 @@ class WorkMonthService
     ) {
         $this->entityManager = $entityManager;
         $this->configService = $configService;
+        $this->banWorkLogRepository = $banWorkLogRepository;
         $this->businessTripWorkLogRepository = $businessTripWorkLogRepository;
         $this->homeOfficeWorkLogRepository = $homeOfficeWorkLogRepository;
         $this->maternityProtectionWorkLogRepository = $maternityProtectionWorkLogRepository;
@@ -198,6 +207,7 @@ class WorkMonthService
         }
 
         $standardWorkLogs = $this->workLogRepository->findAllByWorkMonth($workMonth);
+        $banWorkLogs = $this->banWorkLogRepository->findAllByWorkMonth($workMonth);
         $businessTripWorkLogs = $this->businessTripWorkLogRepository->findAllApprovedByWorkMonth($workMonth);
         $homeOfficeWorkLogs = $this->homeOfficeWorkLogRepository->findAllApprovedByWorkMonth($workMonth);
         $maternityProtectionWorkLogs = $this->maternityProtectionWorkLogRepository->findAllByWorkMonth($workMonth);
@@ -210,6 +220,11 @@ class WorkMonthService
         foreach ($standardWorkLogs as $standardWorkLog) {
             $day = (int) $standardWorkLog->getStartTime()->format('d');
             $allWorkLogs[$day][] = $standardWorkLog;
+        }
+
+        foreach ($banWorkLogs as $banWorkLog) {
+            $day = (int) $banWorkLog->getDate()->format('d');
+            $allWorkLogs[$day][] = $banWorkLog;
         }
 
         foreach ($businessTripWorkLogs as $businessTripWorkLog) {
@@ -256,6 +271,7 @@ class WorkMonthService
         foreach ($allWorkLogs as $day => $allWorkLogsByDay) {
             $currentDate = (new \DateTimeImmutable())->setDate($workMonth->getYear()->getYear(), $workMonth->getMonth(), $day);
 
+            $containsBanDay = false;
             $containsBusinessDay = false;
             $containsHomeDay = false;
             $containsMaternityProtection = false;
@@ -270,6 +286,8 @@ class WorkMonthService
             $workTime = 0;
             $workTimeWithoutCorrection = 0;
             $breakTime = 0;
+
+            $workTimeLimit = 24 * 3600;
 
             // Split work logs into groups by its type and calculate work time of standard work logs.
             foreach ($allWorkLogsByDay as $workLog) {
@@ -290,6 +308,12 @@ class WorkMonthService
                     } else {
                         $workTime += $currentWorkTime;
                     }
+                } elseif ($workLog instanceof BanWorkLog) {
+                    $containsBanDay = true;
+
+                    if ($workLog->getWorkTimeLimit() < $workTimeLimit) {
+                        $workTimeLimit = $workLog->getWorkTimeLimit();
+                    }
                 } elseif ($workLog instanceof BusinessTripWorkLog && $workLog->getTimeApproved()) {
                     $containsBusinessDay = true;
                 } elseif ($workLog instanceof HomeOfficeWorkLog && $workLog->getTimeApproved()) {
@@ -306,6 +330,14 @@ class WorkMonthService
                     $containsTimeOffDay = true;
                 } elseif ($workLog instanceof VacationWorkLog && $workLog->getTimeApproved()) {
                     $containsVacationDay = true;
+                }
+            }
+
+            // Ban work log correction if standard work log was entered before ban work log
+            if ($containsBanDay) {
+                if ($workTimeWithoutCorrection > $workTimeLimit) {
+                    $workTimeWithoutCorrection = min($workTimeLimit, $workTimeWithoutCorrection);
+                    $workTime = min($workTimeLimit, $workTime);
                 }
             }
 
