@@ -34,6 +34,8 @@ App\Entity\User:
                     - work_hours_out_list
         post:
             method: 'POST'
+            validation_groups:
+                - user_password_required
             normalization_context:
                 groups:
                     - user_out_detail
