@@ -19,6 +19,10 @@ security:
                 - IS_AUTHENTICATED_ANONYMOUSLY
         -   path: ^/ban_work_logs
             roles:
+                - !php/const App\Entity\User::ROLE_SUPER_ADMIN
+            methods: [POST, PUT, DELETE]
+        -   path: ^/ban_work_logs
+            roles:
                 - !php/const App\Entity\User::ROLE_EMPLOYEE
                 - !php/const App\Entity\User::ROLE_ADMIN
         -   path: ^/business_trip_work_logs
@@ -40,6 +44,10 @@ security:
                 - !php/const App\Entity\User::ROLE_ADMIN
         -   path: ^/maternity_protection_work_logs
             roles:
+                - !php/const App\Entity\User::ROLE_SUPER_ADMIN
+            methods: [POST, PUT, DELETE]
+        -   path: ^/maternity_protection_work_logs
+            roles:
                 - !php/const App\Entity\User::ROLE_EMPLOYEE
                 - !php/const App\Entity\User::ROLE_ADMIN
         -   path: ^/overtime_work_logs
@@ -48,8 +56,16 @@ security:
                 - !php/const App\Entity\User::ROLE_ADMIN
         -   path: ^/parental_leave_work_logs
             roles:
+                - !php/const App\Entity\User::ROLE_SUPER_ADMIN
+            methods: [POST, PUT, DELETE]
+        -   path: ^/parental_leave_work_logs
+            roles:
                 - !php/const App\Entity\User::ROLE_EMPLOYEE
                 - !php/const App\Entity\User::ROLE_ADMIN
+        -   path: ^/sick_day_unpaid_work_logs
+            roles:
+                - !php/const App\Entity\User::ROLE_SUPER_ADMIN
+            methods: [POST, PUT, DELETE]
         -   path: ^/sick_day_unpaid_work_logs
             roles:
                 - !php/const App\Entity\User::ROLE_EMPLOYEE
@@ -120,8 +136,7 @@ security:
                 - !php/const App\Entity\User::ROLE_ADMIN
         -   path: '^/work_months/[0-9]+/set_work_time_correction'
             roles:
-                - !php/const App\Entity\User::ROLE_EMPLOYEE
-                - !php/const App\Entity\User::ROLE_ADMIN
+                - !php/const App\Entity\User::ROLE_SUPER_ADMIN
         -   path: ^/work_months
             roles:
                 - !php/const App\Entity\User::ROLE_EMPLOYEE
