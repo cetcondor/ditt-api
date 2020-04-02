@@ -227,7 +227,6 @@ class WorkMonthController extends Controller
         );
     }
 
-
     public function specialApprovals(int $supervisorId): Response
     {
         $supervisor = $this->userRepository->getRepository()->find($supervisorId);

@@ -6,7 +6,6 @@ use App\Entity\BanWorkLog;
 use App\Entity\BusinessTripWorkLog;
 use App\Entity\HomeOfficeWorkLog;
 use App\Entity\MaternityProtectionWorkLog;
-use App\Entity\ParentalLeaveWorkLog;
 use App\Entity\SickDayWorkLog;
 use App\Entity\SpecialLeaveWorkLog;
 use App\Entity\TimeOffWorkLog;
@@ -275,7 +274,6 @@ class WorkMonthService
             $containsBusinessDay = false;
             $containsHomeDay = false;
             $containsMaternityProtection = false;
-            $containsParentalLeave = false;
             $containsSickDay = false;
             $containsSpecialLeaveDay = false;
             $containsTimeOffDay = false;
@@ -320,8 +318,6 @@ class WorkMonthService
                     $containsHomeDay = true;
                 } elseif ($workLog instanceof MaternityProtectionWorkLog) {
                     $containsMaternityProtection = true;
-                } elseif ($workLog instanceof ParentalLeaveWorkLog) {
-                    $containsParentalLeave = true;
                 } elseif ($workLog instanceof SickDayWorkLog) {
                     $containsSickDay = true;
                 } elseif ($workLog instanceof SpecialLeaveWorkLog && $workLog->getTimeApproved()) {
@@ -397,7 +393,7 @@ class WorkMonthService
                 (
                     count($standardWorkLogs) === 0
                     && ($containsBusinessDay || $containsHomeDay || $containsSickDay || $containsTimeOffDay)
-                ) || $containsMaternityProtection || $containsParentalLeave || $containsSpecialLeaveDay || $containsVacationDay
+                ) || $containsMaternityProtection || $containsSpecialLeaveDay || $containsVacationDay
             ) {
                 $workTime = $workHours->getRequiredHours();
             } elseif ($containsSickDay && count($standardWorkLogs) > 0) {
