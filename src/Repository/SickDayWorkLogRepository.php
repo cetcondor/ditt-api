@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\SickDayWorkLog;
+use App\Entity\User;
 use App\Entity\WorkMonth;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
@@ -25,6 +26,24 @@ class SickDayWorkLogRepository
     public function getRepository(): EntityRepository
     {
         return $this->repository;
+    }
+
+    /**
+     * @return SickDayWorkLog[]
+     */
+    public function findAllByUserBetweenTwoDates(User $user, \DateTimeImmutable $dateFrom, \DateTimeImmutable $dateTo): array
+    {
+        return $this->repository->createQueryBuilder('sdwl')
+            ->select('sdwl')
+            ->leftJoin('sdwl.workMonth', 'wm')
+            ->where('sdwl.date >= :dateFrom')
+            ->andWhere('sdwl.date <= :dateTo')
+            ->andWhere('wm.user = :user')
+            ->setParameter('dateFrom', $dateFrom->setTime(0, 0, 0))
+            ->setParameter('dateTo', $dateTo->setTime(23, 59, 59))
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
     }
 
     /**

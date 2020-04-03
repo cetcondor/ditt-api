@@ -2,6 +2,7 @@ App\Entity\WorkMonth:
     attributes:
         id:
             groups:
+                - hr_out_detail
                 - work_month_out_list
                 - work_month_out_detail
                 - business_trip_work_log_out_detail

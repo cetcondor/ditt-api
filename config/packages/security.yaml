@@ -42,6 +42,9 @@ security:
             roles:
                 - !php/const App\Entity\User::ROLE_EMPLOYEE
                 - !php/const App\Entity\User::ROLE_ADMIN
+        -   path: '^/hr'
+            roles:
+                - !php/const App\Entity\User::ROLE_SUPER_ADMIN
         -   path: ^/maternity_protection_work_logs
             roles:
                 - !php/const App\Entity\User::ROLE_SUPER_ADMIN

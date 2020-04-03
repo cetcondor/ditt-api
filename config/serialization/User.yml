@@ -2,6 +2,7 @@ App\Entity\User:
     attributes:
         id:
             groups:
+                - hr_out_detail
                 - user_out_list
                 - user_out_detail
                 - user_out_api_token_detail
@@ -19,6 +20,7 @@ App\Entity\User:
                 - user_in
         employeeId:
             groups:
+                - hr_out_detail
                 - user_out_detail
                 - user_out_api_token_detail
                 - special_approvals_out_list
@@ -26,6 +28,7 @@ App\Entity\User:
                 - user_in
         firstName:
             groups:
+                - hr_out_detail
                 - user_out_list
                 - user_out_detail
                 - user_out_api_token_detail
@@ -35,6 +38,7 @@ App\Entity\User:
                 - user_in
         lastName:
             groups:
+                - hr_out_detail
                 - user_out_list
                 - user_out_detail
                 - user_out_api_token_detail

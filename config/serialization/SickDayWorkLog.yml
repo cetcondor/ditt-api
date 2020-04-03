@@ -2,34 +2,40 @@ App\Entity\SickDayWorkLog:
     attributes:
         id:
             groups:
+                - hr_out_detail
                 - sick_day_work_log_out_detail
                 - special_approvals_out_list
                 - work_month_out_detail
         date:
             groups:
+                - hr_out_detail
                 - sick_day_work_log_out_detail
                 - special_approvals_out_list
                 - work_month_out_detail
                 - sick_day_work_log_in
         childName:
             groups:
+                - hr_out_detail
                 - sick_day_work_log_out_detail
                 - special_approvals_out_list
                 - work_month_out_detail
                 - sick_day_work_log_in
         childDateOfBirth:
             groups:
+                - hr_out_detail
                 - sick_day_work_log_out_detail
                 - special_approvals_out_list
                 - work_month_out_detail
                 - sick_day_work_log_in
         variant:
             groups:
+                - hr_out_detail
                 - sick_day_work_log_out_detail
                 - special_approvals_out_list
                 - work_month_out_detail
                 - sick_day_work_log_in
         workMonth:
             groups:
+                - hr_out_detail
                 - sick_day_work_log_out_detail
                 - special_approvals_out_list

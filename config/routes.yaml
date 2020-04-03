@@ -73,6 +73,13 @@ api_home_office_work_log_mark_rejected:
     defaults:
         _api_collection_operation_name: 'markRejected'
 
+api_hr_changes_and_absence_registrations:
+    path: /hr/changes_and_absence_registrations
+    methods: [GET]
+    controller: App\Controller\HrController::changesAndAbsenceRegistrations
+    defaults:
+        _api_collection_operation_name: 'changesAndAbsenceRegistrations'
+
 api_maternity_protection_work_log_bulk_create:
     path: /maternity_protection_work_logs/bulk
     methods: [POST]

@@ -3,6 +3,7 @@ App\Entity\SupportedYear:
         year:
             groups:
                 - config_out
+                - hr_out_detail
                 - special_approvals_out_list
                 - supervised_user_out_list
                 - supported_year_out_detail

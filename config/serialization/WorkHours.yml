@@ -2,6 +2,7 @@ App\Entity\WorkHours:
     attributes:
         year:
             groups:
+                - hr_out_detail
                 - supervised_user_out_list
                 - user_out_list
                 - user_out_detail
@@ -11,6 +12,7 @@ App\Entity\WorkHours:
                 - work_hours_in
         month:
             groups:
+                - hr_out_detail
                 - supervised_user_out_list
                 - user_out_list
                 - user_out_detail
@@ -20,6 +22,7 @@ App\Entity\WorkHours:
                 - work_hours_in
         requiredHours:
             groups:
+                - hr_out_detail
                 - supervised_user_out_list
                 - user_out_list
                 - user_out_detail
