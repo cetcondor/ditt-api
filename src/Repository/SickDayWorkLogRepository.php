@@ -31,13 +31,13 @@ class SickDayWorkLogRepository
     /**
      * @return SickDayWorkLog[]
      */
-    public function findAllByUserBetweenTwoDates(User $user, \DateTimeImmutable $dateFrom, \DateTimeImmutable $dateTo): array
+    public function findAllCreatedByUserBetweenTwoDates(User $user, \DateTimeImmutable $dateFrom, \DateTimeImmutable $dateTo): array
     {
         return $this->repository->createQueryBuilder('sdwl')
             ->select('sdwl')
             ->leftJoin('sdwl.workMonth', 'wm')
-            ->where('sdwl.date >= :dateFrom')
-            ->andWhere('sdwl.date <= :dateTo')
+            ->where('sdwl.createdOn >= :dateFrom')
+            ->andWhere('sdwl.createdOn <= :dateTo')
             ->andWhere('wm.user = :user')
             ->setParameter('dateFrom', $dateFrom->setTime(0, 0, 0))
             ->setParameter('dateTo', $dateTo->setTime(23, 59, 59))

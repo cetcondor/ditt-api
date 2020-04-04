@@ -17,6 +17,8 @@ App\Entity\SickDayWorkLog:
             nullable: true
         variant:
             type: text
+        createdOn:
+            type: datetime_immutable
 
     manyToOne:
         workMonth:

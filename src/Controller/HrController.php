@@ -94,7 +94,7 @@ class HrController extends Controller
                 );
             }
 
-            $sickDays = $this->sickDayWorkLogRepository->findAllByUserBetweenTwoDates($user, $dateFrom, $dateTo);
+            $sickDays = $this->sickDayWorkLogRepository->findAllCreatedByUserBetweenTwoDates($user, $dateFrom, $dateTo);
 
             $normalizedData[] = [
                 'sickDays' => $this->normalizer->normalize(

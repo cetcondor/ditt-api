@@ -39,6 +39,11 @@ class SickDayWorkLog implements WorkLogInterface
     private $variant;
 
     /**
+     * @var \DateTimeImmutable
+     */
+    private $createdOn;
+
+    /**
      * @var WorkMonth
      */
     private $workMonth;
@@ -47,6 +52,7 @@ class SickDayWorkLog implements WorkLogInterface
     {
         $this->date = (new \DateTimeImmutable())->setTime(0, 0, 0, 0);
         $this->variant = '';
+        $this->createdOn = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -105,6 +111,18 @@ class SickDayWorkLog implements WorkLogInterface
     public function setVariant(string $variant): SickDayWorkLog
     {
         $this->variant = $variant;
+
+        return $this;
+    }
+
+    public function getCreatedOn(): \DateTimeImmutable
+    {
+        return $this->createdOn;
+    }
+
+    public function setCreatedOn(\DateTimeImmutable $createdOn): SickDayWorkLog
+    {
+        $this->createdOn = $createdOn;
 
         return $this;
     }
