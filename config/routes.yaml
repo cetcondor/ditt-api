@@ -80,6 +80,13 @@ api_hr_changes_and_absence_registrations:
     defaults:
         _api_collection_operation_name: 'changesAndAbsenceRegistrations'
 
+api_hr_year_overview:
+    path: /hr/year_overview
+    methods: [GET]
+    controller: App\Controller\HrController::yearOverview
+    defaults:
+        _api_collection_operation_name: 'yearOverview'
+
 api_maternity_protection_work_log_bulk_create:
     path: /maternity_protection_work_logs/bulk
     methods: [POST]

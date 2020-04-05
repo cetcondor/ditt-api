@@ -49,6 +49,22 @@ class SickDayWorkLogRepository
     /**
      * @return SickDayWorkLog[]
      */
+    public function findAllByUserFromDate(User $user, \DateTimeImmutable $dateFrom): array
+    {
+        return $this->repository->createQueryBuilder('sdwl')
+            ->select('sdwl')
+            ->leftJoin('sdwl.workMonth', 'wm')
+            ->where('sdwl.date >= :dateFrom')
+            ->andWhere('wm.user = :user')
+            ->setParameter('dateFrom', $dateFrom->setTime(0, 0, 0))
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @return SickDayWorkLog[]
+     */
     public function findAllByWorkMonth(WorkMonth $workMonth): array
     {
         return $this->repository->createQueryBuilder('sdwl')

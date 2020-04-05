@@ -117,4 +117,29 @@ class HrController extends Controller
 
         return JsonResponse::create($normalizedData, JsonResponse::HTTP_OK);
     }
+
+    public function yearOverview(Request $request): Response
+    {
+        $dateFrom = (new \DateTimeImmutable())->modify('-1 year');
+
+        $normalizedData = [];
+        foreach ($this->userRepository->getRepository()->findAll() as $user) {
+            $sickDays = $this->sickDayWorkLogRepository->findAllByUserFromDate($user, $dateFrom);
+
+            $normalizedData[] = [
+                'sickDays' => $this->normalizer->normalize(
+                    $sickDays,
+                    SickDayWorkLog::class,
+                    ['groups' => ['hr_out_detail']]
+                ),
+                'user' => $this->normalizer->normalize(
+                    $user,
+                    User::class,
+                    ['groups' => ['hr_out_detail']]
+                ),
+            ];
+        }
+
+        return JsonResponse::create($normalizedData, JsonResponse::HTTP_OK);
+    }
 }
