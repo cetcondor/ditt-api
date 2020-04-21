@@ -129,6 +129,7 @@ class NotificationsCommand extends ContainerAwareCommand
         $isHolidayToday = $config->isHolidayToday();
 
         $toNotify = [];
+        $toStoreNotificationTimeOnly = [];
 
         foreach ($this->userRepository->getRepository()->findAll() as $user) {
             if (!$user->getNotifications()->canSendSupervisorInfo($isHolidayToday)) {
@@ -163,8 +164,12 @@ class NotificationsCommand extends ContainerAwareCommand
                         $this->waitingForApprovalCount = $waitingForApprovalCount;
                     }
                 };
+            } else {
+                $toStoreNotificationTimeOnly[] = $user;
             }
         }
+
+        $dateTime = new \DateTimeImmutable();
 
         foreach ($toNotify as $details) {
             $htmlContent = $this->templating->render('notifications/supervisor_daily_info.html.twig', [
@@ -172,13 +177,11 @@ class NotificationsCommand extends ContainerAwareCommand
                 'clientSpecialApprovalsUrl' => $this->clientSpecialApprovalsUrl,
             ]);
             $message = (new \Swift_Message())
-                ->setSubject('Tägliche Übersicht des Betreuers')
+                ->setSubject('Versand Erinnerungsmails')
                 ->setFrom([$this->mailSenderAddress => $this->mailSenderAddress])
                 ->setTo($details->user->getEmail())
                 ->setBody($htmlContent, 'text/html')
                 ->addPart((new \Html2Text\Html2Text($htmlContent))->getText(), 'text/plain');
-
-            $dateTime = new \DateTimeImmutable();
 
             if (!$this->mailer->send($message)) {
                 $output->writeln(
@@ -194,6 +197,15 @@ class NotificationsCommand extends ContainerAwareCommand
                     sprintf('[%s] %s | SENT', $dateTime->format('Y-m-d H:i:s'), $details->user->getEmail())
                 );
             }
+        }
+
+        foreach ($toStoreNotificationTimeOnly as $user) {
+            $user->getNotifications()->setSupervisorInfoLastNotificationDateTime($dateTime);
+            $this->entityManager->flush();
+
+            $output->writeln(
+                sprintf('[%s] %s | NOTHING TO SEND', $dateTime->format('Y-m-d H:i:s'), $user->getEmail())
+            );
         }
 
         return 0;
