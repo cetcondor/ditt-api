@@ -7,6 +7,7 @@ use App\Entity\User;
 use App\Entity\Vacation;
 use App\Entity\WorkHours;
 use App\Entity\WorkLogInterface;
+use App\Entity\WorkLogSupportInterface;
 use App\Entity\WorkMonth;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
@@ -58,6 +59,10 @@ class ResourceVoter extends Voter
         }
 
         if ($subject instanceof WorkLogInterface) {
+            return true;
+        }
+
+        if ($subject instanceof WorkLogSupportInterface) {
             return true;
         }
 
@@ -113,6 +118,10 @@ class ResourceVoter extends Voter
             return $this->canViewWorkLog($subject, $user, $token);
         }
 
+        if ($subject instanceof WorkLogSupportInterface) {
+            return $this->canViewWorkLogSupport($subject, $user, $token);
+        }
+
         if ($subject instanceof WorkMonth) {
             return $this->canViewWorkMonth($subject, $user, $token);
         }
@@ -148,6 +157,13 @@ class ResourceVoter extends Voter
             || $this->decisionManager->decide($token, [User::ROLE_SUPER_ADMIN]);
     }
 
+    private function canViewWorkLogSupport(WorkLogSupportInterface $workLogSupport, User $user, TokenInterface $token): bool
+    {
+        return $workLogSupport->getWorkLog()->getWorkMonth()->getUser() === $user
+            || in_array($user, $workLogSupport->getWorkLog()->getWorkMonth()->getUser()->getAllSupervisors())
+            || $this->decisionManager->decide($token, [User::ROLE_SUPER_ADMIN]);
+    }
+
     private function canViewWorkMonth(WorkMonth $workMonth, User $user, TokenInterface $token): bool
     {
         return $workMonth->getUser() === $user
@@ -178,6 +194,10 @@ class ResourceVoter extends Voter
 
         if ($subject instanceof WorkLogInterface) {
             return $this->canEditWorkLog($subject, $user);
+        }
+
+        if ($subject instanceof WorkLogSupportInterface) {
+            return $this->canEditWorkLogSupport($subject, $user, $token);
         }
 
         if ($subject instanceof WorkMonth) {
@@ -230,6 +250,12 @@ class ResourceVoter extends Voter
         } catch (\TypeError $e) {
             return true;
         }
+    }
+
+    private function canEditWorkLogSupport(WorkLogSupportInterface $workLogSupport, User $user, TokenInterface $token): bool
+    {
+        return in_array($user, $workLogSupport->getWorkLog()->getWorkMonth()->getUser()->getAllSupervisors())
+            || $this->decisionManager->decide($token, [User::ROLE_SUPER_ADMIN]);
     }
 
     private function canEditWorkMonth(WorkMonth $workMonth, User $user, TokenInterface $token): bool

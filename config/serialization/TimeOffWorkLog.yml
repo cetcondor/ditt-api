@@ -3,6 +3,7 @@ App\Entity\TimeOffWorkLog:
         id:
             groups:
                 - time_off_work_log_out_detail
+                - time_off_work_log_support_out_detail
                 - special_approvals_out_list
                 - work_month_out_detail
         date:
@@ -33,6 +34,10 @@ App\Entity\TimeOffWorkLog:
                 - special_approvals_out_list
                 - work_month_out_detail
                 - home_office_work_log_in
+        support:
+            groups:
+                - time_off_work_log_out_detail
+                - special_approvals_out_list
         workMonth:
             groups:
                 - time_off_work_log_out_detail

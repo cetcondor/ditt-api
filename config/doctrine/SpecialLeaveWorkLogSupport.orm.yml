@@ -1,0 +1,28 @@
+App\Entity\SpecialLeaveWorkLogSupport:
+    type: entity
+
+    id:
+        id:
+            type: integer
+            generator: { strategy: IDENTITY }
+
+    fields:
+        dateTime:
+            type: datetime_immutable
+
+    manyToOne:
+        supportedBy:
+            targetEntity: App\Entity\User
+            joinColumn:
+                name: user_id
+                referencedColumnName: id
+                nullable: false
+                onDelete: cascade
+        workLog:
+            targetEntity: App\Entity\SpecialLeaveWorkLog
+            inversedBy: support
+            joinColumn:
+                name: work_log_id
+                referencedColumnName: id
+                nullable: false
+                onDelete: cascade

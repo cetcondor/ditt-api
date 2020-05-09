@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+
 class SpecialLeaveWorkLog implements WorkLogInterface
 {
     /**
@@ -30,6 +33,11 @@ class SpecialLeaveWorkLog implements WorkLogInterface
     private $rejectionMessage;
 
     /**
+     * @var SpecialLeaveWorkLogSupport[]
+     */
+    private $support;
+
+    /**
      * @var WorkMonth
      */
     private $workMonth;
@@ -37,6 +45,7 @@ class SpecialLeaveWorkLog implements WorkLogInterface
     public function __construct()
     {
         $this->date = (new \DateTimeImmutable())->setTime(0, 0, 0, 0);
+        $this->support = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -110,6 +119,28 @@ class SpecialLeaveWorkLog implements WorkLogInterface
     public function setRejectionMessage(?string $rejectionMessage): SpecialLeaveWorkLog
     {
         $this->rejectionMessage = $rejectionMessage;
+
+        return $this;
+    }
+
+    /**
+     * @return SpecialLeaveWorkLogSupport[]
+     */
+    public function getSupport(): array
+    {
+        if ($this->support instanceof Collection) {
+            return $this->support->toArray();
+        }
+
+        return $this->support;
+    }
+
+    /**
+     * @param SpecialLeaveWorkLogSupport[]|Collection $support
+     */
+    public function setSupport(array $support): SpecialLeaveWorkLog
+    {
+        $this->support = $support;
 
         return $this;
     }

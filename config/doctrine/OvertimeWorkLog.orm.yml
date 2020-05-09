@@ -21,6 +21,11 @@ App\Entity\OvertimeWorkLog:
             type: text
             nullable: true
 
+    oneToMany:
+        support:
+            targetEntity: App\Entity\OvertimeWorkLogSupport
+            mappedBy: workLog
+
     manyToOne:
         workMonth:
             targetEntity: App\Entity\WorkMonth

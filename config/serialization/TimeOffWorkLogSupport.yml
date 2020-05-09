@@ -1,0 +1,24 @@
+App\Entity\TimeOffWorkLogSupport:
+    attributes:
+        id:
+            groups:
+                - time_off_work_log_out_detail
+                - time_off_work_log_support_out_detail
+                - special_approvals_out_list
+
+        dateTime:
+            groups:
+                - time_off_work_log_out_detail
+                - time_off_work_log_support_out_detail
+                - special_approvals_out_list
+
+        supportedBy:
+            groups:
+                - time_off_work_log_out_detail
+                - time_off_work_log_support_out_detail
+                - special_approvals_out_list
+
+        workLog:
+            groups:
+                - time_off_work_log_support_out_detail
+                - time_off_work_log_support_in

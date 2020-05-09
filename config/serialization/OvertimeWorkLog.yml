@@ -3,6 +3,7 @@ App\Entity\OvertimeWorkLog:
         id:
             groups:
                 - overtime_work_log_out_detail
+                - overtime_work_log_support_out_detail
                 - special_approvals_out_list
                 - work_month_out_detail
         date:
@@ -33,6 +34,10 @@ App\Entity\OvertimeWorkLog:
                 - special_approvals_out_list
                 - work_month_out_detail
                 - overtime_work_log_in
+        support:
+            groups:
+                - overtime_work_log_out_detail
+                - special_approvals_out_list
         workMonth:
             groups:
                 - overtime_work_log_out_detail

@@ -3,6 +3,7 @@ App\Entity\SpecialLeaveWorkLog:
         id:
             groups:
                 - special_leave_work_log_out_detail
+                - special_leave_work_log_support_out_detail
                 - special_approvals_out_list
                 - work_month_out_detail
         date:
@@ -27,6 +28,10 @@ App\Entity\SpecialLeaveWorkLog:
                 - special_approvals_out_list
                 - work_month_out_detail
                 - special_leave_work_log_in
+        support:
+            groups:
+                - special_leave_work_log_out_detail
+                - special_approvals_out_list
         workMonth:
             groups:
                 - special_leave_work_log_out_detail

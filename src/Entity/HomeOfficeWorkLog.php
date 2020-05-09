@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+
 class HomeOfficeWorkLog implements WorkLogInterface
 {
     /**
@@ -35,6 +38,11 @@ class HomeOfficeWorkLog implements WorkLogInterface
     private $rejectionMessage;
 
     /**
+     * @var HomeOfficeWorkLogSupport[]
+     */
+    private $support;
+
+    /**
      * @var WorkMonth
      */
     private $workMonth;
@@ -42,6 +50,7 @@ class HomeOfficeWorkLog implements WorkLogInterface
     public function __construct()
     {
         $this->date = (new \DateTimeImmutable())->setTime(0, 0, 0, 0);
+        $this->support = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -127,6 +136,28 @@ class HomeOfficeWorkLog implements WorkLogInterface
     public function setRejectionMessage(?string $rejectionMessage): HomeOfficeWorkLog
     {
         $this->rejectionMessage = $rejectionMessage;
+
+        return $this;
+    }
+
+    /**
+     * @return HomeOfficeWorkLogSupport[]
+     */
+    public function getSupport(): array
+    {
+        if ($this->support instanceof Collection) {
+            return $this->support->toArray();
+        }
+
+        return $this->support;
+    }
+
+    /**
+     * @param HomeOfficeWorkLogSupport[]|Collection $support
+     */
+    public function setSupport(array $support): HomeOfficeWorkLog
+    {
+        $this->support = $support;
 
         return $this;
     }

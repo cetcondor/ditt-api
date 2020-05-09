@@ -1,0 +1,24 @@
+App\Entity\HomeOfficeWorkLogSupport:
+    attributes:
+        id:
+            groups:
+                - home_office_work_log_out_detail
+                - home_office_work_log_support_out_detail
+                - special_approvals_out_list
+
+        dateTime:
+            groups:
+                - home_office_work_log_out_detail
+                - home_office_work_log_support_out_detail
+                - special_approvals_out_list
+
+        supportedBy:
+            groups:
+                - home_office_work_log_out_detail
+                - home_office_work_log_support_out_detail
+                - special_approvals_out_list
+
+        workLog:
+            groups:
+                - home_office_work_log_support_out_detail
+                - home_office_work_log_support_in
