@@ -22,6 +22,11 @@ App\Entity\HomeOfficeWorkLog:
             type: text
             nullable: true
 
+    oneToMany:
+        support:
+            targetEntity: App\Entity\HomeOfficeWorkLogSupport
+            mappedBy: workLog
+
     manyToOne:
         workMonth:
             targetEntity: App\Entity\WorkMonth

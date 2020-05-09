@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+
 class VacationWorkLog implements WorkLogInterface
 {
     /**
@@ -30,6 +33,11 @@ class VacationWorkLog implements WorkLogInterface
     private $rejectionMessage;
 
     /**
+     * @var VacationWorkLogSupport[]
+     */
+    private $support;
+
+    /**
      * @var WorkMonth
      */
     private $workMonth;
@@ -37,6 +45,7 @@ class VacationWorkLog implements WorkLogInterface
     public function __construct()
     {
         $this->date = (new \DateTimeImmutable())->setTime(0, 0, 0, 0);
+        $this->support = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -110,6 +119,28 @@ class VacationWorkLog implements WorkLogInterface
     public function setRejectionMessage(?string $rejectionMessage): VacationWorkLog
     {
         $this->rejectionMessage = $rejectionMessage;
+
+        return $this;
+    }
+
+    /**
+     * @return VacationWorkLogSupport[]
+     */
+    public function getSupport(): array
+    {
+        if ($this->support instanceof Collection) {
+            return $this->support->toArray();
+        }
+
+        return $this->support;
+    }
+
+    /**
+     * @param VacationWorkLogSupport[]|Collection $support
+     */
+    public function setSupport(array $support): VacationWorkLog
+    {
+        $this->support = $support;
 
         return $this;
     }

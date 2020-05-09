@@ -157,6 +157,13 @@ api_special_leave_work_log_mark_rejected:
     defaults:
         _api_collection_operation_name: 'markRejected'
 
+api_special_leave_work_log_support_bulk_create:
+    path: /special_leave_work_log_supports/bulk
+    methods: [POST]
+    controller: App\Controller\SpecialLeaveWorkLogSupportController::bulkCreate
+    defaults:
+        _api_collection_operation_name: 'bulkCreate'
+
 api_time_off_work_log_mark_approved:
     path: /time_off_work_logs/{id}/mark_approved
     methods: [PUT]
@@ -205,6 +212,13 @@ api_vacation_work_log_mark_rejected:
     controller: App\Controller\VacationWorkLogController::markRejected
     defaults:
         _api_collection_operation_name: 'markRejected'
+
+api_vacation_work_log_support_bulk_create:
+    path: /vacation_work_log_supports/bulk
+    methods: [POST]
+    controller: App\Controller\VacationWorkLogSupportController::bulkCreate
+    defaults:
+        _api_collection_operation_name: 'bulkCreate'
 
 api_users_renew_api_token:
     path: /users/{id}/api_token/renew

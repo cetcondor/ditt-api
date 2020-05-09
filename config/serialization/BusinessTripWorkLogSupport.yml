@@ -1,0 +1,24 @@
+App\Entity\BusinessTripWorkLogSupport:
+    attributes:
+        id:
+            groups:
+                - business_trip_work_log_out_detail
+                - business_trip_work_log_support_out_detail
+                - special_approvals_out_list
+
+        dateTime:
+            groups:
+                - business_trip_work_log_out_detail
+                - business_trip_work_log_support_out_detail
+                - special_approvals_out_list
+
+        supportedBy:
+            groups:
+                - business_trip_work_log_out_detail
+                - business_trip_work_log_support_out_detail
+                - special_approvals_out_list
+
+        workLog:
+            groups:
+                - business_trip_work_log_support_out_detail
+                - business_trip_work_log_support_in

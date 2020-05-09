@@ -1,0 +1,16 @@
+App\Entity\TimeOffWorkLogSupport:
+    collectionOperations:
+        post:
+            method: POST
+            normalization_context:
+                groups:
+                    - time_off_work_log_support_out_detail
+            denormalization_context:
+                groups:
+                    - time_off_work_log_support_in
+    itemOperations:
+        get:
+            method: GET
+            normalization_context:
+                groups:
+                    - time_off_work_log_support_out_detail

@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+
 class BusinessTripWorkLog implements WorkLogInterface
 {
     /**
@@ -55,6 +58,11 @@ class BusinessTripWorkLog implements WorkLogInterface
     private $rejectionMessage;
 
     /**
+     * @var BusinessTripWorkLogSupport[]
+     */
+    private $support;
+
+    /**
      * @var WorkMonth
      */
     private $workMonth;
@@ -67,6 +75,7 @@ class BusinessTripWorkLog implements WorkLogInterface
         $this->transport = '';
         $this->expectedDeparture = '';
         $this->expectedArrival = '';
+        $this->support = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -200,6 +209,28 @@ class BusinessTripWorkLog implements WorkLogInterface
     public function setRejectionMessage(?string $rejectionMessage): BusinessTripWorkLog
     {
         $this->rejectionMessage = $rejectionMessage;
+
+        return $this;
+    }
+
+    /**
+     * @return BusinessTripWorkLogSupport[]
+     */
+    public function getSupport(): array
+    {
+        if ($this->support instanceof Collection) {
+            return $this->support->toArray();
+        }
+
+        return $this->support;
+    }
+
+    /**
+     * @param BusinessTripWorkLogSupport[]|Collection $support
+     */
+    public function setSupport(array $support): BusinessTripWorkLog
+    {
+        $this->support = $support;
 
         return $this;
     }

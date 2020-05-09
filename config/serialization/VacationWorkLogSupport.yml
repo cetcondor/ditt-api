@@ -1,0 +1,24 @@
+App\Entity\VacationWorkLogSupport:
+    attributes:
+        id:
+            groups:
+                - vacation_work_log_out_detail
+                - vacation_work_log_support_out_detail
+                - special_approvals_out_list
+
+        dateTime:
+            groups:
+                - vacation_work_log_out_detail
+                - vacation_work_log_support_out_detail
+                - special_approvals_out_list
+
+        supportedBy:
+            groups:
+                - vacation_work_log_out_detail
+                - vacation_work_log_support_out_detail
+                - special_approvals_out_list
+
+        workLog:
+            groups:
+                - vacation_work_log_support_out_detail
+                - vacation_work_log_support_in
