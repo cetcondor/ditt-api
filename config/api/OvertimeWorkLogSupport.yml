@@ -1,0 +1,16 @@
+App\Entity\OvertimeWorkLogSupport:
+    collectionOperations:
+        post:
+            method: POST
+            normalization_context:
+                groups:
+                    - overtime_work_log_support_out_detail
+            denormalization_context:
+                groups:
+                    - overtime_work_log_support_in
+    itemOperations:
+        get:
+            method: GET
+            normalization_context:
+                groups:
+                    - overtime_work_log_support_out_detail

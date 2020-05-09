@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+
 class OvertimeWorkLog implements WorkLogInterface
 {
     /**
@@ -35,6 +38,11 @@ class OvertimeWorkLog implements WorkLogInterface
     private $rejectionMessage;
 
     /**
+     * @var OvertimeWorkLogSupport[]
+     */
+    private $support;
+
+    /**
      * @var WorkMonth
      */
     private $workMonth;
@@ -43,6 +51,7 @@ class OvertimeWorkLog implements WorkLogInterface
     {
         $this->date = (new \DateTimeImmutable())->setTime(0, 0, 0, 0);
         $this->reason = '';
+        $this->support = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -128,6 +137,28 @@ class OvertimeWorkLog implements WorkLogInterface
     public function setRejectionMessage(?string $rejectionMessage): OvertimeWorkLog
     {
         $this->rejectionMessage = $rejectionMessage;
+
+        return $this;
+    }
+
+    /**
+     * @return OvertimeWorkLogSupport[]
+     */
+    public function getSupport(): array
+    {
+        if ($this->support instanceof Collection) {
+            return $this->support->toArray();
+        }
+
+        return $this->support;
+    }
+
+    /**
+     * @param OvertimeWorkLogSupport[]|Collection $support
+     */
+    public function setSupport(array $support): OvertimeWorkLog
+    {
+        $this->support = $support;
 
         return $this;
     }

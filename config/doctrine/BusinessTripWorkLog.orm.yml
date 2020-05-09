@@ -29,6 +29,11 @@ App\Entity\BusinessTripWorkLog:
             type: text
             nullable: true
 
+    oneToMany:
+        support:
+            targetEntity: App\Entity\BusinessTripWorkLogSupport
+            mappedBy: workLog
+
     manyToOne:
         workMonth:
             targetEntity: App\Entity\WorkMonth

@@ -19,6 +19,11 @@ App\Entity\SpecialLeaveWorkLog:
             type: text
             nullable: true
 
+    oneToMany:
+        support:
+            targetEntity: App\Entity\SpecialLeaveWorkLogSupport
+            mappedBy: workLog
+
     manyToOne:
         workMonth:
             targetEntity: App\Entity\WorkMonth

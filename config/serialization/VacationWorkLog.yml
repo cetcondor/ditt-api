@@ -3,6 +3,7 @@ App\Entity\VacationWorkLog:
         id:
             groups:
                 - vacation_work_log_out_detail
+                - vacation_work_log_support_out_detail
                 - special_approvals_out_list
                 - work_month_out_detail
         date:
@@ -27,6 +28,10 @@ App\Entity\VacationWorkLog:
                 - special_approvals_out_list
                 - work_month_out_detail
                 - vacation_work_log_in
+        support:
+            groups:
+                - vacation_work_log_out_detail
+                - special_approvals_out_list
         workMonth:
             groups:
                 - vacation_work_log_out_detail
