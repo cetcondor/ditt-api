@@ -16,9 +16,9 @@ App\Entity\UserYearStats:
 
     fields:
         requiredHours:
-            type: float
+            type: integer
         workedHours:
-            type: float
+            type: integer
         vacationDaysUsed:
             type: integer
 

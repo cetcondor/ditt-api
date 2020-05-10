@@ -292,15 +292,16 @@ class WorkMonthService
 
                     // Get work time of current work log
                     $currentWorkTimeDiff = $workLog->getEndTime()->diff($workLog->getStartTime());
-                    $currentWorkTime = $currentWorkTimeDiff->h + ($currentWorkTimeDiff->i / 60);
+                    $currentWorkTime = ($currentWorkTimeDiff->h * 3600) + ($currentWorkTimeDiff->i * 60)
+                        + $currentWorkTimeDiff->s;
 
                     // Add work time of current work log to total work time.
                     $workTimeWithoutCorrection += $currentWorkTime;
 
                     // If current work log is longer that 6 hours, 15 minutes break is added.
-                    if ($currentWorkTime > 6) {
-                        $workTime += $currentWorkTime - 0.25;
-                        $breakTime += 0.25;
+                    if ($currentWorkTime > 21600) {
+                        $workTime += $currentWorkTime - 900;
+                        $breakTime += 900;
                     } else {
                         $workTime += $currentWorkTime;
                     }
@@ -351,10 +352,11 @@ class WorkMonthService
                 // Calculate break time between standard work logs
                 foreach ($otherWorkLogs as $otherWorkLog) {
                     $currentBreakTimeDiff = $otherWorkLog->getStartTime()->diff($previousWorkLog->getEndTime());
-                    $currentBreakTime = $currentBreakTimeDiff->h + ($currentBreakTimeDiff->i / 60);
+                    $currentBreakTime = ($currentBreakTimeDiff->h * 3600) + ($currentBreakTimeDiff->i * 60)
+                        + $currentBreakTimeDiff->s;
 
                     // Take in account only current break time that is equal or longer that 15 minutes
-                    if ($currentBreakTime >= 0.25) {
+                    if ($currentBreakTime >= 900) {
                         $breakTime += $currentBreakTime;
                     }
 
@@ -370,17 +372,17 @@ class WorkMonthService
                 $upperLimit = $config->getWorkedHoursLimits()['upperLimit'];
 
                 if (
-                    $workTimeWithoutCorrection > $lowerLimit['limit'] / 3600
-                    && $workTimeWithoutCorrection <= $upperLimit['limit'] / 3600
-                    && $breakTime < abs($lowerLimit['changeBy'] / 3600)
+                    $workTimeWithoutCorrection > $lowerLimit['limit']
+                    && $workTimeWithoutCorrection <= $upperLimit['limit']
+                    && $breakTime < abs($lowerLimit['changeBy'])
                 ) {
-                    $timeToDeduct = abs($lowerLimit['changeBy'] / 3600) - $breakTime;
+                    $timeToDeduct = abs($lowerLimit['changeBy']) - $breakTime;
                     $workTime -= $timeToDeduct;
                 } elseif (
-                    $workTimeWithoutCorrection > $upperLimit['limit'] / 3600
-                    && $breakTime < abs($upperLimit['changeBy'] / 3600)
+                    $workTimeWithoutCorrection > $upperLimit['limit']
+                    && $breakTime < abs($upperLimit['changeBy'])
                 ) {
-                    $timeToDeduct = abs($upperLimit['changeBy'] / 3600) - $breakTime;
+                    $timeToDeduct = abs($upperLimit['changeBy']) - $breakTime;
                     $workTime -= $timeToDeduct;
                 }
             }
@@ -417,13 +419,13 @@ class WorkMonthService
         }
 
         // Apply work time correction for whole work month
-        return array_sum($allWorkLogWorkTime) + ($workMonth->getWorkTimeCorrection() / 3600);
+        return array_sum($allWorkLogWorkTime) + ($workMonth->getWorkTimeCorrection());
     }
 
     /**
      * @throws \Exception
      */
-    public function calculateRequiredHours(WorkMonth $workMonth): float
+    public function calculateRequiredHours(WorkMonth $workMonth): int
     {
         $config = $this->configService->getConfig();
         $workingDaysInMonth = 0;
