@@ -312,7 +312,7 @@ class ApiTester extends \Codeception\Actor
             'workHours' => function() {
                 $workHours = [];
 
-                foreach ($this->generateWorkHours(6) as $generatedWorkHour) {
+                foreach ($this->generateWorkHours(21600) as $generatedWorkHour) {
                     $workHours[] = (new \App\Entity\WorkHours())
                         ->setMonth($generatedWorkHour['month'])
                         ->setYear($generatedWorkHour['year'])

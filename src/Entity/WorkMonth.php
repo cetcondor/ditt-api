@@ -173,7 +173,7 @@ class WorkMonth
     /**
      * @param BanWorkLog[]|Collection $banWorkLogs
      */
-    public function setBanWorkLogs($banWorkLogs): BanWorkLog
+    public function setBanWorkLogs($banWorkLogs): WorkMonth
     {
         $this->banWorkLogs = $banWorkLogs;
 

@@ -33,7 +33,7 @@ class EditUserCest
             'lastName' => 'lastName',
             'plainPassword' => 'password',
             'vacations' => $I->generateVacationsNormalized(25, -5),
-            'workHours' => $I->generateWorkHoursNormalized(8.5),
+            'workHours' => $I->generateWorkHoursNormalized(30600),
         ]);
 
         $I->seeHttpHeader('Content-Type', 'application/json; charset=utf-8');
@@ -48,7 +48,7 @@ class EditUserCest
             'roles' => ['ROLE_EMPLOYEE'],
             'supervisor' => null,
             'vacations' => $I->generateVacationsNormalized(25, -5),
-            'workHours' => $I->generateWorkHoursNormalized(8.5),
+            'workHours' => $I->generateWorkHoursNormalized(30600),
         ]);
         $I->grabEntityFromRepository(User::class, [
             'email' => 'user2@example.com',
