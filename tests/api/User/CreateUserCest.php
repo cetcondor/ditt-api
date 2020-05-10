@@ -35,7 +35,7 @@ class CreateUserCest
             'lastName' => 'lastName',
             'plainPassword' => 'password',
             'vacations' => $I->generateVacationsNormalizedUri(25, -5),
-            'workHours' => $I->generateWorkHoursNormalizedUri(8.5),
+            'workHours' => $I->generateWorkHoursNormalizedUri(30600),
         ]);
 
         $I->seeHttpHeader('Content-Type', 'application/json; charset=utf-8');
@@ -49,7 +49,7 @@ class CreateUserCest
             'roles' => ['ROLE_EMPLOYEE'],
             'supervisor' => null,
             'vacations' => $I->generateVacationsNormalized(25, -5),
-            'workHours' => $I->generateWorkHoursNormalized(8.5),
+            'workHours' => $I->generateWorkHoursNormalized(30600),
         ]);
         $user = $I->grabEntityFromRepository(User::class, [
             'email' => 'test@visionapps.cz',
