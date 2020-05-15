@@ -34,6 +34,16 @@ class WorkMonthRepository
         return $this->repository;
     }
 
+    public function findAllApproved(): array
+    {
+        return $this->repository->createQueryBuilder('wm')
+            ->select('wm')
+            ->where('wm.status = :status')
+            ->setParameter('status', 'APPROVED')
+            ->getQuery()
+            ->getResult();
+    }
+
     public function findByWorkLogAndUser(WorkLogInterface $workLog, User $user): ?WorkMonth
     {
         try {
