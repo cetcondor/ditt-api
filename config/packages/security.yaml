@@ -21,6 +21,9 @@ security:
             roles:
                 - !php/const App\Entity\User::ROLE_SUPER_ADMIN
             methods: [POST, PUT, DELETE]
+        -   path: ^/ical
+            roles:
+                - IS_AUTHENTICATED_ANONYMOUSLY
         -   path: ^/ban_work_logs
             roles:
                 - !php/const App\Entity\User::ROLE_EMPLOYEE

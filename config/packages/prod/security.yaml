@@ -17,6 +17,9 @@ security:
         forgot_password:
             pattern:  ^/(reset-password|new-password)
             security: false
+        ical:
+            pattern: ^/ical
+            security: false
         api:
             logout:
                 path:   /logout

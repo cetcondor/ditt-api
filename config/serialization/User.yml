@@ -113,3 +113,7 @@ App\Entity\User:
             groups:
                 - user_out_detail
                 - user_out_api_token_detail
+        iCalToken:
+            groups:
+                - user_out_detail
+                - user_out_ical_token_detail

@@ -74,4 +74,32 @@ class SickDayWorkLogRepository
             ->getQuery()
             ->getResult();
     }
+
+    /**
+     * @return SickDayWorkLog[]
+     */
+    public function findAllRecentByUser(User $user): array
+    {
+        $date = new \DateTime();
+        $date->modify('-1 month');
+        $previousMonth = $date->format('m');
+        $previousYear = $date->format('Y');
+
+        $qb = $this->repository->createQueryBuilder('sdwl');
+
+        return $qb
+            ->select('sdwl')
+            ->leftJoin('sdwl.workMonth', 'wm')
+            ->leftJoin('wm.user', 'u')
+            ->where($qb->expr()->andX(
+                $qb->expr()->in('wm.user', $user->getId()),
+                $qb->expr()->gte('wm.month', ':previousMonth'),
+                $qb->expr()->gte('wm.year', ':previousYear')
+            ))
+            ->setParameter('previousMonth', $previousMonth)
+            ->setParameter('previousYear', $previousYear)
+            ->orderBy('sdwl.date', 'desc')
+            ->getQuery()
+            ->getResult();
+    }
 }

@@ -74,9 +74,27 @@ class UserService
     /**
      * @throws \Exception
      */
+    public function renewICalToken(User $user): void
+    {
+        $user->renewICalToken();
+        $this->entityManager->flush();
+    }
+
+    /**
+     * @throws \Exception
+     */
     public function resetApiToken(User $user): void
     {
         $user->setApiToken(null);
+        $this->entityManager->flush();
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function resetICalToken(User $user): void
+    {
+        $user->setICalToken(null);
         $this->entityManager->flush();
     }
 
