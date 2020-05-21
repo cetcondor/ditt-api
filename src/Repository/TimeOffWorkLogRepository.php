@@ -146,6 +146,35 @@ class TimeOffWorkLogRepository
     /**
      * @return TimeOffWorkLog[]
      */
+    public function findAllRecentApprovedByUser(User $user): array
+    {
+        $date = new \DateTime();
+        $date->modify('-1 month');
+        $previousMonth = $date->format('m');
+        $previousYear = $date->format('Y');
+
+        $qb = $this->repository->createQueryBuilder('towl');
+
+        return $qb
+            ->select('towl')
+            ->leftJoin('towl.workMonth', 'wm')
+            ->leftJoin('wm.user', 'u')
+            ->where($qb->expr()->andX(
+                $qb->expr()->in('wm.user', $user->getId()),
+                $qb->expr()->gte('wm.month', ':previousMonth'),
+                $qb->expr()->gte('wm.year', ':previousYear'),
+                $qb->expr()->isNotNull('towl.timeApproved')
+            ))
+            ->setParameter('previousMonth', $previousMonth)
+            ->setParameter('previousYear', $previousYear)
+            ->orderBy('towl.date', 'desc')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @return TimeOffWorkLog[]
+     */
     public function findAllApprovedByWorkMonth(WorkMonth $workMonth): array
     {
         return $this->repository->createQueryBuilder('towl')

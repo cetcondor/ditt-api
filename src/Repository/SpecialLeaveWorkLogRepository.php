@@ -157,6 +157,36 @@ class SpecialLeaveWorkLogRepository
             ->getResult();
     }
 
+
+    /**
+     * @return SpecialLeaveWorkLog[]
+     */
+    public function findAllRecentApprovedByUser(User $user): array
+    {
+        $date = new \DateTime();
+        $date->modify('-1 month');
+        $previousMonth = $date->format('m');
+        $previousYear = $date->format('Y');
+
+        $qb = $this->repository->createQueryBuilder('slwl');
+
+        return $qb
+            ->select('slwl')
+            ->leftJoin('slwl.workMonth', 'wm')
+            ->leftJoin('wm.user', 'u')
+            ->where($qb->expr()->andX(
+                $qb->expr()->in('wm.user', $user->getId()),
+                $qb->expr()->gte('wm.month', ':previousMonth'),
+                $qb->expr()->gte('wm.year', ':previousYear'),
+                $qb->expr()->isNotNull('slwl.timeApproved')
+            ))
+            ->setParameter('previousMonth', $previousMonth)
+            ->setParameter('previousYear', $previousYear)
+            ->orderBy('slwl.date', 'desc')
+            ->getQuery()
+            ->getResult();
+    }
+
     /**
      * @return SpecialLeaveWorkLog[]
      */

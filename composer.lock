@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9612442ed543730a9fdc3ea145fcfa2c",
+    "content-hash": "6ca03c2d40a246837d72e6d8812abb9f",
     "packages": [
         {
             "name": "api-platform/api-pack",
@@ -1383,6 +1383,7 @@
                 "monolog",
                 "productivity"
             ],
+            "abandoned": true,
             "time": "2019-10-24T07:13:31+00:00"
         },
         {
@@ -1775,6 +1776,54 @@
                 "sql"
             ],
             "time": "2014-01-12T16:20:24+00:00"
+        },
+        {
+            "name": "jsvrcek/ics",
+            "version": "0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jasvrcek/ICS.git",
+                "reference": "5ba8a478766f9a2faeda0003b187605555d1b1c3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jasvrcek/ICS/zipball/5ba8a478766f9a2faeda0003b187605555d1b1c3",
+                "reference": "5ba8a478766f9a2faeda0003b187605555d1b1c3",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.3 || ^7.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8 || ^5.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Jsvrcek\\ICS\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Justin Svrcek",
+                    "homepage": "https://github.com/jasvrcek"
+                }
+            ],
+            "description": "abstraction layer for creating multi-byte safe RFC 5545 compliant .ics files",
+            "homepage": "https://github.com/jasvrcek/ICS",
+            "keywords": [
+                ".ics",
+                "RFC 5545",
+                "calendar",
+                "export",
+                "ical",
+                "multi-byte safe"
+            ],
+            "time": "2016-10-11T18:46:27+00:00"
         },
         {
             "name": "lcobucci/jwt",
@@ -6715,6 +6764,57 @@
                 "validate"
             ],
             "time": "2019-11-24T13:36:37+00:00"
+        },
+        {
+            "name": "welp/ical-bundle",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/welpdev/icalBundle.git",
+                "reference": "b1e0d8adab396a54dae745c070fb99bb18778f49"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/welpdev/icalBundle/zipball/b1e0d8adab396a54dae745c070fb99bb18778f49",
+                "reference": "b1e0d8adab396a54dae745c070fb99bb18778f49",
+                "shasum": ""
+            },
+            "require": {
+                "jsvrcek/ics": "^0.4",
+                "php": ">=5.6"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~5",
+                "swiftmailer/swiftmailer": "@stable",
+                "symfony/symfony": "~2.7 | ~3.0"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-4": {
+                    "Welp\\IcalBundle\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Titouan BENOIT",
+                    "email": "titouan@welp.today"
+                }
+            ],
+            "description": "Symfony Bundle to manage .ics iCal file (creating and eventually reading)",
+            "homepage": "https://github.com/welpdev/icalBundle",
+            "keywords": [
+                "calendar",
+                "iCalendar",
+                "ical",
+                "ics",
+                "symfony",
+                "welp"
+            ],
+            "time": "2020-03-25T10:13:18+00:00"
         },
         {
             "name": "willdurand/negotiation",

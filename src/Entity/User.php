@@ -105,6 +105,11 @@ class User implements UserInterface
      */
     private $apiToken;
 
+    /**
+     * @var string|null
+     */
+    private $iCalToken;
+
     public function __construct()
     {
         $this->password = '';
@@ -490,6 +495,35 @@ class User implements UserInterface
     public function renewApiToken(): User
     {
         $this->apiToken = substr(str_replace(['+', '/', '='], '', base64_encode(random_bytes(128))), 0, 128);
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getICalToken(): ?string
+    {
+        return $this->iCalToken;
+    }
+
+    /**
+     * @param string|null $iCalToken
+     * @return User
+     */
+    public function setICalToken(?string $iCalToken): User
+    {
+        $this->iCalToken = $iCalToken;
+
+        return $this;
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function renewICalToken(): User
+    {
+        $this->iCalToken = substr(str_replace(['+', '/', '='], '', base64_encode(random_bytes(128))), 0, 128);
 
         return $this;
     }

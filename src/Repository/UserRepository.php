@@ -40,6 +40,14 @@ class UserRepository
         return $user;
     }
 
+    public function getByICalToken(string $iCalToken): ?User
+    {
+        /** @var User|null $user */
+        $user = $this->repository->findOneBy(['iCalToken' => $iCalToken]);
+
+        return $user;
+    }
+
     public function getByEmail(string $email): ?User
     {
         /** @var User|null $user */

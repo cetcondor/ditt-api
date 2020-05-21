@@ -45,6 +45,13 @@ api_business_trip_work_log_mark_rejected:
     defaults:
         _api_collection_operation_name: 'markRejected'
 
+api_calendar_ical:
+    path: /ical/{icalUserKey}/ditt.ics
+    methods: [GET]
+    controller: App\Controller\CalendarController::iCal
+    defaults:
+        _api_collection_operation_name: 'iCal'
+
 api_config_get:
     path: /configs
     methods: [GET]
@@ -227,12 +234,26 @@ api_users_renew_api_token:
     defaults:
         _api_collection_operation_name: 'renewApiToken'
 
+api_users_renew_ical_token:
+    path: /users/{id}/ical_token/renew
+    methods: [PUT]
+    controller: App\Controller\UserController::renewICalToken
+    defaults:
+        _api_collection_operation_name: 'renewICalToken'
+
 api_users_reset_api_token:
     path: /users/{id}/api_token/reset
     methods: [PUT]
     controller: App\Controller\UserController::resetApiToken
     defaults:
         _api_collection_operation_name: 'resetApiToken'
+
+api_users_reset_ical_token:
+    path: /users/{id}/ical_token/reset
+    methods: [PUT]
+    controller: App\Controller\UserController::resetICalToken
+    defaults:
+        _api_collection_operation_name: 'resetICalToken'
 
 api_users_by_api_token:
     path: /users/api_token/{apiToken}

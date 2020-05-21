@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\MaternityProtectionWorkLog;
+use App\Entity\User;
 use App\Entity\WorkMonth;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
@@ -55,6 +56,34 @@ class MaternityProtectionWorkLogRepository
             ->select('mpwl')
             ->where('mpwl.workMonth = :workMonth')
             ->setParameter('workMonth', $workMonth)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @return MaternityProtectionWorkLog[]
+     */
+    public function findAllRecentByUser(User $user): array
+    {
+        $date = new \DateTime();
+        $date->modify('-1 month');
+        $previousMonth = $date->format('m');
+        $previousYear = $date->format('Y');
+
+        $qb = $this->repository->createQueryBuilder('mpwl');
+
+        return $qb
+            ->select('mpwl')
+            ->leftJoin('mpwl.workMonth', 'wm')
+            ->leftJoin('wm.user', 'u')
+            ->where($qb->expr()->andX(
+                $qb->expr()->in('wm.user', $user->getId()),
+                $qb->expr()->gte('wm.month', ':previousMonth'),
+                $qb->expr()->gte('wm.year', ':previousYear')
+            ))
+            ->setParameter('previousMonth', $previousMonth)
+            ->setParameter('previousYear', $previousYear)
+            ->orderBy('mpwl.date', 'desc')
             ->getQuery()
             ->getResult();
     }

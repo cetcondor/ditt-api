@@ -162,6 +162,35 @@ class VacationWorkLogRepository
     /**
      * @return VacationWorkLog[]
      */
+    public function findAllRecentApprovedByUser(User $user): array
+    {
+        $date = new \DateTime();
+        $date->modify('-1 month');
+        $previousMonth = $date->format('m');
+        $previousYear = $date->format('Y');
+
+        $qb = $this->repository->createQueryBuilder('vwl');
+
+        return $qb
+            ->select('vwl')
+            ->leftJoin('vwl.workMonth', 'wm')
+            ->leftJoin('wm.user', 'u')
+            ->where($qb->expr()->andX(
+                $qb->expr()->in('wm.user', $user->getId()),
+                $qb->expr()->gte('wm.month', ':previousMonth'),
+                $qb->expr()->gte('wm.year', ':previousYear'),
+                $qb->expr()->isNotNull('vwl.timeApproved')
+            ))
+            ->setParameter('previousMonth', $previousMonth)
+            ->setParameter('previousYear', $previousYear)
+            ->orderBy('vwl.date', 'desc')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @return VacationWorkLog[]
+     */
     public function findAllApprovedByWorkMonth(WorkMonth $workMonth): array
     {
         return $this->repository->createQueryBuilder('vwl')

@@ -242,6 +242,9 @@
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
     },
+    "jsvrcek/ics": {
+        "version": "0.4"
+    },
     "justinrainbow/json-schema": {
         "version": "5.2.9"
     },
@@ -790,6 +793,9 @@
     },
     "webmozart/assert": {
         "version": "1.6.0"
+    },
+    "welp/ical-bundle": {
+        "version": "1.0.1"
     },
     "willdurand/negotiation": {
         "version": "v2.3.1"

@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\SickDayUnpaidWorkLog;
+use App\Entity\User;
 use App\Entity\WorkMonth;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
@@ -55,6 +56,34 @@ class SickDayUnpaidWorkLogRepository
             ->select('sduwl')
             ->where('sduwl.workMonth = :workMonth')
             ->setParameter('workMonth', $workMonth)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @return SickDayUnpaidWorkLog[]
+     */
+    public function findAllRecentByUser(User $user): array
+    {
+        $date = new \DateTime();
+        $date->modify('-1 month');
+        $previousMonth = $date->format('m');
+        $previousYear = $date->format('Y');
+
+        $qb = $this->repository->createQueryBuilder('sduwl');
+
+        return $qb
+            ->select('sduwl')
+            ->leftJoin('sduwl.workMonth', 'wm')
+            ->leftJoin('wm.user', 'u')
+            ->where($qb->expr()->andX(
+                $qb->expr()->in('wm.user', $user->getId()),
+                $qb->expr()->gte('wm.month', ':previousMonth'),
+                $qb->expr()->gte('wm.year', ':previousYear')
+            ))
+            ->setParameter('previousMonth', $previousMonth)
+            ->setParameter('previousYear', $previousYear)
+            ->orderBy('sduwl.date', 'desc')
             ->getQuery()
             ->getResult();
     }

@@ -146,6 +146,35 @@ class HomeOfficeWorkLogRepository
     /**
      * @return HomeOfficeWorkLog[]
      */
+    public function findAllRecentApprovedByUser(User $user): array
+    {
+        $date = new \DateTime();
+        $date->modify('-1 month');
+        $previousMonth = $date->format('m');
+        $previousYear = $date->format('Y');
+
+        $qb = $this->repository->createQueryBuilder('howl');
+
+        return $qb
+            ->select('howl')
+            ->leftJoin('howl.workMonth', 'wm')
+            ->leftJoin('wm.user', 'u')
+            ->where($qb->expr()->andX(
+                $qb->expr()->in('wm.user', $user->getId()),
+                $qb->expr()->gte('wm.month', ':previousMonth'),
+                $qb->expr()->gte('wm.year', ':previousYear'),
+                $qb->expr()->isNotNull('howl.timeApproved')
+            ))
+            ->setParameter('previousMonth', $previousMonth)
+            ->setParameter('previousYear', $previousYear)
+            ->orderBy('howl.date', 'desc')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @return HomeOfficeWorkLog[]
+     */
     public function findAllApprovedByWorkMonth(WorkMonth $workMonth): array
     {
         return $this->repository->createQueryBuilder('howl')

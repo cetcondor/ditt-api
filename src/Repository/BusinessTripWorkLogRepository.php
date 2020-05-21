@@ -146,6 +146,35 @@ class BusinessTripWorkLogRepository
     /**
      * @return BusinessTripWorkLog[]
      */
+    public function findAllRecentApprovedByUser(User $user): array
+    {
+        $date = new \DateTime();
+        $date->modify('-1 month');
+        $previousMonth = $date->format('m');
+        $previousYear = $date->format('Y');
+
+        $qb = $this->repository->createQueryBuilder('btwl');
+
+        return $qb
+            ->select('btwl')
+            ->leftJoin('btwl.workMonth', 'wm')
+            ->leftJoin('wm.user', 'u')
+            ->where($qb->expr()->andX(
+                $qb->expr()->in('wm.user', $user->getId()),
+                $qb->expr()->gte('wm.month', ':previousMonth'),
+                $qb->expr()->gte('wm.year', ':previousYear'),
+                $qb->expr()->isNotNull('btwl.timeApproved')
+            ))
+            ->setParameter('previousMonth', $previousMonth)
+            ->setParameter('previousYear', $previousYear)
+            ->orderBy('btwl.date', 'desc')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @return BusinessTripWorkLog[]
+     */
     public function findAllApprovedByWorkMonth(WorkMonth $workMonth): array
     {
         return $this->repository->createQueryBuilder('btwl')
