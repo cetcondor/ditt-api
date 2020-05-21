@@ -40,6 +40,11 @@ App\Entity\User:
             unique: true
             nullable: true
 
+        iCalToken:
+            type: text
+            unique: true
+            nullable: true
+
     oneToOne:
         notifications:
             targetEntity: App\Entity\UserNotifications

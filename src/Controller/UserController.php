@@ -166,6 +166,28 @@ class UserController extends Controller
     /**
      * @throws \Exception
      */
+    public function renewICalToken(Request $request, int $id): Response
+    {
+        $user = $this->userRepository->getRepository()->find($id);
+        if (!$user || !$user instanceof User) {
+            throw $this->createNotFoundException(sprintf('User with id %d was not found', $id));
+        }
+
+        $this->userService->renewICalToken($user);
+
+        return JsonResponse::create(
+            $this->normalizer->normalize(
+                $user,
+                User::class,
+                ['groups' => ['user_out_ical_token_detail']]
+            ),
+            JsonResponse::HTTP_OK
+        );
+    }
+
+    /**
+     * @throws \Exception
+     */
     public function resetApiToken(Request $request, int $id): Response
     {
         $user = $this->userRepository->getRepository()->find($id);
@@ -180,6 +202,28 @@ class UserController extends Controller
                 $user,
                 User::class,
                 ['groups' => ['user_out_api_token_detail']]
+            ),
+            JsonResponse::HTTP_OK
+        );
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function resetICalToken(Request $request, int $id): Response
+    {
+        $user = $this->userRepository->getRepository()->find($id);
+        if (!$user || !$user instanceof User) {
+            throw $this->createNotFoundException(sprintf('User with id %d was not found', $id));
+        }
+
+        $this->userService->resetICalToken($user);
+
+        return JsonResponse::create(
+            $this->normalizer->normalize(
+                $user,
+                User::class,
+                ['groups' => ['user_out_ical_token_detail']]
             ),
             JsonResponse::HTTP_OK
         );
