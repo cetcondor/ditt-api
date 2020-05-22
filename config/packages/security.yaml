@@ -100,6 +100,10 @@ security:
             roles:
                 - !php/const App\Entity\User::ROLE_EMPLOYEE
                 - !php/const App\Entity\User::ROLE_ADMIN
+        -   path: '^/users/[0-9]+/ical_token'
+            roles:
+                - !php/const App\Entity\User::ROLE_EMPLOYEE
+                - !php/const App\Entity\User::ROLE_ADMIN
         -   path: ^/users/api_token
             roles:
                 - !php/const App\Entity\User::ROLE_EMPLOYEE
