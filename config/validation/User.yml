@@ -34,6 +34,7 @@ App\Entity\User:
                     - user_password_required
             - Length:
                 min: 8
+                max: 64
 
         vacations:
             - Valid: ~
