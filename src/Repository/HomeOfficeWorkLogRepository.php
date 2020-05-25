@@ -146,7 +146,7 @@ class HomeOfficeWorkLogRepository
     /**
      * @return HomeOfficeWorkLog[]
      */
-    public function findAllRecentApprovedByUser(User $user): array
+    public function findAllRecentWaitingAndApprovedByUser(User $user): array
     {
         $date = new \DateTime();
         $date->modify('-1 month');
@@ -163,7 +163,7 @@ class HomeOfficeWorkLogRepository
                 $qb->expr()->in('wm.user', $user->getId()),
                 $qb->expr()->gte('wm.month', ':previousMonth'),
                 $qb->expr()->gte('wm.year', ':previousYear'),
-                $qb->expr()->isNotNull('howl.timeApproved')
+                $qb->expr()->isNull('howl.timeRejected')
             ))
             ->setParameter('previousMonth', $previousMonth)
             ->setParameter('previousYear', $previousYear)
