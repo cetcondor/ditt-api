@@ -161,7 +161,7 @@ class SpecialLeaveWorkLogRepository
     /**
      * @return SpecialLeaveWorkLog[]
      */
-    public function findAllRecentApprovedByUser(User $user): array
+    public function findAllRecentWaitingAndApprovedByUser(User $user): array
     {
         $date = new \DateTime();
         $date->modify('-1 month');
@@ -178,7 +178,7 @@ class SpecialLeaveWorkLogRepository
                 $qb->expr()->in('wm.user', $user->getId()),
                 $qb->expr()->gte('wm.month', ':previousMonth'),
                 $qb->expr()->gte('wm.year', ':previousYear'),
-                $qb->expr()->isNotNull('slwl.timeApproved')
+                $qb->expr()->isNull('slwl.timeRejected')
             ))
             ->setParameter('previousMonth', $previousMonth)
             ->setParameter('previousYear', $previousYear)

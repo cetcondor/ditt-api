@@ -120,32 +120,34 @@ class CalendarController extends Controller
 
         $calendar = $this->iCalFactory->createCalendar();
 
-        foreach ($this->businessTripWorkLogRepository->findAllRecentApprovedByUser($user) as $workLog) {
+        foreach ($this->businessTripWorkLogRepository->findAllRecentWaitingAndApprovedByUser($user) as $workLog) {
             $event = $this->iCalFactory->createCalendarEvent();
             $event->setUid(sprintf('businessTrip-%s', $workLog->getId()));
             $event->setStart((new \DateTime())->setTimestamp($workLog->getDate()->getTimeStamp()));
             $event->setAllDay(true);
-            $event->setSummary('Dienstreise');
+            $event->setSummary($workLog->getTimeApproved() ? 'Dienstreise' : '? Dienstreise');
             $event->setDescription(sprintf(
-                'Zweck: %s\nZiel: %s\nVerkehrsmittel: %s\nVoraussichtliche Abreise: %s\nVoraussichtliche Rückkehr: %s',
+                'Zweck: %s\nZiel: %s\nVerkehrsmittel: %s\nVoraussichtliche Abreise: %s\nVoraussichtliche Rückkehr: %s\nStatus: %s',
                 $workLog->getPurpose(),
                 $workLog->getDestination(),
                 $workLog->getTransport(),
                 $workLog->getExpectedDeparture(),
-                $workLog->getExpectedArrival()
+                $workLog->getExpectedArrival(),
+                $workLog->getTimeApproved() ? 'Freigegeben' : 'Warte auf Freigabe'
             ));
             $calendar->addEvent($event);
         }
 
-        foreach ($this->homeOfficeWorkLogRepository->findAllRecentApprovedByUser($user) as $workLog) {
+        foreach ($this->homeOfficeWorkLogRepository->findAllRecentWaitingAndApprovedByUser($user) as $workLog) {
             $event = $this->iCalFactory->createCalendarEvent();
             $event->setUid(sprintf('homeOffice-%s', $workLog->getId()));
             $event->setStart((new \DateTime())->setTimestamp($workLog->getDate()->getTimeStamp()));
             $event->setAllDay(true);
-            $event->setSummary('Mobile Arbeit');
+            $event->setSummary($workLog->getTimeApproved() ? 'Mobile Arbeit' : '? Mobile Arbeit');
             $event->setDescription(sprintf(
-                'Kommentar: %s',
-                $workLog->getComment()
+                'Kommentar: %s\nStatus: %s',
+                $workLog->getComment(),
+                $workLog->getTimeApproved() ? 'Freigegeben' : 'Warte auf Freigabe'
             ));
             $calendar->addEvent($event);
         }
@@ -199,34 +201,44 @@ class CalendarController extends Controller
             $calendar->addEvent($event);
         }
 
-        foreach ($this->specialLeaveWorkLogRepository->findAllRecentApprovedByUser($user) as $workLog) {
+        foreach ($this->specialLeaveWorkLogRepository->findAllRecentWaitingAndApprovedByUser($user) as $workLog) {
             $event = $this->iCalFactory->createCalendarEvent();
             $event->setUid(sprintf('specialLeave-%s', $workLog->getId()));
             $event->setStart((new \DateTime())->setTimestamp($workLog->getDate()->getTimeStamp()));
             $event->setAllDay(true);
+            $event->setSummary($workLog->getTimeApproved() ? 'Sonderurlaub' : '? Sonderurlaub');
             $event->setSummary('Sonderurlaub');
-            $calendar->addEvent($event);
-        }
-
-        foreach ($this->timeOffWorkLogRepository->findAllRecentApprovedByUser($user) as $workLog) {
-            $event = $this->iCalFactory->createCalendarEvent();
-            $event->setUid(sprintf('timeOff-%s', $workLog->getId()));
-            $event->setStart((new \DateTime())->setTimestamp($workLog->getDate()->getTimeStamp()));
-            $event->setAllDay(true);
-            $event->setSummary('Freizeitausgleich');
             $event->setDescription(sprintf(
-                'Kommentar: %s',
-                $workLog->getComment()
+                'Status: %s',
+                $workLog->getTimeApproved() ? 'Freigegeben' : 'Warte auf Freigabe'
             ));
             $calendar->addEvent($event);
         }
 
-        foreach ($this->vacationWorkLogRepository->findAllRecentApprovedByUser($user) as $workLog) {
+        foreach ($this->timeOffWorkLogRepository->findAllRecentWaitingAndApprovedByUser($user) as $workLog) {
+            $event = $this->iCalFactory->createCalendarEvent();
+            $event->setUid(sprintf('timeOff-%s', $workLog->getId()));
+            $event->setStart((new \DateTime())->setTimestamp($workLog->getDate()->getTimeStamp()));
+            $event->setAllDay(true);
+            $event->setSummary($workLog->getTimeApproved() ? 'Freizeitausgleich' : '? Freizeitausgleich');
+            $event->setDescription(sprintf(
+                'Kommentar: %s\nStatus: %s',
+                $workLog->getComment(),
+                $workLog->getTimeApproved() ? 'Freigegeben' : 'Warte auf Freigabe'
+            ));
+            $calendar->addEvent($event);
+        }
+
+        foreach ($this->vacationWorkLogRepository->findAllRecentWaitingAndApprovedByUser($user) as $workLog) {
             $event = $this->iCalFactory->createCalendarEvent();
             $event->setUid(sprintf('vacation-%s', $workLog->getId()));
             $event->setStart((new \DateTime())->setTimestamp($workLog->getDate()->getTimeStamp()));
             $event->setAllDay(true);
-            $event->setSummary('Urlaub');
+            $event->setSummary($workLog->getTimeApproved() ? 'Urlaub' : '? Urlaub');
+            $event->setDescription(sprintf(
+                'Status: %s',
+                $workLog->getTimeApproved() ? 'Freigegeben' : 'Warte auf Freigabe'
+            ));
             $calendar->addEvent($event);
         }
 
