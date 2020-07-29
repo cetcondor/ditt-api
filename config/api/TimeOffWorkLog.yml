@@ -8,6 +8,11 @@ App\Entity\TimeOffWorkLog:
             denormalization_context:
                 groups:
                     - time_off_work_log_in
+        bulkCreate:
+            method: POST
+            route_name: api_time_off_work_log_bulk_create
+            swagger_context:
+                summary: Creates multiple TimeOffWorkLog resources.
     itemOperations:
         delete:
             method: DELETE

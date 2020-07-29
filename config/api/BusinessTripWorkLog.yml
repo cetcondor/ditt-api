@@ -8,6 +8,11 @@ App\Entity\BusinessTripWorkLog:
             denormalization_context:
                 groups:
                     - business_trip_work_log_in
+        bulkCreate:
+            method: POST
+            route_name: api_business_trip_work_log_bulk_create
+            swagger_context:
+                summary: Creates multiple BusinessTripWorkLog resources.
     itemOperations:
         delete:
             method: DELETE

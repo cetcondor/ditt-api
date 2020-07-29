@@ -8,6 +8,11 @@ App\Entity\SickDayWorkLog:
             denormalization_context:
                 groups:
                     - sick_day_work_log_in
+        bulkCreate:
+            method: POST
+            route_name: api_sick_day_work_log_bulk_create
+            swagger_context:
+                summary: Creates multiple SickDayWorkLog resources.
     itemOperations:
         delete:
             method: DELETE

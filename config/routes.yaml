@@ -31,6 +31,13 @@ api_ban_work_log_bulk_create:
     defaults:
         _api_collection_operation_name: 'bulkCreate'
 
+api_business_trip_work_log_bulk_create:
+    path: /business_trip_work_logs/bulk
+    methods: [POST]
+    controller: App\Controller\BusinessTripWorkLogController::bulkCreate
+    defaults:
+        _api_collection_operation_name: 'bulkCreate'
+
 api_business_trip_work_log_mark_approved:
     path: /business_trip_work_logs/{id}/mark_approved
     methods: [PUT]
@@ -65,6 +72,13 @@ api_config_save:
     controller: App\Controller\ConfigController::saveConfig
     defaults:
         _api_collection_operation_name: 'saveConfig'
+
+api_home_office_work_log_bulk_create:
+    path: /home_office_work_logs/bulk
+    methods: [POST]
+    controller: App\Controller\HomeOfficeWorkLogController::bulkCreate
+    defaults:
+        _api_collection_operation_name: 'bulkCreate'
 
 api_home_office_work_log_mark_approved:
     path: /home_office_work_logs/{id}/mark_approved
@@ -122,6 +136,13 @@ api_parental_leave_work_log_bulk_create:
     defaults:
         _api_collection_operation_name: 'bulkCreate'
 
+api_sick_day_work_log_bulk_create:
+    path: /sick_day_work_logs/bulk
+    methods: [POST]
+    controller: App\Controller\SickDayWorkLogController::bulkCreate
+    defaults:
+        _api_collection_operation_name: 'bulkCreate'
+
 api_sick_day_unpaid_work_log_bulk_create:
     path: /sick_day_unpaid_work_logs/bulk
     methods: [POST]
@@ -168,6 +189,13 @@ api_special_leave_work_log_support_bulk_create:
     path: /special_leave_work_log_supports/bulk
     methods: [POST]
     controller: App\Controller\SpecialLeaveWorkLogSupportController::bulkCreate
+    defaults:
+        _api_collection_operation_name: 'bulkCreate'
+
+api_time_off_work_log_bulk_create:
+    path: /time_off_work_logs/bulk
+    methods: [POST]
+    controller: App\Controller\TimeOffWorkLogController::bulkCreate
     defaults:
         _api_collection_operation_name: 'bulkCreate'
 
