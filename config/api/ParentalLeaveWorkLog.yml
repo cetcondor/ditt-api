@@ -14,6 +14,14 @@ App\Entity\ParentalLeaveWorkLog:
             swagger_context:
                 summary: Creates multiple ParentalLeaveWorkLog resources.
     itemOperations:
+        put:
+            method: PUT
+            normalization_context:
+                groups:
+                    - parental_leave_work_log_out_detail
+            denormalization_context:
+                groups:
+                    - parental_leave_work_log_in
         delete:
             method: DELETE
         get:

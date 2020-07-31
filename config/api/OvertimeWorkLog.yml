@@ -9,6 +9,14 @@ App\Entity\OvertimeWorkLog:
                 groups:
                     - overtime_work_log_in
     itemOperations:
+        put:
+            method: PUT
+            normalization_context:
+                groups:
+                    - overtime_work_log_out_detail
+            denormalization_context:
+                groups:
+                    - overtime_work_log_in
         delete:
             method: DELETE
         get:

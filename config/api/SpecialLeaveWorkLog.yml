@@ -14,6 +14,14 @@ App\Entity\SpecialLeaveWorkLog:
             swagger_context:
                 summary: Creates multiple SpecialLeaveWorkLog resource.
     itemOperations:
+        put:
+            method: PUT
+            normalization_context:
+                groups:
+                    - special_leave_work_log_out_detail
+            denormalization_context:
+                groups:
+                    - special_leave_work_log_in
         delete:
             method: DELETE
         get:

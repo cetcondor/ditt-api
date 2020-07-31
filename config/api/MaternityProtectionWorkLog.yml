@@ -14,6 +14,14 @@ App\Entity\MaternityProtectionWorkLog:
             swagger_context:
                 summary: Creates multiple MaternityProtectionWorkLog resources.
     itemOperations:
+        put:
+            method: PUT
+            normalization_context:
+                groups:
+                    - maternity_protection_work_log_out_detail
+            denormalization_context:
+                groups:
+                    - maternity_protection_work_log_in
         delete:
             method: DELETE
         get:

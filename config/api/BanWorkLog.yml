@@ -14,6 +14,14 @@ App\Entity\BanWorkLog:
             swagger_context:
                 summary: Creates multiple BanWorkLog resources.
     itemOperations:
+        put:
+            method: PUT
+            normalization_context:
+                groups:
+                    - ban_work_log_out_detail
+            denormalization_context:
+                groups:
+                    - ban_work_log_in
         delete:
             method: DELETE
         get:

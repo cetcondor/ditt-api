@@ -14,6 +14,14 @@ App\Entity\SickDayUnpaidWorkLog:
             swagger_context:
                 summary: Creates multiple SickDayUnpaidWorkLog resources.
     itemOperations:
+        put:
+            method: PUT
+            normalization_context:
+                groups:
+                    - sick_day_unpaid_work_log_out_detail
+            denormalization_context:
+                groups:
+                    - sick_day_unpaid_work_log_in
         delete:
             method: DELETE
         get:

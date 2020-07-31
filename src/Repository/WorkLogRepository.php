@@ -38,15 +38,21 @@ class WorkLogRepository
     public function getOverlaps(WorkLog $workLog): bool
     {
         try {
-            return (int) $this->repository->createQueryBuilder('wl')
+            $query = $this->repository->createQueryBuilder('wl')
                 ->select('COUNT(wl.id)')
                 ->where('overlaps(:startTime, :endTime, wl.startTime, wl.endTime) = TRUE')
-                ->andWhere('wl.workMonth = :workMonth')
-                ->setParameter('startTime', $workLog->getStartTime())
-                ->setParameter('endTime', $workLog->getEndTime())
-                ->setParameter('workMonth', $workLog->getWorkMonth())
-                ->getQuery()
-                ->getSingleScalarResult() > 0;
+                ->andWhere('wl.workMonth = :workMonth');
+
+            if ($workLog->getId()) {
+                $query = $query->andWhere('wl.id != :id')
+                    ->setParameter('id', $workLog->getId());
+            }
+
+            return $query->setParameter('startTime', $workLog->getStartTime())
+                    ->setParameter('endTime', $workLog->getEndTime())
+                    ->setParameter('workMonth', $workLog->getWorkMonth())
+                    ->getQuery()
+                    ->getSingleScalarResult() > 0;
         } catch (NonUniqueResultException $e) {
             return true;
         }
