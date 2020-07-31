@@ -2847,6 +2847,36 @@ class WorkMonthServiceCest
         $I->assertEquals(21600, $service->calculateWorkedHours($workMonth));
     }
 
+    public function testCalculateRequiredHours(\UnitTester $I): void
+    {
+        $prophet = new Prophet();
+        $workMonth = $this->getWorkMonth($prophet);
+        $workHours = $this->getWorkHours($prophet);
+
+        $service = $this->getWorkMonthService($prophet, [], [], [], [], [], [], [], [], [], [], $workHours);
+
+        $I->assertEquals(475200, $service->calculateRequiredHours($workMonth));
+    }
+
+    public function testCalculateRequiredHoursWithParentalLeave(\UnitTester $I): void
+    {
+        $prophet = new Prophet();
+        $workMonth = $this->getWorkMonth($prophet);
+        $workHours = $this->getWorkHours($prophet);
+
+        $parentalLeaveWorkLogs = [
+            (new ParentalLeaveWorkLog())->setDate(new \DateTimeImmutable('2018-01-02')),
+            (new ParentalLeaveWorkLog())->setDate(new \DateTimeImmutable('2018-01-02')),
+            (new ParentalLeaveWorkLog())->setDate(new \DateTimeImmutable('2018-01-03')),
+            (new ParentalLeaveWorkLog())->setDate(new \DateTimeImmutable('2018-01-04')),
+            (new ParentalLeaveWorkLog())->setDate(new \DateTimeImmutable('2018-01-05')),
+        ];
+
+        $service = $this->getWorkMonthService($prophet, [], [], [], [], $parentalLeaveWorkLogs, [], [], [], [], [], $workHours);
+
+        $I->assertEquals(388800, $service->calculateRequiredHours($workMonth));
+    }
+
     private function getWorkMonth(Prophet $prophet, ?int $workTimeCorrection = null): WorkMonth
     {
         $workMonth = $prophet->prophesize(WorkMonth::class);

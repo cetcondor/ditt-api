@@ -464,6 +464,19 @@ class WorkMonthService
             throw new \Exception('Work hours has not been found.');
         }
 
-        return $workingDaysInMonth * $workHours->getRequiredHours();
+        $requiredHours = $workingDaysInMonth * $workHours->getRequiredHours();
+
+        $daysWithParentalLeaveWorkLog = [];
+        $parentalLeaveWorkLogs = $this->parentalLeaveWorkLogRepository->findAllByWorkMonth($workMonth);
+
+        foreach ($parentalLeaveWorkLogs as $parentalLeaveWorkLog) {
+            $daysWithParentalLeaveWorkLog[] = (int) $parentalLeaveWorkLog->getDate()->format('d');
+        }
+
+        if (count($daysWithParentalLeaveWorkLog) > 0) {
+            $requiredHours -= count(array_unique($daysWithParentalLeaveWorkLog)) * $workHours->getRequiredHours();
+        }
+
+        return $requiredHours;
     }
 }
