@@ -157,7 +157,6 @@ class SpecialLeaveWorkLogRepository
             ->getResult();
     }
 
-
     /**
      * @return SpecialLeaveWorkLog[]
      */

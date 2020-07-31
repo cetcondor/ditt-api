@@ -499,18 +499,11 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getICalToken(): ?string
     {
         return $this->iCalToken;
     }
 
-    /**
-     * @param string|null $iCalToken
-     * @return User
-     */
     public function setICalToken(?string $iCalToken): User
     {
         $this->iCalToken = $iCalToken;
