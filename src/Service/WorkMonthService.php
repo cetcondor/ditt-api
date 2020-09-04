@@ -369,14 +369,22 @@ class WorkMonthService
                 $config = $this->configService->getConfig();
 
                 $lowerLimit = $config->getWorkedHoursLimits()['lowerLimit'];
+                $mediumLimit = $config->getWorkedHoursLimits()['mediumLimit'];
                 $upperLimit = $config->getWorkedHoursLimits()['upperLimit'];
 
                 if (
                     $workTimeWithoutCorrection > $lowerLimit['limit']
-                    && $workTimeWithoutCorrection <= $upperLimit['limit']
+                    && $workTimeWithoutCorrection <= $mediumLimit['limit']
                     && $breakTime < abs($lowerLimit['changeBy'])
                 ) {
                     $timeToDeduct = abs($lowerLimit['changeBy']) - $breakTime;
+                    $workTime -= $timeToDeduct;
+                } elseif (
+                    $workTimeWithoutCorrection > $mediumLimit['limit']
+                    && $workTimeWithoutCorrection <= $upperLimit['limit']
+                    && $breakTime < abs($mediumLimit['changeBy'])
+                ) {
+                    $timeToDeduct = abs($mediumLimit['changeBy']) - $breakTime;
                     $workTime -= $timeToDeduct;
                 } elseif (
                     $workTimeWithoutCorrection > $upperLimit['limit']
