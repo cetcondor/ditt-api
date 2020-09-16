@@ -93,6 +93,16 @@ class WorkMonth
     private $workLogs;
 
     /**
+     * @var int|null
+     */
+    private $requiredTime;
+
+    /**
+     * @var int|null
+     */
+    private $workedTime;
+
+    /**
      * @var int
      */
     private $workTimeCorrection;
@@ -418,6 +428,30 @@ class WorkMonth
     public function setWorkLogs($workLogs): WorkMonth
     {
         $this->workLogs = $workLogs;
+
+        return $this;
+    }
+
+    public function getRequiredTime(): ?int
+    {
+        return $this->requiredTime;
+    }
+
+    public function setRequiredTime(?int $requiredTime): WorkMonth
+    {
+        $this->requiredTime = $requiredTime;
+
+        return $this;
+    }
+
+    public function getWorkedTime(): ?int
+    {
+        return $this->workedTime;
+    }
+
+    public function setWorkedTime(?int $workedTime): WorkMonth
+    {
+        $this->workedTime = $workedTime;
 
         return $this;
     }

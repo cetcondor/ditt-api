@@ -11,6 +11,12 @@ App\Entity\WorkMonth:
             type: integer
         status:
             type: text
+        requiredTime:
+            type: integer
+            nullable: true
+        workedTime:
+            type: integer
+            nullable: true
         workTimeCorrection:
             type: integer
 

@@ -162,8 +162,13 @@ class WorkMonthService
             throw new \Exception('User year stats has not been found.');
         }
 
-        $userYearStats->setRequiredHours($userYearStats->getRequiredHours() + $this->calculateRequiredHours($workMonth));
-        $userYearStats->setWorkedHours($userYearStats->getWorkedHours() + $this->calculateWorkedHours($workMonth));
+        $requiredHours = $this->calculateRequiredHours($workMonth);
+        $workedHours = $this->calculateWorkedHours($workMonth);
+
+        $userYearStats->setRequiredHours($userYearStats->getRequiredHours() + $requiredHours);
+        $userYearStats->setWorkedHours($userYearStats->getWorkedHours() + $workedHours);
+        $workMonth->setRequiredTime($requiredHours);
+        $workMonth->setWorkedTime($workedHours);
 
         $this->entityManager->flush();
     }

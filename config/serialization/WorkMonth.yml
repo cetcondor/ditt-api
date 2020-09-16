@@ -73,6 +73,12 @@ App\Entity\WorkMonth:
         workLogs:
             groups:
                 - work_month_out_detail
+        requiredTime:
+            groups:
+                - work_month_out_detail
+        workedTime:
+            groups:
+                - work_month_out_detail
         workTimeCorrection:
             groups:
                 - work_month_out_detail
