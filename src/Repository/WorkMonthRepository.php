@@ -34,6 +34,11 @@ class WorkMonthRepository
         return $this->repository;
     }
 
+    public function findById(int $id): ?WorkMonth
+    {
+        return $this->repository->findOneBy(['id' => $id]);
+    }
+
     public function findAllApproved(): array
     {
         return $this->repository->createQueryBuilder('wm')

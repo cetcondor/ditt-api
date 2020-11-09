@@ -6,7 +6,9 @@ use ApiPlatform\Core\EventListener\EventPriorities;
 use App\Entity\User;
 use App\Entity\UserYearStats;
 use App\Entity\WorkMonth;
+use App\Event\UserChangedEvent;
 use App\Repository\UserNotificationsRepository;
+use App\Repository\UserRepository;
 use App\Repository\VacationRepository;
 use App\Repository\WorkHoursRepository;
 use App\Service\ConfigService;
@@ -15,6 +17,7 @@ use App\Service\UserYearStatsService;
 use App\Service\WorkMonthService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
@@ -28,6 +31,11 @@ class UserSubscriber implements EventSubscriberInterface
     private $entityManager;
 
     /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
+    /**
      * @var ConfigService
      */
     private $configService;
@@ -36,6 +44,11 @@ class UserSubscriber implements EventSubscriberInterface
      * @var UserNotificationsRepository
      */
     private $userNotificationsRepository;
+
+    /**
+     * @var UserRepository
+     */
+    private $userRepository;
 
     /**
      * @var UserService
@@ -64,8 +77,10 @@ class UserSubscriber implements EventSubscriberInterface
 
     public function __construct(
         EntityManagerInterface $entityManager,
+        EventDispatcherInterface $eventDispatcher,
         ConfigService $configService,
         UserNotificationsRepository $userNotificationsRepository,
+        UserRepository $userRepository,
         UserService $userService,
         UserYearStatsService $userYearStatsService,
         VacationRepository $vacationRepository,
@@ -73,7 +88,9 @@ class UserSubscriber implements EventSubscriberInterface
         WorkMonthService $workMonthService
     ) {
         $this->entityManager = $entityManager;
+        $this->eventDispatcher = $eventDispatcher;
         $this->configService = $configService;
+        $this->userRepository = $userRepository;
         $this->userService = $userService;
         $this->userNotificationsRepository = $userNotificationsRepository;
         $this->userYearStatsService = $userYearStatsService;
@@ -160,11 +177,25 @@ class UserSubscriber implements EventSubscriberInterface
             return;
         }
 
+        $oldVacationsArray = [];
+        $newVacationsArray = [];
+        $oldWorkHoursArray = [];
+        $newWorkHoursArray = [];
+
         foreach ($user->getVacations() as $detachedVacation) {
             $attachedVacation = $this->vacationRepository->findOne(
                 $detachedVacation->getYear(),
                 $user
             );
+
+            $oldVacationsArray[$detachedVacation->getYear()->getYear()] = [
+                $detachedVacation->getVacationDays(),
+                $detachedVacation->getVacationDaysCorrection(),
+            ];
+            $newVacationsArray[$attachedVacation->getYear()->getYear()] = [
+                $attachedVacation->getVacationDays(),
+                $attachedVacation->getVacationDaysCorrection(),
+            ];
 
             if ($attachedVacation) {
                 $attachedVacation->setVacationDays($detachedVacation->getVacationDays());
@@ -178,6 +209,13 @@ class UserSubscriber implements EventSubscriberInterface
                 $detachedWorkHours->getMonth(),
                 $user
             );
+
+            $oldWorkHoursArray[
+                sprintf('%s-%s', $detachedWorkHours->getYear()->getYear(), $detachedWorkHours->getMonth())
+            ] = $detachedWorkHours->getRequiredHours();
+            $newWorkHoursArray[
+                sprintf('%s-%s', $attachedWorkHours->getYear()->getYear(), $attachedWorkHours->getMonth())
+            ] = $attachedWorkHours->getRequiredHours();
 
             if ($attachedWorkHours) {
                 $attachedWorkHours->setRequiredHours($detachedWorkHours->getRequiredHours());
@@ -204,6 +242,45 @@ class UserSubscriber implements EventSubscriberInterface
         $user->setWorkHours(new ArrayCollection());
         $user->setVacations(new ArrayCollection());
         $this->entityManager->flush();
+
+        $didVacationsChanged = count($oldVacationsArray) != count($newVacationsArray);
+        if (!$didVacationsChanged) {
+            foreach ($newVacationsArray as $newYear => $newVacationData) {
+                if (!array_key_exists($newYear, $oldVacationsArray)) {
+                    $didVacationsChanged = true;
+                    break;
+                }
+
+                $oldVacationData = $oldVacationsArray[$newYear];
+
+                if ($oldVacationData[0] != $newVacationData[0] || $oldVacationData[1] != $newVacationData[1]) {
+                    $didVacationsChanged = true;
+                    break;
+                }
+            }
+        }
+
+        $didWorkHoursChanged = count($oldWorkHoursArray) != count($newWorkHoursArray);
+        if (!$didWorkHoursChanged) {
+            foreach ($newWorkHoursArray as $key => $newRequiredHours) {
+                if (!array_key_exists($key, $oldWorkHoursArray)) {
+                    $didWorkHoursChanged = true;
+                    break;
+                }
+
+                $oldRequiredHours = $oldWorkHoursArray[$key];
+
+                if ($oldRequiredHours != $newRequiredHours) {
+                    $didWorkHoursChanged = true;
+                    break;
+                }
+            }
+        }
+
+        $this->eventDispatcher->dispatch(
+            new UserChangedEvent($user, $didVacationsChanged, $didWorkHoursChanged),
+            UserChangedEvent::CHANGED
+        );
     }
 
     public function fullfilRemainingVacationDays(GetResponseForControllerResultEvent $event): void
