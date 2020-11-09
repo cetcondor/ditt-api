@@ -36,6 +36,8 @@ class EditUserCest
             'workHours' => $I->generateWorkHoursNormalized(30600),
         ]);
 
+        $I->canSeeEmailIsSent(2);
+
         $I->seeHttpHeader('Content-Type', 'application/json; charset=utf-8');
         $I->seeResponseCodeIs(Response::HTTP_OK);
         $I->seeResponseContainsJson([

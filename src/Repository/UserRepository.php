@@ -32,6 +32,14 @@ class UserRepository
         return $this->repository;
     }
 
+    public function getById(int $id): ?User
+    {
+        /** @var User|null $user */
+        $user = $this->repository->findOneBy(['id' => $id]);
+
+        return $user;
+    }
+
     public function getByApiToken(string $apiToken): ?User
     {
         /** @var User|null $user */

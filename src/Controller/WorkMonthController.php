@@ -11,6 +11,7 @@ use App\Entity\User;
 use App\Entity\VacationWorkLog;
 use App\Entity\WorkMonth;
 use App\Event\WorkMonthApprovedEvent;
+use App\Event\WorkMonthWorkTimeCorrectionChangedEvent;
 use App\Repository\BusinessTripWorkLogRepository;
 use App\Repository\HomeOfficeWorkLogRepository;
 use App\Repository\OvertimeWorkLogRepository;
@@ -197,6 +198,7 @@ class WorkMonthController extends Controller
             );
         }
 
+        $didWorkTimeCorrectionChanged = $workMonth->getWorkTimeCorrection() !== (int) $data->workTimeCorrection;
         $this->workMonthService->setWorkTimeCorrection($workMonth, (int) $data->workTimeCorrection);
 
         if (
@@ -217,6 +219,13 @@ class WorkMonthController extends Controller
         $user = $workMonth->getUser();
         $this->userService->fullfilRemainingVacationDays($user);
         $workMonth->setUser($user);
+
+        if ($didWorkTimeCorrectionChanged) {
+            $this->eventDispatcher->dispatch(
+                new WorkMonthWorkTimeCorrectionChangedEvent($workMonth),
+                WorkMonthWorkTimeCorrectionChangedEvent::WORK_TIME_CORRECTION_CHANGED
+            );
+        }
 
         return JsonResponse::create(
             $this->normalizer->normalize(

@@ -94,6 +94,19 @@ services:
                 event: lexik_jwt_authentication.on_jwt_created
                 method: onJWTCreated
 
+    App\Listener\ChangesNotificationListener:
+        class: App\Listener\ChangesNotificationListener
+        arguments:
+            $mailSenderAddress: '%env(NOTIFICATION_EMAIL_SENDER)%'
+            $clientNewPasswordUrl: '%env(CLIENT_NEW_PASSWORD_URL)%'
+        tags:
+            - name: kernel.event_listener
+              event: !php/const App\Event\UserChangedEvent::CHANGED
+              method: onUserChangedEvent
+            - name: kernel.event_listener
+              event: !php/const App\Event\WorkMonthWorkTimeCorrectionChangedEvent::WORK_TIME_CORRECTION_CHANGED
+              method: onWorkMonthWorkTimeCorrectionChangedEvent
+
     App\Listener\UserPasswordResetEmailNotificationListener:
         class: App\Listener\UserPasswordResetEmailNotificationListener
         arguments:

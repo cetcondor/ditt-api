@@ -1,7 +1,7 @@
 {
     "type": "ditt-api",
     "require": {
-        "php": "^7.2.0",
+        "php": "^7.4",
         "ext-iconv": "*",
         "api-platform/api-pack": "^1.2.1",
         "guzzlehttp/guzzle": "^6.5.2",
