@@ -82,7 +82,7 @@ services:
         class: App\Command\NotificationsCommand
         arguments:
             $clientSpecialApprovalsUrl: '%env(CLIENT_SPECIAL_APPROVALS_URL)%'
-            $mailSenderAddress: '%env(NOTIFICATION_EMAIL_SENDER)%'
+            $mailSenderAddress: '%env(MAILER_EMAIL)%'
 
     # Event listeners
 
@@ -97,7 +97,7 @@ services:
     App\Listener\ChangesNotificationListener:
         class: App\Listener\ChangesNotificationListener
         arguments:
-            $mailSenderAddress: '%env(NOTIFICATION_EMAIL_SENDER)%'
+            $mailSenderAddress: '%env(MAILER_EMAIL)%'
             $clientNewPasswordUrl: '%env(CLIENT_NEW_PASSWORD_URL)%'
         tags:
             - name: kernel.event_listener
@@ -110,7 +110,7 @@ services:
     App\Listener\UserPasswordResetEmailNotificationListener:
         class: App\Listener\UserPasswordResetEmailNotificationListener
         arguments:
-            $mailSenderAddress: '%env(NOTIFICATION_EMAIL_SENDER)%'
+            $mailSenderAddress: '%env(MAILER_EMAIL)%'
             $clientNewPasswordUrl: '%env(CLIENT_NEW_PASSWORD_URL)%'
         tags:
             - name: kernel.event_listener
@@ -120,7 +120,7 @@ services:
     App\Listener\WorkLogEmailNotificationListener:
         class: App\Listener\WorkLogEmailNotificationListener
         arguments:
-            $mailSenderAddress: '%env(NOTIFICATION_EMAIL_SENDER)%'
+            $mailSenderAddress: '%env(MAILER_EMAIL)%'
         tags:
             - name: kernel.event_listener
               event: !php/const App\Event\BusinessTripWorkLogApprovedEvent::APPROVED
@@ -192,7 +192,7 @@ services:
     App\Listener\WorkMonthApprovedEmailNotificationListener:
         class: App\Listener\WorkMonthApprovedEmailNotificationListener
         arguments:
-            $mailSenderAddress: '%env(NOTIFICATION_EMAIL_SENDER)%'
+            $mailSenderAddress: '%env(MAILER_EMAIL)%'
         tags:
             - name: kernel.event_listener
               event: !php/const App\Event\WorkMonthApprovedEvent::APPROVED
