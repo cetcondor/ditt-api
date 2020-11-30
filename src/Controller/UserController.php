@@ -6,10 +6,12 @@ use App\Entity\User;
 use App\Event\UserPasswordResetEvent;
 use App\Repository\UserRepository;
 use App\Service\UserService;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -17,9 +19,19 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 class UserController extends Controller
 {
     /**
+     * @var JWTTokenManagerInterface
+     */
+    private $jwtTokenManager;
+
+    /**
      * @var NormalizerInterface
      */
     private $normalizer;
+
+    /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
 
     /**
      * @var UserRepository
@@ -42,13 +54,17 @@ class UserController extends Controller
     private $eventDispatcher;
 
     public function __construct(
+        JWTTokenManagerInterface $jwtTokenManager,
         NormalizerInterface $normalizer,
+        TokenStorageInterface $tokenStorage,
         UserRepository $userRepository,
         UserService $userService,
         ValidatorInterface $validator,
         EventDispatcherInterface $eventDispatcher
     ) {
+        $this->jwtTokenManager = $jwtTokenManager;
         $this->normalizer = $normalizer;
+        $this->tokenStorage = $tokenStorage;
         $this->userRepository = $userRepository;
         $this->userService = $userService;
         $this->validator = $validator;
@@ -68,6 +84,23 @@ class UserController extends Controller
                 User::class,
                 ['groups' => ['user_out_api_token_detail']]
             ),
+            JsonResponse::HTTP_OK
+        );
+    }
+
+    public function refreshToken(): Response
+    {
+        $token = $this->tokenStorage->getToken();
+
+        if (!$token || !$token->getUser() instanceof User) {
+            return JsonResponse::create(
+                ['detail' => 'Cannot refresh token without user'],
+                JsonResponse::HTTP_BAD_REQUEST
+            );
+        }
+
+        return JsonResponse::create(
+            ['token' => $this->jwtTokenManager->create($token->getUser())],
             JsonResponse::HTTP_OK
         );
     }

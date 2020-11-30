@@ -125,6 +125,16 @@ App\Entity\User:
                       type: string
                       in: body
                       required: true
+        refreshToken:
+            method: 'POST'
+            route_name: 'api_refresh_token'
+            swagger_context:
+                summary: 'Refreshes token'
+                responses:
+                    200:
+                        description: 'Token was refreshed'
+                    400:
+                        description: 'Invalid request.'
         resetPassword:
             method: 'PUT'
             route_name: 'api_reset_password'

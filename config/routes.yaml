@@ -10,6 +10,13 @@ api_logout:
     path: /logout
     methods: [POST]
 
+api_refresh_token:
+    path: /refresh-token
+    methods: [POST]
+    controller: App\Controller\UserController::refreshToken
+    defaults:
+        _api_collection_operation_name: 'refreshToken'
+
 api_reset_password:
     path: /reset-password
     methods: [PUT]
