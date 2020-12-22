@@ -95,9 +95,12 @@ class OvertimeWorkLogRepository
             ->select('owl')
             ->leftJoin('owl.workMonth', 'wm')
             ->leftJoin('wm.user', 'u')
-            ->where($qb->expr()->andX(
-                $qb->expr()->gte('wm.month', ':previousMonth'),
-                $qb->expr()->gte('wm.year', ':previousYear')
+            ->where($qb->expr()->orX(
+                $qb->expr()->andX(
+                    $qb->expr()->gte('wm.month', ':previousMonth'),
+                    $qb->expr()->eq('wm.year', ':previousYear')
+                ),
+                $qb->expr()->gt('wm.year', ':previousYear')
             ))
             ->setParameter('previousMonth', $previousMonth)
             ->setParameter('previousYear', $previousYear)
@@ -130,10 +133,16 @@ class OvertimeWorkLogRepository
             ->select('owl')
             ->leftJoin('owl.workMonth', 'wm')
             ->leftJoin('wm.user', 'u')
-            ->where($qb->expr()->andX(
-                $qb->expr()->in('wm.user', $supervisedUserIds),
-                $qb->expr()->gte('wm.month', ':previousMonth'),
-                $qb->expr()->gte('wm.year', ':previousYear')
+            ->where($qb->expr()->orX(
+                $qb->expr()->andX(
+                    $qb->expr()->in('wm.user', $supervisedUserIds),
+                    $qb->expr()->gte('wm.month', ':previousMonth'),
+                    $qb->expr()->eq('wm.year', ':previousYear')
+                ),
+                $qb->expr()->andX(
+                    $qb->expr()->in('wm.user', $supervisedUserIds),
+                    $qb->expr()->gt('wm.year', ':previousYear')
+                )
             ))
             ->setParameter('previousMonth', $previousMonth)
             ->setParameter('previousYear', $previousYear)
