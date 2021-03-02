@@ -8,11 +8,12 @@ class GetConfigCest
 {
     public function testGet(\ApiTester $I)
     {
-        $I->createUser([
+        $user = $I->createUser([
             'firstName' => 'Jan',
             'lastName' => 'Svoboda',
             'email' => 'test1@visionapps.cz',
         ]);
+        $I->login($user);
         $I->haveHttpHeader('Content-Type', 'application/json');
 
         $I->sendGET('/configs');

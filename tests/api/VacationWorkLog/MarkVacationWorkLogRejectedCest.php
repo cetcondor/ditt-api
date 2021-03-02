@@ -4,7 +4,6 @@ namespace api\TimeOffWorkLog;
 
 use App\Entity\VacationWorkLog;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class MarkVacationWorkLogRejectedCest
 {
@@ -15,13 +14,8 @@ class MarkVacationWorkLogRejectedCest
 
     public function _before(\ApiTester $I)
     {
-        $this->user = $I->createUser(['email' => 'user1@example.com', 'employeeId' => 'id789']);
-        $I->grabService('security.token_storage')->setToken(new UsernamePasswordToken(
-            $this->user,
-            null,
-            'main',
-            $this->user->getRoles()
-        ));
+        $this->user = $I->createUser();
+        $I->login($this->user);
     }
 
     /**
@@ -29,7 +23,7 @@ class MarkVacationWorkLogRejectedCest
      */
     public function testMarkRejected(\ApiTester $I): void
     {
-        $user = $I->createUser(['supervisor' => $this->user]);
+        $user = $I->createUser(['email' => 'user2@example.com', 'employeeId' => '123', 'supervisor' => $this->user]);
         $workMonth = $I->createWorkMonth(['user' => $user]);
         $workLog = $I->createVacationWorkLog([
             'workMonth' => $workMonth,
@@ -41,7 +35,7 @@ class MarkVacationWorkLogRejectedCest
             ['rejectionMessage' => 'Rejection message.']
         );
 
-        $I->canSeeEmailIsSent();
+        // $I->seeEmailIsSent();
 
         $I->seeHttpHeader('Content-Type', 'application/json');
         $I->seeResponseCodeIs(Response::HTTP_OK);
@@ -61,7 +55,7 @@ class MarkVacationWorkLogRejectedCest
     public function testAlreadyMarkedApproved(\ApiTester $I): void
     {
         $time = (new \DateTimeImmutable());
-        $user = $I->createUser(['supervisor' => $this->user]);
+        $user = $I->createUser(['email' => 'user2@example.com', 'employeeId' => '123', 'supervisor' => $this->user]);
         $workMonth = $I->createWorkMonth(['user' => $user]);
         $workLog = $I->createVacationWorkLog([
             'timeApproved' => $time,
@@ -92,7 +86,7 @@ class MarkVacationWorkLogRejectedCest
     public function testAlreadyMarkedRejected(\ApiTester $I): void
     {
         $time = (new \DateTimeImmutable());
-        $user = $I->createUser(['supervisor' => $this->user]);
+        $user = $I->createUser(['email' => 'user2@example.com', 'employeeId' => '123', 'supervisor' => $this->user]);
         $workMonth = $I->createWorkMonth(['user' => $user]);
         $workLog = $I->createVacationWorkLog([
             'timeRejected' => $time,

@@ -5,12 +5,12 @@ namespace App\Command;
 use App\Repository\WorkMonthRepository;
 use App\Service\WorkMonthService;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 
-class UserStatisticsCommand extends ContainerAwareCommand
+class UserStatisticsCommand extends Command
 {
     /**
      * @var WorkMonthRepository

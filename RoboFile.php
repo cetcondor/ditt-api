@@ -10,7 +10,7 @@ class RoboFile extends Tasks
     const CACHE_DIR = __DIR__ . '/var/cache';
     const TESTS_DIR = __DIR__ . '/tests';
     const TEMPLATES_DIR = __DIR__ . '/templates';
-    const CODECEPTION_SUITES = ['api', 'unit', 'functional', 'acceptance'];
+    const CODECEPTION_SUITES = ['api', 'unit', 'acceptance'];
     const DEPLOYMENT_TAR = 'deployment.tar.gz';
     const DEPLOYMENT_FOLDER = 'deployment';
 

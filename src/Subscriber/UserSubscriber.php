@@ -20,7 +20,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 class UserSubscriber implements EventSubscriberInterface
@@ -111,7 +111,7 @@ class UserSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function createYearStats(GetResponseForControllerResultEvent $event): void
+    public function createYearStats(RequestEvent $event): void
     {
         $user = $event->getControllerResult();
         if (!$user instanceof User) {
@@ -136,7 +136,7 @@ class UserSubscriber implements EventSubscriberInterface
         $this->userYearStatsService->createUserYearStats($userYearStats);
     }
 
-    public function createWorkMonths(GetResponseForControllerResultEvent $event): void
+    public function createWorkMonths(RequestEvent $event): void
     {
         $user = $event->getControllerResult();
         if (!$user instanceof User) {
@@ -164,7 +164,7 @@ class UserSubscriber implements EventSubscriberInterface
         $this->workMonthService->createWorkMonths($workMonths);
     }
 
-    public function editUser(GetResponseForControllerResultEvent $event): void
+    public function editUser(RequestEvent $event): void
     {
         $user = $event->getControllerResult();
         if (!$user instanceof User) {
@@ -283,7 +283,7 @@ class UserSubscriber implements EventSubscriberInterface
         );
     }
 
-    public function fullfilRemainingVacationDays(GetResponseForControllerResultEvent $event): void
+    public function fullfilRemainingVacationDays(RequestEvent $event): void
     {
         $user = $event->getControllerResult();
         if (!$user instanceof User) {

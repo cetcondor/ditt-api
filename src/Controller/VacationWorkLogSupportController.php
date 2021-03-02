@@ -6,7 +6,7 @@ use App\Entity\User;
 use App\Entity\VacationWorkLog;
 use App\Entity\VacationWorkLogSupport;
 use App\Service\VacationWorkLogSupportService;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,7 +16,7 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class VacationWorkLogSupportController extends Controller
+class VacationWorkLogSupportController extends AbstractController
 {
     /**
      * @var NormalizerInterface

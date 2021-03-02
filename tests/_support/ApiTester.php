@@ -1,5 +1,7 @@
 <?php
 
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+
 /**
  * Inherited Methods
  * @method void wantToTest($text)
@@ -18,6 +20,16 @@
 class ApiTester extends \Codeception\Actor
 {
     use _generated\ApiTesterActions;
+
+    public function login($user, $firewallName = 'main') {
+        $this->amLoggedInAs($user);
+        $this->grabService('security.token_storage')->setToken(new UsernamePasswordToken(
+            $user,
+            null,
+            $firewallName,
+            $user->getRoles()
+        ));
+    }
 
     public function getSupportedYear($year) {
         return $this->grabEntityFromRepository(\App\Entity\SupportedYear::class, [
@@ -334,7 +346,7 @@ class ApiTester extends \Codeception\Actor
     public function generateVacations($vacationDays, $vacationDaysCorrection) {
         $vacations = [];
 
-        for ($year = 2018; $year <= 2020; ++$year) {
+        for ($year = 2018; $year <= 2024; ++$year) {
             $vacations[] = [
                 'vacationDays' => $vacationDays,
                 'vacationDaysCorrection' => $vacationDaysCorrection,
@@ -348,7 +360,7 @@ class ApiTester extends \Codeception\Actor
     public function generateVacationsNormalized($vacationDays, $vacationDaysCorrection) {
         $vacations = [];
 
-        for ($year = 2018; $year <= 2020; ++$year) {
+        for ($year = 2018; $year <= 2024; ++$year) {
             $vacations[] = [
                 'vacationDays' => $vacationDays,
                 'vacationDaysCorrection' => $vacationDaysCorrection,
@@ -364,7 +376,7 @@ class ApiTester extends \Codeception\Actor
     public function generateVacationsNormalizedUri($vacationDays, $vacationDaysCorrection) {
         $vacations = [];
 
-        for ($year = 2018; $year <= 2020; ++$year) {
+        for ($year = 2018; $year <= 2024; ++$year) {
             $vacations[] = [
                 'vacationDays' => $vacationDays,
                 'vacationDaysCorrection' => $vacationDaysCorrection,
@@ -378,7 +390,7 @@ class ApiTester extends \Codeception\Actor
     public function generateWorkHours($requiredHours) {
         $workHours = [];
 
-        for ($year = 2018; $year <= 2020; ++$year) {
+        for ($year = 2018; $year <= 2024; ++$year) {
             for ($month = 1; $month <= 12; ++$month) {
                 $workHours[] = [
                     'month' => $month,
@@ -394,7 +406,7 @@ class ApiTester extends \Codeception\Actor
     public function generateWorkHoursNormalized($requiredHours) {
         $workHours = [];
 
-        for ($year = 2018; $year <= 2020; ++$year) {
+        for ($year = 2018; $year <= 2024; ++$year) {
             for ($month = 1; $month <= 12; ++$month) {
                 $workHours[] = [
                     'month' => $month,
@@ -412,7 +424,7 @@ class ApiTester extends \Codeception\Actor
     public function generateWorkHoursNormalizedUri($requiredHours) {
         $workHours = [];
 
-        for ($year = 2018; $year <= 2020; ++$year) {
+        for ($year = 2018; $year <= 2024; ++$year) {
             for ($month = 1; $month <= 12; ++$month) {
                 $workHours[] = [
                     'month' => $month,

@@ -5,11 +5,11 @@ App\Entity\WorkLog:
     properties:
         startTime:
             - NotBlank: ~
-            - DateTime: ~
+            - Type: DateTimeImmutable
 
         endTime:
             - NotBlank: ~
-            - DateTime: ~
+            - Type: DateTimeImmutable
             - GreaterThan:
                 propertyPath: startTime
 

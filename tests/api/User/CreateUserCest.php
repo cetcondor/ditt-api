@@ -6,22 +6,14 @@ use App\Entity\User;
 use App\Entity\UserYearStats;
 use App\Entity\WorkMonth;
 use Doctrine\ORM\NoResultException;
-use Prophecy\Prophet;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class CreateUserCest
 {
     public function _before(\ApiTester $I)
     {
-        $prophet = new Prophet();
         $user = $I->createUser();
-        $token = $prophet->prophesize(TokenInterface::class);
-        $token->getUser()->willReturn($user);
-        $tokenStorage = $prophet->prophesize(TokenStorageInterface::class);
-        $tokenStorage->getToken()->willReturn($token->reveal());
-        $I->getContainer()->set(TokenStorageInterface::class, $tokenStorage->reveal());
+        $I->login($user);
     }
 
     public function testCreateWithValidData(\ApiTester $I)
@@ -55,7 +47,7 @@ class CreateUserCest
             'email' => 'test@visionapps.cz',
         ]);
 
-        $I->expectException(NoResultException::class, function () use ($I, $user) {
+        $I->expectThrowable(NoResultException::class, function () use ($I, $user) {
             $I->grabEntityFromRepository(WorkMonth::class, [
                 'month' => 12,
                 'user' => $user,
@@ -72,11 +64,16 @@ class CreateUserCest
             'user' => $user,
             'year' => $I->getSupportedYear(2020),
         ]);
-        $I->expectException(NoResultException::class, function () use ($I, $user) {
+        $I->grabEntityFromRepository(WorkMonth::class, [
+            'month' => 1,
+            'user' => $user,
+            'year' => $I->getSupportedYear(2021),
+        ]);
+        $I->expectThrowable(NoResultException::class, function () use ($I, $user) {
             $I->grabEntityFromRepository(WorkMonth::class, [
                 'month' => 1,
                 'user' => $user,
-                'year' => $I->getSupportedYear(2021),
+                'year' => $I->getSupportedYear(2017),
             ]);
         });
 
@@ -86,7 +83,15 @@ class CreateUserCest
         ]);
         $I->grabEntityFromRepository(UserYearStats::class, [
             'user' => $user,
+            'year' => $I->getSupportedYear(2019),
+        ]);
+        $I->grabEntityFromRepository(UserYearStats::class, [
+            'user' => $user,
             'year' => $I->getSupportedYear(2020),
+        ]);
+        $I->grabEntityFromRepository(UserYearStats::class, [
+            'user' => $user,
+            'year' => $I->getSupportedYear(2021),
         ]);
     }
 
@@ -103,12 +108,12 @@ class CreateUserCest
         ]);
 
         $I->seeHttpHeader('Content-Type', 'application/problem+json; charset=utf-8');
-        $I->seeResponseCodeIs(Response::HTTP_BAD_REQUEST);
+        $I->seeResponseCodeIs(Response::HTTP_UNPROCESSABLE_ENTITY);
         $I->seeResponseContainsJson([
             'violations' => [[]],
         ]);
 
-        $I->expectException(NoResultException::class, function () use ($I) {
+        $I->expectThrowable(NoResultException::class, function () use ($I) {
             $I->grabEntityFromRepository(User::class, [
                 'email' => 'INVALID',
             ]);

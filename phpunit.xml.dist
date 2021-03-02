@@ -1,28 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- https://phpunit.de/manual/current/en/appendixes.configuration.html -->
+<!-- https://phpunit.readthedocs.io/en/latest/configuration.html -->
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/6.1/phpunit.xsd"
+         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
          backupGlobals="false"
          colors="true"
-         bootstrap="vendor/autoload.php"
+         bootstrap="tests/bootstrap.php"
 >
     <php>
         <ini name="error_reporting" value="-1" />
-        <env name="KERNEL_CLASS" value="App\Kernel" />
-        <env name="APP_ENV" value="test" />
-        <env name="APP_DEBUG" value="1" />
-        <env name="APP_SECRET" value="s$cretf0rt3st" />
-        <env name="SHELL_VERBOSITY" value="-1" />
-        <!-- define your env variables for the test env here -->
+        <server name="KERNEL_CLASS" value="App\Kernel" />
+        <server name="APP_ENV" value="test" force="true" />
+        <server name="APP_DEBUG" value="1" />
+        <server name="APP_SECRET" value="s$cretf0rt3st" />
+        <server name="SHELL_VERBOSITY" value="-1" />
 
         <!-- ###+ lexik/jwt-authentication-bundle ### -->
         <!-- Key paths should be relative to the project directory -->
-        <env name="JWT_PRIVATE_KEY_PATH" value="config/jwt/private.pem"/>
-        <env name="JWT_PUBLIC_KEY_PATH" value="config/jwt/public.pem"/>
-        <env name="JWT_PASSPHRASE" value="2a01d2b305fca1f64cd6933f393d5ef4"/>
+        <server name="JWT_PRIVATE_KEY_PATH" value="config/jwt/private.pem"/>
+        <server name="JWT_PUBLIC_KEY_PATH" value="config/jwt/public.pem"/>
+        <server name="JWT_PASSPHRASE" value="2a01d2b305fca1f64cd6933f393d5ef4"/>
         <!-- ###- lexik/jwt-authentication-bundle ### -->
-        <env name="SYMFONY_DEPRECATIONS_HELPER" value="disabled" />
+        <server name="SYMFONY_DEPRECATIONS_HELPER" value="disabled" />
     </php>
 
     <testsuites>
@@ -33,7 +32,7 @@
 
     <filter>
         <whitelist>
-            <directory>./src/</directory>
+            <directory suffix=".php">./src/</directory>
         </whitelist>
     </filter>
 

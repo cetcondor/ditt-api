@@ -10,7 +10,7 @@ use App\Event\BusinessTripWorkLogRejectedEvent;
 use App\Repository\BusinessTripWorkLogRepository;
 use App\Repository\WorkMonthRepository;
 use App\Service\BusinessTripWorkLogService;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,7 +21,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-class BusinessTripWorkLogController extends Controller
+class BusinessTripWorkLogController extends AbstractController
 {
     /**
      * @var NormalizerInterface

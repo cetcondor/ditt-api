@@ -5,10 +5,7 @@ namespace api\HomeOfficeWorkLog;
 use App\Entity\HomeOfficeWorkLog;
 use App\Entity\User;
 use Doctrine\ORM\NoResultException;
-use Prophecy\Prophet;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class CreateHomeOfficeWorkLogCest
 {
@@ -19,13 +16,8 @@ class CreateHomeOfficeWorkLogCest
 
     public function _before(\ApiTester $I)
     {
-        $prophet = new Prophet();
         $this->user = $I->createUser();
-        $token = $prophet->prophesize(TokenInterface::class);
-        $token->getUser()->willReturn($this->user);
-        $tokenStorage = $prophet->prophesize(TokenStorageInterface::class);
-        $tokenStorage->getToken()->willReturn($token->reveal());
-        $I->getContainer()->set(TokenStorageInterface::class, $tokenStorage->reveal());
+        $I->login($this->user);
     }
 
     /**
@@ -82,7 +74,7 @@ class CreateHomeOfficeWorkLogCest
         $I->seeResponseContainsJson([
             'detail' => 'Cannot add or delete work log to closed work month.',
         ]);
-        $I->expectException(NoResultException::class, function () use ($I, $date) {
+        $I->expectThrowable(NoResultException::class, function () use ($I, $date) {
             $I->grabEntityFromRepository(HomeOfficeWorkLog::class, [
                 'date' => $date,
                 'comment' => 'Comment',
@@ -115,7 +107,7 @@ class CreateHomeOfficeWorkLogCest
             . 'that can be parsed with the passed format or a valid DateTime string.',
         ]);
 
-        $I->expectException(NoResultException::class, function () use ($I, $date) {
+        $I->expectThrowable(NoResultException::class, function () use ($I, $date) {
             $I->grabEntityFromRepository(HomeOfficeWorkLog::class, [
                 'date' => $date,
             ]);

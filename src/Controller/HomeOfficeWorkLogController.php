@@ -10,7 +10,7 @@ use App\Event\HomeOfficeWorkLogRejectedEvent;
 use App\Repository\HomeOfficeWorkLogRepository;
 use App\Repository\WorkMonthRepository;
 use App\Service\HomeOfficeWorkLogService;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,7 +21,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-class HomeOfficeWorkLogController extends Controller
+class HomeOfficeWorkLogController extends AbstractController
 {
     /**
      * @var NormalizerInterface

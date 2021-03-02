@@ -2,7 +2,7 @@ App\Entity\BanWorkLog:
     properties:
         date:
             - NotBlank: ~
-            - DateTime: ~
+            - Type: DateTimeImmutable
 
         workTimeLimit:
             - NotBlank: ~

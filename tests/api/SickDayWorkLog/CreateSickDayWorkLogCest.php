@@ -5,10 +5,7 @@ namespace api\SickDayWorkLog;
 use App\Entity\SickDayWorkLog;
 use App\Entity\User;
 use Doctrine\ORM\NoResultException;
-use Prophecy\Prophet;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class CreateSickDayWorkLogCest
 {
@@ -19,13 +16,8 @@ class CreateSickDayWorkLogCest
 
     public function _before(\ApiTester $I)
     {
-        $prophet = new Prophet();
         $this->user = $I->createUser();
-        $token = $prophet->prophesize(TokenInterface::class);
-        $token->getUser()->willReturn($this->user);
-        $tokenStorage = $prophet->prophesize(TokenStorageInterface::class);
-        $tokenStorage->getToken()->willReturn($token->reveal());
-        $I->getContainer()->set(TokenStorageInterface::class, $tokenStorage->reveal());
+        $I->login($this->user);
     }
 
     /**
@@ -118,7 +110,7 @@ class CreateSickDayWorkLogCest
         $I->seeResponseContainsJson([
             'detail' => 'Cannot add or delete work log to closed work month.',
         ]);
-        $I->expectException(NoResultException::class, function () use ($I, $date) {
+        $I->expectThrowable(NoResultException::class, function () use ($I, $date) {
             $I->grabEntityFromRepository(SickDayWorkLog::class, [
                 'date' => $date,
                 'variant' => 'WITH_NOTE',
@@ -153,7 +145,7 @@ class CreateSickDayWorkLogCest
             . 'that can be parsed with the passed format or a valid DateTime string.',
         ]);
 
-        $I->expectException(NoResultException::class, function () use ($I, $date) {
+        $I->expectThrowable(NoResultException::class, function () use ($I, $date) {
             $I->grabEntityFromRepository(SickDayWorkLog::class, [
                 'date' => $date,
                 'variant' => '',
@@ -182,12 +174,12 @@ class CreateSickDayWorkLogCest
         ]);
 
         $I->seeHttpHeader('Content-Type', 'application/problem+json; charset=utf-8');
-        $I->seeResponseCodeIs(Response::HTTP_BAD_REQUEST);
+        $I->seeResponseCodeIs(Response::HTTP_UNPROCESSABLE_ENTITY);
         $I->seeResponseContainsJson([
             'detail' => 'Sick day work log required child`s name and date of birth if sick child is selected.',
         ]);
 
-        $I->expectException(NoResultException::class, function () use ($I, $date) {
+        $I->expectThrowable(NoResultException::class, function () use ($I, $date) {
             $I->grabEntityFromRepository(SickDayWorkLog::class, [
                 'date' => $date,
                 'variant' => 'SICK_CHILD',

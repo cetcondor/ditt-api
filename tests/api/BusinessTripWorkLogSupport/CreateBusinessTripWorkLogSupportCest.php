@@ -4,10 +4,7 @@ namespace api\BusinessTripWorkLogSupport;
 
 use App\Entity\BusinessTripWorkLogSupport;
 use App\Entity\User;
-use Prophecy\Prophet;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class CreateBusinessTripWorkLogSupportCest
 {
@@ -18,13 +15,8 @@ class CreateBusinessTripWorkLogSupportCest
 
     public function _before(\ApiTester $I)
     {
-        $prophet = new Prophet();
-        $this->user = $I->createUser(['email' => 'user1@example.com', 'employeeId' => 'id789']);
-        $token = $prophet->prophesize(TokenInterface::class);
-        $token->getUser()->willReturn($this->user);
-        $tokenStorage = $prophet->prophesize(TokenStorageInterface::class);
-        $tokenStorage->getToken()->willReturn($token->reveal());
-        $I->getContainer()->set(TokenStorageInterface::class, $tokenStorage->reveal());
+        $this->user = $I->createUser();
+        $I->login($this->user);
     }
 
     /**
@@ -32,7 +24,7 @@ class CreateBusinessTripWorkLogSupportCest
      */
     public function testCreateWithValidData(\ApiTester $I): void
     {
-        $user = $I->createUser(['supervisor' => $this->user]);
+        $user = $I->createUser(['email' => 'user2@example.com', 'employeeId' => '123', 'supervisor' => $this->user]);
         $workMonth = $I->createWorkMonth(['user' => $user]);
         $workLog = $I->createBusinessTripWorkLog(['workMonth' => $workMonth]);
 

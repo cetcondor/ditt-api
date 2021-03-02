@@ -1,6 +1,6 @@
 parameters:
     # Adds a fallback CORS_ALLOW_ORIGIN if the env var is not set.
-    env(CORS_ALLOW_ORIGIN): '^https?://localhost:?[0-9]*$'
+    env(CORS_ALLOW_ORIGIN): '^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$'
 
 nelmio_cors:
     defaults:
@@ -12,6 +12,7 @@ nelmio_cors:
             - 'OPTIONS'
             - 'POST'
             - 'PUT'
+            - 'PATCH'
             - 'DELETE'
         allow_headers:
             - 'Content-Type'

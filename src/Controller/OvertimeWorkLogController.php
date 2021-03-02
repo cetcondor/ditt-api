@@ -7,14 +7,14 @@ use App\Event\OvertimeWorkLogApprovedEvent;
 use App\Event\OvertimeWorkLogRejectedEvent;
 use App\Repository\OvertimeWorkLogRepository;
 use App\Service\OvertimeWorkLogService;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-class OvertimeWorkLogController extends Controller
+class OvertimeWorkLogController extends AbstractController
 {
     /**
      * @var NormalizerInterface

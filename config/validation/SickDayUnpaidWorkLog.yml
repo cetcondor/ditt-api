@@ -2,7 +2,7 @@ App\Entity\SickDayUnpaidWorkLog:
     properties:
         date:
             - NotBlank: ~
-            - DateTime: ~
+            - Type: DateTimeImmutable
 
         workMonth:
             - NotBlank: ~

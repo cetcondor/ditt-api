@@ -2,7 +2,7 @@ App\Entity\MaternityProtectionWorkLog:
     properties:
         date:
             - NotBlank: ~
-            - DateTime: ~
+            - Type: DateTimeImmutable
 
         workMonth:
             - NotBlank: ~

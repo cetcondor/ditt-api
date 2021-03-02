@@ -5,10 +5,7 @@ namespace api\TimeOffWorkLog;
 use App\Entity\User;
 use App\Entity\VacationWorkLog;
 use Doctrine\ORM\NoResultException;
-use Prophecy\Prophet;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class BulkCreateVacationWorkLogCest
 {
@@ -19,7 +16,6 @@ class BulkCreateVacationWorkLogCest
 
     public function _before(\ApiTester $I)
     {
-        $prophet = new Prophet();
         $this->user = $I->createUser([
             'vacations' => function () use ($I) {
                 $vacations = [];
@@ -34,11 +30,7 @@ class BulkCreateVacationWorkLogCest
                 return $vacations;
             },
         ]);
-        $token = $prophet->prophesize(TokenInterface::class);
-        $token->getUser()->willReturn($this->user);
-        $tokenStorage = $prophet->prophesize(TokenStorageInterface::class);
-        $tokenStorage->getToken()->willReturn($token->reveal());
-        $I->getContainer()->set(TokenStorageInterface::class, $tokenStorage->reveal());
+        $I->login($this->user);
     }
 
     /**
@@ -103,7 +95,7 @@ class BulkCreateVacationWorkLogCest
         $I->seeResponseContainsJson([
             'detail' => 'Set duration exceeds number of vacation days allocated for this year.',
         ]);
-        $I->expectException(NoResultException::class, function () use ($I, $date2, $date3) {
+        $I->expectThrowable(NoResultException::class, function () use ($I, $date2, $date3) {
             $I->grabEntityFromRepository(VacationWorkLog::class, [
                 'date' => $date2,
             ]);
@@ -135,7 +127,7 @@ class BulkCreateVacationWorkLogCest
         $I->seeResponseContainsJson([
             'detail' => 'Cannot add work log to closed work month.',
         ]);
-        $I->expectException(NoResultException::class, function () use ($I, $date) {
+        $I->expectThrowable(NoResultException::class, function () use ($I, $date) {
             $I->grabEntityFromRepository(VacationWorkLog::class, [
                 'date' => $date,
             ]);
@@ -164,7 +156,7 @@ class BulkCreateVacationWorkLogCest
             'detail' => 'Cannot denormalize work log.',
         ]);
 
-        $I->expectException(NoResultException::class, function () use ($I, $date) {
+        $I->expectThrowable(NoResultException::class, function () use ($I, $date) {
             $I->grabEntityFromRepository(VacationWorkLog::class, [
                 'date' => $date,
             ]);

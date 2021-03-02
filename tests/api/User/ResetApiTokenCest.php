@@ -12,6 +12,7 @@ class ResetApiTokenCest
         $user = $I->createUser([
             'apiToken' => 'token',
         ]);
+        $I->login($user);
 
         $I->assertNotNull($user->getApiToken());
 

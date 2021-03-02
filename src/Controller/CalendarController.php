@@ -14,13 +14,13 @@ use App\Repository\SpecialLeaveWorkLogRepository;
 use App\Repository\TimeOffWorkLogRepository;
 use App\Repository\UserRepository;
 use App\Repository\VacationWorkLogRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Welp\IcalBundle\Factory\Factory;
 use Welp\IcalBundle\Response\CalendarResponse;
 
-class CalendarController extends Controller
+class CalendarController extends AbstractController
 {
     /**
      * @var BusinessTripWorkLogRepository

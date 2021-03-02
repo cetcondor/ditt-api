@@ -3,33 +3,20 @@
 namespace api\WorkMonth;
 
 use App\Entity\User;
-use Prophecy\Prophet;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class GetRecentSpecialApprovalCest
 {
     private function beforeEmployee(\ApiTester $I)
     {
-        $prophet = new Prophet();
         $user = $I->createUser();
-        $token = $prophet->prophesize(TokenInterface::class);
-        $token->getUser()->willReturn($user);
-        $tokenStorage = $prophet->prophesize(TokenStorageInterface::class);
-        $tokenStorage->getToken()->willReturn($token->reveal());
-        $I->getContainer()->set(TokenStorageInterface::class, $tokenStorage->reveal());
+        $I->login($user);
     }
 
     private function beforeSuperAdmin(\ApiTester $I)
     {
-        $prophet = new Prophet();
         $user = $I->createUser(['roles' => [User::ROLE_SUPER_ADMIN]]);
-        $token = $prophet->prophesize(TokenInterface::class);
-        $token->getUser()->willReturn($user);
-        $tokenStorage = $prophet->prophesize(TokenStorageInterface::class);
-        $tokenStorage->getToken()->willReturn($token->reveal());
-        $I->getContainer()->set(TokenStorageInterface::class, $tokenStorage->reveal());
+        $I->login($user);
     }
 
     public function testGetEmpty(\ApiTester $I)

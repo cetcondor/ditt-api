@@ -2,7 +2,7 @@ App\Entity\ParentalLeaveWorkLog:
     properties:
         date:
             - NotBlank: ~
-            - DateTime: ~
+            - Type: DateTimeImmutable
 
         workMonth:
             - NotBlank: ~

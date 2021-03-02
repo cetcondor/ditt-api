@@ -1,7 +1,11 @@
 INSERT INTO "supported_year" ("year") VALUES
 (2018),
 (2019),
-(2020);
+(2020),
+(2021),
+(2022),
+(2023),
+(2024);
 
 INSERT INTO "supported_holiday" ("day", "month", "year") VALUES
 (1,	1,	2018),

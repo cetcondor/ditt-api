@@ -3,10 +3,7 @@
 namespace api\WorkLog;
 
 use App\Entity\User;
-use Prophecy\Prophet;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class GetWorkMonthDetailCest
 {
@@ -22,45 +19,32 @@ class GetWorkMonthDetailCest
 
     private function beforeEmployee(\ApiTester $I)
     {
-        $prophet = new Prophet();
         $this->user = $I->createUser();
-        $token = $prophet->prophesize(TokenInterface::class);
-        $token->getUser()->willReturn($this->user);
-        $tokenStorage = $prophet->prophesize(TokenStorageInterface::class);
-        $tokenStorage->getToken()->willReturn($token->reveal());
-        $I->getContainer()->set(TokenStorageInterface::class, $tokenStorage->reveal());
+        $I->login($this->user);
     }
 
     private function beforeSupervisor(\ApiTester $I)
     {
-        $prophet = new Prophet();
         $this->supervisor = $I->createUser();
+        $I->login($this->supervisor);
+
         $this->user = $I->createUser([
             'employeeId' => '123',
             'email' => 'user2@example.com',
             'supervisor' => $this->supervisor,
         ]);
-        $token = $prophet->prophesize(TokenInterface::class);
-        $token->getUser()->willReturn($this->supervisor);
-        $tokenStorage = $prophet->prophesize(TokenStorageInterface::class);
-        $tokenStorage->getToken()->willReturn($token->reveal());
-        $I->getContainer()->set(TokenStorageInterface::class, $tokenStorage->reveal());
     }
 
     private function beforeSuperAdmin(\ApiTester $I)
     {
-        $prophet = new Prophet();
         $this->supervisor = $I->createUser();
+        $I->login($this->supervisor);
+
         $this->user = $I->createUser([
             'employeeId' => '456',
             'email' => 'user3@example.com',
             'roles' => [User::ROLE_SUPER_ADMIN],
         ]);
-        $token = $prophet->prophesize(TokenInterface::class);
-        $token->getUser()->willReturn($this->supervisor);
-        $tokenStorage = $prophet->prophesize(TokenStorageInterface::class);
-        $tokenStorage->getToken()->willReturn($token->reveal());
-        $I->getContainer()->set(TokenStorageInterface::class, $tokenStorage->reveal());
     }
 
     private function prepareData(

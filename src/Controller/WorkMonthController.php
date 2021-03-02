@@ -23,7 +23,7 @@ use App\Repository\WorkMonthRepository;
 use App\Service\UserService;
 use App\Service\WorkMonthService;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,7 +31,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-class WorkMonthController extends Controller
+class WorkMonthController extends AbstractController
 {
     /**
      * @var NormalizerInterface
@@ -134,7 +134,7 @@ class WorkMonthController extends Controller
     public function getWorkMonthDetail(int $id): Response
     {
         $workMonth = $this->workMonthRepository->getRepository()->find($id);
-        if (!$workMonth || !$workMonth instanceof  WorkMonth) {
+        if (!$workMonth || !$workMonth instanceof WorkMonth) {
             throw $this->createNotFoundException(sprintf('Work month with id %d was not found', $id));
         }
 
@@ -169,7 +169,7 @@ class WorkMonthController extends Controller
     public function setWorkTimeCorrection(Request $request, int $id)
     {
         $workMonth = $this->workMonthRepository->getRepository()->find($id);
-        if (!$workMonth || !$workMonth instanceof  WorkMonth) {
+        if (!$workMonth || !$workMonth instanceof WorkMonth) {
             throw $this->createNotFoundException(sprintf('Work month with id %d was not found', $id));
         }
 

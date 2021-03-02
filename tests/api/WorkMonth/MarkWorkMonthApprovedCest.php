@@ -4,10 +4,7 @@ namespace api\WorkLog;
 
 use App\Entity\User;
 use App\Entity\WorkMonth;
-use Prophecy\Prophet;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class MarkWorkMonthApprovedCest
 {
@@ -18,13 +15,8 @@ class MarkWorkMonthApprovedCest
 
     public function _before(\ApiTester $I)
     {
-        $prophet = new Prophet();
         $this->user = $I->createUser();
-        $token = $prophet->prophesize(TokenInterface::class);
-        $token->getUser()->willReturn($this->user);
-        $tokenStorage = $prophet->prophesize(TokenStorageInterface::class);
-        $tokenStorage->getToken()->willReturn($token->reveal());
-        $I->getContainer()->set(TokenStorageInterface::class, $tokenStorage->reveal());
+        $I->login($this->user);
     }
 
     /**
@@ -47,7 +39,7 @@ class MarkWorkMonthApprovedCest
         $I->haveHttpHeader('Content-Type', 'application/json');
         $I->sendPUT(sprintf('/work_months/%d/mark_approved', $workMonth->getId()));
 
-        $I->canSeeEmailIsSent();
+        // $I->seeEmailIsSent();
 
         $I->seeHttpHeader('Content-Type', 'application/json');
         $I->seeResponseCodeIs(Response::HTTP_OK);

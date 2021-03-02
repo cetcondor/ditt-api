@@ -9,13 +9,13 @@ use App\Repository\SickDayWorkLogRepository;
 use App\Repository\SupportedYearRepository;
 use App\Repository\UserRepository;
 use App\Repository\WorkHoursRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-class HrController extends Controller
+class HrController extends AbstractController
 {
     /**
      * @var NormalizerInterface

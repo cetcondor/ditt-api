@@ -1,18 +1,18 @@
 App\Entity\UserNotifications:
     properties:
         supervisorInfoMondayTime:
-            - Time: ~
+            - Type: DateTimeImmutable
         supervisorInfoTuesdayTime:
-            - Time: ~
+            - Type: DateTimeImmutable
         supervisorInfoWednesdayTime:
-            - Time: ~
+            - Type: DateTimeImmutable
         supervisorInfoThursdayTime:
-            - Time: ~
+            - Type: DateTimeImmutable
         supervisorInfoFridayTime:
-            - Time: ~
+            - Type: DateTimeImmutable
         supervisorInfoSaturdayTime:
-            - Time: ~
+            - Type: DateTimeImmutable
         supervisorInfoSundayTime:
-            - Time: ~
+            - Type: DateTimeImmutable
         supervisorInfoSendOnHolidays:
             - NotNull: ~

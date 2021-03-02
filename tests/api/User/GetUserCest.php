@@ -6,6 +6,12 @@ use Symfony\Component\HttpFoundation\Response;
 
 class GetUserCest
 {
+    public function _before(\ApiTester $I)
+    {
+        $user = $I->createUser();
+        $I->login($user);
+    }
+
     public function testGetEmpty(\ApiTester $I)
     {
         $I->haveHttpHeader('Content-Type', 'application/json');
@@ -23,12 +29,13 @@ class GetUserCest
             'firstName' => 'Jan',
             'lastName' => 'Svoboda',
             'email' => 'test1@visionapps.cz',
+            'employeeId' => '123',
         ]);
         $user2 = $I->createUser([
             'firstName' => 'Petr',
             'lastName' => 'Pavel',
             'email' => 'test2@visionapps.cz',
-            'employeeId' => 'id456',
+            'employeeId' => '456',
         ]);
         $I->haveHttpHeader('Content-Type', 'application/json');
 

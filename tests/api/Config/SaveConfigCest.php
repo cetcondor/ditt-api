@@ -11,7 +11,12 @@ class SaveConfigCest
 {
     public function testSave(\ApiTester $I)
     {
-        $I->createUser();
+        $user = $I->createUser([
+            'firstName' => 'Jan',
+            'lastName' => 'Svoboda',
+            'email' => 'test1@visionapps.cz',
+        ]);
+        $I->login($user);
         $I->haveHttpHeader('Content-Type', 'application/json');
 
         $I->sendPOST('/configs', [
@@ -120,12 +125,13 @@ class SaveConfigCest
 
     public function testInvalidSave(\ApiTester $I)
     {
-        $I->createUser();
+        $user = $I->createUser();
+        $I->login($user);
         $I->haveHttpHeader('Content-Type', 'application/json');
 
         $I->sendPOST('/configs', [
             'supportedYears' => [
-                ['year' => 2021],
+                ['year' => 2017],
             ],
             'supportedHolidays' => [
                 [
@@ -156,12 +162,12 @@ class SaveConfigCest
         $I->seeResponseContainsJson([
             'detail' => 'One of supported year or supported holiday is not valid.',
         ]);
-        $I->expectException(NoResultException::class, function () use ($I) {
+        $I->expectThrowable(NoResultException::class, function () use ($I) {
             $I->grabEntityFromRepository(SupportedYear::class, [
-                'year' => 2021,
+                'year' => 2017,
             ]);
         });
-        $I->expectException(NoResultException::class, function () use ($I) {
+        $I->expectThrowable(NoResultException::class, function () use ($I) {
             $I->grabEntityFromRepository(SupportedHoliday::class, [
                 'day' => 1,
                 'month' => 2,

@@ -4,13 +4,13 @@ namespace App\Controller;
 
 use App\Entity\Config;
 use App\Service\ConfigService;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-class ConfigController extends Controller
+class ConfigController extends AbstractController
 {
     /**
      * @var NormalizerInterface

@@ -2,9 +2,6 @@ services:
     _defaults:
         public: true
 
-    Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface:
-        class: Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage
-        public: public
 
     # remove UserAccessSubscriber from container in test mode
     App\Subscriber\UserAccessSubscriber:

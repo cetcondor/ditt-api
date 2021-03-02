@@ -10,6 +10,7 @@ class RenewApiTokenCest
     public function testResetApiToken(\ApiTester $I)
     {
         $user = $I->createUser();
+        $I->login($user);
 
         $I->assertNull($user->getApiToken());
 

@@ -5,10 +5,7 @@ namespace api\TimeOffWorkLog;
 use App\Entity\ParentalLeaveWorkLog;
 use App\Entity\User;
 use Doctrine\ORM\NoResultException;
-use Prophecy\Prophet;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class CreateParentalLeaveWorkLogCest
 {
@@ -24,14 +21,8 @@ class CreateParentalLeaveWorkLogCest
 
     public function _before(\ApiTester $I)
     {
-        $prophet = new Prophet();
         $this->user = $I->createUser();
         $this->user2 = $user = $I->createUser(['email' => 'user2@example.com', 'employeeId' => 'id123']);
-        $token = $prophet->prophesize(TokenInterface::class);
-        $token->getUser()->willReturn($this->user);
-        $tokenStorage = $prophet->prophesize(TokenStorageInterface::class);
-        $tokenStorage->getToken()->willReturn($token->reveal());
-        $I->getContainer()->set(TokenStorageInterface::class, $tokenStorage->reveal());
     }
 
     /**
@@ -86,7 +77,7 @@ class CreateParentalLeaveWorkLogCest
         $I->seeResponseContainsJson([
             'detail' => 'Cannot add or delete work log to closed work month.',
         ]);
-        $I->expectException(NoResultException::class, function () use ($I, $date) {
+        $I->expectThrowable(NoResultException::class, function () use ($I, $date) {
             $I->grabEntityFromRepository(ParentalLeaveWorkLog::class, [
                 'date' => $date,
             ]);
@@ -118,7 +109,7 @@ class CreateParentalLeaveWorkLogCest
             . 'that can be parsed with the passed format or a valid DateTime string.',
         ]);
 
-        $I->expectException(NoResultException::class, function () use ($I, $date) {
+        $I->expectThrowable(NoResultException::class, function () use ($I, $date) {
             $I->grabEntityFromRepository(ParentalLeaveWorkLog::class, [
                 'date' => $date,
             ]);

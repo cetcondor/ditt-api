@@ -1,1 +1,9 @@
 swiftmailer:
+    transport: smtp
+    host: mail
+    port: 1025
+    username: local@host.com
+    password: ~
+    sender_address: local@host.com
+    spool:
+        type: memory

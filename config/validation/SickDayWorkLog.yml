@@ -5,10 +5,10 @@ App\Entity\SickDayWorkLog:
     properties:
         date:
             - NotBlank: ~
-            - DateTime: ~
+            - Type: DateTimeImmutable
 
         childDateOfBirth:
-            - DateTime: ~
+            - Type: DateTimeImmutable
 
         variant:
             - NotBlank: ~

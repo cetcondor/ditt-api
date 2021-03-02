@@ -2,13 +2,13 @@ App\Entity\HomeOfficeWorkLog:
     properties:
         date:
             - NotBlank: ~
-            - DateTime: ~
+            - Type: DateTimeImmutable
 
         timeApproved:
-            - DateTime: ~
+            - Type: DateTimeImmutable
 
         timeRejected:
-            - DateTime: ~
+            - Type: DateTimeImmutable
 
         workMonth:
             - NotBlank: ~

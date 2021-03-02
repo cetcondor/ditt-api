@@ -5,7 +5,7 @@ namespace App\Subscriber;
 use App\Security\ResourceVoter;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -41,7 +41,7 @@ class UserAccessSubscriber implements EventSubscriberInterface
     /**
      * @throws AccessDeniedException
      */
-    public function checkPermissions(GetResponseEvent $event): void
+    public function checkPermissions(RequestEvent $event): void
     {
         $request = $event->getRequest();
 

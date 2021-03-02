@@ -8,7 +8,7 @@ use App\Entity\User;
 use App\Entity\WorkLogSupportInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -36,7 +36,7 @@ class WorkLogSupportSubscriber implements EventSubscriberInterface
     /**
      * @throws \Exception
      */
-    public function addDetails(GetResponseForControllerResultEvent $event): void
+    public function addDetails(RequestEvent $event): void
     {
         $workLogSupport = $event->getControllerResult();
         if (!$workLogSupport instanceof WorkLogSupportInterface) {

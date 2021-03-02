@@ -23,7 +23,7 @@ use App\Event\VacationWorkLogCanceledEvent;
 use App\Repository\WorkMonthRepository;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -70,7 +70,7 @@ class WorkLogSubscriber implements EventSubscriberInterface
     /**
      * @throws InvalidArgumentException
      */
-    public function addWorkMonth(GetResponseForControllerResultEvent $event): void
+    public function addWorkMonth(RequestEvent $event): void
     {
         $workLog = $event->getControllerResult();
         if (!$workLog instanceof WorkLogInterface || $workLog instanceof SupervisorWorkLogInterface) {
@@ -98,7 +98,7 @@ class WorkLogSubscriber implements EventSubscriberInterface
         $workLog->setWorkMonth($workMonth);
     }
 
-    public function deleteWorkLog(GetResponseForControllerResultEvent $event): void
+    public function deleteWorkLog(RequestEvent $event): void
     {
         $workLog = $event->getControllerResult();
         if (!$workLog instanceof WorkLogInterface) {
@@ -149,7 +149,7 @@ class WorkLogSubscriber implements EventSubscriberInterface
     /**
      * @throws InvalidArgumentException
      */
-    public function checkWorkMonthStatus(GetResponseForControllerResultEvent $event): void
+    public function checkWorkMonthStatus(RequestEvent $event): void
     {
         $workLog = $event->getControllerResult();
         if (!$workLog instanceof WorkLogInterface) {
@@ -167,7 +167,7 @@ class WorkLogSubscriber implements EventSubscriberInterface
         }
     }
 
-    public function resetWorkMonthStatus(GetResponseForControllerResultEvent $event): void
+    public function resetWorkMonthStatus(RequestEvent $event): void
     {
         $workLog = $event->getControllerResult();
         if (!$workLog instanceof WorkLogInterface) {

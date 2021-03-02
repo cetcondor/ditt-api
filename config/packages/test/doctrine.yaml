@@ -1,10 +1,9 @@
-parameters:
-    # Adds a fallback DATABASE_URL if the env var is not set.
-    env(DATABASE_URL_TEST): 'pgsql://postgres:pass@db/docker_test'
-
 doctrine:
     dbal:
         driver: pdo_pgsql
         server_version: 11.7
-        charset:  UTF8
+        charset: UTF8
         url: '%env(resolve:DATABASE_URL_TEST)%'
+
+        # IMPORTANT: You MUST configure your server version,
+        # either here or in the DATABASE_URL_TEST env var (see .env file)
