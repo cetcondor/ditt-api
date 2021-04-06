@@ -5,7 +5,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
-class BusinessTripWorkLog implements WorkLogInterface
+class BusinessTripWorkLog implements SpecialWorkLogInterface
 {
     /**
      * @var int|null

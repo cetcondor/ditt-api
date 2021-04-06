@@ -89,7 +89,7 @@ class BulkMarkVacationWorkLogRejectedCest
         $I->seeHttpHeader('Content-Type', 'application/json');
         $I->seeResponseCodeIs(Response::HTTP_BAD_REQUEST);
         $I->seeResponseContainsJson([
-            'detail' => sprintf('Vacation work log with id %d has been already approved.', $workLog->getId()),
+            'detail' => sprintf('Work log with id %d has been already approved.', $workLog->getId()),
         ]);
         $I->grabEntityFromRepository(VacationWorkLog::class, [
             'id' => $workLog->getId(),
@@ -126,7 +126,7 @@ class BulkMarkVacationWorkLogRejectedCest
         $I->seeHttpHeader('Content-Type', 'application/json');
         $I->seeResponseCodeIs(Response::HTTP_BAD_REQUEST);
         $I->seeResponseContainsJson([
-            'detail' => sprintf('Vacation work log with id %d has been already rejected.', $workLog->getId()),
+            'detail' => sprintf('Work log with id %d has been already rejected.', $workLog->getId()),
         ]);
         $I->grabEntityFromRepository(VacationWorkLog::class, [
             'id' => $workLog->getId(),

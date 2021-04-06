@@ -8,6 +8,11 @@ App\Entity\OvertimeWorkLogSupport:
             denormalization_context:
                 groups:
                     - overtime_work_log_support_in
+        bulkCreate:
+            method: POST
+            route_name: api_overtime_work_log_support_bulk_create
+            swagger_context:
+                summary: Creates multiple OvertimeWorkLogSupport resource.
     itemOperations:
         get:
             method: GET

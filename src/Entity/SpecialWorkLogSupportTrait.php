@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-trait WorkLogSupportTrait
+trait SpecialWorkLogSupportTrait
 {
     /**
      * @var int|null
@@ -29,7 +29,7 @@ trait WorkLogSupportTrait
         return $this->id;
     }
 
-    public function setId(?int $id): WorkLogSupportInterface
+    public function setId(?int $id): SpecialWorkLogSupportInterface
     {
         $this->id = $id;
 
@@ -41,7 +41,7 @@ trait WorkLogSupportTrait
         return $this->dateTime;
     }
 
-    public function setDateTime(\DateTimeImmutable $dateTimeTime): WorkLogSupportInterface
+    public function setDateTime(\DateTimeImmutable $dateTimeTime): SpecialWorkLogSupportInterface
     {
         $this->dateTime = $dateTimeTime;
 
@@ -53,7 +53,7 @@ trait WorkLogSupportTrait
         return $this->supportedBy;
     }
 
-    public function setSupportedBy(User $supportedBy): WorkLogSupportInterface
+    public function setSupportedBy(User $supportedBy): SpecialWorkLogSupportInterface
     {
         $this->supportedBy = $supportedBy;
 
@@ -65,7 +65,7 @@ trait WorkLogSupportTrait
         return $this->workLog;
     }
 
-    public function setWorkLog(WorkLogInterface $workLog): WorkLogSupportInterface
+    public function setWorkLog(WorkLogInterface $workLog): SpecialWorkLogSupportInterface
     {
         $this->workLog = $workLog;
 

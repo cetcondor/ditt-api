@@ -6,28 +6,22 @@ use App\Entity\User;
 use App\Entity\VacationWorkLog;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class VacationWorkLogCanceledEvent extends Event
+class VacationWorkLogCanceledEvent extends Event implements SpecialWorkLogEventInterface
 {
-    const CANCELED = 'event.vacation_work_log.canceled';
+    const EVENT = 'event.vacation_work_log.canceled';
 
-    /**
-     * @var VacationWorkLog
-     */
-    private $vacationWorkLog;
-    /**
-     * @var User|null
-     */
-    private $supervisor;
+    private VacationWorkLog $workLog;
+    private ?User $supervisor;
 
-    public function __construct(VacationWorkLog $vacationWorkLog, ?User $supervisor)
+    public function __construct(VacationWorkLog $workLog, ?User $supervisor)
     {
-        $this->vacationWorkLog = $vacationWorkLog;
+        $this->workLog = $workLog;
         $this->supervisor = $supervisor;
     }
 
-    public function getVacationWorkLog(): VacationWorkLog
+    public function getWorkLog(): VacationWorkLog
     {
-        return $this->vacationWorkLog;
+        return $this->workLog;
     }
 
     public function getSupervisor(): ?User

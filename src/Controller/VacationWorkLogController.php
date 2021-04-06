@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\SpecialWorkLogInterface;
 use App\Entity\SupportedYear;
 use App\Entity\User;
 use App\Entity\VacationWorkLog;
@@ -10,143 +11,112 @@ use App\Event\MultipleVacationWorkLogApprovedEvent;
 use App\Event\MultipleVacationWorkLogRejectedEvent;
 use App\Event\VacationWorkLogApprovedEvent;
 use App\Event\VacationWorkLogRejectedEvent;
+use App\Repository\SpecialWorkLogRepository;
 use App\Repository\SupportedYearRepository;
 use App\Repository\VacationWorkLogRepository;
 use App\Repository\WorkMonthRepository;
-use App\Service\VacationWorkLogService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Service\SpecialWorkLogService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-class VacationWorkLogController extends AbstractController
+class VacationWorkLogController extends AbstractSpecialWorkLogController
 {
-    /**
-     * @var NormalizerInterface
-     */
-    private $normalizer;
-
-    /**
-     * @var DenormalizerInterface
-     */
-    private $denormalizer;
-
-    /**
-     * @var SupportedYearRepository
-     */
-    private $supportedYearRepository;
-
-    /**
-     * @var VacationWorkLogRepository
-     */
-    private $vacationWorkLogRepository;
-
-    /**
-     * @var VacationWorkLogService
-     */
-    private $vacationWorkLogService;
-
-    /**
-     * @var WorkMonthRepository
-     */
-    private $workMonthRepository;
-
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
-
-    /**
-     * @var ValidatorInterface
-     */
-    private $validator;
-
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
+    private VacationWorkLogRepository $vacationWorkLogRepository;
 
     public function __construct(
-        NormalizerInterface $normalizer,
         DenormalizerInterface $denormalizer,
+        EntityManagerInterface $entityManager,
+        EventDispatcherInterface $eventDispatcher,
+        NormalizerInterface $normalizer,
+        SpecialWorkLogService $specialWorkLogService,
         SupportedYearRepository $supportedYearRepository,
         VacationWorkLogRepository $vacationWorkLogRepository,
-        VacationWorkLogService $vacationWorkLogService,
-        WorkMonthRepository $workMonthRepository,
-        EventDispatcherInterface $eventDispatcher,
         ValidatorInterface $validator,
-        TokenStorageInterface $tokenStorage
+        WorkMonthRepository $workMonthRepository
     ) {
-        $this->normalizer = $normalizer;
-        $this->denormalizer = $denormalizer;
-        $this->supportedYearRepository = $supportedYearRepository;
+        parent::__construct(
+            $denormalizer,
+            $eventDispatcher,
+            $normalizer,
+            new SpecialWorkLogRepository($entityManager, VacationWorkLog::class),
+            $specialWorkLogService,
+            $supportedYearRepository,
+            $validator,
+            $workMonthRepository,
+            VacationWorkLog::class,
+            'vacation_work_log_out_detail',
+            VacationWorkLogApprovedEvent::class,
+            MultipleVacationWorkLogApprovedEvent::class,
+            VacationWorkLogRejectedEvent::class,
+            MultipleVacationWorkLogRejectedEvent::class,
+        );
+
         $this->vacationWorkLogRepository = $vacationWorkLogRepository;
-        $this->vacationWorkLogService = $vacationWorkLogService;
-        $this->workMonthRepository = $workMonthRepository;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->validator = $validator;
-        $this->tokenStorage = $tokenStorage;
     }
 
     public function bulkCreate(Request $request): Response
     {
         $data = json_decode((string) $request->getContent(), true);
-        $vacationWorkLogs = [];
-        $vacationWorkLogsByYear = [];
 
         if (!$data || !is_array($data)) {
-            return JsonResponse::create(
-                ['detail' => 'Expected array of work logs.'], JsonResponse::HTTP_BAD_REQUEST
+            return new JsonResponse(
+                ['detail' => 'Expected array of work logs.'],
+                JsonResponse::HTTP_BAD_REQUEST
             );
         }
-
-        $token = $this->tokenStorage->getToken();
 
         // Authorization is checked in security layer of Symfony, this is necessary because of PHP Stan
-        if (!$token || !$token->getUser() instanceof User) {
-            return JsonResponse::create(
-                ['detail' => 'Cannot create work log without user.'], JsonResponse::HTTP_BAD_REQUEST
+        if (!$this->getUser() || !$this->getUser() instanceof User) {
+            return new JsonResponse(
+                ['detail' => 'Cannot create work log without user.'],
+                JsonResponse::HTTP_BAD_REQUEST
             );
         }
 
-        foreach ($data as $normalizedVacationWorkLog) {
+        $workLogs = [];
+        $vacationWorkLogsByYear = [];
+
+        foreach ($data as $normalizedWorkLog) {
             try {
-                $vacationWorkLog = $this->denormalizer->denormalize(
-                    $normalizedVacationWorkLog,
-                    VacationWorkLog::class
+                $workLog = $this->denormalizer->denormalize(
+                    $normalizedWorkLog,
+                    $this->entityClassName
                 );
 
-                if (!$vacationWorkLog instanceof VacationWorkLog) {
+                if (!$workLog instanceof SpecialWorkLogInterface) {
                     throw new NotNormalizableValueException();
                 }
-            } catch (NotNormalizableValueException $e) {
-                return JsonResponse::create(
+            } catch (\Exception $e) {
+                return new JsonResponse(
                     ['detail' => 'Cannot denormalize work log.'], JsonResponse::HTTP_BAD_REQUEST
                 );
             }
 
-            $workMonth = $this->workMonthRepository->findByWorkLogAndUser($vacationWorkLog, $token->getUser());
+            $workMonth = $this->workMonthRepository->findByWorkLogAndUser($workLog, $this->getUser());
 
             if (!$workMonth) {
-                return JsonResponse::create(
-                    ['detail' => 'Cannot create work log without work month.'], JsonResponse::HTTP_BAD_REQUEST
+                return new JsonResponse(
+                    ['detail' => 'Cannot create work log without work month.'],
+                    JsonResponse::HTTP_BAD_REQUEST
                 );
             }
 
             if ($workMonth->getStatus() === WorkMonth::STATUS_APPROVED) {
-                return JsonResponse::create(
-                    ['detail' => 'Cannot add work log to closed work month.'], JsonResponse::HTTP_BAD_REQUEST
+                return new JsonResponse(
+                    ['detail' => 'Cannot add work log to closed work month.'],
+                    JsonResponse::HTTP_BAD_REQUEST
                 );
             }
 
-            $vacationWorkLog->setWorkMonth($workMonth);
-            $vacationWorkLogs[] = $vacationWorkLog;
+            $workLog->setWorkMonth($workMonth);
+            $workLogs[] = $workLog;
 
             if (!array_key_exists($workMonth->getYear()->getYear(), $vacationWorkLogsByYear)) {
                 $vacationWorkLogsByYear[$workMonth->getYear()->getYear()] = 0;
@@ -159,7 +129,7 @@ class VacationWorkLogController extends AbstractController
             /** @var SupportedYear */
             $supportedYear = $this->supportedYearRepository->getRepository()->find($year);
 
-            if ($this->vacationWorkLogRepository->getRemainingVacationDays($token->getUser(), $supportedYear) < $workLogCount) {
+            if ($this->vacationWorkLogRepository->getRemainingVacationDays($this->getUser(), $supportedYear) < $workLogCount) {
                 return JsonResponse::create(
                     ['detail' => 'Set duration exceeds number of vacation days allocated for this year.'],
                     JsonResponse::HTTP_BAD_REQUEST
@@ -167,234 +137,28 @@ class VacationWorkLogController extends AbstractController
             }
         }
 
-        foreach ($vacationWorkLogs as $index => $vacationWorkLog) {
-            $errors = $this->validator->validate($vacationWorkLog);
+        foreach ($workLogs as $index => $item) {
+            $errors = $this->validator->validate($item);
 
             if (count($errors) > 0) {
-                return JsonResponse::create(
-                    ['detail' => sprintf('Vacation work log with index %d is not valid: %s', $index, $errors[0]->getMessage())],
+                return new JsonResponse(
+                    ['detail' => sprintf('Work log with index %d is not valid: %s', $index, $errors[0]->getMessage())],
                     JsonResponse::HTTP_BAD_REQUEST
                 );
             }
         }
 
-        $this->vacationWorkLogService->createVacationWorkLogs($vacationWorkLogs);
-        $normalizedVacationWorkLogs = [];
-
-        foreach ($vacationWorkLogs as $vacationWorkLog) {
-            $normalizedVacationWorkLogs[] = $this->normalizer->normalize(
-                $vacationWorkLog,
-                VacationWorkLog::class,
-                ['groups' => ['vacation_work_log_out_detail']]
-            );
-        }
-
-        return JsonResponse::create($normalizedVacationWorkLogs, JsonResponse::HTTP_CREATED);
-    }
-
-    public function bulkMarkApproved(Request $request): Response
-    {
-        $data = json_decode((string) $request->getContent());
-        if (!isset($data->workLogIds) || !is_array($data->workLogIds)) {
-            return JsonResponse::create(
-                ['detail' => 'Work log ids are missing.'], JsonResponse::HTTP_BAD_REQUEST
-            );
-        }
-
-        $workLogs = [];
-
-        foreach ($this->vacationWorkLogRepository->findByIds($data->workLogIds) as $workLog) {
-            if (!in_array($this->getUser(), $workLog->getWorkMonth()->getUser()->getAllSupervisors())) {
-                return JsonResponse::create(null, JsonResponse::HTTP_FORBIDDEN);
-            }
-
-            if ($workLog->getTimeApproved()) {
-                return JsonResponse::create(
-                    ['detail' => sprintf('Vacation work log with id %d has been already approved.', $workLog->getId())],
-                    JsonResponse::HTTP_BAD_REQUEST
-                );
-            }
-
-            if ($workLog->getTimeRejected()) {
-                return JsonResponse::create(
-                    ['detail' => sprintf('Vacation work log with id %d has been already rejected.', $workLog->getId())],
-                    JsonResponse::HTTP_BAD_REQUEST
-                );
-            }
-
-            $workLogs[] = $workLog;
-        }
-
-        foreach ($workLogs as $workLog) {
-            $this->vacationWorkLogService->markApproved($workLog);
-        }
-
-        $supervisor = $this->getUser();
-
-        $this->eventDispatcher->dispatch(
-            new MultipleVacationWorkLogApprovedEvent($workLogs, $supervisor),
-            MultipleVacationWorkLogApprovedEvent::APPROVED
-        );
-
+        $this->specialWorkLogService->createWorkLogs($workLogs);
         $normalizedWorkLogs = [];
 
-        foreach ($workLogs as $workLog) {
+        foreach ($workLogs as $item) {
             $normalizedWorkLogs[] = $this->normalizer->normalize(
-                $workLog,
-                VacationWorkLog::class,
-                ['groups' => ['vacation_work_log_out_detail']]
+                $item,
+                $this->entityClassName,
+                ['groups' => [$this->entityNormalizationGroup]]
             );
         }
 
-        return JsonResponse::create($normalizedWorkLogs, JsonResponse::HTTP_OK);
-    }
-
-    public function bulkMarkRejected(Request $request): Response
-    {
-        $data = json_decode((string) $request->getContent());
-        if (!isset($data->workLogIds) || !is_array($data->workLogIds)) {
-            return JsonResponse::create(
-                ['detail' => 'Work log ids are missing.'], JsonResponse::HTTP_BAD_REQUEST
-            );
-        }
-        if (!isset($data->rejectionMessage)) {
-            return JsonResponse::create(
-                ['detail' => 'Rejection message is missing.'], JsonResponse::HTTP_BAD_REQUEST
-            );
-        }
-
-        $workLogs = [];
-
-        foreach ($this->vacationWorkLogRepository->findByIds($data->workLogIds) as $workLog) {
-            if (!in_array($this->getUser(), $workLog->getWorkMonth()->getUser()->getAllSupervisors())) {
-                return JsonResponse::create(null, JsonResponse::HTTP_FORBIDDEN);
-            }
-
-            if ($workLog->getTimeApproved()) {
-                return JsonResponse::create(
-                    ['detail' => sprintf('Vacation work log with id %d has been already approved.', $workLog->getId())],
-                    JsonResponse::HTTP_BAD_REQUEST
-                );
-            }
-
-            if ($workLog->getTimeRejected()) {
-                return JsonResponse::create(
-                    ['detail' => sprintf('Vacation work log with id %d has been already rejected.', $workLog->getId())],
-                    JsonResponse::HTTP_BAD_REQUEST
-                );
-            }
-
-            $workLogs[] = $workLog;
-        }
-
-        foreach ($workLogs as $workLog) {
-            $this->vacationWorkLogService->markRejected($workLog, $data->rejectionMessage);
-        }
-
-        $supervisor = $this->getUser();
-
-        $this->eventDispatcher->dispatch(
-            new MultipleVacationWorkLogRejectedEvent($workLogs, $supervisor),
-            MultipleVacationWorkLogRejectedEvent::REJECTED
-        );
-
-        $normalizedWorkLogs = [];
-
-        foreach ($workLogs as $workLog) {
-            $normalizedWorkLogs[] = $this->normalizer->normalize(
-                $workLog,
-                VacationWorkLog::class,
-                ['groups' => ['vacation_work_log_out_detail']]
-            );
-        }
-
-        return JsonResponse::create($normalizedWorkLogs, JsonResponse::HTTP_OK);
-    }
-
-    public function markApproved(int $id): Response
-    {
-        $workLog = $this->vacationWorkLogRepository->getRepository()->find($id);
-        if (!$workLog || !$workLog instanceof VacationWorkLog) {
-            throw $this->createNotFoundException(sprintf('Vacation work log with id %d was not found.', $id));
-        }
-
-        if (!in_array($this->getUser(), $workLog->getWorkMonth()->getUser()->getAllSupervisors())) {
-            return JsonResponse::create(null, JsonResponse::HTTP_FORBIDDEN);
-        }
-
-        if ($workLog->getTimeApproved()) {
-            return JsonResponse::create(
-                ['detail' => 'Vacation work log month has been already approved.'], JsonResponse::HTTP_BAD_REQUEST
-            );
-        }
-
-        if ($workLog->getTimeRejected()) {
-            return JsonResponse::create(
-                ['detail' => 'Vacation work log month has been already rejected.'], JsonResponse::HTTP_BAD_REQUEST
-            );
-        }
-
-        $this->vacationWorkLogService->markApproved($workLog);
-        $supervisor = $this->getUser();
-
-        $this->eventDispatcher->dispatch(
-            new VacationWorkLogApprovedEvent($workLog, $supervisor),
-            VacationWorkLogApprovedEvent::APPROVED
-        );
-
-        return JsonResponse::create(
-            $this->normalizer->normalize(
-                $workLog,
-                VacationWorkLog::class,
-                ['groups' => ['vacation_work_log_out_detail']]
-            ), JsonResponse::HTTP_OK
-        );
-    }
-
-    public function markRejected(Request $request, int $id): Response
-    {
-        $workLog = $this->vacationWorkLogRepository->getRepository()->find($id);
-        if (!$workLog || !$workLog instanceof VacationWorkLog) {
-            throw $this->createNotFoundException(sprintf('Vacation work log with id %d was not found.', $id));
-        }
-
-        if (!in_array($this->getUser(), $workLog->getWorkMonth()->getUser()->getAllSupervisors())) {
-            return JsonResponse::create(null, JsonResponse::HTTP_FORBIDDEN);
-        }
-
-        if ($workLog->getTimeApproved()) {
-            return JsonResponse::create(
-                ['detail' => 'Vacation work log month has been already approved.'], JsonResponse::HTTP_BAD_REQUEST
-            );
-        }
-
-        if ($workLog->getTimeRejected()) {
-            return JsonResponse::create(
-                ['detail' => 'Vacation work log month has been already rejected.'], JsonResponse::HTTP_BAD_REQUEST
-            );
-        }
-
-        $data = json_decode((string) $request->getContent());
-        if (!isset($data->rejectionMessage)) {
-            return JsonResponse::create(
-                ['detail' => 'Rejection message is missing.'], JsonResponse::HTTP_BAD_REQUEST
-            );
-        }
-
-        $this->vacationWorkLogService->markRejected($workLog, $data->rejectionMessage);
-        $supervisor = $this->getUser();
-
-        $this->eventDispatcher->dispatch(
-            new VacationWorkLogRejectedEvent($workLog, $supervisor),
-            VacationWorkLogRejectedEvent::REJECTED
-        );
-
-        return JsonResponse::create(
-            $this->normalizer->normalize(
-                $workLog,
-                VacationWorkLog::class,
-                ['groups' => ['vacation_work_log_out_detail']]
-            ), JsonResponse::HTTP_OK
-        );
+        return new JsonResponse($normalizedWorkLogs, JsonResponse::HTTP_CREATED);
     }
 }

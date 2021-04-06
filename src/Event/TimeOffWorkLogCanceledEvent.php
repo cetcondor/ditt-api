@@ -6,28 +6,22 @@ use App\Entity\TimeOffWorkLog;
 use App\Entity\User;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class TimeOffWorkLogCanceledEvent extends Event
+class TimeOffWorkLogCanceledEvent extends Event implements SpecialWorkLogEventInterface
 {
-    const CANCELED = 'event.time_off_work_log.canceled';
+    const EVENT = 'event.time_off_work_log.canceled';
 
-    /**
-     * @var TimeOffWorkLog
-     */
-    private $timeOffWorkLog;
-    /**
-     * @var User|null
-     */
-    private $supervisor;
+    private TimeOffWorkLog $workLog;
+    private ?User $supervisor;
 
-    public function __construct(TimeOffWorkLog $timeOffWorkLog, ?User $supervisor)
+    public function __construct(TimeOffWorkLog $workLog, ?User $supervisor)
     {
-        $this->timeOffWorkLog = $timeOffWorkLog;
+        $this->workLog = $workLog;
         $this->supervisor = $supervisor;
     }
 
-    public function getTimeOffWorkLog(): TimeOffWorkLog
+    public function getWorkLog(): TimeOffWorkLog
     {
-        return $this->timeOffWorkLog;
+        return $this->workLog;
     }
 
     public function getSupervisor(): ?User

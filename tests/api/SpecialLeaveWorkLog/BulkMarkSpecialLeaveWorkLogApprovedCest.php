@@ -83,7 +83,7 @@ class BulkMarkSpecialLeaveWorkLogApprovedCest
         $I->seeHttpHeader('Content-Type', 'application/json');
         $I->seeResponseCodeIs(Response::HTTP_BAD_REQUEST);
         $I->seeResponseContainsJson([
-            'detail' => sprintf('Special leave work log with id %d has been already approved.', $workLog->getId()),
+            'detail' => sprintf('Work log with id %d has been already approved.', $workLog->getId()),
         ]);
         $I->grabEntityFromRepository(SpecialLeaveWorkLog::class, [
             'id' => $workLog->getId(),
@@ -117,7 +117,7 @@ class BulkMarkSpecialLeaveWorkLogApprovedCest
         $I->seeHttpHeader('Content-Type', 'application/json');
         $I->seeResponseCodeIs(Response::HTTP_BAD_REQUEST);
         $I->seeResponseContainsJson([
-            'detail' => sprintf('Special leave work log with id %d has been already rejected.', $workLog->getId()),
+            'detail' => sprintf('Work log with id %d has been already rejected.', $workLog->getId()),
         ]);
         $I->grabEntityFromRepository(SpecialLeaveWorkLog::class, [
             'id' => $workLog->getId(),

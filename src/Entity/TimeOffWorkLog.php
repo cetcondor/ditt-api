@@ -5,7 +5,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
-class TimeOffWorkLog implements WorkLogInterface
+class TimeOffWorkLog implements SpecialWorkLogInterface
 {
     /**
      * @var int|null

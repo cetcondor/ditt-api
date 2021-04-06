@@ -65,7 +65,7 @@ class MarkTimeOffWorkLogApprovedCest
         $I->seeHttpHeader('Content-Type', 'application/json');
         $I->seeResponseCodeIs(Response::HTTP_BAD_REQUEST);
         $I->seeResponseContainsJson([
-            'detail' => 'Time off work log month has been already approved.',
+            'detail' => 'Work log month has been already approved.',
         ]);
         $I->grabEntityFromRepository(TimeOffWorkLog::class, [
             'id' => $workLog->getId(),
@@ -93,7 +93,7 @@ class MarkTimeOffWorkLogApprovedCest
         $I->seeHttpHeader('Content-Type', 'application/json');
         $I->seeResponseCodeIs(Response::HTTP_BAD_REQUEST);
         $I->seeResponseContainsJson([
-            'detail' => 'Time off work log month has been already rejected.',
+            'detail' => 'Work log month has been already rejected.',
         ]);
         $I->grabEntityFromRepository(TimeOffWorkLog::class, [
             'id' => $workLog->getId(),

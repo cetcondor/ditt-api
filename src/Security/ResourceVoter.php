@@ -2,12 +2,12 @@
 
 namespace App\Security;
 
+use App\Entity\SpecialWorkLogSupportInterface;
 use App\Entity\SupervisorWorkLogInterface;
 use App\Entity\User;
 use App\Entity\Vacation;
 use App\Entity\WorkHours;
 use App\Entity\WorkLogInterface;
-use App\Entity\WorkLogSupportInterface;
 use App\Entity\WorkMonth;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
@@ -62,7 +62,7 @@ class ResourceVoter extends Voter
             return true;
         }
 
-        if ($subject instanceof WorkLogSupportInterface) {
+        if ($subject instanceof SpecialWorkLogSupportInterface) {
             return true;
         }
 
@@ -118,7 +118,7 @@ class ResourceVoter extends Voter
             return $this->canViewWorkLog($subject, $user, $token);
         }
 
-        if ($subject instanceof WorkLogSupportInterface) {
+        if ($subject instanceof SpecialWorkLogSupportInterface) {
             return $this->canViewWorkLogSupport($subject, $user, $token);
         }
 
@@ -157,7 +157,7 @@ class ResourceVoter extends Voter
             || $this->decisionManager->decide($token, [User::ROLE_SUPER_ADMIN]);
     }
 
-    private function canViewWorkLogSupport(WorkLogSupportInterface $workLogSupport, User $user, TokenInterface $token): bool
+    private function canViewWorkLogSupport(SpecialWorkLogSupportInterface $workLogSupport, User $user, TokenInterface $token): bool
     {
         return $workLogSupport->getWorkLog()->getWorkMonth()->getUser() === $user
             || in_array($user, $workLogSupport->getWorkLog()->getWorkMonth()->getUser()->getAllSupervisors())
@@ -196,7 +196,7 @@ class ResourceVoter extends Voter
             return $this->canEditWorkLog($subject, $user);
         }
 
-        if ($subject instanceof WorkLogSupportInterface) {
+        if ($subject instanceof SpecialWorkLogSupportInterface) {
             return $this->canEditWorkLogSupport($subject, $user, $token);
         }
 
@@ -252,7 +252,7 @@ class ResourceVoter extends Voter
         }
     }
 
-    private function canEditWorkLogSupport(WorkLogSupportInterface $workLogSupport, User $user, TokenInterface $token): bool
+    private function canEditWorkLogSupport(SpecialWorkLogSupportInterface $workLogSupport, User $user, TokenInterface $token): bool
     {
         return in_array($user, $workLogSupport->getWorkLog()->getWorkMonth()->getUser()->getAllSupervisors())
             || $this->decisionManager->decide($token, [User::ROLE_SUPER_ADMIN]);

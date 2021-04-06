@@ -6,29 +6,22 @@ use App\Entity\HomeOfficeWorkLog;
 use App\Entity\User;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class HomeOfficeWorkLogCanceledEvent extends Event
+class HomeOfficeWorkLogCanceledEvent extends Event implements SpecialWorkLogEventInterface
 {
-    const CANCELED = 'event.home_office_work_log.canceled';
+    const EVENT = 'event.home_office_work_log.canceled';
 
-    /**
-     * @var HomeOfficeWorkLog
-     */
-    private $homeOfficeWorkLog;
+    private HomeOfficeWorkLog $workLog;
+    private ?User $supervisor;
 
-    /**
-     * @var User|null
-     */
-    private $supervisor;
-
-    public function __construct(HomeOfficeWorkLog $homeOfficeWorkLog, ?User $supervisor)
+    public function __construct(HomeOfficeWorkLog $workLog, ?User $supervisor)
     {
-        $this->homeOfficeWorkLog = $homeOfficeWorkLog;
+        $this->workLog = $workLog;
         $this->supervisor = $supervisor;
     }
 
-    public function getHomeOfficeWorkLog(): HomeOfficeWorkLog
+    public function getWorkLog(): HomeOfficeWorkLog
     {
-        return $this->homeOfficeWorkLog;
+        return $this->workLog;
     }
 
     public function getSupervisor(): ?User

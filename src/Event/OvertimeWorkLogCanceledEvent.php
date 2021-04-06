@@ -6,28 +6,22 @@ use App\Entity\OvertimeWorkLog;
 use App\Entity\User;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class OvertimeWorkLogCanceledEvent extends Event
+class OvertimeWorkLogCanceledEvent extends Event implements SpecialWorkLogEventInterface
 {
-    const CANCELED = 'event.overtime_work_log.canceled';
+    const EVENT = 'event.overtime_work_log.canceled';
 
-    /**
-     * @var OvertimeWorkLog
-     */
-    private $overtimeWorkLog;
-    /**
-     * @var User|null
-     */
-    private $supervisor;
+    private OvertimeWorkLog $workLog;
+    private ?User $supervisor;
 
-    public function __construct(OvertimeWorkLog $overtimeWorkLog, ?User $supervisor)
+    public function __construct(OvertimeWorkLog $workLog, ?User $supervisor)
     {
-        $this->overtimeWorkLog = $overtimeWorkLog;
+        $this->workLog = $workLog;
         $this->supervisor = $supervisor;
     }
 
-    public function getOvertimeWorkLog(): OvertimeWorkLog
+    public function getWorkLog(): OvertimeWorkLog
     {
-        return $this->overtimeWorkLog;
+        return $this->workLog;
     }
 
     public function getSupervisor(): ?User

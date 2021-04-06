@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-class HomeOfficeWorkLogSupport implements WorkLogSupportInterface
+class HomeOfficeWorkLogSupport implements SpecialWorkLogSupportInterface
 {
-    use WorkLogSupportTrait;
+    use SpecialWorkLogSupportTrait;
 }

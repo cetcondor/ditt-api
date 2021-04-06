@@ -5,7 +5,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
-class HomeOfficeWorkLog implements WorkLogInterface
+class HomeOfficeWorkLog implements SpecialWorkLogInterface
 {
     /**
      * @var int|null

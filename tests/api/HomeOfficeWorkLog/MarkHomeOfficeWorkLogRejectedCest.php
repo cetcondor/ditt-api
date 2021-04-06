@@ -71,7 +71,7 @@ class MarkHomeOfficeWorkLogRejectedCest
         $I->seeHttpHeader('Content-Type', 'application/json');
         $I->seeResponseCodeIs(Response::HTTP_BAD_REQUEST);
         $I->seeResponseContainsJson([
-            'detail' => 'Home office work log month has been already approved.',
+            'detail' => 'Work log month has been already approved.',
         ]);
         $I->grabEntityFromRepository(HomeOfficeWorkLog::class, [
             'id' => $workLog->getId(),
@@ -102,7 +102,7 @@ class MarkHomeOfficeWorkLogRejectedCest
         $I->seeHttpHeader('Content-Type', 'application/json');
         $I->seeResponseCodeIs(Response::HTTP_BAD_REQUEST);
         $I->seeResponseContainsJson([
-            'detail' => 'Home office work log month has been already rejected.',
+            'detail' => 'Work log month has been already rejected.',
         ]);
         $I->grabEntityFromRepository(HomeOfficeWorkLog::class, [
             'id' => $workLog->getId(),

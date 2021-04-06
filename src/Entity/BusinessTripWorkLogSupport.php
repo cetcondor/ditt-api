@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-class BusinessTripWorkLogSupport implements WorkLogSupportInterface
+class BusinessTripWorkLogSupport implements SpecialWorkLogSupportInterface
 {
-    use WorkLogSupportTrait;
+    use SpecialWorkLogSupportTrait;
 }

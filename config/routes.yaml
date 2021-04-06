@@ -45,6 +45,20 @@ api_business_trip_work_log_bulk_create:
     defaults:
         _api_collection_operation_name: 'bulkCreate'
 
+api_business_trip_work_log_bulk_mark_approved:
+    path: /business_trip_work_logs/bulk/mark_approved
+    methods: [PUT]
+    controller: App\Controller\BusinessTripWorkLogController::bulkMarkApproved
+    defaults:
+        _api_collection_operation_name: 'bulkMarkApproved'
+
+api_business_trip_work_log_bulk_mark_rejected:
+    path: /business_trip_work_logs/bulk/mark_rejected
+    methods: [PUT]
+    controller: App\Controller\BusinessTripWorkLogController::bulkMarkRejected
+    defaults:
+        _api_collection_operation_name: 'bulkMarkRejected'
+
 api_business_trip_work_log_mark_approved:
     path: /business_trip_work_logs/{id}/mark_approved
     methods: [PUT]
@@ -58,6 +72,13 @@ api_business_trip_work_log_mark_rejected:
     controller: App\Controller\BusinessTripWorkLogController::markRejected
     defaults:
         _api_collection_operation_name: 'markRejected'
+
+api_business_trip_work_log_support_bulk_create:
+    path: /business_trip_work_log_supports/bulk
+    methods: [POST]
+    controller: App\Controller\BusinessTripWorkLogSupportController::bulkCreate
+    defaults:
+        _api_collection_operation_name: 'bulkCreate'
 
 api_calendar_ical:
     path: /ical/{icalUserKey}/ditt.ics
@@ -87,6 +108,20 @@ api_home_office_work_log_bulk_create:
     defaults:
         _api_collection_operation_name: 'bulkCreate'
 
+api_home_office_work_log_bulk_mark_approved:
+    path: /home_office_work_logs/bulk/mark_approved
+    methods: [PUT]
+    controller: App\Controller\HomeOfficeWorkLogController::bulkMarkApproved
+    defaults:
+        _api_collection_operation_name: 'bulkMarkApproved'
+
+api_home_office_work_log_bulk_mark_rejected:
+    path: /home_office_work_logs/bulk/mark_rejected
+    methods: [PUT]
+    controller: App\Controller\HomeOfficeWorkLogController::bulkMarkRejected
+    defaults:
+        _api_collection_operation_name: 'bulkMarkRejected'
+
 api_home_office_work_log_mark_approved:
     path: /home_office_work_logs/{id}/mark_approved
     methods: [PUT]
@@ -100,6 +135,13 @@ api_home_office_work_log_mark_rejected:
     controller: App\Controller\HomeOfficeWorkLogController::markRejected
     defaults:
         _api_collection_operation_name: 'markRejected'
+
+api_home_office_work_log_support_bulk_create:
+    path: /home_office_work_log_supports/bulk
+    methods: [POST]
+    controller: App\Controller\HomeOfficeWorkLogSupportController::bulkCreate
+    defaults:
+        _api_collection_operation_name: 'bulkCreate'
 
 api_hr_changes_and_absence_registrations:
     path: /hr/changes_and_absence_registrations
@@ -122,6 +164,27 @@ api_maternity_protection_work_log_bulk_create:
     defaults:
         _api_collection_operation_name: 'bulkCreate'
 
+api_overtime_work_log_bulk_create:
+    path: /overtime_work_logs/bulk
+    methods: [POST]
+    controller: App\Controller\OvertimeWorkLogController::bulkCreate
+    defaults:
+        _api_collection_operation_name: 'bulkCreate'
+
+api_overtime_work_log_bulk_mark_approved:
+    path: /overtime_work_logs/bulk/mark_approved
+    methods: [PUT]
+    controller: App\Controller\OvertimeWorkLogController::bulkMarkApproved
+    defaults:
+        _api_collection_operation_name: 'bulkMarkApproved'
+
+api_overtime_work_log_bulk_mark_rejected:
+    path: /overtime_work_logs/bulk/mark_rejected
+    methods: [PUT]
+    controller: App\Controller\OvertimeWorkLogController::bulkMarkRejected
+    defaults:
+        _api_collection_operation_name: 'bulkMarkRejected'
+
 api_overtime_work_log_mark_approved:
     path: /overtime_work_logs/{id}/mark_approved
     methods: [PUT]
@@ -135,6 +198,13 @@ api_overtime_work_log_mark_rejected:
     controller: App\Controller\OvertimeWorkLogController::markRejected
     defaults:
         _api_collection_operation_name: 'markRejected'
+
+api_overtime_work_log_support_bulk_create:
+    path: /overtime_work_log_supports/bulk
+    methods: [POST]
+    controller: App\Controller\OvertimeWorkLogSupportController::bulkCreate
+    defaults:
+        _api_collection_operation_name: 'bulkCreate'
 
 api_parental_leave_work_log_bulk_create:
     path: /parental_leave_work_logs/bulk
@@ -206,6 +276,20 @@ api_time_off_work_log_bulk_create:
     defaults:
         _api_collection_operation_name: 'bulkCreate'
 
+api_time_off_work_log_bulk_mark_approved:
+    path: /time_off_work_logs/bulk/mark_approved
+    methods: [PUT]
+    controller: App\Controller\TimeOffWorkLogController::bulkMarkApproved
+    defaults:
+        _api_collection_operation_name: 'bulkMarkApproved'
+
+api_time_off_work_log_bulk_mark_rejected:
+    path: /time_off_work_logs/bulk/mark_rejected
+    methods: [PUT]
+    controller: App\Controller\TimeOffWorkLogController::bulkMarkRejected
+    defaults:
+        _api_collection_operation_name: 'bulkMarkRejected'
+
 api_time_off_work_log_mark_approved:
     path: /time_off_work_logs/{id}/mark_approved
     methods: [PUT]
@@ -219,6 +303,13 @@ api_time_off_work_log_mark_rejected:
     controller: App\Controller\TimeOffWorkLogController::markRejected
     defaults:
         _api_collection_operation_name: 'markRejected'
+
+api_time_off_work_log_support_bulk_create:
+    path: /time_off_work_log_supports/bulk
+    methods: [POST]
+    controller: App\Controller\TimeOffWorkLogSupportController::bulkCreate
+    defaults:
+        _api_collection_operation_name: 'bulkCreate'
 
 api_vacation_work_log_bulk_create:
     path: /vacation_work_logs/bulk

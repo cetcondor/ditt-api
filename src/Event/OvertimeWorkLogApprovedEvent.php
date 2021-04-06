@@ -6,29 +6,22 @@ use App\Entity\OvertimeWorkLog;
 use App\Entity\User;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class OvertimeWorkLogApprovedEvent extends Event
+class OvertimeWorkLogApprovedEvent extends Event implements SpecialWorkLogEventInterface
 {
-    const APPROVED = 'event.overtime_work_log.approved';
+    const EVENT = 'event.overtime_work_log.approved';
 
-    /**
-     * @var OvertimeWorkLog
-     */
-    private $overtimeWorkLog;
+    private OvertimeWorkLog $workLog;
+    private ?User $supervisor;
 
-    /**
-     * @var User|null
-     */
-    private $supervisor;
-
-    public function __construct(OvertimeWorkLog $overtimeWorkLog, ?User $supervisor)
+    public function __construct(OvertimeWorkLog $workLog, ?User $supervisor)
     {
-        $this->overtimeWorkLog = $overtimeWorkLog;
+        $this->workLog = $workLog;
         $this->supervisor = $supervisor;
     }
 
-    public function getOvertimeWorkLog(): OvertimeWorkLog
+    public function getWorkLog(): OvertimeWorkLog
     {
-        return $this->overtimeWorkLog;
+        return $this->workLog;
     }
 
     public function getSupervisor(): ?User

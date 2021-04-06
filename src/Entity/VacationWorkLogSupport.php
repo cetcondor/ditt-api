@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-class VacationWorkLogSupport implements WorkLogSupportInterface
+class VacationWorkLogSupport implements SpecialWorkLogSupportInterface
 {
-    use WorkLogSupportTrait;
+    use SpecialWorkLogSupportTrait;
 }

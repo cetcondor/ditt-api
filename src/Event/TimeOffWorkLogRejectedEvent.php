@@ -6,29 +6,22 @@ use App\Entity\TimeOffWorkLog;
 use App\Entity\User;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class TimeOffWorkLogRejectedEvent extends Event
+class TimeOffWorkLogRejectedEvent extends Event implements SpecialWorkLogEventInterface
 {
-    const REJECTED = 'event.time_off_work_log.rejected';
+    const EVENT = 'event.time_off_work_log.rejected';
 
-    /**
-     * @var TimeOffWorkLog
-     */
-    private $timeOffWorkLog;
+    private TimeOffWorkLog $workLog;
+    private ?User $supervisor;
 
-    /**
-     * @var User|null
-     */
-    private $supervisor;
-
-    public function __construct(TimeOffWorkLog $timeOffWorkLog, ?User $supervisor)
+    public function __construct(TimeOffWorkLog $workLog, ?User $supervisor)
     {
-        $this->timeOffWorkLog = $timeOffWorkLog;
+        $this->workLog = $workLog;
         $this->supervisor = $supervisor;
     }
 
-    public function getTimeOffWorkLog(): TimeOffWorkLog
+    public function getWorkLog(): TimeOffWorkLog
     {
-        return $this->timeOffWorkLog;
+        return $this->workLog;
     }
 
     public function getSupervisor(): ?User

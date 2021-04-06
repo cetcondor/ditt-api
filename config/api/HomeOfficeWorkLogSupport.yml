@@ -8,6 +8,11 @@ App\Entity\HomeOfficeWorkLogSupport:
             denormalization_context:
                 groups:
                     - home_office_work_log_support_in
+        bulkCreate:
+            method: POST
+            route_name: api_home_office_work_log_support_bulk_create
+            swagger_context:
+                summary: Creates multiple HomeOfficeWorkLogSupport resource.
     itemOperations:
         get:
             method: GET

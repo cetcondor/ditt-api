@@ -6,29 +6,22 @@ use App\Entity\BusinessTripWorkLog;
 use App\Entity\User;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class BusinessTripWorkLogApprovedEvent extends Event
+class BusinessTripWorkLogApprovedEvent extends Event implements SpecialWorkLogEventInterface
 {
-    const APPROVED = 'event.business_trip_work_log.approved';
+    const EVENT = 'event.business_trip_work_log.approved';
 
-    /**
-     * @var BusinessTripWorkLog
-     */
-    private $businessTripWorkLog;
+    private BusinessTripWorkLog $workLog;
+    private ?User $supervisor;
 
-    /**
-     * @var User|null
-     */
-    private $supervisor;
-
-    public function __construct(BusinessTripWorkLog $businessTripWorkLog, ?User $supervisor)
+    public function __construct(BusinessTripWorkLog $workLog, ?User $supervisor)
     {
-        $this->businessTripWorkLog = $businessTripWorkLog;
+        $this->workLog = $workLog;
         $this->supervisor = $supervisor;
     }
 
-    public function getBusinessTripWorkLog(): BusinessTripWorkLog
+    public function getWorkLog(): BusinessTripWorkLog
     {
-        return $this->businessTripWorkLog;
+        return $this->workLog;
     }
 
     public function getSupervisor(): ?User

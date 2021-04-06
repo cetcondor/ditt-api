@@ -116,32 +116,32 @@ class WorkLogSubscriber implements EventSubscriberInterface
         if ($workLog instanceof BusinessTripWorkLog && $workLog->getTimeApproved() !== null) {
             $this->eventDispatcher->dispatch(
                 new BusinessTripWorkLogCanceledEvent($workLog, $supervisor),
-                BusinessTripWorkLogCanceledEvent::CANCELED
+                BusinessTripWorkLogCanceledEvent::EVENT
             );
         } elseif ($workLog instanceof HomeOfficeWorkLog && $workLog->getTimeApproved() !== null) {
             $this->eventDispatcher->dispatch(
                 new HomeOfficeWorkLogCanceledEvent($workLog, $supervisor),
-                HomeOfficeWorkLogCanceledEvent::CANCELED
+                HomeOfficeWorkLogCanceledEvent::EVENT
             );
         } elseif ($workLog instanceof OvertimeWorkLog && $workLog->getTimeApproved() !== null) {
             $this->eventDispatcher->dispatch(
                 new OvertimeWorkLogCanceledEvent($workLog, $supervisor),
-                OvertimeWorkLogCanceledEvent::CANCELED
+                OvertimeWorkLogCanceledEvent::EVENT
             );
         } elseif ($workLog instanceof SpecialLeaveWorkLog && $workLog->getTimeApproved() !== null) {
             $this->eventDispatcher->dispatch(
                 new SpecialLeaveWorkLogCanceledEvent($workLog, $supervisor),
-                SpecialLeaveWorkLogCanceledEvent::CANCELED
+                SpecialLeaveWorkLogCanceledEvent::EVENT
             );
         } elseif ($workLog instanceof TimeOffWorkLog && $workLog->getTimeApproved() !== null) {
             $this->eventDispatcher->dispatch(
                 new TimeOffWorkLogCanceledEvent($workLog, $supervisor),
-                TimeOffWorkLogCanceledEvent::CANCELED
+                TimeOffWorkLogCanceledEvent::EVENT
             );
         } elseif ($workLog instanceof VacationWorkLog && $workLog->getTimeApproved() !== null) {
             $this->eventDispatcher->dispatch(
                 new VacationWorkLogCanceledEvent($workLog, $supervisor),
-                VacationWorkLogCanceledEvent::CANCELED
+                VacationWorkLogCanceledEvent::EVENT
             );
         }
     }

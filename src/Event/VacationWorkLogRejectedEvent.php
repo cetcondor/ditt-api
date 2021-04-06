@@ -6,29 +6,22 @@ use App\Entity\User;
 use App\Entity\VacationWorkLog;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class VacationWorkLogRejectedEvent extends Event
+class VacationWorkLogRejectedEvent extends Event implements SpecialWorkLogEventInterface
 {
-    const REJECTED = 'event.vacation_work_log.rejected';
+    const EVENT = 'event.vacation_work_log.rejected';
 
-    /**
-     * @var VacationWorkLog
-     */
-    private $vacationWorkLog;
+    private VacationWorkLog $workLog;
+    private ?User $supervisor;
 
-    /**
-     * @var User|null
-     */
-    private $supervisor;
-
-    public function __construct(VacationWorkLog $vacationWorkLog, ?User $supervisor)
+    public function __construct(VacationWorkLog $workLog, ?User $supervisor)
     {
-        $this->vacationWorkLog = $vacationWorkLog;
+        $this->workLog = $workLog;
         $this->supervisor = $supervisor;
     }
 
-    public function getVacationWorkLog(): VacationWorkLog
+    public function getWorkLog(): VacationWorkLog
     {
-        return $this->vacationWorkLog;
+        return $this->workLog;
     }
 
     public function getSupervisor(): ?User

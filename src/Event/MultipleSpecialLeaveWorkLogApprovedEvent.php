@@ -2,40 +2,25 @@
 
 namespace App\Event;
 
-use App\Entity\SpecialLeaveWorkLog;
 use App\Entity\User;
-use App\Entity\VacationWorkLog;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class MultipleSpecialLeaveWorkLogApprovedEvent extends Event
+class MultipleSpecialLeaveWorkLogApprovedEvent extends Event implements MultipleSpecialWorkLogEventInterface
 {
-    const APPROVED = 'event.special_leave_work_log.multiple.approved';
+    const EVENT = 'event.special_leave_work_log.multiple.approved';
 
-    /**
-     * @var SpecialLeaveWorkLog[]
-     */
-    private $specialLeaveWorkLogs;
+    private array $workLogs;
+    private ?User $supervisor;
 
-    /**
-     * @var User|null
-     */
-    private $supervisor;
-
-    /**
-     * @param SpecialLeaveWorkLog[] $specialLeaveWorkLogs
-     */
-    public function __construct(array $specialLeaveWorkLogs, ?User $supervisor)
+    public function __construct(array $workLogs, ?User $supervisor)
     {
-        $this->specialLeaveWorkLogs = $specialLeaveWorkLogs;
+        $this->workLogs = $workLogs;
         $this->supervisor = $supervisor;
     }
 
-    /**
-     * @return VacationWorkLog[]
-     */
-    public function getSpecialLeaveWorkLogs(): array
+    public function getWorkLogs(): array
     {
-        return $this->specialLeaveWorkLogs;
+        return $this->workLogs;
     }
 
     public function getSupervisor(): ?User

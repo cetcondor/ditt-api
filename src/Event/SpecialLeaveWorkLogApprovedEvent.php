@@ -6,29 +6,22 @@ use App\Entity\SpecialLeaveWorkLog;
 use App\Entity\User;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class SpecialLeaveWorkLogApprovedEvent extends Event
+class SpecialLeaveWorkLogApprovedEvent extends Event implements SpecialWorkLogEventInterface
 {
-    const APPROVED = 'event.special_leave_work_log.approved';
+    const EVENT = 'event.special_leave_work_log.approved';
 
-    /**
-     * @var SpecialLeaveWorkLog
-     */
-    private $specialLeaveWorkLog;
+    private SpecialLeaveWorkLog $workLog;
+    private ?User $supervisor;
 
-    /**
-     * @var User|null
-     */
-    private $supervisor;
-
-    public function __construct(SpecialLeaveWorkLog $specialLeaveWorkLog, ?User $supervisor)
+    public function __construct(SpecialLeaveWorkLog $workLog, ?User $supervisor)
     {
-        $this->specialLeaveWorkLog = $specialLeaveWorkLog;
+        $this->workLog = $workLog;
         $this->supervisor = $supervisor;
     }
 
-    public function getSpecialLeaveWorkLog(): SpecialLeaveWorkLog
+    public function getWorkLog(): SpecialLeaveWorkLog
     {
-        return $this->specialLeaveWorkLog;
+        return $this->workLog;
     }
 
     public function getSupervisor(): ?User

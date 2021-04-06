@@ -3,38 +3,24 @@
 namespace App\Event;
 
 use App\Entity\User;
-use App\Entity\VacationWorkLog;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class MultipleVacationWorkLogApprovedEvent extends Event
+class MultipleVacationWorkLogApprovedEvent extends Event implements MultipleSpecialWorkLogEventInterface
 {
-    const APPROVED = 'event.vacation_work_log.multiple.approved';
+    const EVENT = 'event.vacation_work_log.multiple.approved';
 
-    /**
-     * @var VacationWorkLog[]
-     */
-    private $vacationWorkLogs;
+    private array $workLogs;
+    private ?User $supervisor;
 
-    /**
-     * @var User|null
-     */
-    private $supervisor;
-
-    /**
-     * @param VacationWorkLog[] $vacationWorkLogs
-     */
-    public function __construct(array $vacationWorkLogs, ?User $supervisor)
+    public function __construct(array $workLogs, ?User $supervisor)
     {
-        $this->vacationWorkLogs = $vacationWorkLogs;
+        $this->workLogs = $workLogs;
         $this->supervisor = $supervisor;
     }
 
-    /**
-     * @return VacationWorkLog[]
-     */
-    public function getVacationWorkLogs(): array
+    public function getWorkLogs(): array
     {
-        return $this->vacationWorkLogs;
+        return $this->workLogs;
     }
 
     public function getSupervisor(): ?User

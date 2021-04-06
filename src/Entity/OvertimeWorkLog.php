@@ -5,7 +5,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
-class OvertimeWorkLog implements WorkLogInterface
+class OvertimeWorkLog implements SpecialWorkLogInterface
 {
     /**
      * @var int|null

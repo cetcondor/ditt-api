@@ -4,8 +4,8 @@ namespace App\Subscriber;
 
 use ApiPlatform\Core\EventListener\EventPriorities;
 use ApiPlatform\Core\Exception\InvalidArgumentException;
+use App\Entity\SpecialWorkLogSupportInterface;
 use App\Entity\User;
-use App\Entity\WorkLogSupportInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -39,7 +39,7 @@ class WorkLogSupportSubscriber implements EventSubscriberInterface
     public function addDetails(RequestEvent $event): void
     {
         $workLogSupport = $event->getControllerResult();
-        if (!$workLogSupport instanceof WorkLogSupportInterface) {
+        if (!$workLogSupport instanceof SpecialWorkLogSupportInterface) {
             return;
         }
 

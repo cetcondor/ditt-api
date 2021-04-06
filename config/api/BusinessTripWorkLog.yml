@@ -29,6 +29,39 @@ App\Entity\BusinessTripWorkLog:
             normalization_context:
                 groups:
                     - business_trip_work_log_out_detail
+        bulkMarkApproved:
+            method: PUT
+            route_name: api_business_trip_work_log_bulk_mark_approved
+            normalization_context:
+                groups:
+                    - business_trip_work_log_out_detail
+            swagger_context:
+                summary: Marks multiple BusinessTripWorkLog resources as approved.
+                parameters:
+                    - name: workLogIds
+                      description: 'Work log ids'
+                      type: array
+                      in: body
+                      required: true
+        bulkMarkRejected:
+            method: PUT
+            route_name: api_business_trip_work_log_bulk_mark_rejected
+            normalization_context:
+                groups:
+                    - business_trip_work_log_out_detail
+            swagger_context:
+                summary: Marks multiple BusinessTripWorkLog resources as rejected.
+                parameters:
+                    - name: workLogIds
+                      description: 'Work log ids'
+                      type: array
+                      in: body
+                      required: true
+                    - name: rejectionMessage
+                      description: 'Rejection message'
+                      type: string
+                      in: body
+                      required: true
         markApproved:
             method: PUT
             route_name: api_business_trip_work_log_mark_approved

@@ -71,7 +71,7 @@ class MarkOvertimeWorkLogRejectedCest
         $I->seeHttpHeader('Content-Type', 'application/json');
         $I->seeResponseCodeIs(Response::HTTP_BAD_REQUEST);
         $I->seeResponseContainsJson([
-            'detail' => 'Overtime work log month has been already approved.',
+            'detail' => 'Work log month has been already approved.',
         ]);
         $I->grabEntityFromRepository(OvertimeWorkLog::class, [
             'id' => $workLog->getId(),
@@ -102,7 +102,7 @@ class MarkOvertimeWorkLogRejectedCest
         $I->seeHttpHeader('Content-Type', 'application/json');
         $I->seeResponseCodeIs(Response::HTTP_BAD_REQUEST);
         $I->seeResponseContainsJson([
-            'detail' => 'Overtime work log month has been already rejected.',
+            'detail' => 'Work log month has been already rejected.',
         ]);
         $I->grabEntityFromRepository(OvertimeWorkLog::class, [
             'id' => $workLog->getId(),

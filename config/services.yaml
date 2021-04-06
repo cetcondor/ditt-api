@@ -131,70 +131,94 @@ services:
             $mailSenderAddress: '%env(MAILER_EMAIL)%'
         tags:
             - name: kernel.event_listener
-              event: !php/const App\Event\BusinessTripWorkLogApprovedEvent::APPROVED
+              event: !php/const App\Event\BusinessTripWorkLogApprovedEvent::EVENT
               method: onBusinessTripWorkLogApproved
             - name: kernel.event_listener
-              event: !php/const App\Event\BusinessTripWorkLogCanceledEvent::CANCELED
+              event: !php/const App\Event\BusinessTripWorkLogCanceledEvent::EVENT
               method: onBusinessTripWorkLogCanceled
             - name: kernel.event_listener
-              event: !php/const App\Event\BusinessTripWorkLogRejectedEvent::REJECTED
+              event: !php/const App\Event\BusinessTripWorkLogRejectedEvent::EVENT
               method: onBusinessTripWorkLogRejected
             - name: kernel.event_listener
-              event: !php/const App\Event\HomeOfficeWorkLogApprovedEvent::APPROVED
+              event: !php/const App\Event\HomeOfficeWorkLogApprovedEvent::EVENT
               method: onHomeOfficeWorkLogApproved
             - name: kernel.event_listener
-              event: !php/const App\Event\HomeOfficeWorkLogCanceledEvent::CANCELED
+              event: !php/const App\Event\HomeOfficeWorkLogCanceledEvent::EVENT
               method: onHomeOfficeWorkLogCanceled
             - name: kernel.event_listener
-              event: !php/const App\Event\HomeOfficeWorkLogRejectedEvent::REJECTED
+              event: !php/const App\Event\HomeOfficeWorkLogRejectedEvent::EVENT
               method: onHomeOfficeWorkLogRejected
             - name: kernel.event_listener
-              event: !php/const App\Event\MultipleSpecialLeaveWorkLogApprovedEvent::APPROVED
+              event: !php/const App\Event\MultipleBusinessTripWorkLogApprovedEvent::EVENT
+              method: onMultipleBusinessTripWorkLogApproved
+            - name: kernel.event_listener
+              event: !php/const App\Event\MultipleBusinessTripWorkLogRejectedEvent::EVENT
+              method: onMultipleBusinessTripWorkLogRejected
+            - name: kernel.event_listener
+              event: !php/const App\Event\MultipleHomeOfficeWorkLogApprovedEvent::EVENT
+              method: onMultipleHomeOfficeWorkLogApproved
+            - name: kernel.event_listener
+              event: !php/const App\Event\MultipleHomeOfficeWorkLogRejectedEvent::EVENT
+              method: onMultipleHomeOfficeWorkLogRejected
+            - name: kernel.event_listener
+              event: !php/const App\Event\MultipleOvertimeWorkLogApprovedEvent::EVENT
+              method: onMultipleOvertimeWorkLogApproved
+            - name: kernel.event_listener
+              event: !php/const App\Event\MultipleOvertimeWorkLogRejectedEvent::EVENT
+              method: onMultipleOvertimeWorkLogRejected
+            - name: kernel.event_listener
+              event: !php/const App\Event\MultipleSpecialLeaveWorkLogApprovedEvent::EVENT
               method: onMultipleSpecialLeaveWorkLogApproved
             - name: kernel.event_listener
-              event: !php/const App\Event\MultipleSpecialLeaveWorkLogRejectedEvent::REJECTED
+              event: !php/const App\Event\MultipleSpecialLeaveWorkLogRejectedEvent::EVENT
               method: onMultipleSpecialLeaveWorkLogRejected
             - name: kernel.event_listener
-              event: !php/const App\Event\MultipleVacationWorkLogApprovedEvent::APPROVED
+              event: !php/const App\Event\MultipleTimeOffWorkLogApprovedEvent::EVENT
+              method: onMultipleTimeOffWorkLogApproved
+            - name: kernel.event_listener
+              event: !php/const App\Event\MultipleTimeOffWorkLogRejectedEvent::EVENT
+              method: onMultipleTimeOffWorkLogRejected
+            - name: kernel.event_listener
+              event: !php/const App\Event\MultipleVacationWorkLogApprovedEvent::EVENT
               method: onMultipleVacationWorkLogApproved
             - name: kernel.event_listener
-              event: !php/const App\Event\MultipleVacationWorkLogRejectedEvent::REJECTED
+              event: !php/const App\Event\MultipleVacationWorkLogRejectedEvent::EVENT
               method: onMultipleVacationWorkLogRejected
             - name: kernel.event_listener
-              event: !php/const App\Event\OvertimeWorkLogApprovedEvent::APPROVED
+              event: !php/const App\Event\OvertimeWorkLogApprovedEvent::EVENT
               method: onOvertimeWorkLogApproved
             - name: kernel.event_listener
-              event: !php/const App\Event\OvertimeWorkLogCanceledEvent::CANCELED
+              event: !php/const App\Event\OvertimeWorkLogCanceledEvent::EVENT
               method: onOvertimeWorkLogCanceled
             - name: kernel.event_listener
-              event: !php/const App\Event\OvertimeWorkLogRejectedEvent::REJECTED
+              event: !php/const App\Event\OvertimeWorkLogRejectedEvent::EVENT
               method: onOvertimeWorkLogRejected
             - name: kernel.event_listener
-              event: !php/const App\Event\SpecialLeaveWorkLogApprovedEvent::APPROVED
+              event: !php/const App\Event\SpecialLeaveWorkLogApprovedEvent::EVENT
               method: onSpecialLeaveWorkLogApproved
             - name: kernel.event_listener
-              event: !php/const App\Event\SpecialLeaveWorkLogCanceledEvent::CANCELED
+              event: !php/const App\Event\SpecialLeaveWorkLogCanceledEvent::EVENT
               method: onSpecialLeaveWorkLogCanceled
             - name: kernel.event_listener
-              event: !php/const App\Event\SpecialLeaveWorkLogRejectedEvent::REJECTED
+              event: !php/const App\Event\SpecialLeaveWorkLogRejectedEvent::EVENT
               method: onSpecialLeaveWorkLogRejected
             - name: kernel.event_listener
-              event: !php/const App\Event\TimeOffWorkLogApprovedEvent::APPROVED
+              event: !php/const App\Event\TimeOffWorkLogApprovedEvent::EVENT
               method: onTimeOffWorkLogApproved
             - name: kernel.event_listener
-              event: !php/const App\Event\TimeOffWorkLogCanceledEvent::CANCELED
+              event: !php/const App\Event\TimeOffWorkLogCanceledEvent::EVENT
               method: onTimeOffWorkLogCanceled
             - name: kernel.event_listener
-              event: !php/const App\Event\TimeOffWorkLogRejectedEvent::REJECTED
+              event: !php/const App\Event\TimeOffWorkLogRejectedEvent::EVENT
               method: onTimeOffWorkLogRejected
             - name: kernel.event_listener
-              event: !php/const App\Event\VacationWorkLogApprovedEvent::APPROVED
+              event: !php/const App\Event\VacationWorkLogApprovedEvent::EVENT
               method: onVacationWorkLogApproved
             - name: kernel.event_listener
-              event: !php/const App\Event\VacationWorkLogCanceledEvent::CANCELED
+              event: !php/const App\Event\VacationWorkLogCanceledEvent::EVENT
               method: onVacationWorkLogCanceled
             - name: kernel.event_listener
-              event: !php/const App\Event\VacationWorkLogRejectedEvent::REJECTED
+              event: !php/const App\Event\VacationWorkLogRejectedEvent::EVENT
               method: onVacationWorkLogRejected
 
     App\Listener\WorkMonthApprovedEmailNotificationListener:

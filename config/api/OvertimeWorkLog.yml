@@ -8,6 +8,11 @@ App\Entity\OvertimeWorkLog:
             denormalization_context:
                 groups:
                     - overtime_work_log_in
+        bulkCreate:
+            method: POST
+            route_name: api_overtime_work_log_bulk_create
+            swagger_context:
+                summary: Creates multiple OvertimeWorkLog resource.
     itemOperations:
         put:
             method: PUT
@@ -24,6 +29,39 @@ App\Entity\OvertimeWorkLog:
             normalization_context:
                 groups:
                     - overtime_work_log_out_detail
+        bulkMarkApproved:
+            method: PUT
+            route_name: api_overtime_work_log_bulk_mark_approved
+            normalization_context:
+                groups:
+                    - overtime_work_log_out_detail
+            swagger_context:
+                summary: Marks multiple OvertimeWorkLog resources as approved.
+                parameters:
+                    - name: workLogIds
+                      description: 'Work log ids'
+                      type: array
+                      in: body
+                      required: true
+        bulkMarkRejected:
+            method: PUT
+            route_name: api_overtime_work_log_bulk_mark_rejected
+            normalization_context:
+                groups:
+                    - overtime_work_log_out_detail
+            swagger_context:
+                summary: Marks multiple OvertimeWorkLog resources as rejected.
+                parameters:
+                    - name: workLogIds
+                      description: 'Work log ids'
+                      type: array
+                      in: body
+                      required: true
+                    - name: rejectionMessage
+                      description: 'Rejection message'
+                      type: string
+                      in: body
+                      required: true
         markApproved:
             method: PUT
             route_name: api_overtime_work_log_mark_approved

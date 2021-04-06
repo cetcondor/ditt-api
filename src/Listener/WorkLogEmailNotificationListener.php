@@ -2,7 +2,11 @@
 
 namespace App\Listener;
 
+use App\Entity\BusinessTripWorkLog;
+use App\Entity\HomeOfficeWorkLog;
+use App\Entity\OvertimeWorkLog;
 use App\Entity\SpecialLeaveWorkLog;
+use App\Entity\TimeOffWorkLog;
 use App\Entity\User;
 use App\Entity\VacationWorkLog;
 use App\Entity\WorkLogInterface;
@@ -12,8 +16,16 @@ use App\Event\BusinessTripWorkLogRejectedEvent;
 use App\Event\HomeOfficeWorkLogApprovedEvent;
 use App\Event\HomeOfficeWorkLogCanceledEvent;
 use App\Event\HomeOfficeWorkLogRejectedEvent;
+use App\Event\MultipleBusinessTripWorkLogApprovedEvent;
+use App\Event\MultipleBusinessTripWorkLogRejectedEvent;
+use App\Event\MultipleHomeOfficeWorkLogApprovedEvent;
+use App\Event\MultipleHomeOfficeWorkLogRejectedEvent;
+use App\Event\MultipleOvertimeWorkLogApprovedEvent;
+use App\Event\MultipleOvertimeWorkLogRejectedEvent;
 use App\Event\MultipleSpecialLeaveWorkLogApprovedEvent;
 use App\Event\MultipleSpecialLeaveWorkLogRejectedEvent;
+use App\Event\MultipleTimeOffWorkLogApprovedEvent;
+use App\Event\MultipleTimeOffWorkLogRejectedEvent;
 use App\Event\MultipleVacationWorkLogApprovedEvent;
 use App\Event\MultipleVacationWorkLogRejectedEvent;
 use App\Event\OvertimeWorkLogApprovedEvent;
@@ -81,9 +93,9 @@ class WorkLogEmailNotificationListener
     {
         $this->sendWorkLogMail(
             $event->getSupervisor(),
-            $event->getBusinessTripWorkLog(),
+            $event->getWorkLog(),
             'Antrag auf Dienstreise gewährt – %s',
-            $event->getBusinessTripWorkLog()->getDate(),
+            $event->getWorkLog()->getDate(),
             'notifications/business_trip_work_log_approved.html.twig'
         );
     }
@@ -98,9 +110,9 @@ class WorkLogEmailNotificationListener
     {
         $this->sendWorkLogMail(
             $event->getSupervisor(),
-            $event->getBusinessTripWorkLog(),
+            $event->getWorkLog(),
             'Antrag auf Dienstreise storniert – %s',
-            $event->getBusinessTripWorkLog()->getDate(),
+            $event->getWorkLog()->getDate(),
             'notifications/business_trip_work_log_canceled.html.twig'
         );
     }
@@ -115,9 +127,9 @@ class WorkLogEmailNotificationListener
     {
         $this->sendWorkLogMail(
             $event->getSupervisor(),
-            $event->getBusinessTripWorkLog(),
+            $event->getWorkLog(),
             'Antrag auf Dienstreise abgelehnt – %s',
-            $event->getBusinessTripWorkLog()->getDate(),
+            $event->getWorkLog()->getDate(),
             'notifications/business_trip_work_log_rejected.html.twig'
         );
     }
@@ -132,9 +144,9 @@ class WorkLogEmailNotificationListener
     {
         $this->sendWorkLogMail(
             $event->getSupervisor(),
-            $event->getHomeOfficeWorkLog(),
+            $event->getWorkLog(),
             'Antrag auf Mobile Arbeit gewährt – %s',
-            $event->getHomeOfficeWorkLog()->getDate(),
+            $event->getWorkLog()->getDate(),
             'notifications/home_office_work_log_approved.html.twig'
         );
     }
@@ -149,9 +161,9 @@ class WorkLogEmailNotificationListener
     {
         $this->sendWorkLogMail(
             $event->getSupervisor(),
-            $event->getHomeOfficeWorkLog(),
+            $event->getWorkLog(),
             'Antrag auf Mobile Arbeit storniert – %s',
-            $event->getHomeOfficeWorkLog()->getDate(),
+            $event->getWorkLog()->getDate(),
             'notifications/home_office_work_log_canceled.html.twig'
         );
     }
@@ -166,10 +178,166 @@ class WorkLogEmailNotificationListener
     {
         $this->sendWorkLogMail(
             $event->getSupervisor(),
-            $event->getHomeOfficeWorkLog(),
+            $event->getWorkLog(),
             'Antrag auf Mobile Arbeit abgelehnt – %s',
-            $event->getHomeOfficeWorkLog()->getDate(),
+            $event->getWorkLog()->getDate(),
             'notifications/home_office_work_log_rejected.html.twig'
+        );
+    }
+
+    /**
+     * @throws EmailNotSentException
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
+     */
+    public function onMultipleBusinessTripWorkLogApproved(MultipleBusinessTripWorkLogApprovedEvent $event): void
+    {
+        $workLogs = $event->getWorkLogs();
+        $startDate = $workLogs[0]->getDate();
+        $endDate = $workLogs[0]->getDate();
+
+        if (count($workLogs) > 1 && end($workLogs) instanceof BusinessTripWorkLog) {
+            $endDate = end($workLogs)->getDate();
+        }
+
+        $this->sendWorkLogsMail(
+            $event->getSupervisor(),
+            $workLogs,
+            'Antrag auf mehrtägigen Dienstreise gewährt – %s bis %s',
+            $startDate,
+            $endDate,
+            'notifications/multiple_business_trip_work_log_approved.html.twig'
+        );
+    }
+
+    /**
+     * @throws EmailNotSentException
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
+     */
+    public function onMultipleBusinessTripWorkLogRejected(MultipleBusinessTripWorkLogRejectedEvent $event): void
+    {
+        $workLogs = $event->getWorkLogs();
+        $startDate = $workLogs[0]->getDate();
+        $endDate = $workLogs[0]->getDate();
+
+        if (count($workLogs) > 1 && end($workLogs) instanceof BusinessTripWorkLog) {
+            $endDate = end($workLogs)->getDate();
+        }
+
+        $this->sendWorkLogsMail(
+            $event->getSupervisor(),
+            $workLogs,
+            'Antrag auf mehrtägigen Dienstreise abgelehnt – %s bis %s',
+            $startDate,
+            $endDate,
+            'notifications/multiple_business_trip_work_log_rejected.html.twig'
+        );
+    }
+
+    /**
+     * @throws EmailNotSentException
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
+     */
+    public function onMultipleHomeOfficeWorkLogApproved(MultipleHomeOfficeWorkLogApprovedEvent $event): void
+    {
+        $workLogs = $event->getWorkLogs();
+        $startDate = $workLogs[0]->getDate();
+        $endDate = $workLogs[0]->getDate();
+
+        if (count($workLogs) > 1 && end($workLogs) instanceof HomeOfficeWorkLog) {
+            $endDate = end($workLogs)->getDate();
+        }
+
+        $this->sendWorkLogsMail(
+            $event->getSupervisor(),
+            $workLogs,
+            'Antrag auf mehrtägigen Mobile Arbeit gewährt – %s bis %s',
+            $startDate,
+            $endDate,
+            'notifications/multiple_home_office_work_log_approved.html.twig'
+        );
+    }
+
+    /**
+     * @throws EmailNotSentException
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
+     */
+    public function onMultipleHomeOfficeWorkLogRejected(MultipleHomeOfficeWorkLogRejectedEvent $event): void
+    {
+        $workLogs = $event->getWorkLogs();
+        $startDate = $workLogs[0]->getDate();
+        $endDate = $workLogs[0]->getDate();
+
+        if (count($workLogs) > 1 && end($workLogs) instanceof HomeOfficeWorkLog) {
+            $endDate = end($workLogs)->getDate();
+        }
+
+        $this->sendWorkLogsMail(
+            $event->getSupervisor(),
+            $workLogs,
+            'Antrag auf mehrtägigen Mobile Arbeit abgelehnt – %s bis %s',
+            $startDate,
+            $endDate,
+            'notifications/multiple_home_office_work_log_rejected.html.twig'
+        );
+    }
+
+    /**
+     * @throws EmailNotSentException
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
+     */
+    public function onMultipleOvertimeWorkLogApproved(MultipleOvertimeWorkLogApprovedEvent $event): void
+    {
+        $workLogs = $event->getWorkLogs();
+        $startDate = $workLogs[0]->getDate();
+        $endDate = $workLogs[0]->getDate();
+
+        if (count($workLogs) > 1 && end($workLogs) instanceof OvertimeWorkLog) {
+            $endDate = end($workLogs)->getDate();
+        }
+
+        $this->sendWorkLogsMail(
+            $event->getSupervisor(),
+            $workLogs,
+            'Antrag auf mehrtägigen Mehrarbeit gewährt – %s bis %s',
+            $startDate,
+            $endDate,
+            'notifications/multiple_overtime_work_log_approved.html.twig'
+        );
+    }
+
+    /**
+     * @throws EmailNotSentException
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
+     */
+    public function onMultipleOvertimeWorkLogRejected(MultipleOvertimeWorkLogRejectedEvent $event): void
+    {
+        $workLogs = $event->getWorkLogs();
+        $startDate = $workLogs[0]->getDate();
+        $endDate = $workLogs[0]->getDate();
+
+        if (count($workLogs) > 1 && end($workLogs) instanceof OvertimeWorkLog) {
+            $endDate = end($workLogs)->getDate();
+        }
+
+        $this->sendWorkLogsMail(
+            $event->getSupervisor(),
+            $workLogs,
+            'Antrag auf mehrtägigen Mehrarbeit abgelehnt – %s bis %s',
+            $startDate,
+            $endDate,
+            'notifications/multiple_overtime_work_log_rejected.html.twig'
         );
     }
 
@@ -181,7 +349,7 @@ class WorkLogEmailNotificationListener
      */
     public function onMultipleSpecialLeaveWorkLogApproved(MultipleSpecialLeaveWorkLogApprovedEvent $event): void
     {
-        $workLogs = $event->getSpecialLeaveWorkLogs();
+        $workLogs = $event->getWorkLogs();
         $startDate = $workLogs[0]->getDate();
         $endDate = $workLogs[0]->getDate();
 
@@ -207,7 +375,7 @@ class WorkLogEmailNotificationListener
      */
     public function onMultipleSpecialLeaveWorkLogRejected(MultipleSpecialLeaveWorkLogRejectedEvent $event): void
     {
-        $workLogs = $event->getSpecialLeaveWorkLogs();
+        $workLogs = $event->getWorkLogs();
         $startDate = $workLogs[0]->getDate();
         $endDate = $workLogs[0]->getDate();
 
@@ -231,9 +399,61 @@ class WorkLogEmailNotificationListener
      * @throws RuntimeError
      * @throws SyntaxError
      */
+    public function onMultipleTimeOffWorkLogApproved(MultipleTimeOffWorkLogApprovedEvent $event): void
+    {
+        $workLogs = $event->getWorkLogs();
+        $startDate = $workLogs[0]->getDate();
+        $endDate = $workLogs[0]->getDate();
+
+        if (count($workLogs) > 1 && end($workLogs) instanceof TimeOffWorkLog) {
+            $endDate = end($workLogs)->getDate();
+        }
+
+        $this->sendWorkLogsMail(
+            $event->getSupervisor(),
+            $workLogs,
+            'Antrag auf mehrtägigen Freizeitausgleich – %s bis %s',
+            $startDate,
+            $endDate,
+            'notifications/multiple_time_off_work_log_approved.html.twig'
+        );
+    }
+
+    /**
+     * @throws EmailNotSentException
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
+     */
+    public function onMultipleTimeOffWorkLogRejected(MultipleTimeOffWorkLogRejectedEvent $event): void
+    {
+        $workLogs = $event->getWorkLogs();
+        $startDate = $workLogs[0]->getDate();
+        $endDate = $workLogs[0]->getDate();
+
+        if (count($workLogs) > 1 && end($workLogs) instanceof TimeOffWorkLog) {
+            $endDate = end($workLogs)->getDate();
+        }
+
+        $this->sendWorkLogsMail(
+            $event->getSupervisor(),
+            $workLogs,
+            'Antrag auf mehrtägigen Freizeitausgleich abgelehnt – %s bis %s',
+            $startDate,
+            $endDate,
+            'notifications/multiple_time_off_work_log_rejected.html.twig'
+        );
+    }
+
+    /**
+     * @throws EmailNotSentException
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
+     */
     public function onMultipleVacationWorkLogApproved(MultipleVacationWorkLogApprovedEvent $event): void
     {
-        $workLogs = $event->getVacationWorkLogs();
+        $workLogs = $event->getWorkLogs();
         $startDate = $workLogs[0]->getDate();
         $endDate = $workLogs[0]->getDate();
 
@@ -259,7 +479,7 @@ class WorkLogEmailNotificationListener
      */
     public function onMultipleVacationWorkLogRejected(MultipleVacationWorkLogRejectedEvent $event): void
     {
-        $workLogs = $event->getVacationWorkLogs();
+        $workLogs = $event->getWorkLogs();
         $startDate = $workLogs[0]->getDate();
         $endDate = $workLogs[0]->getDate();
 
@@ -287,9 +507,9 @@ class WorkLogEmailNotificationListener
     {
         $this->sendWorkLogMail(
             $event->getSupervisor(),
-            $event->getOvertimeWorkLog(),
+            $event->getWorkLog(),
             'Antrag auf Mehrarbeit gewährt – %s',
-            $event->getOvertimeWorkLog()->getDate(),
+            $event->getWorkLog()->getDate(),
             'notifications/overtime_work_log_approved.html.twig'
         );
     }
@@ -304,9 +524,9 @@ class WorkLogEmailNotificationListener
     {
         $this->sendWorkLogMail(
             $event->getSupervisor(),
-            $event->getOvertimeWorkLog(),
+            $event->getWorkLog(),
             'Antrag auf Mehrarbeit storniert – %s',
-            $event->getOvertimeWorkLog()->getDate(),
+            $event->getWorkLog()->getDate(),
             'notifications/overtime_work_log_canceled.html.twig'
         );
     }
@@ -321,9 +541,9 @@ class WorkLogEmailNotificationListener
     {
         $this->sendWorkLogMail(
             $event->getSupervisor(),
-            $event->getOvertimeWorkLog(),
+            $event->getWorkLog(),
             'Antrag auf Mehrarbeit abgelehnt – %s',
-            $event->getOvertimeWorkLog()->getDate(),
+            $event->getWorkLog()->getDate(),
             'notifications/overtime_work_log_rejected.html.twig'
         );
     }
@@ -338,9 +558,9 @@ class WorkLogEmailNotificationListener
     {
         $this->sendWorkLogMail(
             $event->getSupervisor(),
-            $event->getSpecialLeaveWorkLog(),
+            $event->getWorkLog(),
             'Antrag auf Sonderurlaub gewährt – %s',
-            $event->getSpecialLeaveWorkLog()->getDate(),
+            $event->getWorkLog()->getDate(),
             'notifications/special_leave_work_log_approved.html.twig'
         );
     }
@@ -355,9 +575,9 @@ class WorkLogEmailNotificationListener
     {
         $this->sendWorkLogMail(
             $event->getSupervisor(),
-            $event->getSpecialLeaveWorkLog(),
+            $event->getWorkLog(),
             'Antrag auf Sonderurlaub storniert – %s',
-            $event->getSpecialLeaveWorkLog()->getDate(),
+            $event->getWorkLog()->getDate(),
             'notifications/special_leave_work_log_canceled.html.twig'
         );
     }
@@ -372,9 +592,9 @@ class WorkLogEmailNotificationListener
     {
         $this->sendWorkLogMail(
             $event->getSupervisor(),
-            $event->getSpecialLeaveWorkLog(),
+            $event->getWorkLog(),
             'Antrag auf Sonderurlaub abgelehnt – %s',
-            $event->getSpecialLeaveWorkLog()->getDate(),
+            $event->getWorkLog()->getDate(),
             'notifications/special_leave_work_log_rejected.html.twig'
         );
     }
@@ -389,9 +609,9 @@ class WorkLogEmailNotificationListener
     {
         $this->sendWorkLogMail(
             $event->getSupervisor(),
-            $event->getTimeOffWorkLog(),
+            $event->getWorkLog(),
             'Antrag auf Freizeitausgleich gewährt – %s',
-            $event->getTimeOffWorkLog()->getDate(),
+            $event->getWorkLog()->getDate(),
             'notifications/time_off_work_log_approved.html.twig'
         );
     }
@@ -406,9 +626,9 @@ class WorkLogEmailNotificationListener
     {
         $this->sendWorkLogMail(
             $event->getSupervisor(),
-            $event->getTimeOffWorkLog(),
+            $event->getWorkLog(),
             'Antrag auf Freizeitausgleich storniert – %s',
-            $event->getTimeOffWorkLog()->getDate(),
+            $event->getWorkLog()->getDate(),
             'notifications/time_off_work_log_canceled.html.twig'
         );
     }
@@ -423,9 +643,9 @@ class WorkLogEmailNotificationListener
     {
         $this->sendWorkLogMail(
             $event->getSupervisor(),
-            $event->getTimeOffWorkLog(),
+            $event->getWorkLog(),
             'Antrag auf Freizeitausgleich abgelehnt – %s',
-            $event->getTimeOffWorkLog()->getDate(),
+            $event->getWorkLog()->getDate(),
             'notifications/time_off_work_log_rejected.html.twig'
         );
     }
@@ -440,9 +660,9 @@ class WorkLogEmailNotificationListener
     {
         $this->sendWorkLogMail(
             $event->getSupervisor(),
-            $event->getVacationWorkLog(),
+            $event->getWorkLog(),
             'Antrag auf Urlaub gewährt – %s',
-            $event->getVacationWorkLog()->getDate(),
+            $event->getWorkLog()->getDate(),
             'notifications/vacation_work_log_approved.html.twig'
         );
     }
@@ -457,9 +677,9 @@ class WorkLogEmailNotificationListener
     {
         $this->sendWorkLogMail(
             $event->getSupervisor(),
-            $event->getVacationWorkLog(),
+            $event->getWorkLog(),
             'Antrag auf Urlaub storniert – %s',
-            $event->getVacationWorkLog()->getDate(),
+            $event->getWorkLog()->getDate(),
             'notifications/vacation_work_log_canceled.html.twig'
         );
     }
@@ -474,9 +694,9 @@ class WorkLogEmailNotificationListener
     {
         $this->sendWorkLogMail(
             $event->getSupervisor(),
-            $event->getVacationWorkLog(),
+            $event->getWorkLog(),
             'Antrag auf Urlaub abgelehnt – %s',
-            $event->getVacationWorkLog()->getDate(),
+            $event->getWorkLog()->getDate(),
             'notifications/vacation_work_log_rejected.html.twig'
         );
     }
