@@ -104,6 +104,7 @@ App\Entity\User:
             groups:
                 - user_out_detail
                 - user_out_list
+                - supervised_user_out_list
                 - work_month_out_detail
         notifications:
             groups:
