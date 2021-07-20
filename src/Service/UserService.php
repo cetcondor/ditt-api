@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\User;
 use App\Entity\Vacation;
+use App\Entity\WorkMonth;
 use App\Repository\VacationWorkLogRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -60,6 +61,44 @@ class UserService
         }
 
         $user->setVacations(new ArrayCollection($vacations));
+    }
+
+    public function fulfillLastApprovedWorkMonth($users): void
+    {
+        $currentYearMonthValue = intval(date('Y')) * 12 + intval(date('m'));
+
+        /** @var User $iUser */
+        foreach ($users as $iUser) {
+            $foundWorkMonth = null;
+            $foundYearMonthValue = null;
+
+            foreach ($iUser->getWorkMonths() as $workMonth) {
+                $iYearMonthValue = $workMonth->getYear()->getYear() * 12 + $workMonth->getMonth();
+
+                if (
+                    (
+                        $workMonth->getStatus() === WorkMonth::STATUS_APPROVED
+                        && $iYearMonthValue <= $currentYearMonthValue
+                        && $iYearMonthValue == null
+                    ) || (
+                        $workMonth->getStatus() === WorkMonth::STATUS_APPROVED
+                        && $iYearMonthValue <= $currentYearMonthValue
+                        && $iYearMonthValue != null
+                        && $iYearMonthValue > $foundYearMonthValue
+                    )
+                ) {
+                    $foundWorkMonth = $workMonth;
+                    $foundYearMonthValue = $foundWorkMonth->getYear()->getYear() * 12 + $foundWorkMonth->getMonth();
+
+                    // If maximum possible was found, stop search
+                    if ($foundYearMonthValue >= $currentYearMonthValue - 1) {
+                        break;
+                    }
+                }
+            }
+
+            $iUser->setLastApprovedWorkMonth($foundWorkMonth);
+        }
     }
 
     /**

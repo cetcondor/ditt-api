@@ -101,6 +101,11 @@ class User implements UserInterface
     private $notifications;
 
     /**
+     * @var WorkMonth|null
+     */
+    private $lastApprovedWorkMonth;
+
+    /**
      * @var string|null
      */
     private $apiToken;
@@ -125,6 +130,7 @@ class User implements UserInterface
         $this->workMonths = new ArrayCollection();
         $this->yearStats = new ArrayCollection();
         $this->setNotifications(new UserNotifications());
+        $this->lastApprovedWorkMonth = null;
     }
 
     public function getId(): ?int
@@ -420,6 +426,18 @@ class User implements UserInterface
     public function setWorkMonths($workMonths): User
     {
         $this->workMonths = $workMonths;
+
+        return $this;
+    }
+
+    public function getLastApprovedWorkMonth(): ?WorkMonth
+    {
+        return $this->lastApprovedWorkMonth;
+    }
+
+    public function setLastApprovedWorkMonth(?WorkMonth $lastApprovedWorkMonth): User
+    {
+        $this->lastApprovedWorkMonth = $lastApprovedWorkMonth;
 
         return $this;
     }

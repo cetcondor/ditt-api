@@ -106,6 +106,7 @@ class UserSubscriber implements EventSubscriberInterface
                 ['createWorkMonths', EventPriorities::POST_WRITE],
                 ['createYearStats', EventPriorities::POST_WRITE],
                 ['editUser', EventPriorities::PRE_WRITE],
+                ['fulfillLastApprovedWorkMonth', EventPriorities::PRE_SERIALIZE],
                 ['fullfilRemainingVacationDays', EventPriorities::PRE_SERIALIZE],
             ],
         ];
@@ -283,13 +284,21 @@ class UserSubscriber implements EventSubscriberInterface
         );
     }
 
+    public function fulfillLastApprovedWorkMonth(RequestEvent $event): void
+    {
+        if ($event->getRequest()->get('_route') !== 'api_users_get_collection') {
+            return;
+        }
+
+        $this->userService->fulfillLastApprovedWorkMonth($event->getControllerResult());
+    }
+
     public function fullfilRemainingVacationDays(RequestEvent $event): void
     {
         $user = $event->getControllerResult();
         if (!$user instanceof User) {
             return;
         }
-
         $method = $event->getRequest()->getMethod();
 
         if (

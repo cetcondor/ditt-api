@@ -289,6 +289,8 @@ class UserController extends AbstractController
             });
         }
 
+        $this->userService->fulfillLastApprovedWorkMonth($supervisedUsers);
+
         $normalizedUsers = [];
         foreach ($supervisedUsers as $user) {
             $normalizedUsers[] = $this->normalizer->normalize(

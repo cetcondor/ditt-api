@@ -110,6 +110,10 @@ App\Entity\User:
             groups:
                 - user_out_detail
                 - user_in
+        lastApprovedWorkMonth:
+            groups:
+                - supervised_user_out_list
+                - user_out_list
         apiToken:
             groups:
                 - user_out_detail
