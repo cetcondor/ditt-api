@@ -11,6 +11,12 @@ api_platform:
         html:
             mime_types:
                 - 'text/html'
+    patch_formats:
+        json:
+            - 'application/merge-patch+json'
     collection:
         pagination:
             enabled: false
+    swagger:
+        versions:
+            - 3

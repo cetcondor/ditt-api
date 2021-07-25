@@ -18,5 +18,5 @@
            'phpdoc_summary' => false,
            'yoda_style' => false,
         ])
-        ->setUsingCache(false)
+        ->setCacheFile('.php-cs-fixer.cache')
         ->setFinder($finder);

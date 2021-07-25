@@ -6,8 +6,10 @@
          backupGlobals="false"
          colors="true"
          bootstrap="tests/bootstrap.php"
+         convertDeprecationsToExceptions="false"
 >
     <php>
+        <ini name="display_errors" value="1" />
         <ini name="error_reporting" value="-1" />
         <server name="KERNEL_CLASS" value="App\Kernel" />
         <server name="APP_ENV" value="test" force="true" />
@@ -22,19 +24,23 @@
         <server name="JWT_PASSPHRASE" value="2a01d2b305fca1f64cd6933f393d5ef4"/>
         <!-- ###- lexik/jwt-authentication-bundle ### -->
         <server name="SYMFONY_DEPRECATIONS_HELPER" value="disabled" />
+
+        <server name="SHELL_VERBOSITY" value="-1" />
+        <server name="SYMFONY_PHPUNIT_REMOVE" value="" />
+        <server name="SYMFONY_PHPUNIT_VERSION" value="9.5" />
     </php>
 
     <testsuites>
         <testsuite name="Project Test Suite">
-            <directory>tests/</directory>
+            <directory>tests</directory>
         </testsuite>
     </testsuites>
 
-    <filter>
-        <whitelist>
-            <directory suffix=".php">./src/</directory>
-        </whitelist>
-    </filter>
+    <coverage processUncoveredFiles="true">
+        <include>
+            <directory suffix=".php">src</directory>
+        </include>
+    </coverage>
 
     <listeners>
         <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener" />
