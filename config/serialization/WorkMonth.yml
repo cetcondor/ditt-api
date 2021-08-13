@@ -79,11 +79,13 @@ App\Entity\WorkMonth:
         requiredTime:
             groups:
                 - work_month_out_detail
+                - work_month_out_list
                 - supervised_user_out_list
                 - user_out_list
         workedTime:
             groups:
                 - work_month_out_detail
+                - work_month_out_list
                 - supervised_user_out_list
                 - user_out_list
         workTimeCorrection:
