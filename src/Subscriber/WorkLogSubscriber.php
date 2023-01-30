@@ -7,6 +7,7 @@ use ApiPlatform\Core\Exception\InvalidArgumentException;
 use App\Entity\BusinessTripWorkLog;
 use App\Entity\HomeOfficeWorkLog;
 use App\Entity\OvertimeWorkLog;
+use App\Entity\SickDayWorkLog;
 use App\Entity\SpecialLeaveWorkLog;
 use App\Entity\SupervisorWorkLogInterface;
 use App\Entity\TimeOffWorkLog;
@@ -17,6 +18,7 @@ use App\Entity\WorkMonth;
 use App\Event\BusinessTripWorkLogCanceledEvent;
 use App\Event\HomeOfficeWorkLogCanceledEvent;
 use App\Event\OvertimeWorkLogCanceledEvent;
+use App\Event\SickDayWorkLogCreatedEvent;
 use App\Event\SpecialLeaveWorkLogCanceledEvent;
 use App\Event\TimeOffWorkLogCanceledEvent;
 use App\Event\VacationWorkLogCanceledEvent;
@@ -59,12 +61,34 @@ class WorkLogSubscriber implements EventSubscriberInterface
     {
         return [
             KernelEvents::VIEW => [
+                ['addWorkLog', EventPriorities::POST_WRITE],
                 ['addWorkMonth', EventPriorities::PRE_VALIDATE],
                 ['deleteWorkLog', EventPriorities::PRE_WRITE],
                 ['checkWorkMonthStatus', EventPriorities::PRE_WRITE],
                 ['resetWorkMonthStatus', EventPriorities::PRE_WRITE],
             ],
         ];
+    }
+
+    public function addWorkLog(RequestEvent $event): void
+    {
+        $workLog = $event->getControllerResult();
+        if (!$workLog instanceof SickDayWorkLog) {
+            return;
+        }
+
+        $method = $event->getRequest()->getMethod();
+
+        if (Request::METHOD_POST !== $method) {
+            return;
+        }
+
+        if ($workLog instanceof SickDayWorkLog) {
+            $this->eventDispatcher->dispatch(
+                new SickDayWorkLogCreatedEvent($workLog, $workLog->getWorkMonth()->getUser()->getSupervisor()),
+                SickDayWorkLogCreatedEvent::EVENT
+            );
+        }
     }
 
     /**

@@ -22,6 +22,7 @@ use App\Event\MultipleHomeOfficeWorkLogApprovedEvent;
 use App\Event\MultipleHomeOfficeWorkLogRejectedEvent;
 use App\Event\MultipleOvertimeWorkLogApprovedEvent;
 use App\Event\MultipleOvertimeWorkLogRejectedEvent;
+use App\Event\MultipleSickDayWorkLogCreatedEvent;
 use App\Event\MultipleSpecialLeaveWorkLogApprovedEvent;
 use App\Event\MultipleSpecialLeaveWorkLogRejectedEvent;
 use App\Event\MultipleTimeOffWorkLogApprovedEvent;
@@ -31,6 +32,7 @@ use App\Event\MultipleVacationWorkLogRejectedEvent;
 use App\Event\OvertimeWorkLogApprovedEvent;
 use App\Event\OvertimeWorkLogCanceledEvent;
 use App\Event\OvertimeWorkLogRejectedEvent;
+use App\Event\SickDayWorkLogCreatedEvent;
 use App\Event\SpecialLeaveWorkLogApprovedEvent;
 use App\Event\SpecialLeaveWorkLogCanceledEvent;
 use App\Event\SpecialLeaveWorkLogRejectedEvent;
@@ -347,6 +349,32 @@ class WorkLogEmailNotificationListener
      * @throws RuntimeError
      * @throws SyntaxError
      */
+    public function onMultipleSickDayWorkLogCreated(MultipleSickDayWorkLogCreatedEvent $event): void
+    {
+        $workLogs = $event->getWorkLogs();
+        $startDate = $workLogs[0]->getDate();
+        $endDate = $workLogs[0]->getDate();
+
+        if (count($workLogs) > 1 && end($workLogs) instanceof SpecialLeaveWorkLog) {
+            $endDate = end($workLogs)->getDate();
+        }
+
+        $this->sendWorkLogsMail(
+            $event->getSupervisor(),
+            $workLogs,
+            'Antrag auf mehrtägigen Krankentag erstellt – %s bis %s',
+            $startDate,
+            $endDate,
+            'notifications/multiple_sick_day_work_log_created.html.twig'
+        );
+    }
+
+    /**
+     * @throws EmailNotSentException
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
+     */
     public function onMultipleSpecialLeaveWorkLogApproved(MultipleSpecialLeaveWorkLogApprovedEvent $event): void
     {
         $workLogs = $event->getWorkLogs();
@@ -545,6 +573,23 @@ class WorkLogEmailNotificationListener
             'Antrag auf Mehrarbeit abgelehnt – %s',
             $event->getWorkLog()->getDate(),
             'notifications/overtime_work_log_rejected.html.twig'
+        );
+    }
+
+    /**
+     * @throws EmailNotSentException
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
+     */
+    public function onSickDayWorkLogCreated(SickDayWorkLogCreatedEvent $event): void
+    {
+        $this->sendWorkLogMail(
+            $event->getSupervisor(),
+            $event->getWorkLog(),
+            'Antrag auf Krankentag erstellt – %s',
+            $event->getWorkLog()->getDate(),
+            'notifications/sick_day_work_log_created.html.twig'
         );
     }
 

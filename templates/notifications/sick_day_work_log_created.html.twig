@@ -1,0 +1,26 @@
+<html lang="de">
+    <head>
+        <meta charset="utf-8" />
+        <style>
+            body {
+                font-family: helvetica, roboto, arial, sans-serif;
+            }
+        </style>
+    </head>
+
+    <body>
+        <h1>Antrag auf Krankentag erstellt</h1>
+        <p>
+            <strong>Datum: </strong>{{ workLog.date | date('d.m.Y') }}<br>
+            <strong>Betrifft: </strong>{{ workLog.workMonth.user.firstName }} {{ workLog.workMonth.user.lastName }}<br>
+            {% if supervisor is not null %}
+                <strong>Gewährt durch: </strong>{{ supervisor.firstName }} {{ supervisor.lastName }}<br>
+            {% endif %}
+            <strong>Variante: </strong>
+            {% if workLog.variant == 'SICK_CHILD' %}Kind krank{% endif %}
+            {% if workLog.variant == 'WITH_NOTE' %}Mit Krankenschein{% endif %}
+            {% if workLog.variant == 'WITHOUT_NOTE' %}Ohne Krankenschein{% endif %}
+            <br>
+        </p>
+    </body>
+</html>

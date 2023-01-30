@@ -170,6 +170,9 @@ services:
               event: !php/const App\Event\MultipleSpecialLeaveWorkLogApprovedEvent::EVENT
               method: onMultipleSpecialLeaveWorkLogApproved
             - name: kernel.event_listener
+              event: !php/const App\Event\MultipleSickDayWorkLogCreatedEvent::EVENT
+              method: onMultipleSickDayWorkLogCreated
+            - name: kernel.event_listener
               event: !php/const App\Event\MultipleSpecialLeaveWorkLogRejectedEvent::EVENT
               method: onMultipleSpecialLeaveWorkLogRejected
             - name: kernel.event_listener
@@ -196,6 +199,9 @@ services:
             - name: kernel.event_listener
               event: !php/const App\Event\SpecialLeaveWorkLogApprovedEvent::EVENT
               method: onSpecialLeaveWorkLogApproved
+            - name: kernel.event_listener
+              event: !php/const App\Event\SickDayWorkLogCreatedEvent::EVENT
+              method: onSickDayWorkLogCreated
             - name: kernel.event_listener
               event: !php/const App\Event\SpecialLeaveWorkLogCanceledEvent::EVENT
               method: onSpecialLeaveWorkLogCanceled

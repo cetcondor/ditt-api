@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\SickDayWorkLog;
 use App\Entity\User;
 use App\Entity\WorkMonth;
+use App\Event\MultipleSickDayWorkLogCreatedEvent;
 use App\Repository\WorkMonthRepository;
 use App\Service\SickDayWorkLogService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,18 +17,24 @@ use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class SickDayWorkLogController extends AbstractController
 {
     /**
-     * @var NormalizerInterface
+     * @var EventDispatcherInterface
      */
-    private $normalizer;
+    protected $eventDispatcher;
 
     /**
      * @var DenormalizerInterface
      */
     private $denormalizer;
+
+    /**
+     * @var NormalizerInterface
+     */
+    private $normalizer;
 
     /**
      * @var SickDayWorkLogService
@@ -50,15 +57,17 @@ class SickDayWorkLogController extends AbstractController
     private $workMonthRepository;
 
     public function __construct(
-        NormalizerInterface $normalizer,
         DenormalizerInterface $denormalizer,
+        EventDispatcherInterface $eventDispatcher,
+        NormalizerInterface $normalizer,
         SickDayWorkLogService $sickDayWorkLogService,
         TokenStorageInterface $tokenStorage,
         ValidatorInterface $validator,
         WorkMonthRepository $workMonthRepository
     ) {
-        $this->normalizer = $normalizer;
         $this->denormalizer = $denormalizer;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->normalizer = $normalizer;
         $this->sickDayWorkLogService = $sickDayWorkLogService;
         $this->tokenStorage = $tokenStorage;
         $this->validator = $validator;
@@ -132,6 +141,11 @@ class SickDayWorkLogController extends AbstractController
 
         $this->sickDayWorkLogService->createSickDayWorkLogs($sickDayWorkLogs);
         $normalizedSickDayWorkLogs = [];
+
+        $supervisor = $workMonth->getUser()->getSupervisor();
+
+        $event = new MultipleSickDayWorkLogCreatedEvent($sickDayWorkLogs, $supervisor);
+        $this->eventDispatcher->dispatch($event, $event::EVENT);
 
         foreach ($sickDayWorkLogs as $sickDayWorkLog) {
             $normalizedSickDayWorkLogs[] = $this->normalizer->normalize(
