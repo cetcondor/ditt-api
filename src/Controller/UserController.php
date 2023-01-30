@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\SickDayWorkLog;
 use App\Entity\User;
 use App\Event\UserPasswordResetEvent;
+use App\Repository\SickDayWorkLogRepository;
 use App\Repository\UserRepository;
 use App\Service\UserService;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
@@ -27,6 +29,11 @@ class UserController extends AbstractController
      * @var NormalizerInterface
      */
     private $normalizer;
+
+    /**
+     * @var SickDayWorkLogRepository
+     */
+    private $sickDayWorkLogRepository;
 
     /**
      * @var TokenStorageInterface
@@ -56,6 +63,7 @@ class UserController extends AbstractController
     public function __construct(
         JWTTokenManagerInterface $jwtTokenManager,
         NormalizerInterface $normalizer,
+        SickDayWorkLogRepository $sickDayWorkLogRepository,
         TokenStorageInterface $tokenStorage,
         UserRepository $userRepository,
         UserService $userService,
@@ -64,6 +72,7 @@ class UserController extends AbstractController
     ) {
         $this->jwtTokenManager = $jwtTokenManager;
         $this->normalizer = $normalizer;
+        $this->sickDayWorkLogRepository = $sickDayWorkLogRepository;
         $this->tokenStorage = $tokenStorage;
         $this->userRepository = $userRepository;
         $this->userService = $userService;
@@ -291,15 +300,26 @@ class UserController extends AbstractController
 
         $this->userService->fulfillLastApprovedWorkMonth($supervisedUsers);
 
-        $normalizedUsers = [];
+        $dateFrom = (new \DateTimeImmutable())->modify('-1 year');
+
+        $normalizedData = [];
         foreach ($supervisedUsers as $user) {
-            $normalizedUsers[] = $this->normalizer->normalize(
-                $user,
-                User::class,
-                ['groups' => ['supervised_user_out_list']]
-            );
+            $sickDays = $this->sickDayWorkLogRepository->findAllByUserFromDate($user, $dateFrom);
+
+            $normalizedData[] = [
+                'sickDays' => $this->normalizer->normalize(
+                    $sickDays,
+                    SickDayWorkLog::class,
+                    ['groups' => ['supervised_user_out_list']]
+                ),
+                'user' => $this->normalizer->normalize(
+                    $user,
+                    User::class,
+                    ['groups' => ['supervised_user_out_list']]
+                ),
+            ];
         }
 
-        return JsonResponse::create($normalizedUsers, JsonResponse::HTTP_OK);
+        return JsonResponse::create($normalizedData, JsonResponse::HTTP_OK);
     }
 }

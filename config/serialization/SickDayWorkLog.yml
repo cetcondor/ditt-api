@@ -5,12 +5,14 @@ App\Entity\SickDayWorkLog:
                 - hr_out_detail
                 - sick_day_work_log_out_detail
                 - special_approvals_out_list
+                - supervised_user_out_list
                 - work_month_out_detail
         date:
             groups:
                 - hr_out_detail
                 - sick_day_work_log_out_detail
                 - special_approvals_out_list
+                - supervised_user_out_list
                 - work_month_out_detail
                 - sick_day_work_log_in
         childName:
@@ -18,6 +20,7 @@ App\Entity\SickDayWorkLog:
                 - hr_out_detail
                 - sick_day_work_log_out_detail
                 - special_approvals_out_list
+                - supervised_user_out_list
                 - work_month_out_detail
                 - sick_day_work_log_in
         childDateOfBirth:
@@ -25,6 +28,7 @@ App\Entity\SickDayWorkLog:
                 - hr_out_detail
                 - sick_day_work_log_out_detail
                 - special_approvals_out_list
+                - supervised_user_out_list
                 - work_month_out_detail
                 - sick_day_work_log_in
         variant:
@@ -32,6 +36,7 @@ App\Entity\SickDayWorkLog:
                 - hr_out_detail
                 - sick_day_work_log_out_detail
                 - special_approvals_out_list
+                - supervised_user_out_list
                 - work_month_out_detail
                 - sick_day_work_log_in
         workMonth:
@@ -39,3 +44,4 @@ App\Entity\SickDayWorkLog:
                 - hr_out_detail
                 - sick_day_work_log_out_detail
                 - special_approvals_out_list
+                - supervised_user_out_list
