@@ -26,7 +26,7 @@ if [ "$1" = "start" ]; then
     docker-sync start 2> /dev/null || :
 
     echo "* Setting up permissions"
-    docker exec -it ditt-api_web_1 chown -R www-data: /www
+    docker exec -it ditt-api-web-1 chown -R www-data: /www
 elif [ "$1" = "stop" ]; then
     echo "* Stopping docker containers"
     docker-compose stop
