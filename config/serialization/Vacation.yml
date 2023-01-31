@@ -32,5 +32,6 @@ App\Entity\Vacation:
                 - vacation_in
         remainingVacationDays:
             groups:
+                - supervised_user_out_list
                 - user_out_detail
                 - work_month_out_detail

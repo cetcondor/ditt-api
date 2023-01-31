@@ -305,6 +305,7 @@ class UserController extends AbstractController
         $normalizedData = [];
         foreach ($supervisedUsers as $user) {
             $sickDays = $this->sickDayWorkLogRepository->findAllByUserFromDate($user, $dateFrom);
+            $this->userService->fullfilRemainingVacationDays($user);
 
             $normalizedData[] = [
                 'sickDays' => $this->normalizer->normalize(
