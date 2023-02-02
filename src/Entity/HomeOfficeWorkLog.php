@@ -23,6 +23,26 @@ class HomeOfficeWorkLog implements SpecialWorkLogInterface
     private $comment;
 
     /**
+     * @var int
+     */
+    private $plannedEndHour;
+
+    /**
+     * @var int
+     */
+    private $plannedEndMinute;
+
+    /**
+     * @var int
+     */
+    private $plannedStartHour;
+
+    /**
+     * @var int
+     */
+    private $plannedStartMinute;
+
+    /**
      * @var \DateTimeImmutable|null
      */
     private $timeApproved;
@@ -85,6 +105,54 @@ class HomeOfficeWorkLog implements SpecialWorkLogInterface
     public function setComment(?string $comment): HomeOfficeWorkLog
     {
         $this->comment = $comment;
+
+        return $this;
+    }
+
+    public function getPlannedEndHour(): int
+    {
+        return $this->plannedEndHour;
+    }
+
+    public function setPlannedEndHour(int $plannedEndHour): HomeOfficeWorkLog
+    {
+        $this->plannedEndHour = $plannedEndHour;
+
+        return $this;
+    }
+
+    public function getPlannedEndMinute(): int
+    {
+        return $this->plannedEndMinute;
+    }
+
+    public function setPlannedEndMinute(int $plannedEndMinute): HomeOfficeWorkLog
+    {
+        $this->plannedEndMinute = $plannedEndMinute;
+
+        return $this;
+    }
+
+    public function getPlannedStartHour(): int
+    {
+        return $this->plannedStartHour;
+    }
+
+    public function setPlannedStartHour(int $plannedStartHour): HomeOfficeWorkLog
+    {
+        $this->plannedStartHour = $plannedStartHour;
+
+        return $this;
+    }
+
+    public function getPlannedStartMinute(): int
+    {
+        return $this->plannedStartMinute;
+    }
+
+    public function setPlannedStartMinute(int $plannedStartMinute): HomeOfficeWorkLog
+    {
+        $this->plannedStartMinute = $plannedStartMinute;
 
         return $this;
     }

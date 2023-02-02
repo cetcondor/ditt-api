@@ -35,21 +35,53 @@ class BulkCreateHomeOfficeWorkLogCest
 
         $I->haveHttpHeader('Content-Type', 'application/json');
         $I->sendPOST('/home_office_work_logs/bulk', [
-            ['date' => $date->format(\DateTime::RFC3339)],
-            ['date' => $date2->format(\DateTime::RFC3339)],
+            [
+                'date' => $date->format(\DateTime::RFC3339),
+                'plannedEndHour' => 23,
+                'plannedEndMinute' => 59,
+                'plannedStartHour' => 0,
+                'plannedStartMinute' => 0,
+            ],
+            [
+                'date' => $date2->format(\DateTime::RFC3339),
+                'plannedEndHour' => 23,
+                'plannedEndMinute' => 59,
+                'plannedStartHour' => 0,
+                'plannedStartMinute' => 0,
+            ],
         ]);
 
         $I->seeHttpHeader('Content-Type', 'application/json');
         $I->seeResponseCodeIs(Response::HTTP_CREATED);
         $I->seeResponseContainsJson([
-            ['date' => $date->format(\DateTime::RFC3339)],
-            ['date' => $date2->format(\DateTime::RFC3339)],
+            [
+                'date' => $date->format(\DateTime::RFC3339),
+                'plannedEndHour' => 23,
+                'plannedEndMinute' => 59,
+                'plannedStartHour' => 0,
+                'plannedStartMinute' => 0,
+            ],
+            [
+                'date' => $date2->format(\DateTime::RFC3339),
+                'plannedEndHour' => 23,
+                'plannedEndMinute' => 59,
+                'plannedStartHour' => 0,
+                'plannedStartMinute' => 0,
+            ],
         ]);
         $I->grabEntityFromRepository(HomeOfficeWorkLog::class, [
             'date' => $date,
+            'plannedEndHour' => 23,
+            'plannedEndMinute' => 59,
+            'plannedStartHour' => 0,
+            'plannedStartMinute' => 0,
         ]);
         $I->grabEntityFromRepository(HomeOfficeWorkLog::class, [
             'date' => $date2,
+            'plannedEndHour' => 23,
+            'plannedEndMinute' => 59,
+            'plannedStartHour' => 0,
+            'plannedStartMinute' => 0,
         ]);
     }
 
@@ -96,7 +128,13 @@ class BulkCreateHomeOfficeWorkLogCest
 
         $I->haveHttpHeader('Content-Type', 'application/json');
         $I->sendPOST('/home_office_work_logs/bulk', [
-            ['date' => null],
+            [
+                'date' => null,
+                'plannedEndHour' => null,
+                'plannedEndMinute' => null,
+                'plannedStartHour' => null,
+                'plannedStartMinute' => null,
+            ],
         ]);
 
         $I->seeResponseCodeIs(Response::HTTP_BAD_REQUEST);

@@ -42,6 +42,10 @@ class BulkCreateBusinessTripWorkLogCest
                 'transport' => 'Plane',
                 'expectedDeparture' => 'At the morning',
                 'expectedArrival' => 'In the evening',
+                'plannedEndHour' => 23,
+                'plannedEndMinute' => 59,
+                'plannedStartHour' => 0,
+                'plannedStartMinute' => 0,
             ],
             [
                 'date' => $date2->format(\DateTime::RFC3339),
@@ -50,6 +54,10 @@ class BulkCreateBusinessTripWorkLogCest
                 'transport' => 'Plane',
                 'expectedDeparture' => 'At the morning',
                 'expectedArrival' => 'In the evening',
+                'plannedEndHour' => 23,
+                'plannedEndMinute' => 59,
+                'plannedStartHour' => 0,
+                'plannedStartMinute' => 0,
             ],
         ]);
 
@@ -63,6 +71,10 @@ class BulkCreateBusinessTripWorkLogCest
                 'transport' => 'Plane',
                 'expectedDeparture' => 'At the morning',
                 'expectedArrival' => 'In the evening',
+                'plannedEndHour' => 23,
+                'plannedEndMinute' => 59,
+                'plannedStartHour' => 0,
+                'plannedStartMinute' => 0,
             ],
             [
                 'date' => $date2->format(\DateTime::RFC3339),
@@ -71,6 +83,10 @@ class BulkCreateBusinessTripWorkLogCest
                 'transport' => 'Plane',
                 'expectedDeparture' => 'At the morning',
                 'expectedArrival' => 'In the evening',
+                'plannedEndHour' => 23,
+                'plannedEndMinute' => 59,
+                'plannedStartHour' => 0,
+                'plannedStartMinute' => 0,
             ],
         ]);
         $I->grabEntityFromRepository(BusinessTripWorkLog::class, [

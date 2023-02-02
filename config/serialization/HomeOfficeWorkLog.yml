@@ -18,6 +18,30 @@ App\Entity\HomeOfficeWorkLog:
                 - special_approvals_out_list
                 - work_month_out_detail
                 - home_office_work_log_in
+        plannedEndHour:
+            groups:
+                - home_office_work_log_out_detail
+                - special_approvals_out_list
+                - work_month_out_detail
+                - home_office_work_log_in
+        plannedEndMinute:
+            groups:
+                - home_office_work_log_out_detail
+                - special_approvals_out_list
+                - work_month_out_detail
+                - home_office_work_log_in
+        plannedStartHour:
+            groups:
+                - home_office_work_log_out_detail
+                - special_approvals_out_list
+                - work_month_out_detail
+                - home_office_work_log_in
+        plannedStartMinute:
+            groups:
+                - home_office_work_log_out_detail
+                - special_approvals_out_list
+                - work_month_out_detail
+                - home_office_work_log_in
         timeApproved:
             groups:
                 - home_office_work_log_out_detail

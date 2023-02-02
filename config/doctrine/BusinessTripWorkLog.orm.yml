@@ -19,6 +19,14 @@ App\Entity\BusinessTripWorkLog:
             type: text
         expectedArrival:
             type: text
+        plannedEndHour:
+            type: integer
+        plannedEndMinute:
+            type: integer
+        plannedStartHour:
+            type: integer
+        plannedStartMinute:
+            type: integer
         timeApproved:
             type: datetime_immutable
             nullable: true

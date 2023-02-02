@@ -12,6 +12,14 @@ App\Entity\HomeOfficeWorkLog:
         comment:
             type: text
             nullable: true
+        plannedEndHour:
+            type: integer
+        plannedEndMinute:
+            type: integer
+        plannedStartHour:
+            type: integer
+        plannedStartMinute:
+            type: integer
         timeApproved:
             type: datetime_immutable
             nullable: true

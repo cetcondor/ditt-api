@@ -454,6 +454,10 @@ class GetSpecialApprovalCest
                 [
                     'date' => $businessTripWorkLog1->getDate()->format(\DateTime::RFC3339),
                     'id' => $businessTripWorkLog1->getId(),
+                    'plannedEndHour' => 23,
+                    'plannedEndMinute' => 59,
+                    'plannedStartHour' => 0,
+                    'plannedStartMinute' => 0,
                     'timeApproved' => null,
                     'timeRejected' => null,
                     'workMonth' => [

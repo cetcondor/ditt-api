@@ -19,6 +19,34 @@ App\Entity\BusinessTripWorkLog:
         expectedArrival:
             - NotBlank: ~
 
+        plannedEndHour:
+              - NotBlank: ~
+              - Type: numeric
+              - Range:
+                    min: 0
+                    max: 23
+
+        plannedEndMinute:
+              - NotBlank: ~
+              - Type: numeric
+              - Range:
+                    min: 0
+                    max: 59
+
+        plannedStartHour:
+              - NotBlank: ~
+              - Type: numeric
+              - Range:
+                    min: 0
+                    max: 23
+
+        plannedStartMinute:
+              - NotBlank: ~
+              - Type: numeric
+              - Range:
+                    min: 0
+                    max: 59
+
         timeApproved:
             - Type: DateTimeImmutable
 

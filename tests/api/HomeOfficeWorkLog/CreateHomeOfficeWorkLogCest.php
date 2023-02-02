@@ -36,6 +36,10 @@ class CreateHomeOfficeWorkLogCest
         $I->sendPOST('/home_office_work_logs.json', [
             'date' => $date->format(\DateTime::RFC3339),
             'comment' => 'Comment',
+            'plannedEndHour' => 23,
+            'plannedEndMinute' => 59,
+            'plannedStartHour' => 0,
+            'plannedStartMinute' => 0,
         ]);
 
         $I->seeHttpHeader('Content-Type', 'application/json; charset=utf-8');
@@ -43,10 +47,18 @@ class CreateHomeOfficeWorkLogCest
         $I->seeResponseContainsJson([
             'date' => $date->format(\DateTime::RFC3339),
             'comment' => 'Comment',
+            'plannedEndHour' => 23,
+            'plannedEndMinute' => 59,
+            'plannedStartHour' => 0,
+            'plannedStartMinute' => 0,
         ]);
         $I->grabEntityFromRepository(HomeOfficeWorkLog::class, [
             'date' => $date,
             'comment' => 'Comment',
+            'plannedEndHour' => 23,
+            'plannedEndMinute' => 59,
+            'plannedStartHour' => 0,
+            'plannedStartMinute' => 0,
         ]);
     }
 
@@ -67,6 +79,10 @@ class CreateHomeOfficeWorkLogCest
         $I->sendPOST('/home_office_work_logs.json', [
             'date' => $date->format(\DateTime::RFC3339),
             'comment' => 'Comment',
+            'plannedEndHour' => 23,
+            'plannedEndMinute' => 59,
+            'plannedStartHour' => 0,
+            'plannedStartMinute' => 0,
         ]);
 
         $I->seeHttpHeader('Content-Type', 'application/problem+json; charset=utf-8');
@@ -98,6 +114,10 @@ class CreateHomeOfficeWorkLogCest
         $I->sendPOST('/home_office_work_logs.json', [
             'date' => null,
             'comment' => null,
+            'plannedEndHour' => null,
+            'plannedEndMinute' => null,
+            'plannedStartHour' => null,
+            'plannedStartMinute' => null,
         ]);
 
         $I->seeHttpHeader('Content-Type', 'application/problem+json; charset=utf-8');

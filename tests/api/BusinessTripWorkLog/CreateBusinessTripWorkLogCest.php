@@ -40,6 +40,10 @@ class CreateBusinessTripWorkLogCest
             'transport' => 'Plane',
             'expectedDeparture' => 'At the morning',
             'expectedArrival' => 'In the evening',
+            'plannedEndHour' => 23,
+            'plannedEndMinute' => 59,
+            'plannedStartHour' => 0,
+            'plannedStartMinute' => 0,
         ]);
 
         $I->seeHttpHeader('Content-Type', 'application/json; charset=utf-8');
@@ -51,6 +55,10 @@ class CreateBusinessTripWorkLogCest
             'transport' => 'Plane',
             'expectedDeparture' => 'At the morning',
             'expectedArrival' => 'In the evening',
+            'plannedEndHour' => 23,
+            'plannedEndMinute' => 59,
+            'plannedStartHour' => 0,
+            'plannedStartMinute' => 0,
         ]);
         $I->grabEntityFromRepository(BusinessTripWorkLog::class, [
             'date' => $date,
@@ -59,6 +67,10 @@ class CreateBusinessTripWorkLogCest
             'transport' => 'Plane',
             'expectedDeparture' => 'At the morning',
             'expectedArrival' => 'In the evening',
+            'plannedEndHour' => 23,
+            'plannedEndMinute' => 59,
+            'plannedStartHour' => 0,
+            'plannedStartMinute' => 0,
         ]);
     }
 
@@ -83,6 +95,10 @@ class CreateBusinessTripWorkLogCest
             'transport' => 'Plane',
             'expectedDeparture' => 'At the morning',
             'expectedArrival' => 'In the evening',
+            'plannedEndHour' => 23,
+            'plannedEndMinute' => 59,
+            'plannedStartHour' => 0,
+            'plannedStartMinute' => 0,
         ]);
 
         $I->seeHttpHeader('Content-Type', 'application/problem+json; charset=utf-8');
@@ -98,6 +114,10 @@ class CreateBusinessTripWorkLogCest
                 'transport' => 'Plane',
                 'expectedDeparture' => 'At the morning',
                 'expectedArrival' => 'In the evening',
+                'plannedEndHour' => 23,
+                'plannedEndMinute' => 59,
+                'plannedStartHour' => 0,
+                'plannedStartMinute' => 0,
             ]);
         });
     }
@@ -122,6 +142,10 @@ class CreateBusinessTripWorkLogCest
             'transport' => '',
             'expectedDeparture' => '',
             'expectedArrival' => '',
+            'plannedEndHour' => null,
+            'plannedEndMinute' => null,
+            'plannedStartHour' => null,
+            'plannedStartMinute' => null,
         ]);
 
         $I->seeHttpHeader('Content-Type', 'application/problem+json; charset=utf-8');

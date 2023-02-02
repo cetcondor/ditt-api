@@ -42,6 +42,30 @@ App\Entity\BusinessTripWorkLog:
                 - special_approvals_out_list
                 - work_month_out_detail
                 - business_trip_work_log_in
+        plannedEndHour:
+            groups:
+                - business_trip_work_log_out_detail
+                - special_approvals_out_list
+                - work_month_out_detail
+                - business_trip_work_log_in
+        plannedEndMinute:
+            groups:
+                - business_trip_work_log_out_detail
+                - special_approvals_out_list
+                - work_month_out_detail
+                - business_trip_work_log_in
+        plannedStartHour:
+            groups:
+                - business_trip_work_log_out_detail
+                - special_approvals_out_list
+                - work_month_out_detail
+                - business_trip_work_log_in
+        plannedStartMinute:
+            groups:
+                - business_trip_work_log_out_detail
+                - special_approvals_out_list
+                - work_month_out_detail
+                - business_trip_work_log_in
         timeApproved:
             groups:
                 - business_trip_work_log_out_detail

@@ -893,6 +893,10 @@ class GetRecentSpecialApprovalCest
                 [
                     'date' => $businessTripWorkLog1->getDate()->format(\DateTime::RFC3339),
                     'id' => $businessTripWorkLog1->getId(),
+                    'plannedEndHour' => 23,
+                    'plannedEndMinute' => 59,
+                    'plannedStartHour' => 0,
+                    'plannedStartMinute' => 0,
                     'timeApproved' => null,
                     'timeRejected' => null,
                     'workMonth' => [
@@ -913,6 +917,10 @@ class GetRecentSpecialApprovalCest
                 [
                     'date' => $businessTripWorkLog2->getDate()->format(\DateTime::RFC3339),
                     'id' => $businessTripWorkLog2->getId(),
+                    'plannedEndHour' => 23,
+                    'plannedEndMinute' => 59,
+                    'plannedStartHour' => 0,
+                    'plannedStartMinute' => 0,
                     'timeApproved' => $dateTime1->format(\DateTime::RFC3339),
                     'timeRejected' => null,
                     'workMonth' => [
@@ -933,6 +941,10 @@ class GetRecentSpecialApprovalCest
                 [
                     'date' => $businessTripWorkLog3->getDate()->format(\DateTime::RFC3339),
                     'id' => $businessTripWorkLog3->getId(),
+                    'plannedEndHour' => 23,
+                    'plannedEndMinute' => 59,
+                    'plannedStartHour' => 0,
+                    'plannedStartMinute' => 0,
                     'timeApproved' => null,
                     'timeRejected' => $dateTime1->format(\DateTime::RFC3339),
                     'workMonth' => [
@@ -953,6 +965,10 @@ class GetRecentSpecialApprovalCest
                 [
                     'date' => $businessTripWorkLog4->getDate()->format(\DateTime::RFC3339),
                     'id' => $businessTripWorkLog4->getId(),
+                    'plannedEndHour' => 23,
+                    'plannedEndMinute' => 59,
+                    'plannedStartHour' => 0,
+                    'plannedStartMinute' => 0,
                     'timeApproved' => null,
                     'timeRejected' => null,
                     'workMonth' => [
@@ -973,6 +989,10 @@ class GetRecentSpecialApprovalCest
                 [
                     'date' => $businessTripWorkLog5->getDate()->format(\DateTime::RFC3339),
                     'id' => $businessTripWorkLog5->getId(),
+                    'plannedEndHour' => 23,
+                    'plannedEndMinute' => 59,
+                    'plannedStartHour' => 0,
+                    'plannedStartMinute' => 0,
                     'timeApproved' => null,
                     'timeRejected' => null,
                     'workMonth' => [
@@ -995,6 +1015,10 @@ class GetRecentSpecialApprovalCest
                 [
                     'date' => $homeOfficeWorkLog1->getDate()->format(\DateTime::RFC3339),
                     'id' => $homeOfficeWorkLog1->getId(),
+                    'plannedEndHour' => 23,
+                    'plannedEndMinute' => 59,
+                    'plannedStartHour' => 0,
+                    'plannedStartMinute' => 0,
                     'timeApproved' => null,
                     'timeRejected' => null,
                     'workMonth' => [
@@ -1015,6 +1039,10 @@ class GetRecentSpecialApprovalCest
                 [
                     'date' => $homeOfficeWorkLog2->getDate()->format(\DateTime::RFC3339),
                     'id' => $homeOfficeWorkLog2->getId(),
+                    'plannedEndHour' => 23,
+                    'plannedEndMinute' => 59,
+                    'plannedStartHour' => 0,
+                    'plannedStartMinute' => 0,
                     'timeApproved' => $dateTime1->format(\DateTime::RFC3339),
                     'timeRejected' => null,
                     'workMonth' => [
@@ -1035,6 +1063,10 @@ class GetRecentSpecialApprovalCest
                 [
                     'date' => $homeOfficeWorkLog3->getDate()->format(\DateTime::RFC3339),
                     'id' => $homeOfficeWorkLog3->getId(),
+                    'plannedEndHour' => 23,
+                    'plannedEndMinute' => 59,
+                    'plannedStartHour' => 0,
+                    'plannedStartMinute' => 0,
                     'timeApproved' => null,
                     'timeRejected' => $dateTime1->format(\DateTime::RFC3339),
                     'workMonth' => [
@@ -1055,6 +1087,10 @@ class GetRecentSpecialApprovalCest
                 [
                     'date' => $homeOfficeWorkLog4->getDate()->format(\DateTime::RFC3339),
                     'id' => $homeOfficeWorkLog4->getId(),
+                    'plannedEndHour' => 23,
+                    'plannedEndMinute' => 59,
+                    'plannedStartHour' => 0,
+                    'plannedStartMinute' => 0,
                     'timeApproved' => null,
                     'timeRejected' => null,
                     'workMonth' => [
@@ -1075,6 +1111,10 @@ class GetRecentSpecialApprovalCest
                 [
                     'date' => $homeOfficeWorkLog5->getDate()->format(\DateTime::RFC3339),
                     'id' => $homeOfficeWorkLog5->getId(),
+                    'plannedEndHour' => 23,
+                    'plannedEndMinute' => 59,
+                    'plannedStartHour' => 0,
+                    'plannedStartMinute' => 0,
                     'timeApproved' => null,
                     'timeRejected' => null,
                     'workMonth' => [

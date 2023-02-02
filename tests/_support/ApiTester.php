@@ -72,6 +72,10 @@ class ApiTester extends \Codeception\Actor
             'transport' => 'Plane',
             'expectedDeparture' => 'At the morning',
             'expectedArrival' => 'In the evening',
+            'plannedEndHour' => 23,
+            'plannedEndMinute' => 59,
+            'plannedStartHour' => 0,
+            'plannedStartMinute' => 0,
             'timeApproved' => null,
             'timeRejected' => null,
         ], $params);
@@ -91,6 +95,10 @@ class ApiTester extends \Codeception\Actor
             },
             'date' => new DateTimeImmutable(),
             'comment' => 'Comment',
+            'plannedEndHour' => 23,
+            'plannedEndMinute' => 59,
+            'plannedStartHour' => 0,
+            'plannedStartMinute' => 0,
             'timeApproved' => null,
             'timeRejected' => null,
         ], $params);
