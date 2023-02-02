@@ -3,12 +3,9 @@
 namespace App\Service;
 
 use App\Entity\BanWorkLog;
-use App\Entity\BusinessTripWorkLog;
-use App\Entity\HomeOfficeWorkLog;
 use App\Entity\MaternityProtectionWorkLog;
 use App\Entity\SickDayWorkLog;
 use App\Entity\SpecialLeaveWorkLog;
-use App\Entity\TrainingWorkLog;
 use App\Entity\VacationWorkLog;
 use App\Entity\WorkLog;
 use App\Entity\WorkMonth;
@@ -220,14 +217,11 @@ class WorkMonthService
 
         $standardWorkLogs = $this->workLogRepository->findAllByWorkMonth($workMonth);
         $banWorkLogs = $this->banWorkLogRepository->findAllByWorkMonth($workMonth);
-        $businessTripWorkLogs = $this->businessTripWorkLogRepository->findAllApprovedByWorkMonth($workMonth);
-        $homeOfficeWorkLogs = $this->homeOfficeWorkLogRepository->findAllApprovedByWorkMonth($workMonth);
         $maternityProtectionWorkLogs = $this->maternityProtectionWorkLogRepository->findAllByWorkMonth($workMonth);
         $parentalLeaveWorkLogs = $this->parentalLeaveWorkLogRepository->findAllByWorkMonth($workMonth);
         $sickDayWorkLogs = $this->sickDayWorkLogRepository->findAllByWorkMonth($workMonth);
         $specialLeaveWorkLogs = $this->specialLeaveWorkLogRepository->findAllApprovedByWorkMonth($workMonth);
         $timeOffWorkLogs = $this->timeOffWorkLogRepository->findAllApprovedByWorkMonth($workMonth);
-        $trainingWorkLogs = $this->trainingWorkLogRepository->findAllApprovedByWorkMonth($workMonth);
         $vacationWorkLogs = $this->vacationWorkLogRepository->findAllApprovedByWorkMonth($workMonth);
 
         foreach ($standardWorkLogs as $standardWorkLog) {
@@ -238,16 +232,6 @@ class WorkMonthService
         foreach ($banWorkLogs as $banWorkLog) {
             $day = (int) $banWorkLog->getDate()->format('d');
             $allWorkLogs[$day][] = $banWorkLog;
-        }
-
-        foreach ($businessTripWorkLogs as $businessTripWorkLog) {
-            $day = (int) $businessTripWorkLog->getDate()->format('d');
-            $allWorkLogs[$day][] = $businessTripWorkLog;
-        }
-
-        foreach ($homeOfficeWorkLogs as $homeOfficeWorkLog) {
-            $day = (int) $homeOfficeWorkLog->getDate()->format('d');
-            $allWorkLogs[$day][] = $homeOfficeWorkLog;
         }
 
         foreach ($maternityProtectionWorkLogs as $maternityProtectionWorkLog) {
@@ -275,11 +259,6 @@ class WorkMonthService
             $allWorkLogs[$day][] = $timeOffWorkLog;
         }
 
-        foreach ($trainingWorkLogs as $trainingWorkLog) {
-            $day = (int) $trainingWorkLog->getDate()->format('d');
-            $allWorkLogs[$day][] = $trainingWorkLog;
-        }
-
         foreach ($vacationWorkLogs as $vacationWorkLog) {
             $day = (int) $vacationWorkLog->getDate()->format('d');
             $allWorkLogs[$day][] = $vacationWorkLog;
@@ -290,12 +269,9 @@ class WorkMonthService
             $currentDate = (new \DateTimeImmutable())->setDate($workMonth->getYear()->getYear(), $workMonth->getMonth(), $day);
 
             $containsBanDay = false;
-            $containsBusinessDay = false;
-            $containsHomeDay = false;
             $containsMaternityProtection = false;
             $containsSickDay = false;
             $containsSpecialLeaveDay = false;
-            $containsTrainingDay = false;
             $containsVacationDay = false;
 
             $standardWorkLogs = [];
@@ -332,18 +308,12 @@ class WorkMonthService
                     if ($workLog->getWorkTimeLimit() < $workTimeLimit) {
                         $workTimeLimit = $workLog->getWorkTimeLimit();
                     }
-                } elseif ($workLog instanceof BusinessTripWorkLog && $workLog->getTimeApproved()) {
-                    $containsBusinessDay = true;
-                } elseif ($workLog instanceof HomeOfficeWorkLog && $workLog->getTimeApproved()) {
-                    $containsHomeDay = true;
                 } elseif ($workLog instanceof MaternityProtectionWorkLog) {
                     $containsMaternityProtection = true;
                 } elseif ($workLog instanceof SickDayWorkLog) {
                     $containsSickDay = true;
                 } elseif ($workLog instanceof SpecialLeaveWorkLog && $workLog->getTimeApproved()) {
                     $containsSpecialLeaveDay = true;
-                } elseif ($workLog instanceof TrainingWorkLog && $workLog->getTimeApproved()) {
-                    $containsTrainingDay = true;
                 } elseif ($workLog instanceof VacationWorkLog && $workLog->getTimeApproved()) {
                     $containsVacationDay = true;
                 }
@@ -420,8 +390,7 @@ class WorkMonthService
 
             if (
                 (
-                    count($standardWorkLogs) === 0
-                    && ($containsBusinessDay || $containsHomeDay || $containsSickDay || $containsTrainingDay)
+                    count($standardWorkLogs) === 0 && $containsSickDay
                 ) || $containsMaternityProtection || $containsSpecialLeaveDay || $containsVacationDay
             ) {
                 $workTime = $workHours->getRequiredHours();
