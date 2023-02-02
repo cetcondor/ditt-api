@@ -18,6 +18,11 @@ class SpecialLeaveWorkLog implements SpecialWorkLogInterface
     private $date;
 
     /**
+     * @var string|null
+     */
+    private $reason;
+
+    /**
      * @var \DateTimeImmutable|null
      */
     private $timeApproved;
@@ -68,6 +73,18 @@ class SpecialLeaveWorkLog implements SpecialWorkLogInterface
     public function setDate(\DateTimeImmutable $date): SpecialLeaveWorkLog
     {
         $this->date = $date;
+
+        return $this;
+    }
+
+    public function getReason(): ?string
+    {
+        return $this->reason;
+    }
+
+    public function setReason(?string $reason): SpecialLeaveWorkLog
+    {
+        $this->reason = $reason;
 
         return $this;
     }

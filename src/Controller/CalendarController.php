@@ -217,7 +217,8 @@ class CalendarController extends AbstractController
             $event->setSummary($workLog->getTimeApproved() ? 'Sonderurlaub' : '? Sonderurlaub');
             $event->setSummary('Sonderurlaub');
             $event->setDescription(sprintf(
-                'Status: %s',
+                'Grund für Sonderurlaub: %s\nStatus: %s',
+                $workLog->getReason() ?: '–',
                 $workLog->getTimeApproved() ? 'Freigegeben' : 'Warte auf Freigabe'
             ));
             $calendar->addEvent($event);
@@ -246,7 +247,7 @@ class CalendarController extends AbstractController
             $event->setDescription(sprintf(
                 'Titel: %s\Kommentar: %s\nVoraussichtliche Rückkehr: %s\nStatus: %s',
                 $workLog->getTitle(),
-                $workLog->getComment(),
+                $workLog->getComment() ?: '–',
                 $workLog->getTimeApproved() ? 'Freigegeben' : 'Warte auf Freigabe'
             ));
             $calendar->addEvent($event);
