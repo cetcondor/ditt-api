@@ -182,6 +182,12 @@ services:
               event: !php/const App\Event\MultipleTimeOffWorkLogRejectedEvent::EVENT
               method: onMultipleTimeOffWorkLogRejected
             - name: kernel.event_listener
+              event: !php/const App\Event\MultipleTrainingWorkLogApprovedEvent::EVENT
+              method: onMultipleTrainingWorkLogApproved
+            - name: kernel.event_listener
+              event: !php/const App\Event\MultipleTrainingWorkLogRejectedEvent::EVENT
+              method: onMultipleTrainingWorkLogRejected
+            - name: kernel.event_listener
               event: !php/const App\Event\MultipleVacationWorkLogApprovedEvent::EVENT
               method: onMultipleVacationWorkLogApproved
             - name: kernel.event_listener
@@ -217,6 +223,15 @@ services:
             - name: kernel.event_listener
               event: !php/const App\Event\TimeOffWorkLogRejectedEvent::EVENT
               method: onTimeOffWorkLogRejected
+            - name: kernel.event_listener
+              event: !php/const App\Event\TrainingWorkLogApprovedEvent::EVENT
+              method: onTrainingWorkLogApproved
+            - name: kernel.event_listener
+              event: !php/const App\Event\TrainingWorkLogCanceledEvent::EVENT
+              method: onTrainingWorkLogCanceled
+            - name: kernel.event_listener
+              event: !php/const App\Event\TrainingWorkLogRejectedEvent::EVENT
+              method: onTrainingWorkLogRejected
             - name: kernel.event_listener
               event: !php/const App\Event\VacationWorkLogApprovedEvent::EVENT
               method: onVacationWorkLogApproved

@@ -83,6 +83,11 @@ class WorkMonth
     private $timeOffWorkLogs;
 
     /**
+     * @var TrainingWorkLog[]|Collection
+     */
+    private $trainingWorkLogs;
+
+    /**
      * @var VacationWorkLog[]|Collection
      */
     private $vacationWorkLogs;
@@ -130,6 +135,7 @@ class WorkMonth
         $this->sickDayWorkLogs = new ArrayCollection();
         $this->specialLeaveWorkLogs = new ArrayCollection();
         $this->timeOffWorkLogs = new ArrayCollection();
+        $this->trainingWorkLogs = new ArrayCollection();
         $this->vacationWorkLogs = new ArrayCollection();
         $this->workLogs = new ArrayCollection();
         $this->workTimeCorrection = 0;
@@ -384,6 +390,28 @@ class WorkMonth
     public function setTimeOffWorkLogs($timeOffWorkLogs): WorkMonth
     {
         $this->timeOffWorkLogs = $timeOffWorkLogs;
+
+        return $this;
+    }
+
+    /**
+     * @return TrainingWorkLog[]
+     */
+    public function getTrainingWorkLogs(): array
+    {
+        if ($this->trainingWorkLogs instanceof Collection) {
+            return $this->trainingWorkLogs->toArray();
+        }
+
+        return $this->trainingWorkLogs;
+    }
+
+    /**
+     * @param TrainingWorkLog[]|Collection $trainingWorkLogs
+     */
+    public function setTrainingWorkLogs($trainingWorkLogs): WorkMonth
+    {
+        $this->trainingWorkLogs = $trainingWorkLogs;
 
         return $this;
     }

@@ -828,6 +828,33 @@ class GetRecentSpecialApprovalCest
             'workMonth' => $workMonth4,
         ]);
 
+        $trainingWorkLog1 = $I->createTrainingWorkLog([
+            'date' => $dateTime1,
+            'workMonth' => $workMonth2,
+        ]);
+        $trainingWorkLog2 = $I->createTrainingWorkLog([
+            'date' => $dateTime1,
+            'timeApproved' => $dateTime1,
+            'workMonth' => $workMonth2,
+        ]);
+        $trainingWorkLog3 = $I->createTrainingWorkLog([
+            'date' => $dateTime1,
+            'timeRejected' => $dateTime1,
+            'workMonth' => $workMonth2,
+        ]);
+        $trainingWorkLog4 = $I->createTrainingWorkLog([
+            'date' => $dateTime1,
+            'workMonth' => $workMonth1,
+        ]);
+        $trainingWorkLog5 = $I->createTrainingWorkLog([
+            'date' => $dateTime2,
+            'workMonth' => $workMonth3,
+        ]);
+        $trainingWorkLog6 = $I->createTrainingWorkLog([
+            'date' => $dateTime3,
+            'workMonth' => $workMonth4,
+        ]);
+
         $vacationWorkLog1 = $I->createVacationWorkLog([
             'date' => $dateTime1,
             'workMonth' => $workMonth2,
@@ -1372,6 +1399,108 @@ class GetRecentSpecialApprovalCest
                     ],
                 ],
             ],
+            'trainingWorkLogs' => [
+                [
+                    'date' => $trainingWorkLog1->getDate()->format(\DateTime::RFC3339),
+                    'id' => $trainingWorkLog1->getId(),
+                    'timeApproved' => null,
+                    'timeRejected' => null,
+                    'workMonth' => [
+                        'id' => $workMonth2->getId(),
+                        'month' => $workMonth2->getMonth(),
+                        'status' => $workMonth2->getStatus(),
+                        'user' => [
+                            'email' => $user2->getEmail(),
+                            'firstName' => $user2->getFirstName(),
+                            'lastName' => $user2->getLastName(),
+                            'id' => $user2->getId(),
+                        ],
+                        'year' => [
+                            'year' => $workMonth2->getYear()->getYear(),
+                        ],
+                    ],
+                ],
+                [
+                    'date' => $trainingWorkLog2->getDate()->format(\DateTime::RFC3339),
+                    'id' => $trainingWorkLog2->getId(),
+                    'timeApproved' => $dateTime1->format(\DateTime::RFC3339),
+                    'timeRejected' => null,
+                    'workMonth' => [
+                        'id' => $workMonth2->getId(),
+                        'month' => $workMonth2->getMonth(),
+                        'status' => $workMonth2->getStatus(),
+                        'user' => [
+                            'email' => $user2->getEmail(),
+                            'firstName' => $user2->getFirstName(),
+                            'lastName' => $user2->getLastName(),
+                            'id' => $user2->getId(),
+                        ],
+                        'year' => [
+                            'year' => $workMonth2->getYear()->getYear(),
+                        ],
+                    ],
+                ],
+                [
+                    'date' => $trainingWorkLog3->getDate()->format(\DateTime::RFC3339),
+                    'id' => $trainingWorkLog3->getId(),
+                    'timeApproved' => null,
+                    'timeRejected' => $dateTime1->format(\DateTime::RFC3339),
+                    'workMonth' => [
+                        'id' => $workMonth2->getId(),
+                        'month' => $workMonth2->getMonth(),
+                        'status' => $workMonth2->getStatus(),
+                        'user' => [
+                            'email' => $user2->getEmail(),
+                            'firstName' => $user2->getFirstName(),
+                            'lastName' => $user2->getLastName(),
+                            'id' => $user2->getId(),
+                        ],
+                        'year' => [
+                            'year' => $workMonth2->getYear()->getYear(),
+                        ],
+                    ],
+                ],
+                [
+                    'date' => $trainingWorkLog4->getDate()->format(\DateTime::RFC3339),
+                    'id' => $trainingWorkLog4->getId(),
+                    'timeApproved' => null,
+                    'timeRejected' => null,
+                    'workMonth' => [
+                        'id' => $workMonth1->getId(),
+                        'month' => $workMonth1->getMonth(),
+                        'status' => $workMonth1->getStatus(),
+                        'user' => [
+                            'email' => $user1->getEmail(),
+                            'firstName' => $user1->getFirstName(),
+                            'lastName' => $user1->getLastName(),
+                            'id' => $user1->getId(),
+                        ],
+                        'year' => [
+                            'year' => $workMonth1->getYear()->getYear(),
+                        ],
+                    ],
+                ],
+                [
+                    'date' => $trainingWorkLog5->getDate()->format(\DateTime::RFC3339),
+                    'id' => $trainingWorkLog5->getId(),
+                    'timeApproved' => null,
+                    'timeRejected' => null,
+                    'workMonth' => [
+                        'id' => $workMonth3->getId(),
+                        'month' => $workMonth3->getMonth(),
+                        'status' => $workMonth3->getStatus(),
+                        'user' => [
+                            'email' => $user2->getEmail(),
+                            'firstName' => $user2->getFirstName(),
+                            'lastName' => $user2->getLastName(),
+                            'id' => $user2->getId(),
+                        ],
+                        'year' => [
+                            'year' => $workMonth3->getYear()->getYear(),
+                        ],
+                    ],
+                ],
+            ],
             'vacationWorkLogs' => [
                 [
                     'date' => $vacationWorkLog1->getDate()->format(\DateTime::RFC3339),
@@ -1490,6 +1619,9 @@ class GetRecentSpecialApprovalCest
             ],
             'timeOffWorkLogs' => [
                 ['id' => $timeOffWorkLog6->getId()],
+            ],
+            'trainingWorkLogs' => [
+                ['id' => $trainingWorkLog6->getId()],
             ],
             'vacationWorkLogs' => [
                 ['id' => $vacationWorkLog6->getId()],

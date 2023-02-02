@@ -225,6 +225,26 @@ class ApiTester extends \Codeception\Actor
         ]);
     }
 
+    public function createTrainingWorkLog(array $params = [])
+    {
+        $trainingTripWorkLog = $this->populateEntity(new \App\Entity\TrainingWorkLog(), [
+            'workMonth' => function () {
+                return $this->createWorkMonth();
+            },
+            'date' => new DateTimeImmutable(),
+            'title' => 'Title',
+            'comment' => 'Comment',
+            'timeApproved' => null,
+            'timeRejected' => null,
+        ], $params);
+
+        $this->persistEntity($trainingTripWorkLog);
+
+        return $this->grabEntityFromRepository(\App\Entity\TrainingWorkLog::class, [
+            'id' => $trainingTripWorkLog->getId(),
+        ]);
+    }
+
     public function createUserYearStats(array $params = [])
     {
         $userYearStats = $this->populateEntity(new \App\Entity\UserYearStats(), [

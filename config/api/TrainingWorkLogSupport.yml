@@ -1,0 +1,21 @@
+App\Entity\TrainingWorkLogSupport:
+    collectionOperations:
+        post:
+            method: POST
+            normalization_context:
+                groups:
+                    - training_work_log_support_out_detail
+            denormalization_context:
+                groups:
+                    - training_work_log_support_in
+        bulkCreate:
+            method: POST
+            route_name: api_training_work_log_support_bulk_create
+            swagger_context:
+                summary: Creates multiple TrainingWorkLogSupport resource.
+    itemOperations:
+        get:
+            method: GET
+            normalization_context:
+                groups:
+                    - training_work_log_support_out_detail

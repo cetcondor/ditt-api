@@ -7,6 +7,7 @@ use App\Entity\HomeOfficeWorkLog;
 use App\Entity\OvertimeWorkLog;
 use App\Entity\SpecialLeaveWorkLog;
 use App\Entity\TimeOffWorkLog;
+use App\Entity\TrainingWorkLog;
 use App\Entity\User;
 use App\Entity\VacationWorkLog;
 use App\Entity\WorkMonth;
@@ -17,6 +18,7 @@ use App\Repository\HomeOfficeWorkLogRepository;
 use App\Repository\OvertimeWorkLogRepository;
 use App\Repository\SpecialLeaveWorkLogRepository;
 use App\Repository\TimeOffWorkLogRepository;
+use App\Repository\TrainingWorkLogRepository;
 use App\Repository\UserRepository;
 use App\Repository\VacationWorkLogRepository;
 use App\Repository\WorkMonthRepository;
@@ -84,6 +86,11 @@ class WorkMonthController extends AbstractController
     private $timeOffWorkLogRepository;
 
     /**
+     * @var TrainingWorkLogRepository
+     */
+    private $trainingWorkLogRepository;
+
+    /**
      * @var VacationWorkLogRepository
      */
     private $vacationWorkLogRepository;
@@ -109,6 +116,7 @@ class WorkMonthController extends AbstractController
         OvertimeWorkLogRepository $overtimeWorkLogRepository,
         SpecialLeaveWorkLogRepository $specialLeaveWorkLogRepository,
         TimeOffWorkLogRepository $timeOffWorkLogRepository,
+        TrainingWorkLogRepository $trainingWorkLogRepository,
         VacationWorkLogRepository $vacationWorkLogRepository,
         EventDispatcherInterface $eventDispatcher,
         TokenStorageInterface $tokenStorage
@@ -123,6 +131,7 @@ class WorkMonthController extends AbstractController
         $this->overtimeWorkLogRepository = $overtimeWorkLogRepository;
         $this->specialLeaveWorkLogRepository = $specialLeaveWorkLogRepository;
         $this->timeOffWorkLogRepository = $timeOffWorkLogRepository;
+        $this->trainingWorkLogRepository = $trainingWorkLogRepository;
         $this->vacationWorkLogRepository = $vacationWorkLogRepository;
         $this->eventDispatcher = $eventDispatcher;
 
@@ -149,6 +158,7 @@ class WorkMonthController extends AbstractController
             $workMonth->setSickDayWorkLogs($emptyCollection);
             $workMonth->setSpecialLeaveWorkLogs($emptyCollection);
             $workMonth->setTimeOffWorkLogs($emptyCollection);
+            $workMonth->setTrainingWorkLogs($emptyCollection);
             $workMonth->setVacationWorkLogs($emptyCollection);
             $workMonth->setWorkLogs($emptyCollection);
         }
@@ -212,6 +222,7 @@ class WorkMonthController extends AbstractController
             $workMonth->setSickDayWorkLogs($emptyCollection);
             $workMonth->setSpecialLeaveWorkLogs($emptyCollection);
             $workMonth->setTimeOffWorkLogs($emptyCollection);
+            $workMonth->setTrainingWorkLogs($emptyCollection);
             $workMonth->setVacationWorkLogs($emptyCollection);
             $workMonth->setWorkLogs($emptyCollection);
         }
@@ -254,6 +265,7 @@ class WorkMonthController extends AbstractController
             'overtimeWorkLogs' => [],
             'specialLeaveWorkLogs' => [],
             'timeOffWorkLogs' => [],
+            'trainingWorkLogs' => [],
             'vacationWorkLogs' => [],
         ];
 
@@ -294,6 +306,14 @@ class WorkMonthController extends AbstractController
                 $response['timeOffWorkLogs'][] = $this->normalizer->normalize(
                     $workLog,
                     TimeOffWorkLog::class,
+                    ['groups' => ['special_approvals_out_list']]
+                );
+            }
+
+            foreach ($this->trainingWorkLogRepository->findAllWaitingForApproval() as $workLog) {
+                $response['trainingWorkLogs'][] = $this->normalizer->normalize(
+                    $workLog,
+                    TrainingWorkLog::class,
                     ['groups' => ['special_approvals_out_list']]
                 );
             }
@@ -346,6 +366,14 @@ class WorkMonthController extends AbstractController
                 );
             }
 
+            foreach ($this->trainingWorkLogRepository->findAllWaitingForApprovalBySupervisor($supervisor) as $workLog) {
+                $response['trainingWorkLogs'][] = $this->normalizer->normalize(
+                    $workLog,
+                    TrainingWorkLog::class,
+                    ['groups' => ['special_approvals_out_list']]
+                );
+            }
+
             foreach ($this->vacationWorkLogRepository->findAllWaitingForApprovalBySupervisor($supervisor) as $workLog) {
                 $response['vacationWorkLogs'][] = $this->normalizer->normalize(
                     $workLog,
@@ -376,6 +404,7 @@ class WorkMonthController extends AbstractController
             'overtimeWorkLogs' => [],
             'specialLeaveWorkLogs' => [],
             'timeOffWorkLogs' => [],
+            'trainingWorkLogs' => [],
             'vacationWorkLogs' => [],
         ];
 
@@ -416,6 +445,14 @@ class WorkMonthController extends AbstractController
                 $response['timeOffWorkLogs'][] = $this->normalizer->normalize(
                     $workLog,
                     TimeOffWorkLog::class,
+                    ['groups' => ['special_approvals_out_list']]
+                );
+            }
+
+            foreach ($this->trainingWorkLogRepository->findAllRecent() as $workLog) {
+                $response['trainingWorkLogs'][] = $this->normalizer->normalize(
+                    $workLog,
+                    TrainingWorkLog::class,
                     ['groups' => ['special_approvals_out_list']]
                 );
             }
@@ -464,6 +501,14 @@ class WorkMonthController extends AbstractController
                 $response['timeOffWorkLogs'][] = $this->normalizer->normalize(
                     $workLog,
                     TimeOffWorkLog::class,
+                    ['groups' => ['special_approvals_out_list']]
+                );
+            }
+
+            foreach ($this->trainingWorkLogRepository->findAllRecentBySupervisor($supervisor) as $workLog) {
+                $response['trainingWorkLogs'][] = $this->normalizer->normalize(
+                    $workLog,
+                    TrainingWorkLog::class,
                     ['groups' => ['special_approvals_out_list']]
                 );
             }

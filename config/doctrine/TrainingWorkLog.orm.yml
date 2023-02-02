@@ -1,0 +1,39 @@
+App\Entity\TrainingWorkLog:
+    type: entity
+
+    id:
+        id:
+            type: integer
+            generator: { strategy: IDENTITY }
+
+    fields:
+        date:
+            type: datetime_immutable
+        title:
+            type: text
+        comment:
+            nullable: true
+            type: text
+        timeApproved:
+            type: datetime_immutable
+            nullable: true
+        timeRejected:
+            type: datetime_immutable
+            nullable: true
+        rejectionMessage:
+            type: text
+            nullable: true
+
+    oneToMany:
+        support:
+            targetEntity: App\Entity\TrainingWorkLogSupport
+            mappedBy: workLog
+
+    manyToOne:
+        workMonth:
+            targetEntity: App\Entity\WorkMonth
+            inversedBy: trainingWorkLogs
+            joinColumn:
+                name: work_month_id
+                referencedColumnName: id
+                nullable: false

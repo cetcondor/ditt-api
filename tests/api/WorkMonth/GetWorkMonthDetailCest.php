@@ -144,6 +144,14 @@ class GetWorkMonthDetailCest
             'date' => $endTime1,
             'workMonth' => $data['workMonth'],
         ]);
+        $data['trainingWorkLog1'] = $I->createTrainingWorkLog([
+            'date' => $startTime1,
+            'workMonth' => $data['workMonth'],
+        ]);
+        $data['trainingWorkLog2'] = $I->createTrainingWorkLog([
+            'date' => $endTime1,
+            'workMonth' => $data['workMonth'],
+        ]);
         $data['vacationWorkLog1'] = $I->createVacationWorkLog([
             'date' => $startTime1,
             'workMonth' => $data['workMonth'],
@@ -173,6 +181,7 @@ class GetWorkMonthDetailCest
         $data['workMonth']->setSickDayWorkLogs([$data['sickDayWorkLog1'], $data['sickDayWorkLog2']]);
         $data['workMonth']->setSpecialLeaveWorkLogs([$data['specialLeaveWorkLog1'], $data['specialLeaveWorkLog2']]);
         $data['workMonth']->setTimeOffWorkLogs([$data['timeOffWorkLog1'], $data['timeOffWorkLog2']]);
+        $data['workMonth']->setTrainingWorkLogs([$data['trainingWorkLog1'], $data['trainingWorkLog2']]);
         $data['workMonth']->setVacationWorkLogs([$data['vacationWorkLog1'], $data['vacationWorkLog2']]);
         $data['workMonth']->setWorkLogs([$data['workLog1'], $data['workLog2']]);
 
@@ -305,6 +314,16 @@ class GetWorkMonthDetailCest
                 [
                     'date' => $endTime1->format(\DateTime::RFC3339),
                     'id' => $data['timeOffWorkLog2']->getId(),
+                ],
+            ],
+            'trainingWorkLogs' => [
+                [
+                    'date' => $startTime1->format(\DateTime::RFC3339),
+                    'id' => $data['trainingWorkLog1']->getId(),
+                ],
+                [
+                    'date' => $endTime1->format(\DateTime::RFC3339),
+                    'id' => $data['trainingWorkLog2']->getId(),
                 ],
             ],
             'user' => ['id' => $this->user->getId()],
@@ -462,6 +481,16 @@ class GetWorkMonthDetailCest
                     'id' => $data['timeOffWorkLog2']->getId(),
                 ],
             ],
+            'trainingWorkLogs' => [
+                [
+                    'date' => $startTime1->format(\DateTime::RFC3339),
+                    'id' => $data['trainingWorkLog1']->getId(),
+                ],
+                [
+                    'date' => $endTime1->format(\DateTime::RFC3339),
+                    'id' => $data['trainingWorkLog2']->getId(),
+                ],
+            ],
             'user' => ['id' => $this->user->getId()],
             'vacationWorkLogs' => [
                 [
@@ -549,6 +578,8 @@ class GetWorkMonthDetailCest
             'sickDayWorkLogs' => [],
             'specialLeaveWorkLogs' => [],
             'timeOffWorkLogs' => [],
+            'trainingWorkLogs' => [],
+
             'user' => ['id' => $this->user->getId()],
             'vacationWorkLogs' => [],
             'workLogs' => [],
@@ -684,6 +715,16 @@ class GetWorkMonthDetailCest
                     'id' => $data['timeOffWorkLog2']->getId(),
                 ],
             ],
+            'trainingWorkLogs' => [
+                [
+                    'date' => $startTime1->format(\DateTime::RFC3339),
+                    'id' => $data['trainingWorkLog1']->getId(),
+                ],
+                [
+                    'date' => $endTime1->format(\DateTime::RFC3339),
+                    'id' => $data['trainingWorkLog2']->getId(),
+                ],
+            ],
             'user' => ['id' => $this->user->getId()],
             'vacationWorkLogs' => [
                 [
@@ -783,6 +824,7 @@ class GetWorkMonthDetailCest
             'sickDayWorkLogs' => [],
             'specialLeaveWorkLogs' => [],
             'timeOffWorkLogs' => [],
+            'trainingWorkLogs' => [],
             'user' => ['id' => $this->user->getId()],
             'vacationWorkLogs' => [],
             'workLogs' => [],
@@ -916,6 +958,16 @@ class GetWorkMonthDetailCest
                 [
                     'date' => $endTime1->format(\DateTime::RFC3339),
                     'id' => $data['timeOffWorkLog2']->getId(),
+                ],
+            ],
+            'trainingWorkLogs' => [
+                [
+                    'date' => $startTime1->format(\DateTime::RFC3339),
+                    'id' => $data['trainingWorkLog1']->getId(),
+                ],
+                [
+                    'date' => $endTime1->format(\DateTime::RFC3339),
+                    'id' => $data['trainingWorkLog2']->getId(),
                 ],
             ],
             'user' => ['id' => $this->user->getId()],

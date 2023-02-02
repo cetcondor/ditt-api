@@ -311,6 +311,48 @@ api_time_off_work_log_support_bulk_create:
     defaults:
         _api_collection_operation_name: 'bulkCreate'
 
+api_training_work_log_bulk_create:
+    path: /training_work_logs/bulk
+    methods: [POST]
+    controller: App\Controller\TrainingWorkLogController::bulkCreate
+    defaults:
+        _api_collection_operation_name: 'bulkCreate'
+
+api_training_work_log_bulk_mark_approved:
+    path: /training_work_logs/bulk/mark_approved
+    methods: [PUT]
+    controller: App\Controller\TrainingWorkLogController::bulkMarkApproved
+    defaults:
+        _api_collection_operation_name: 'bulkMarkApproved'
+
+api_training_work_log_bulk_mark_rejected:
+    path: /training_work_logs/bulk/mark_rejected
+    methods: [PUT]
+    controller: App\Controller\TrainingWorkLogController::bulkMarkRejected
+    defaults:
+        _api_collection_operation_name: 'bulkMarkRejected'
+
+api_training_work_log_mark_approved:
+    path: /training_work_logs/{id}/mark_approved
+    methods: [PUT]
+    controller: App\Controller\TrainingWorkLogController::markApproved
+    defaults:
+        _api_collection_operation_name: 'markApproved'
+
+api_training_work_log_mark_rejected:
+    path: /training_work_logs/{id}/mark_rejected
+    methods: [PUT]
+    controller: App\Controller\TrainingWorkLogController::markRejected
+    defaults:
+        _api_collection_operation_name: 'markRejected'
+
+api_training_work_log_support_bulk_create:
+    path: /training_work_log_supports/bulk
+    methods: [POST]
+    controller: App\Controller\TrainingWorkLogSupportController::bulkCreate
+    defaults:
+        _api_collection_operation_name: 'bulkCreate'
+
 api_vacation_work_log_bulk_create:
     path: /vacation_work_logs/bulk
     methods: [POST]

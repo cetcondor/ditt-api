@@ -405,6 +405,25 @@ class GetSpecialApprovalCest
             'workMonth' => $workMonth1,
         ]);
 
+        $trainingWorkLog1 = $I->createTrainingWorkLog([
+            'date' => new \DateTimeImmutable(),
+            'workMonth' => $workMonth2,
+        ]);
+        $trainingWorkLog2 = $I->createTrainingWorkLog([
+            'date' => new \DateTimeImmutable(),
+            'timeApproved' => new \DateTimeImmutable(),
+            'workMonth' => $workMonth2,
+        ]);
+        $trainingWorkLog3 = $I->createTrainingWorkLog([
+            'date' => new \DateTimeImmutable(),
+            'timeRejected' => new \DateTimeImmutable(),
+            'workMonth' => $workMonth2,
+        ]);
+        $trainingWorkLog4 = $I->createTrainingWorkLog([
+            'date' => new \DateTimeImmutable(),
+            'workMonth' => $workMonth1,
+        ]);
+
         $vacationWorkLog1 = $I->createVacationWorkLog([
             'date' => new \DateTimeImmutable(),
             'workMonth' => $workMonth2,
@@ -641,6 +660,48 @@ class GetSpecialApprovalCest
                     ],
                 ],
             ],
+            'trainingWorkLogs' => [
+                [
+                    'date' => $trainingWorkLog1->getDate()->format(\DateTime::RFC3339),
+                    'id' => $trainingWorkLog1->getId(),
+                    'timeApproved' => null,
+                    'timeRejected' => null,
+                    'workMonth' => [
+                        'id' => $workMonth2->getId(),
+                        'month' => $workMonth2->getMonth(),
+                        'status' => $workMonth2->getStatus(),
+                        'user' => [
+                            'email' => $user2->getEmail(),
+                            'firstName' => $user2->getFirstName(),
+                            'lastName' => $user2->getLastName(),
+                            'id' => $user2->getId(),
+                        ],
+                        'year' => [
+                            'year' => $workMonth2->getYear()->getYear(),
+                        ],
+                    ],
+                ],
+                [
+                    'date' => $trainingWorkLog4->getDate()->format(\DateTime::RFC3339),
+                    'id' => $trainingWorkLog4->getId(),
+                    'timeApproved' => null,
+                    'timeRejected' => null,
+                    'workMonth' => [
+                        'id' => $workMonth1->getId(),
+                        'month' => $workMonth1->getMonth(),
+                        'status' => $workMonth1->getStatus(),
+                        'user' => [
+                            'email' => $user1->getEmail(),
+                            'firstName' => $user1->getFirstName(),
+                            'lastName' => $user1->getLastName(),
+                            'id' => $user1->getId(),
+                        ],
+                        'year' => [
+                            'year' => $workMonth1->getYear()->getYear(),
+                        ],
+                    ],
+                ],
+            ],
             'vacationWorkLogs' => [
                 [
                     'date' => $vacationWorkLog1->getDate()->format(\DateTime::RFC3339),
@@ -704,6 +765,10 @@ class GetSpecialApprovalCest
             'timeOffWorkLogs' => [
                 ['id' => $timeOffWorkLog2->getId()],
                 ['id' => $timeOffWorkLog3->getId()],
+            ],
+            'trainingWorkLogs' => [
+                ['id' => $trainingWorkLog2->getId()],
+                ['id' => $trainingWorkLog3->getId()],
             ],
             'vacationWorkLogs' => [
                 ['id' => $vacationWorkLog2->getId()],

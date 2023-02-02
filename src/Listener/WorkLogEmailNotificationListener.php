@@ -7,6 +7,7 @@ use App\Entity\HomeOfficeWorkLog;
 use App\Entity\OvertimeWorkLog;
 use App\Entity\SpecialLeaveWorkLog;
 use App\Entity\TimeOffWorkLog;
+use App\Entity\TrainingWorkLog;
 use App\Entity\User;
 use App\Entity\VacationWorkLog;
 use App\Entity\WorkLogInterface;
@@ -27,6 +28,8 @@ use App\Event\MultipleSpecialLeaveWorkLogApprovedEvent;
 use App\Event\MultipleSpecialLeaveWorkLogRejectedEvent;
 use App\Event\MultipleTimeOffWorkLogApprovedEvent;
 use App\Event\MultipleTimeOffWorkLogRejectedEvent;
+use App\Event\MultipleTrainingWorkLogApprovedEvent;
+use App\Event\MultipleTrainingWorkLogRejectedEvent;
 use App\Event\MultipleVacationWorkLogApprovedEvent;
 use App\Event\MultipleVacationWorkLogRejectedEvent;
 use App\Event\OvertimeWorkLogApprovedEvent;
@@ -39,6 +42,9 @@ use App\Event\SpecialLeaveWorkLogRejectedEvent;
 use App\Event\TimeOffWorkLogApprovedEvent;
 use App\Event\TimeOffWorkLogCanceledEvent;
 use App\Event\TimeOffWorkLogRejectedEvent;
+use App\Event\TrainingWorkLogApprovedEvent;
+use App\Event\TrainingWorkLogCanceledEvent;
+use App\Event\TrainingWorkLogRejectedEvent;
 use App\Event\VacationWorkLogApprovedEvent;
 use App\Event\VacationWorkLogCanceledEvent;
 use App\Event\VacationWorkLogRejectedEvent;
@@ -479,6 +485,58 @@ class WorkLogEmailNotificationListener
      * @throws RuntimeError
      * @throws SyntaxError
      */
+    public function onMultipleTrainingWorkLogApproved(MultipleTrainingWorkLogApprovedEvent $event): void
+    {
+        $workLogs = $event->getWorkLogs();
+        $startDate = $workLogs[0]->getDate();
+        $endDate = $workLogs[0]->getDate();
+
+        if (count($workLogs) > 1 && end($workLogs) instanceof TrainingWorkLog) {
+            $endDate = end($workLogs)->getDate();
+        }
+
+        $this->sendWorkLogsMail(
+            $event->getSupervisor(),
+            $workLogs,
+            'Antrag auf mehrtägigen Fortbildung gewährt – %s bis %s',
+            $startDate,
+            $endDate,
+            'notifications/multiple_training_work_log_approved.html.twig'
+        );
+    }
+
+    /**
+     * @throws EmailNotSentException
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
+     */
+    public function onMultipleTrainingWorkLogRejected(MultipleTrainingWorkLogRejectedEvent $event): void
+    {
+        $workLogs = $event->getWorkLogs();
+        $startDate = $workLogs[0]->getDate();
+        $endDate = $workLogs[0]->getDate();
+
+        if (count($workLogs) > 1 && end($workLogs) instanceof TrainingWorkLog) {
+            $endDate = end($workLogs)->getDate();
+        }
+
+        $this->sendWorkLogsMail(
+            $event->getSupervisor(),
+            $workLogs,
+            'Antrag auf mehrtägigen Fortbildung abgelehnt – %s bis %s',
+            $startDate,
+            $endDate,
+            'notifications/multiple_training_work_log_rejected.html.twig'
+        );
+    }
+
+    /**
+     * @throws EmailNotSentException
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
+     */
     public function onMultipleVacationWorkLogApproved(MultipleVacationWorkLogApprovedEvent $event): void
     {
         $workLogs = $event->getWorkLogs();
@@ -692,6 +750,57 @@ class WorkLogEmailNotificationListener
             'Antrag auf Freizeitausgleich abgelehnt – %s',
             $event->getWorkLog()->getDate(),
             'notifications/time_off_work_log_rejected.html.twig'
+        );
+    }
+
+    /**
+     * @throws EmailNotSentException
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
+     */
+    public function onTrainingWorkLogApproved(TrainingWorkLogApprovedEvent $event): void
+    {
+        $this->sendWorkLogMail(
+            $event->getSupervisor(),
+            $event->getWorkLog(),
+            'Antrag auf Fortbildung gewährt – %s',
+            $event->getWorkLog()->getDate(),
+            'notifications/training_work_log_approved.html.twig'
+        );
+    }
+
+    /**
+     * @throws EmailNotSentException
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
+     */
+    public function onTrainingWorkLogCanceled(TrainingWorkLogCanceledEvent $event): void
+    {
+        $this->sendWorkLogMail(
+            $event->getSupervisor(),
+            $event->getWorkLog(),
+            'Antrag auf Fortbildung storniert – %s',
+            $event->getWorkLog()->getDate(),
+            'notifications/training_work_log_canceled.html.twig'
+        );
+    }
+
+    /**
+     * @throws EmailNotSentException
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
+     */
+    public function onTrainingWorkLogRejected(TrainingWorkLogRejectedEvent $event): void
+    {
+        $this->sendWorkLogMail(
+            $event->getSupervisor(),
+            $event->getWorkLog(),
+            'Antrag auf Fortbildung abgelehnt – %s',
+            $event->getWorkLog()->getDate(),
+            'notifications/training_work_log_rejected.html.twig'
         );
     }
 

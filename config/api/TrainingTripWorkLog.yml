@@ -1,0 +1,80 @@
+App\Entity\TrainingWorkLog:
+    collectionOperations:
+        post:
+            method: POST
+            normalization_context:
+                groups:
+                    - training_work_log_out_detail
+            denormalization_context:
+                groups:
+                    - training_work_log_in
+        bulkCreate:
+            method: POST
+            route_name: api_training_work_log_bulk_create
+            swagger_context:
+                summary: Creates multiple TrainingWorkLog resources.
+    itemOperations:
+        put:
+            method: PUT
+            normalization_context:
+                groups:
+                    - training_work_log_out_detail
+            denormalization_context:
+                groups:
+                    - training_work_log_in
+        delete:
+            method: DELETE
+        get:
+            method: GET
+            normalization_context:
+                groups:
+                    - training_work_log_out_detail
+        bulkMarkApproved:
+            method: PUT
+            route_name: api_training_work_log_bulk_mark_approved
+            normalization_context:
+                groups:
+                    - training_work_log_out_detail
+            swagger_context:
+                summary: Marks multiple TrainingWorkLog resources as approved.
+                parameters:
+                    - name: workLogIds
+                      description: 'Work log ids'
+                      type: array
+                      in: body
+                      required: true
+        bulkMarkRejected:
+            method: PUT
+            route_name: api_training_work_log_bulk_mark_rejected
+            normalization_context:
+                groups:
+                    - training_work_log_out_detail
+            swagger_context:
+                summary: Marks multiple TrainingWorkLog resources as rejected.
+                parameters:
+                    - name: workLogIds
+                      description: 'Work log ids'
+                      type: array
+                      in: body
+                      required: true
+                    - name: rejectionMessage
+                      description: 'Rejection message'
+                      type: string
+                      in: body
+                      required: true
+        markApproved:
+            method: PUT
+            route_name: api_training_work_log_mark_approved
+            normalization_context:
+                groups:
+                    - training_work_log_out_detail
+            swagger_context:
+                summary: Marks the TrainingWorkLog as approved.
+        markRejected:
+            method: PUT
+            route_name: api_training_work_log_mark_rejected
+            normalization_context:
+                groups:
+                    - training_work_log_out_detail
+            swagger_context:
+                summary: Marks the TrainingWorkLog as rejected.

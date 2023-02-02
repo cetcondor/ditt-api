@@ -11,6 +11,7 @@ App\Entity\WorkMonth:
                 - sick_day_work_log_out_detail
                 - special_approvals_out_list
                 - time_off_work_log_out_detail
+                - training_work_log_out_detail
                 - vacation_work_log_out_detail
                 - work_log_out_detail
                 - supervised_user_out_list
@@ -68,6 +69,9 @@ App\Entity\WorkMonth:
             groups:
                 - work_month_out_detail
         timeOffWorkLogs:
+            groups:
+                - work_month_out_detail
+        trainingWorkLogs:
             groups:
                 - work_month_out_detail
         vacationWorkLogs:

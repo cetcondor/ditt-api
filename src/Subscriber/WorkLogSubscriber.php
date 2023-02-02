@@ -11,6 +11,7 @@ use App\Entity\SickDayWorkLog;
 use App\Entity\SpecialLeaveWorkLog;
 use App\Entity\SupervisorWorkLogInterface;
 use App\Entity\TimeOffWorkLog;
+use App\Entity\TrainingWorkLog;
 use App\Entity\User;
 use App\Entity\VacationWorkLog;
 use App\Entity\WorkLogInterface;
@@ -21,6 +22,7 @@ use App\Event\OvertimeWorkLogCanceledEvent;
 use App\Event\SickDayWorkLogCreatedEvent;
 use App\Event\SpecialLeaveWorkLogCanceledEvent;
 use App\Event\TimeOffWorkLogCanceledEvent;
+use App\Event\TrainingWorkLogCanceledEvent;
 use App\Event\VacationWorkLogCanceledEvent;
 use App\Repository\WorkMonthRepository;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -161,6 +163,11 @@ class WorkLogSubscriber implements EventSubscriberInterface
             $this->eventDispatcher->dispatch(
                 new TimeOffWorkLogCanceledEvent($workLog, $supervisor),
                 TimeOffWorkLogCanceledEvent::EVENT
+            );
+        } elseif ($workLog instanceof TrainingWorkLog && $workLog->getTimeApproved() !== null) {
+            $this->eventDispatcher->dispatch(
+                new TrainingWorkLogCanceledEvent($workLog, $supervisor),
+                TrainingWorkLogCanceledEvent::EVENT
             );
         } elseif ($workLog instanceof VacationWorkLog && $workLog->getTimeApproved() !== null) {
             $this->eventDispatcher->dispatch(

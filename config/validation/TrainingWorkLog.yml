@@ -1,0 +1,17 @@
+App\Entity\TrainingWorkLog:
+    properties:
+        date:
+            - NotBlank: ~
+            - Type: DateTimeImmutable
+
+        title:
+            - NotBlank: ~
+
+        timeApproved:
+            - Type: DateTimeImmutable
+
+        timeRejected:
+            - Type: DateTimeImmutable
+
+        workMonth:
+            - NotBlank: ~

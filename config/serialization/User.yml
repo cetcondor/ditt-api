@@ -13,6 +13,7 @@ App\Entity\User:
                 - special_leave_work_log_support_out_detail
                 - supervised_user_out_list
                 - time_off_work_log_support_out_detail
+                - training_work_log_support_out_detail
                 - vacation_work_log_support_out_detail
                 - work_month_out_list
                 - work_month_out_detail

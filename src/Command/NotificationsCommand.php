@@ -8,6 +8,7 @@ use App\Repository\HomeOfficeWorkLogRepository;
 use App\Repository\OvertimeWorkLogRepository;
 use App\Repository\SpecialLeaveWorkLogRepository;
 use App\Repository\TimeOffWorkLogRepository;
+use App\Repository\TrainingWorkLogRepository;
 use App\Repository\UserRepository;
 use App\Repository\VacationWorkLogRepository;
 use App\Service\ConfigService;
@@ -42,6 +43,11 @@ class NotificationsCommand extends Command
      * @var TimeOffWorkLogRepository
      */
     private $timeOffWorkLogRepository;
+
+    /**
+     * @var TrainingWorkLogRepository
+     */
+    private $trainingWorkLogRepository;
 
     /**
      * @var VacationWorkLogRepository
@@ -89,6 +95,7 @@ class NotificationsCommand extends Command
         OvertimeWorkLogRepository $overtimeWorkLogRepository,
         SpecialLeaveWorkLogRepository $specialLeaveWorkLogRepository,
         TimeOffWorkLogRepository $timeOffWorkLogRepository,
+        TrainingWorkLogRepository $trainingWorkLogRepository,
         VacationWorkLogRepository $vacationWorkLogRepository,
         string $clientSpecialApprovalsUrl,
         ConfigService $configService,
@@ -105,6 +112,7 @@ class NotificationsCommand extends Command
         $this->overtimeWorkLogRepository = $overtimeWorkLogRepository;
         $this->specialLeaveWorkLogRepository = $specialLeaveWorkLogRepository;
         $this->timeOffWorkLogRepository = $timeOffWorkLogRepository;
+        $this->trainingWorkLogRepository = $trainingWorkLogRepository;
         $this->vacationWorkLogRepository = $vacationWorkLogRepository;
         $this->mailSenderAddress = $mailSenderAddress;
         $this->clientSpecialApprovalsUrl = $clientSpecialApprovalsUrl;
@@ -142,6 +150,7 @@ class NotificationsCommand extends Command
                     + count($this->overtimeWorkLogRepository->findAllWaitingForApprovalBySupervisor($user))
                     + count($this->specialLeaveWorkLogRepository->findAllWaitingForApprovalBySupervisor($user))
                     + count($this->timeOffWorkLogRepository->findAllWaitingForApprovalBySupervisor($user))
+                    + count($this->trainingWorkLogRepository->findAllWaitingForApprovalBySupervisor($user))
                     + count($this->vacationWorkLogRepository->findAllWaitingForApprovalBySupervisor($user));
             } catch (\Exception $ex) {
                 $waitingCount = 0;

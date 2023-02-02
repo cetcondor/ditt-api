@@ -12,6 +12,7 @@ use App\Repository\SickDayUnpaidWorkLogRepository;
 use App\Repository\SickDayWorkLogRepository;
 use App\Repository\SpecialLeaveWorkLogRepository;
 use App\Repository\TimeOffWorkLogRepository;
+use App\Repository\TrainingWorkLogRepository;
 use App\Repository\UserRepository;
 use App\Repository\VacationWorkLogRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -68,6 +69,11 @@ class CalendarController extends AbstractController
     private $timeOffWorkLogRepository;
 
     /**
+     * @var TrainingWorkLogRepository
+     */
+    private $trainingWorkLogRepository;
+
+    /**
      * @var VacationWorkLogRepository
      */
     private $vacationWorkLogRepository;
@@ -92,6 +98,7 @@ class CalendarController extends AbstractController
         SickDayWorkLogRepository $sickDayWorkLogRepository,
         SpecialLeaveWorkLogRepository $specialLeaveWorkLogRepository,
         TimeOffWorkLogRepository $timeOffWorkLogRepository,
+        TrainingWorkLogRepository $trainingWorkLogRepository,
         VacationWorkLogRepository $vacationWorkLogRepository,
         UserRepository $userRepository,
         Factory $iCalFactory
@@ -105,6 +112,7 @@ class CalendarController extends AbstractController
         $this->sickDayWorkLogRepository = $sickDayWorkLogRepository;
         $this->specialLeaveWorkLogRepository = $specialLeaveWorkLogRepository;
         $this->timeOffWorkLogRepository = $timeOffWorkLogRepository;
+        $this->trainingWorkLogRepository = $trainingWorkLogRepository;
         $this->vacationWorkLogRepository = $vacationWorkLogRepository;
         $this->userRepository = $userRepository;
         $this->iCalFactory = $iCalFactory;
@@ -223,6 +231,21 @@ class CalendarController extends AbstractController
             $event->setSummary($workLog->getTimeApproved() ? 'Freizeitausgleich' : '? Freizeitausgleich');
             $event->setDescription(sprintf(
                 'Kommentar: %s\nStatus: %s',
+                $workLog->getComment(),
+                $workLog->getTimeApproved() ? 'Freigegeben' : 'Warte auf Freigabe'
+            ));
+            $calendar->addEvent($event);
+        }
+
+        foreach ($this->trainingWorkLogRepository->findAllRecentWaitingAndApprovedByUser($user) as $workLog) {
+            $event = $this->iCalFactory->createCalendarEvent();
+            $event->setUid(sprintf('training-%s', $workLog->getId()));
+            $event->setStart((new \DateTime())->setTimestamp($workLog->getDate()->getTimeStamp()));
+            $event->setAllDay(true);
+            $event->setSummary($workLog->getTimeApproved() ? 'Fortbildung' : '? Fortbildung');
+            $event->setDescription(sprintf(
+                'Titel: %s\Kommentar: %s\nVoraussichtliche Rückkehr: %s\nStatus: %s',
+                $workLog->getTitle(),
                 $workLog->getComment(),
                 $workLog->getTimeApproved() ? 'Freigegeben' : 'Warte auf Freigabe'
             ));

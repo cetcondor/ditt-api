@@ -1,0 +1,50 @@
+App\Entity\TrainingWorkLog:
+    attributes:
+        id:
+            groups:
+                - training_work_log_out_detail
+                - training_work_log_support_out_detail
+                - special_approvals_out_list
+                - work_month_out_detail
+        date:
+            groups:
+                - training_work_log_out_detail
+                - special_approvals_out_list
+                - work_month_out_detail
+                - training_work_log_in
+        title:
+            groups:
+                - training_work_log_out_detail
+                - special_approvals_out_list
+                - work_month_out_detail
+                - training_work_log_in
+        comment:
+            groups:
+                - training_work_log_out_detail
+                - special_approvals_out_list
+                - work_month_out_detail
+                - training_work_log_in
+        timeApproved:
+            groups:
+                - training_work_log_out_detail
+                - special_approvals_out_list
+                - work_month_out_detail
+        timeRejected:
+            groups:
+                - training_work_log_out_detail
+                - special_approvals_out_list
+                - work_month_out_detail
+        rejectionMessage:
+            groups:
+                - training_work_log_out_detail
+                - special_approvals_out_list
+                - work_month_out_detail
+                - training_work_log_in
+        support:
+            groups:
+                - training_work_log_out_detail
+                - special_approvals_out_list
+        workMonth:
+            groups:
+                - training_work_log_out_detail
+                - special_approvals_out_list
