@@ -16,8 +16,6 @@ App\Entity\User:
         supervisedUsers:
             method: 'GET'
             route_name: 'api_supervised_users'
-            filters:
-                - 'order_filter.supervised_user'
             normalization_context:
                 groups:
                     - supervised_user_out_list
@@ -25,8 +23,6 @@ App\Entity\User:
                     - work_hours_out_list
         get:
             method: 'GET'
-            filters:
-                - 'order_filter.user'
             normalization_context:
                 groups:
                     - user_out_list

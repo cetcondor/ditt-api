@@ -279,22 +279,11 @@ class UserController extends AbstractController
         }
 
         $supervisedUsers = $user->getAllSupervised();
-        $order = $request->query->get('order') ?: [];
         $isActiveFilter = $request->query->get('isActive');
 
         if (boolval($isActiveFilter)) {
             $supervisedUsers = array_filter($supervisedUsers, function (User $supervisedUser) {
                 return $supervisedUser->getIsActive();
-            });
-        }
-
-        if (isset($order['lastName']) && in_array($order['lastName'], ['asc', 'desc'])) {
-            usort($supervisedUsers, function (User $a, User $b) use ($order) {
-                if ($order['lastName'] === 'desc') {
-                    return strcasecmp($b->getLastName(), $a->getLastName());
-                }
-
-                return strcasecmp($a->getLastName(), $b->getLastName());
             });
         }
 

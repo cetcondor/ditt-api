@@ -66,24 +66,6 @@ services:
         autoconfigure: false
         public: false
 
-    # API Order filters
-
-    app.order_filter.supervised_user:
-        parent:    'api_platform.doctrine.orm.order_filter'
-        arguments: [ { firstName: ~, lastName: ~ } ]
-        tags:      [ { name: 'api_platform.filter', id: 'order_filter.supervised_user' } ]
-        autowire: false
-        autoconfigure: false
-        public: false
-
-    app.order_filter.user:
-        parent:    'api_platform.doctrine.orm.order_filter'
-        arguments: [ { firstName: ~, lastName: ~, supervisor.firstName: ~, supervisor.lastName: ~ } ]
-        tags:      [ { name: 'api_platform.filter', id: 'order_filter.user' } ]
-        autowire: false
-        autoconfigure: false
-        public: false
-
     # Commands
 
     App\Command\NotificationsCommand:
