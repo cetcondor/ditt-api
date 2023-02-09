@@ -271,22 +271,6 @@ class UserController extends AbstractController
         );
     }
 
-    public function getOptions(Request $request): Response
-    {
-        $users = $this->userRepository->getRepository()->findAll();
-
-        $normalizedData = [];
-        foreach ($users as $user) {
-            $normalizedData[] = $this->normalizer->normalize(
-                $user,
-                User::class,
-                ['groups' => ['user_out_options']]
-            );
-        }
-
-        return JsonResponse::create($normalizedData, JsonResponse::HTTP_OK);
-    }
-
     public function supervisedUsers(Request $request, int $id): Response
     {
         $user = $this->userRepository->getRepository()->find($id);

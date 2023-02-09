@@ -9,7 +9,6 @@ App\Entity\User:
                 - user_out_list
                 - user_out_detail
                 - user_out_api_token_detail
-                - user_out_options
                 - special_approvals_out_list
                 - special_leave_work_log_support_out_detail
                 - supervised_user_out_list
@@ -23,7 +22,6 @@ App\Entity\User:
                 - user_out_list
                 - user_out_detail
                 - user_out_api_token_detail
-                - user_out_options
                 - special_approvals_out_list
                 - supervised_user_out_list
                 - user_in
@@ -41,7 +39,6 @@ App\Entity\User:
                 - user_out_list
                 - user_out_detail
                 - user_out_api_token_detail
-                - user_out_options
                 - special_approvals_out_list
                 - supervised_user_out_list
                 - work_month_out_detail
@@ -52,7 +49,6 @@ App\Entity\User:
                 - user_out_list
                 - user_out_detail
                 - user_out_api_token_detail
-                - user_out_options
                 - special_approvals_out_list
                 - supervised_user_out_list
                 - work_month_out_detail
