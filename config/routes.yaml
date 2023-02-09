@@ -437,6 +437,13 @@ api_supervised_users:
     defaults:
         _api_collection_operation_name: 'supervisedUsers'
 
+api_users_get_options:
+    path: /users_options
+    methods: [GET]
+    controller: App\Controller\UserController::getOptions
+    defaults:
+        _api_collection_operation_name: 'getOptions'
+
 api_work_months_detail:
     path: /work_months/{id}/detail
     methods: [GET]

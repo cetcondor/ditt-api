@@ -9,6 +9,7 @@ App\Entity\User:
                 - user_out_list
                 - user_out_detail
                 - user_out_api_token_detail
+                - user_out_options
                 - special_approvals_out_list
                 - special_leave_work_log_support_out_detail
                 - supervised_user_out_list
@@ -22,6 +23,7 @@ App\Entity\User:
                 - user_out_list
                 - user_out_detail
                 - user_out_api_token_detail
+                - user_out_options
                 - special_approvals_out_list
                 - supervised_user_out_list
                 - user_in
@@ -39,6 +41,7 @@ App\Entity\User:
                 - user_out_list
                 - user_out_detail
                 - user_out_api_token_detail
+                - user_out_options
                 - special_approvals_out_list
                 - supervised_user_out_list
                 - work_month_out_detail
@@ -49,6 +52,7 @@ App\Entity\User:
                 - user_out_list
                 - user_out_detail
                 - user_out_api_token_detail
+                - user_out_options
                 - special_approvals_out_list
                 - supervised_user_out_list
                 - work_month_out_detail
@@ -71,6 +75,7 @@ App\Entity\User:
                 - supervised_user_out_list
                 - user_in
         supervisor:
+            max_depth: 1
             groups:
                 - special_approvals_out_list
                 - supervised_user_out_list
@@ -78,12 +83,14 @@ App\Entity\User:
                 - user_out_detail
                 - user_in
         allSupervisors:
+            max_depth:  1
             groups:
                 - special_approvals_out_list
                 - user_out_list
                 - user_out_detail
                 - user_in
         vacations:
+            max_depth:  1
             groups:
                 - user_out_list
                 - user_out_detail
@@ -92,6 +99,7 @@ App\Entity\User:
                 - work_month_out_detail
                 - user_in
         workHours:
+            max_depth:  1
             groups:
                 - user_out_list
                 - user_out_detail
@@ -99,19 +107,23 @@ App\Entity\User:
                 - supervised_user_out_list
                 - user_in
         workMonths:
+            max_depth:  1
             groups:
                 - supervised_user_out_list
         yearStats:
+            max_depth:  1
             groups:
                 - user_out_detail
                 - user_out_list
                 - supervised_user_out_list
                 - work_month_out_detail
         notifications:
+            max_depth:  1
             groups:
                 - user_out_detail
                 - user_in
         lastApprovedWorkMonth:
+            max_depth:  1
             groups:
                 - supervised_user_out_list
                 - user_out_list

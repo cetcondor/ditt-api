@@ -131,6 +131,10 @@ security:
                 - !php/const App\Entity\User::ROLE_ADMIN
         -   path: ^/users
             roles:
+                - !php/const App\Entity\User::ROLE_EMPLOYEE
+                - !php/const App\Entity\User::ROLE_ADMIN
+        -   path: ^/users_options
+            roles:
                 - !php/const App\Entity\User::ROLE_ADMIN
         -   path: ^/vacation_work_logs
             roles:

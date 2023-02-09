@@ -24,10 +24,17 @@ App\Entity\User:
         get:
             method: 'GET'
             normalization_context:
+                enable_max_depth: true
                 groups:
                     - user_out_list
                     - vacation_out_list
                     - work_hours_out_list
+        getOptions:
+            method: 'GET'
+            route_name: 'api_users_get_options'
+            normalization_context:
+                groups:
+                    - user_out_options
         post:
             method: 'POST'
             validation_groups:
