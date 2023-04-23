@@ -1,0 +1,40 @@
+App\Entity\Contract:
+    type: entity
+
+    id:
+        id:
+            type: integer
+            generator: { strategy: IDENTITY }
+
+    fields:
+        startDateTime:
+            type: datetime_immutable
+        endDateTime:
+            type: datetime_immutable
+            nullable: true
+        isDayBased:
+            type: boolean
+        isMondayIncluded:
+            type: boolean
+        isTuesdayIncluded:
+            type: boolean
+        isWednesdayIncluded:
+            type: boolean
+        isThursdayIncluded:
+            type: boolean
+        isFridayIncluded:
+            type: boolean
+        weeklyWorkingDays:
+            type: integer
+        weeklyWorkingHours:
+            type: float
+
+    manyToOne:
+        user:
+            targetEntity: App\Entity\User
+            inversedBy: contracts
+            joinColumn:
+                name: user_id
+                referencedColumnName: id
+                nullable: false
+                onDelete: cascade

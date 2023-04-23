@@ -3,14 +3,15 @@
 namespace App\Subscriber;
 
 use ApiPlatform\Core\EventListener\EventPriorities;
+use App\Entity\Contract;
 use App\Entity\User;
 use App\Entity\UserYearStats;
 use App\Entity\WorkMonth;
 use App\Event\UserChangedEvent;
+use App\Repository\ContractRepository;
 use App\Repository\UserNotificationsRepository;
 use App\Repository\UserRepository;
 use App\Repository\VacationRepository;
-use App\Repository\WorkHoursRepository;
 use App\Service\ConfigService;
 use App\Service\UserService;
 use App\Service\UserYearStatsService;
@@ -41,6 +42,11 @@ class UserSubscriber implements EventSubscriberInterface
     private $configService;
 
     /**
+     * @var ContractRepository
+     */
+    private $contractRepository;
+
+    /**
      * @var UserNotificationsRepository
      */
     private $userNotificationsRepository;
@@ -66,11 +72,6 @@ class UserSubscriber implements EventSubscriberInterface
     private $vacationRepository;
 
     /**
-     * @var WorkHoursRepository
-     */
-    private $workHoursRepository;
-
-    /**
      * @var WorkMonthService
      */
     private $workMonthService;
@@ -79,23 +80,23 @@ class UserSubscriber implements EventSubscriberInterface
         EntityManagerInterface $entityManager,
         EventDispatcherInterface $eventDispatcher,
         ConfigService $configService,
+        ContractRepository $contractRepository,
         UserNotificationsRepository $userNotificationsRepository,
         UserRepository $userRepository,
         UserService $userService,
         UserYearStatsService $userYearStatsService,
         VacationRepository $vacationRepository,
-        WorkHoursRepository $workHoursRepository,
         WorkMonthService $workMonthService
     ) {
         $this->entityManager = $entityManager;
         $this->eventDispatcher = $eventDispatcher;
         $this->configService = $configService;
+        $this->contractRepository = $contractRepository;
         $this->userRepository = $userRepository;
         $this->userService = $userService;
         $this->userNotificationsRepository = $userNotificationsRepository;
         $this->userYearStatsService = $userYearStatsService;
         $this->vacationRepository = $vacationRepository;
-        $this->workHoursRepository = $workHoursRepository;
         $this->workMonthService = $workMonthService;
     }
 
@@ -178,10 +179,82 @@ class UserSubscriber implements EventSubscriberInterface
             return;
         }
 
+        $oldContractsArray = $this->contractRepository->getRepository()->findBy(['user' => $user]);
+        $newContractsArray = $user->getContracts();
+
+        $didContractChanged = count($oldContractsArray) != count($newContractsArray);
+        if (!$didContractChanged) {
+            /** @var Contract $newContract */
+            foreach ($newContractsArray as $newContract) {
+                if ($newContract->getIsDayBased()) {
+                    $workingDaysCount = ($newContract->getIsMondayIncluded() ? 1 : 0)
+                        + ($newContract->getIsTuesdayIncluded() ? 1 : 0)
+                        + ($newContract->getIsWednesdayIncluded() ? 1 : 0)
+                        + ($newContract->getIsThursdayIncluded() ? 1 : 0)
+                        + ($newContract->getIsFridayIncluded() ? 1 : 0);
+                    $newContract->setWeeklyWorkingDays($workingDaysCount);
+                }
+
+                $foundOldContract = $this->contractRepository->getRepository()->find($newContract->getId());
+
+                if ($foundOldContract == null) {
+                    $didContractChanged = true;
+                    break;
+                }
+
+                if (
+                    $foundOldContract->getIsDayBased() != $newContract->getIsDayBased()
+                    || $foundOldContract->getIsMondayIncluded() != $newContract->getIsMondayIncluded()
+                    || $foundOldContract->getIsTuesdayIncluded() != $newContract->getIsTuesdayIncluded()
+                    || $foundOldContract->getIsWednesdayIncluded() != $newContract->getIsWednesdayIncluded()
+                    || $foundOldContract->getIsThursdayIncluded() != $newContract->getIsThursdayIncluded()
+                    || $foundOldContract->getIsFridayIncluded() != $newContract->getIsFridayIncluded()
+                    || $foundOldContract->getWeeklyWorkingDays() != $newContract->getWeeklyWorkingDays()
+                    || $foundOldContract->getWeeklyWorkingHours() != $newContract->getWeeklyWorkingHours()
+                ) {
+                    $didContractChanged = true;
+                    break;
+                }
+            }
+        }
+
+        foreach ($user->getContracts() as $detachedContract) {
+            if (!$detachedContract->getId()) {
+                continue;
+            }
+
+            /** @var Contract $attachedContract */
+            $attachedContract = $this->contractRepository->getRepository()->find($detachedContract->getId());
+
+            if ($attachedContract) {
+                $attachedContract->setStartDateTime($detachedContract->getStartDateTime());
+                $attachedContract->setEndDateTime($detachedContract->getEndDateTime());
+                $attachedContract->setIsDayBased($detachedContract->getIsDayBased());
+                $attachedContract->setIsMondayIncluded($detachedContract->getIsMondayIncluded());
+                $attachedContract->setIsTuesdayIncluded($detachedContract->getIsTuesdayIncluded());
+                $attachedContract->setIsWednesdayIncluded($detachedContract->getIsWednesdayIncluded());
+                $attachedContract->setIsThursdayIncluded($detachedContract->getIsThursdayIncluded());
+                $attachedContract->setIsFridayIncluded($detachedContract->getIsFridayIncluded());
+                $attachedContract->setWeeklyWorkingDays($detachedContract->getWeeklyWorkingDays());
+                $attachedContract->setWeeklyWorkingHours($detachedContract->getWeeklyWorkingHours());
+            }
+        }
+        foreach ($oldContractsArray as $oldContract) {
+            $isDeleted = true;
+            foreach ($user->getContracts() as $newContract) {
+                if ($oldContract->getId() == $newContract->getId()) {
+                    $isDeleted = false;
+                    break;
+                }
+            }
+
+            if ($isDeleted) {
+                $this->entityManager->remove($oldContract);
+            }
+        }
+
         $oldVacationsArray = [];
         $newVacationsArray = [];
-        $oldWorkHoursArray = [];
-        $newWorkHoursArray = [];
 
         foreach ($user->getVacations() as $detachedVacation) {
             $attachedVacation = $this->vacationRepository->findOne(
@@ -204,25 +277,6 @@ class UserSubscriber implements EventSubscriberInterface
             }
         }
 
-        foreach ($user->getWorkHours() as $detachedWorkHours) {
-            $attachedWorkHours = $this->workHoursRepository->findOne(
-                $detachedWorkHours->getYear(),
-                $detachedWorkHours->getMonth(),
-                $user
-            );
-
-            $oldWorkHoursArray[
-                sprintf('%s-%s', $detachedWorkHours->getYear()->getYear(), $detachedWorkHours->getMonth())
-            ] = $detachedWorkHours->getRequiredHours();
-            $newWorkHoursArray[
-                sprintf('%s-%s', $attachedWorkHours->getYear()->getYear(), $attachedWorkHours->getMonth())
-            ] = $attachedWorkHours->getRequiredHours();
-
-            if ($attachedWorkHours) {
-                $attachedWorkHours->setRequiredHours($detachedWorkHours->getRequiredHours());
-            }
-        }
-
         if ($user->getNotifications()->getId() !== null) {
             $attachedUserNotifications = $this->userNotificationsRepository->findOne($user->getNotifications()->getId());
 
@@ -240,7 +294,6 @@ class UserSubscriber implements EventSubscriberInterface
             }
         }
 
-        $user->setWorkHours(new ArrayCollection());
         $user->setVacations(new ArrayCollection());
         $this->entityManager->flush();
 
@@ -261,25 +314,8 @@ class UserSubscriber implements EventSubscriberInterface
             }
         }
 
-        $didWorkHoursChanged = count($oldWorkHoursArray) != count($newWorkHoursArray);
-        if (!$didWorkHoursChanged) {
-            foreach ($newWorkHoursArray as $key => $newRequiredHours) {
-                if (!array_key_exists($key, $oldWorkHoursArray)) {
-                    $didWorkHoursChanged = true;
-                    break;
-                }
-
-                $oldRequiredHours = $oldWorkHoursArray[$key];
-
-                if ($oldRequiredHours != $newRequiredHours) {
-                    $didWorkHoursChanged = true;
-                    break;
-                }
-            }
-        }
-
         $this->eventDispatcher->dispatch(
-            new UserChangedEvent($user, $didVacationsChanged, $didWorkHoursChanged),
+            new UserChangedEvent($user, $didContractChanged, $didVacationsChanged),
             UserChangedEvent::CHANGED
         );
     }

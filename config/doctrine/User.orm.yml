@@ -52,15 +52,15 @@ App\Entity\User:
             cascade: [persist]
 
     oneToMany:
+        contracts:
+            targetEntity: App\Entity\Contract
+            mappedBy: user
+            cascade: [persist, remove]
         supervised:
             targetEntity: App\Entity\User
             mappedBy: supervisor
         vacations:
             targetEntity: App\Entity\Vacation
-            mappedBy: user
-            cascade: [persist]
-        workHours:
-            targetEntity: App\Entity\WorkHours
             mappedBy: user
             cascade: [persist]
         workMonths:

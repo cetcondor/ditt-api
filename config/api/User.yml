@@ -1,12 +1,12 @@
 App\Entity\User:
     properties:
+        contracts:
+            subresource:
+                resourceClass: 'App\Entity\Contract'
+                collection: true
         vacations:
             subresource:
                 resourceClass: 'App\Entity\Vacation'
-                collection: true
-        workHours:
-            subresource:
-                resourceClass: 'App\Entity\WorkHours'
                 collection: true
         workMonths:
             subresource:
@@ -20,7 +20,6 @@ App\Entity\User:
                 groups:
                     - supervised_user_out_list
                     - vacation_out_list
-                    - work_hours_out_list
         get:
             method: 'GET'
             filters:
@@ -30,7 +29,6 @@ App\Entity\User:
                 groups:
                     - user_out_list
                     - vacation_out_list
-                    - work_hours_out_list
         post:
             method: 'POST'
             validation_groups:
@@ -39,12 +37,11 @@ App\Entity\User:
                 groups:
                     - user_out_detail
                     - vacation_out_list
-                    - work_hours_out_list
             denormalization_context:
                 groups:
+                    - contract_in
                     - user_in
                     - vacation_in
-                    - work_hours_in
     itemOperations:
         get:
             method: 'GET'
@@ -52,19 +49,17 @@ App\Entity\User:
                 groups:
                     - user_out_detail
                     - vacation_out_list
-                    - work_hours_out_list
         put:
             method: 'PUT'
             normalization_context:
                 groups:
                     - user_out_detail
                     - vacation_out_list
-                    - work_hours_out_list
             denormalization_context:
                 groups:
+                    - contract_in
                     - user_in
                     - vacation_in
-                    - work_hours_in
         delete:
             method: 'DELETE'
         login_check:

@@ -10,8 +10,8 @@ modules:
             dsn: 'pgsql:host=db;dbname=docker_test'
             user: 'postgres'
             password: 'pass'
-            dump: tests/_data/config.sql
-            cleanup: true
+            populate: true # run populator before all tests
+            cleanup: true # run populator before each test
     enabled:
         - \Helper\Api
         - Asserts

@@ -10,14 +10,17 @@ class UserChangedEvent extends Event
     const CHANGED = 'event.user.changed';
 
     private User $user;
+    private bool $didContractsChanged;
     private bool $didVacationsChanged;
-    private bool $didWorkHoursChanged;
 
-    public function __construct(User $user, bool $didVacationsChanged, bool $didWorkHoursChanged)
-    {
+    public function __construct(
+        User $user,
+        bool $didContractsChanged,
+        bool $didVacationsChanged
+    ) {
         $this->user = $user;
+        $this->didContractsChanged = $didContractsChanged;
         $this->didVacationsChanged = $didVacationsChanged;
-        $this->didWorkHoursChanged = $didWorkHoursChanged;
     }
 
     public function getUser(): User
@@ -25,13 +28,13 @@ class UserChangedEvent extends Event
         return $this->user;
     }
 
+    public function getDidContractsChanged(): bool
+    {
+        return $this->didContractsChanged;
+    }
+
     public function getDidVacationsChanged(): bool
     {
         return $this->didVacationsChanged;
-    }
-
-    public function getDidWorkHoursChanged(): bool
-    {
-        return $this->didWorkHoursChanged;
     }
 }

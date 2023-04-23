@@ -3,6 +3,8 @@
 namespace App\Service;
 
 use App\Entity\BanWorkLog;
+use App\Entity\Config;
+use App\Entity\Contract;
 use App\Entity\MaternityProtectionWorkLog;
 use App\Entity\SickDayWorkLog;
 use App\Entity\SpecialLeaveWorkLog;
@@ -11,6 +13,7 @@ use App\Entity\WorkLog;
 use App\Entity\WorkMonth;
 use App\Repository\BanWorkLogRepository;
 use App\Repository\BusinessTripWorkLogRepository;
+use App\Repository\ContractRepository;
 use App\Repository\HomeOfficeWorkLogRepository;
 use App\Repository\MaternityProtectionWorkLogRepository;
 use App\Repository\ParentalLeaveWorkLogRepository;
@@ -20,7 +23,6 @@ use App\Repository\TimeOffWorkLogRepository;
 use App\Repository\TrainingWorkLogRepository;
 use App\Repository\UserYearStatsRepository;
 use App\Repository\VacationWorkLogRepository;
-use App\Repository\WorkHoursRepository;
 use App\Repository\WorkLogRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -36,6 +38,11 @@ class WorkMonthService
      * @var ConfigService
      */
     private $configService;
+
+    /**
+     * @var ContractRepository
+     */
+    private $contractRepository;
 
     /**
      * @var BanWorkLogRepository
@@ -97,14 +104,10 @@ class WorkMonthService
      */
     private $workLogRepository;
 
-    /**
-     * @var WorkHoursRepository
-     */
-    private $workHoursRepository;
-
     public function __construct(
         EntityManagerInterface $entityManager,
         ConfigService $configService,
+        ContractRepository $contractRepository,
         BanWorkLogRepository $banWorkLogRepository,
         BusinessTripWorkLogRepository $businessTripWorkLogRepository,
         HomeOfficeWorkLogRepository $homeOfficeWorkLogRepository,
@@ -116,11 +119,11 @@ class WorkMonthService
         TrainingWorkLogRepository $trainingWorkLogRepository,
         UserYearStatsRepository $userYearStatsRepository,
         VacationWorkLogRepository $vacationWorkLogRepository,
-        WorkLogRepository $workLogRepository,
-        WorkHoursRepository $workHoursRepository
+        WorkLogRepository $workLogRepository
     ) {
         $this->entityManager = $entityManager;
         $this->configService = $configService;
+        $this->contractRepository = $contractRepository;
         $this->banWorkLogRepository = $banWorkLogRepository;
         $this->businessTripWorkLogRepository = $businessTripWorkLogRepository;
         $this->homeOfficeWorkLogRepository = $homeOfficeWorkLogRepository;
@@ -133,7 +136,6 @@ class WorkMonthService
         $this->userYearStatsRepository = $userYearStatsRepository;
         $this->vacationWorkLogRepository = $vacationWorkLogRepository;
         $this->workLogRepository = $workLogRepository;
-        $this->workHoursRepository = $workHoursRepository;
     }
 
     /**
@@ -191,24 +193,97 @@ class WorkMonthService
         $this->entityManager->flush();
     }
 
+    private function getWorkingHoursMap(WorkMonth $workMonth, Config $config): array
+    {
+        $isWeekend = function ($date) {
+            return $date->format('l') === 'Saturday' || $date->format('l') === 'Sunday';
+        };
+
+        $isHoliday = function ($date) use ($config) {
+            foreach ($config->getSupportedHolidays() as $supportedHoliday) {
+                if ($supportedHoliday->getDate()->format('Y-m-d') === $date->format('Y-m-d')) {
+                    return true;
+                }
+            }
+
+            return false;
+        };
+
+        $dateFrom = (new \DateTimeImmutable($workMonth->getYear()->getYear() . '-' . $workMonth->getMonth() . '-01'))
+            ->setTime(0, 0, 0);
+        $dateTo = \DateTimeImmutable::createFromMutable(new \DateTime(sprintf('last day of %s', $dateFrom->format('Y-m'))))
+            ->setTime(23, 59, 59);
+
+        $contracts = $this->contractRepository->findContractsBetweenDates($workMonth->getUser(), $dateFrom, $dateTo);
+        $workingHours = [];
+
+        for ($day = 1; $day <= intval($dateTo->format('d')); ++$day) {
+            $workingHours[$day] = 0;
+        }
+
+        /** @var Contract $contract */
+        foreach ($contracts as $contract) {
+            for ($day = intval($dateFrom->format('d')); $day <= intval($dateTo->format('d')); ++$day) {
+                $date = (new \DateTimeImmutable($workMonth->getYear()->getYear() . '-' . $workMonth->getMonth() . '-' . $day))
+                    ->setTime(0, 0, 0);
+
+                if ($isWeekend($date) || $isHoliday($date)) {
+                    continue;
+                }
+
+                if (!$contract->getIsDayBased()) {
+                    $weekStart = $date->modify('monday this week');
+                    $weekEnd = $date->modify('sunday this week');
+                    $workingDaysBeforeCurrentDay = 0;
+
+                    for (
+                        $currentDay = $weekStart;
+                        $currentDay < $date && $currentDay <= $weekEnd;
+                        $currentDay = $currentDay->modify('+1 day')
+                    ) {
+                        if ($isWeekend($currentDay) || $isHoliday($currentDay)) {
+                            continue;
+                        }
+
+                        ++$workingDaysBeforeCurrentDay;
+                    }
+
+                    if ($workingDaysBeforeCurrentDay >= $contract->getWeeklyWorkingDays()) {
+                        continue;
+                    }
+                }
+
+                if (
+                    $contract->getIsDayBased() && (
+                        ($date->format('N') == 1 && !$contract->getIsMondayIncluded())
+                        || ($date->format('N') == 2 && !$contract->getIsTuesdayIncluded())
+                        || ($date->format('N') == 3 && !$contract->getIsWednesdayIncluded())
+                        || ($date->format('N') == 4 && !$contract->getIsThursdayIncluded())
+                        || ($date->format('N') == 5 && !$contract->getIsFridayIncluded())
+                    )
+                ) {
+                    continue;
+                }
+
+                if (
+                    $contract->getStartDateTime() <= $date
+                    && (!$contract->getEndDateTime() || $contract->getEndDateTime() >= $date)
+                ) {
+                    $workingHours[$day] = ($contract->getWeeklyWorkingHours() / $contract->getWeeklyWorkingDays()) * 3600;
+                }
+            }
+        }
+
+        return $workingHours;
+    }
+
     /**
      * @throws \Exception
      */
     public function calculateWorkedHours(WorkMonth $workMonth): float
     {
         $config = $this->configService->getConfig();
-        $workHours = $this->workHoursRepository->findOne(
-            $workMonth->getYear(),
-            $workMonth->getMonth(),
-            $workMonth->getUser()
-        );
-
-        if (!$workHours) {
-            throw new \Exception('Work hours has not been found.');
-        }
-
-        $allWorkLogs = [];
-        $allWorkLogWorkTime = [];
+        $workingHours = $this->getWorkingHoursMap($workMonth, $config);
 
         for ($day = 1; $day < 32; ++$day) {
             $allWorkLogs[$day] = [];
@@ -389,13 +464,12 @@ class WorkMonthService
             }
 
             if (
-                (
-                    count($standardWorkLogs) === 0 && $containsSickDay
-                ) || $containsMaternityProtection || $containsSpecialLeaveDay || $containsVacationDay
+                (count($standardWorkLogs) === 0 && $containsSickDay)
+                || $containsMaternityProtection || $containsSpecialLeaveDay || $containsVacationDay
             ) {
-                $workTime = $workHours->getRequiredHours();
+                $workTime = $workingHours[$day];
             } elseif ($containsSickDay && count($standardWorkLogs) > 0) {
-                $workTime = min($workTimeWithoutCorrection, $workHours->getRequiredHours());
+                $workTime = min($workTimeWithoutCorrection, $workingHours[$day]);
             }
 
             $isHoliday = function ($date) use ($config) {
@@ -428,53 +502,22 @@ class WorkMonthService
     public function calculateRequiredHours(WorkMonth $workMonth): int
     {
         $config = $this->configService->getConfig();
-        $workingDaysInMonth = 0;
+        $workingHours = $this->getWorkingHoursMap($workMonth, $config);
 
-        $isWeekend = function ($date) {
-            return $date->format('l') === 'Saturday' || $date->format('l') === 'Sunday';
-        };
+        $requiredHours = 0;
 
-        $isHoliday = function ($date) use ($config) {
-            foreach ($config->getSupportedHolidays() as $supportedHoliday) {
-                if ($supportedHoliday->getDate()->format('Y-m-d') === $date->format('Y-m-d')) {
-                    return true;
-                }
-            }
-
-            return false;
-        };
+        // Parental leave work logs are not counted as working hours
+        $parentalLeaveWorkLogs = $this->parentalLeaveWorkLogRepository->findAllByWorkMonth($workMonth);
+        foreach ($parentalLeaveWorkLogs as $parentalLeaveWorkLog) {
+            $workingHours[intval($parentalLeaveWorkLog->getDate()->format('d'))] = 0;
+        }
 
         for (
             $date = (new \DateTime())->setDate($workMonth->getYear()->getYear(), $workMonth->getMonth(), 1);
             (int) $date->format('m') === $workMonth->getMonth();
             $date->add(new \DateInterval('P1D'))
         ) {
-            if (!$isWeekend($date) && !$isHoliday($date)) {
-                ++$workingDaysInMonth;
-            }
-        }
-
-        $workHours = $this->workHoursRepository->findOne(
-            $workMonth->getYear(),
-            $workMonth->getMonth(),
-            $workMonth->getUser()
-        );
-
-        if (!$workHours) {
-            throw new \Exception('Work hours has not been found.');
-        }
-
-        $requiredHours = $workingDaysInMonth * $workHours->getRequiredHours();
-
-        $daysWithParentalLeaveWorkLog = [];
-        $parentalLeaveWorkLogs = $this->parentalLeaveWorkLogRepository->findAllByWorkMonth($workMonth);
-
-        foreach ($parentalLeaveWorkLogs as $parentalLeaveWorkLog) {
-            $daysWithParentalLeaveWorkLog[] = (int) $parentalLeaveWorkLog->getDate()->format('d');
-        }
-
-        if (count($daysWithParentalLeaveWorkLog) > 0) {
-            $requiredHours -= count(array_unique($daysWithParentalLeaveWorkLog)) * $workHours->getRequiredHours();
+            $requiredHours += $workingHours[intval($date->format('d'))];
         }
 
         return $requiredHours;

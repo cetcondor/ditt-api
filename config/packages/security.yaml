@@ -41,6 +41,10 @@ security:
             methods: [POST]
             roles:
                 - !php/const App\Entity\User::ROLE_SUPER_ADMIN
+        -   path: ^/contracts
+            roles:
+                - !php/const App\Entity\User::ROLE_EMPLOYEE
+                - !php/const App\Entity\User::ROLE_ADMIN
         -   path: ^/home_office_work_logs
             roles:
                 - !php/const App\Entity\User::ROLE_EMPLOYEE
@@ -104,6 +108,10 @@ security:
             roles:
                 - !php/const App\Entity\User::ROLE_EMPLOYEE
                 - !php/const App\Entity\User::ROLE_ADMIN
+        -   path: '^/users/[0-9]+/contracts$'
+            roles:
+                - !php/const App\Entity\User::ROLE_EMPLOYEE
+                - !php/const App\Entity\User::ROLE_ADMIN
         -   path: '^/users/[0-9]+/ical_token'
             roles:
                 - !php/const App\Entity\User::ROLE_EMPLOYEE
@@ -113,10 +121,6 @@ security:
                 - !php/const App\Entity\User::ROLE_EMPLOYEE
                 - !php/const App\Entity\User::ROLE_ADMIN
         -   path: '^/users/[0-9]+/vacations'
-            roles:
-                - !php/const App\Entity\User::ROLE_EMPLOYEE
-                - !php/const App\Entity\User::ROLE_ADMIN
-        -   path: '^/users/[0-9]+/work_hours$'
             roles:
                 - !php/const App\Entity\User::ROLE_EMPLOYEE
                 - !php/const App\Entity\User::ROLE_ADMIN
@@ -138,10 +142,6 @@ security:
                 - !php/const App\Entity\User::ROLE_EMPLOYEE
                 - !php/const App\Entity\User::ROLE_ADMIN
         -   path: ^/vacations
-            roles:
-                - !php/const App\Entity\User::ROLE_EMPLOYEE
-                - !php/const App\Entity\User::ROLE_ADMIN
-        -   path: ^/work_hours
             roles:
                 - !php/const App\Entity\User::ROLE_EMPLOYEE
                 - !php/const App\Entity\User::ROLE_ADMIN

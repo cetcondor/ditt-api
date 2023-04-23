@@ -330,6 +330,17 @@ class ApiTester extends \Codeception\Actor
     {
         $user = $this->populateEntity(new \App\Entity\User(), [
             'apiToken' => null,
+            'contracts' => function() {
+                $contract = new \App\Entity\Contract();
+
+                $contractDateFrom = (new DateTimeImmutable())->setDate(2018, 1, 1);
+                $contract->setStartDateTime($contractDateFrom);
+                $contract->setEndDateTime(null);
+                $contract->setWeeklyWorkingHours(30);
+                $contract->setWeeklyWorkingDays(5);
+
+                return [$contract];
+            },
             'email' => 'user@example.com',
             'employeeId' => 'some_id_123',
             'firstName' => 'Jan',
@@ -349,18 +360,6 @@ class ApiTester extends \Codeception\Actor
                 }
 
                 return $vacations;
-            },
-            'workHours' => function() {
-                $workHours = [];
-
-                foreach ($this->generateWorkHours(21600) as $generatedWorkHour) {
-                    $workHours[] = (new \App\Entity\WorkHours())
-                        ->setMonth($generatedWorkHour['month'])
-                        ->setYear($generatedWorkHour['year'])
-                        ->setRequiredHours($generatedWorkHour['requiredHours']);
-                }
-
-                return $workHours;
             },
             'roles' => [\App\Entity\User::ROLE_EMPLOYEE],
         ], $params);
@@ -416,54 +415,14 @@ class ApiTester extends \Codeception\Actor
         return $vacations;
     }
 
-    public function generateWorkHours($requiredHours) {
-        $workHours = [];
-
-        for ($year = 2018; $year <= 2024; ++$year) {
-            for ($month = 1; $month <= 12; ++$month) {
-                $workHours[] = [
-                    'month' => $month,
-                    'requiredHours' => $requiredHours,
-                    'year' => $this->getSupportedYear($year),
-                ];
-            }
-        }
-
-        return $workHours;
-    }
-
-    public function generateWorkHoursNormalized($requiredHours) {
-        $workHours = [];
-
-        for ($year = 2018; $year <= 2024; ++$year) {
-            for ($month = 1; $month <= 12; ++$month) {
-                $workHours[] = [
-                    'month' => $month,
-                    'requiredHours' => $requiredHours,
-                    'year' => [
-                        'year' => $year,
-                    ],
-                ];
-            }
-        }
-
-        return $workHours;
-    }
-
-    public function generateWorkHoursNormalizedUri($requiredHours) {
-        $workHours = [];
-
-        for ($year = 2018; $year <= 2024; ++$year) {
-            for ($month = 1; $month <= 12; ++$month) {
-                $workHours[] = [
-                    'month' => $month,
-                    'requiredHours' => $requiredHours,
-                    'year' => sprintf('/supported_years/%s', $year),
-                ];
-            }
-        }
-
-        return $workHours;
+    public function generateContractsNormalized($requiredHours) {
+        return [[
+            'id' => null,
+            'startDateTime' => '2018-01-01T00:00:00+00:00',
+            'endDateTime' => null,
+            'weeklyWorkingHours' => $requiredHours,
+            'weeklyWorkingDays' => 5,
+        ]];
     }
 
     /**

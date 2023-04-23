@@ -45,19 +45,20 @@ class ChangesNotificationListener
      */
     public function onUserChangedEvent(UserChangedEvent $event): void
     {
+        // TODO: Update subject and content when translations arrive
+        if ($event->getDidContractsChanged()) {
+            $this->sendMail(
+                'Arbeitszeit wurde angepasst',
+                [$event->getUser()->getEmail()],
+                $this->templating->render('notifications/contract_changed.html.twig')
+            );
+        }
+
         if ($event->getDidVacationsChanged()) {
             $this->sendMail(
                 'Anzahl der Urlaubstage wurden angepasst',
                 [$event->getUser()->getEmail()],
                 $this->templating->render('notifications/amount_of_vacation_days_changed.html.twig')
-            );
-        }
-
-        if ($event->getDidWorkHoursChanged()) {
-            $this->sendMail(
-                'Arbeitszeit wurde angepasst',
-                [$event->getUser()->getEmail()],
-                $this->templating->render('notifications/work_hours_changed.html.twig')
             );
         }
     }

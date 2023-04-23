@@ -2,13 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\Contract;
 use App\Entity\SickDayWorkLog;
 use App\Entity\User;
-use App\Entity\WorkHours;
+use App\Repository\ContractRepository;
 use App\Repository\SickDayWorkLogRepository;
 use App\Repository\SupportedYearRepository;
 use App\Repository\UserRepository;
-use App\Repository\WorkHoursRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,6 +21,11 @@ class HrController extends AbstractController
      * @var NormalizerInterface
      */
     private $normalizer;
+
+    /**
+     * @var ContractRepository
+     */
+    private $contractRepository;
 
     /**
      * @var SickDayWorkLogRepository
@@ -37,23 +42,18 @@ class HrController extends AbstractController
      */
     private $userRepository;
 
-    /**
-     * @var WorkHoursRepository
-     */
-    private $workHoursRepository;
-
     public function __construct(
         NormalizerInterface $normalizer,
+        ContractRepository $contractRepository,
         SickDayWorkLogRepository $sickDayWorkLogRepository,
         SupportedYearRepository $supportedYearRepository,
-        UserRepository $userRepository,
-        WorkHoursRepository $workHoursRepository
+        UserRepository $userRepository
     ) {
         $this->normalizer = $normalizer;
+        $this->contractRepository = $contractRepository;
         $this->sickDayWorkLogRepository = $sickDayWorkLogRepository;
         $this->supportedYearRepository = $supportedYearRepository;
         $this->userRepository = $userRepository;
-        $this->workHoursRepository = $workHoursRepository;
     }
 
     public function changesAndAbsenceRegistrations(Request $request): Response
@@ -85,18 +85,15 @@ class HrController extends AbstractController
 
         $normalizedData = [];
         foreach ($this->userRepository->getRepository()->findAll() as $user) {
-            $workHours = [];
-            foreach ($monthWithYearList as $monthYear) {
-                $workHours[] = $this->workHoursRepository->findOne(
-                    $monthYear['year'],
-                    $monthYear['month'],
-                    $user
-                );
-            }
-
             $sickDays = $this->sickDayWorkLogRepository->findAllCreatedByUserBetweenTwoDates($user, $dateFrom, $dateTo);
+            $contracts = $this->contractRepository->findContractsBetweenDates($user, $dateFrom, $dateTo);
 
             $normalizedData[] = [
+                'contracts' => $this->normalizer->normalize(
+                    $contracts,
+                    Contract::class,
+                    ['groups' => ['hr_out_detail']]
+                ),
                 'sickDays' => $this->normalizer->normalize(
                     $sickDays,
                     SickDayWorkLog::class,
@@ -105,11 +102,6 @@ class HrController extends AbstractController
                 'user' => $this->normalizer->normalize(
                     $user,
                     User::class,
-                    ['groups' => ['hr_out_detail']]
-                ),
-                'workHours' => $this->normalizer->normalize(
-                    $workHours,
-                    WorkHours::class,
                     ['groups' => ['hr_out_detail']]
                 ),
             ];

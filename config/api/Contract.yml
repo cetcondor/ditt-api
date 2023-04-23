@@ -1,0 +1,33 @@
+App\Entity\Contract:
+    collectionOperations:
+        get:
+            method: GET
+            normalization_context:
+                groups:
+                    - contract_out_list
+    itemOperations:
+        get:
+            method: GET
+            normalization_context:
+                groups:
+                    - contract_out_detail
+        terminateContract:
+            method: PUT
+            route_name: api_contract_terminate_contract
+            normalization_context:
+                groups:
+                    - contract_out_detail
+            swagger_context:
+                summary: Terminate Contracts.
+                parameters:
+                    -   name: dateTime
+                        description: 'Date time of termination'
+                        type: int
+                        in: body
+                        required: true
+    subresourceOperations:
+        api_user_contacts_get_subresource:
+            method: GET
+            normalization_context:
+                groups:
+                    - contract_out_list

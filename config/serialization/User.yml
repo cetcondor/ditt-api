@@ -85,6 +85,13 @@ App\Entity\User:
                 - user_out_list
                 - user_out_detail
                 - user_in
+        contracts:
+            max_depth:  1
+            groups:
+                - contract_out_list
+                - contract_in
+                - hr_out_detail
+                - user_in
         vacations:
             max_depth:  1
             groups:
@@ -93,14 +100,6 @@ App\Entity\User:
                 - user_out_api_token_detail
                 - supervised_user_out_list
                 - work_month_out_detail
-                - user_in
-        workHours:
-            max_depth:  1
-            groups:
-                - user_out_list
-                - user_out_detail
-                - user_out_api_token_detail
-                - supervised_user_out_list
                 - user_in
         workMonths:
             max_depth:  1

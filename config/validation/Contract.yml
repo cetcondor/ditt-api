@@ -1,0 +1,27 @@
+App\Entity\Contract:
+    properties:
+        startDateTime:
+            - NotBlank: ~
+            - Type: DateTimeImmutable
+
+        endDateTime:
+            - Type: DateTimeImmutable
+            - GreaterThan:
+                propertyPath: startDateTime
+
+        weeklyWorkingDays:
+            - NotBlank: ~
+            - Type: numeric
+            - Range:
+                min: 0
+                max: 5
+
+        weeklyWorkingHours:
+            - NotBlank: ~
+            - Type: numeric
+            - Range:
+                min: 0
+                max: 168
+
+        user:
+            - NotBlank: ~

@@ -1,0 +1,68 @@
+App\Entity\Contract:
+    attributes:
+        id:
+            groups:
+                - contract_out_list
+                - contract_out_detail
+                - contract_in
+                - hr_out_detail
+        startDateTime:
+            groups:
+                - contract_out_list
+                - contract_out_detail
+                - contract_in
+                - hr_out_detail
+        endDateTime:
+            groups:
+                - contract_out_list
+                - contract_out_detail
+                - contract_in
+                - hr_out_detail
+        isDayBased:
+            groups:
+                - contract_out_list
+                - contract_out_detail
+                - contract_in
+                - hr_out_detail
+        isMondayIncluded:
+            groups:
+                - contract_out_list
+                - contract_out_detail
+                - contract_in
+                - hr_out_detail
+        isTuesdayIncluded:
+            groups:
+                - contract_out_list
+                - contract_out_detail
+                - contract_in
+                - hr_out_detail
+        isWednesdayIncluded:
+            groups:
+                - contract_out_list
+                - contract_out_detail
+                - contract_in
+                - hr_out_detail
+        isThursdayIncluded:
+            groups:
+                - contract_out_list
+                - contract_out_detail
+                - contract_in
+                - hr_out_detail
+        isFridayIncluded:
+            groups:
+                - contract_out_list
+                - contract_out_detail
+                - contract_in
+                - hr_out_detail
+        weeklyWorkingDays:
+            groups:
+                - contract_out_list
+                - contract_out_detail
+                - contract_in
+                - hr_out_detail
+        weeklyWorkingHours:
+            groups:
+                - contract_out_list
+                - contract_out_detail
+                - contract_in
+                - hr_out_detail

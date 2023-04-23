@@ -18,6 +18,7 @@ class EditUserCest
         $user = $I->createUser(['email' => 'user1@example.com', 'employeeId' => 'id123']);
         $I->haveHttpHeader('Content-Type', 'application/json');
         $I->sendPUT(sprintf('/users/%s.json', $user->getId()), [
+            'contracts' => [],
             'email' => 'user2@example.com',
             'employeeId' => 'id123',
             'firstName' => 'First',
@@ -25,7 +26,6 @@ class EditUserCest
             'lastName' => 'lastName',
             'plainPassword' => 'password',
             'vacations' => $I->generateVacationsNormalized(25, -5),
-            'workHours' => $I->generateWorkHoursNormalized(30600),
         ]);
 
         // $I->seeEmailIsSent(2);
@@ -42,7 +42,6 @@ class EditUserCest
             'roles' => ['ROLE_EMPLOYEE'],
             'supervisor' => null,
             'vacations' => $I->generateVacationsNormalized(25, -5),
-            'workHours' => $I->generateWorkHoursNormalized(30600),
         ]);
         $I->grabEntityFromRepository(User::class, [
             'email' => 'user2@example.com',
@@ -54,13 +53,13 @@ class EditUserCest
         $user = $I->createUser(['email' => 'user1@example.com', 'employeeId' => 'id123']);
         $I->haveHttpHeader('Content-Type', 'application/json');
         $I->sendPUT(sprintf('/users/%s.json', $user->getId()), [
+            'contracts' => $I->generateContractsNormalized(8.5),
             'email' => 'INVALID',
             'employeeId' => 'id123',
             'firstName' => 'First',
             'isActive' => true,
             'lastName' => 'lastName',
             'plainPassword' => null,
-            'workHours' => $I->generateWorkHoursNormalized(100),
         ]);
 
         $I->seeHttpHeader('Content-Type', 'application/problem+json; charset=utf-8');

@@ -39,6 +39,56 @@ class WorkMonthRepository
         return $this->repository->findOneBy(['id' => $id]);
     }
 
+    /**
+     * @return WorkMonth[]
+     */
+    public function findAllOpenedByUserBetweenDates(User $user, \DateTimeImmutable $dateFrom, ?\DateTimeImmutable $dateTo): array
+    {
+        $queryBuilder = $this->repository->createQueryBuilder('wm')
+            ->select('wm')
+            ->where('wm.user = :user')
+            ->andWhere('wm.status != :status')
+            ->setParameter('user', $user)
+            ->setParameter('status', WorkMonth::STATUS_OPENED);
+
+        $expr = $queryBuilder->expr();
+        $yearFrom = $dateFrom->format('Y');
+        $monthFrom = $dateFrom->format('m');
+
+        if ($dateTo === null) {
+            $queryBuilder->andWhere(
+                $expr->orX(
+                    $expr->gt('wm.year', $yearFrom),
+                    $expr->andX(
+                        $expr->eq('wm.year', $yearFrom),
+                        $expr->gte('wm.month', $monthFrom)
+                    )
+                )
+            );
+        } else {
+            $yearTo = $dateTo->format('Y');
+            $monthTo = $dateTo->format('m');
+            $queryBuilder->andWhere(
+                $expr->orX(
+                    $expr->gt('wm.year', $yearFrom),
+                    $expr->andX(
+                        $expr->eq('wm.year', $yearFrom),
+                        $expr->gte('wm.month', $monthFrom)
+                    )
+                ),
+                $expr->orX(
+                    $expr->lt('wm.year', $yearTo),
+                    $expr->andX(
+                        $expr->eq('wm.year', $yearTo),
+                        $expr->lte('wm.month', $monthTo)
+                    )
+                )
+            );
+        }
+
+        return $queryBuilder->getQuery()->getResult();
+    }
+
     public function findAllApproved(): array
     {
         return $this->repository->createQueryBuilder('wm')

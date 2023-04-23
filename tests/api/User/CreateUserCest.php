@@ -2,9 +2,11 @@
 
 namespace api\User;
 
+use App\Entity\Contract;
 use App\Entity\User;
 use App\Entity\UserYearStats;
 use App\Entity\WorkMonth;
+use App\Repository\ContractRepository;
 use Doctrine\ORM\NoResultException;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -20,6 +22,7 @@ class CreateUserCest
     {
         $I->haveHttpHeader('Content-Type', 'application/json');
         $I->sendPOST('/users.json', [
+            'contracts' => $I->generateContractsNormalized(8.5),
             'email' => 'test@visionapps.cz',
             'employeeId' => '123',
             'firstName' => 'First',
@@ -27,7 +30,6 @@ class CreateUserCest
             'lastName' => 'lastName',
             'plainPassword' => 'password',
             'vacations' => $I->generateVacationsNormalizedUri(25, -5),
-            'workHours' => $I->generateWorkHoursNormalizedUri(30600),
         ]);
 
         $I->seeHttpHeader('Content-Type', 'application/json; charset=utf-8');
@@ -41,10 +43,13 @@ class CreateUserCest
             'roles' => ['ROLE_EMPLOYEE'],
             'supervisor' => null,
             'vacations' => $I->generateVacationsNormalized(25, -5),
-            'workHours' => $I->generateWorkHoursNormalized(30600),
         ]);
         $user = $I->grabEntityFromRepository(User::class, [
             'email' => 'test@visionapps.cz',
+        ]);
+
+        $I->grabEntityFromRepository(Contract::class, [
+            'user' => $user,
         ]);
 
         $I->expectThrowable(NoResultException::class, function () use ($I, $user) {

@@ -2,8 +2,8 @@ App\Entity\User:
     constraints:
         - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: apiToken
         - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: email
+        - App\Validator\Constraints\ContractNotOverlaps: ~
         - App\Validator\Constraints\VacationPresent: ~
-        - App\Validator\Constraints\WorkHoursPresent: ~
     properties:
         email:
             - NotBlank: ~
@@ -39,8 +39,8 @@ App\Entity\User:
         vacations:
             - Valid: ~
 
-        workHours:
+        notifications:
             - Valid: ~
 
-        notifications:
+        contracts:
             - Valid: ~

@@ -7,7 +7,6 @@ use App\Entity\SupportedHoliday;
 use App\Entity\SupportedYear;
 use App\Entity\UserYearStats;
 use App\Entity\Vacation;
-use App\Entity\WorkHours;
 use App\Entity\WorkMonth;
 use App\Repository\SupportedHolidayRepository;
 use App\Repository\SupportedYearRepository;
@@ -194,12 +193,6 @@ class ConfigService
                 ->setYear($supportedYear);
 
             for ($month = 1; $month <= 12; ++$month) {
-                $newEntities[] = (new WorkHours())
-                    ->setYear($supportedYear)
-                    ->setMonth($month)
-                    ->setRequiredHours(0)
-                    ->setUser($user);
-
                 $newEntities[] = (new WorkMonth())
                     ->setYear($supportedYear)
                     ->setMonth($month)

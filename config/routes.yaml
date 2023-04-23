@@ -101,6 +101,13 @@ api_config_save:
     defaults:
         _api_collection_operation_name: 'saveConfig'
 
+api_contract_terminate_contract:
+    path: /contracts/{id}/terminate
+    methods: [PUT]
+    controller: App\Controller\ContractController::terminateContract
+    defaults:
+        _api_collection_operation_name: 'terminateContract'
+
 api_home_office_work_log_bulk_create:
     path: /home_office_work_logs/bulk
     methods: [POST]

@@ -2,11 +2,11 @@
 
 namespace App\Security;
 
+use App\Entity\Contract;
 use App\Entity\SpecialWorkLogSupportInterface;
 use App\Entity\SupervisorWorkLogInterface;
 use App\Entity\User;
 use App\Entity\Vacation;
-use App\Entity\WorkHours;
 use App\Entity\WorkLogInterface;
 use App\Entity\WorkMonth;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -42,6 +42,10 @@ class ResourceVoter extends Voter
             return false;
         }
 
+        if ($subject instanceof Contract) {
+            return true;
+        }
+
         if ($subject instanceof SupervisorWorkLogInterface) {
             return true;
         }
@@ -51,10 +55,6 @@ class ResourceVoter extends Voter
         }
 
         if ($subject instanceof Vacation) {
-            return true;
-        }
-
-        if ($subject instanceof WorkHours) {
             return true;
         }
 
@@ -102,16 +102,16 @@ class ResourceVoter extends Voter
      */
     private function canView($subject, User $user, TokenInterface $token): bool
     {
+        if ($subject instanceof Contract) {
+            return $this->canViewContract($subject, $user, $token);
+        }
+
         if ($subject instanceof User) {
             return $this->canViewUser($subject, $user, $token);
         }
 
         if ($subject instanceof Vacation) {
             return $this->canViewVacation($subject, $user, $token);
-        }
-
-        if ($subject instanceof WorkHours) {
-            return $this->canViewWorkHour($subject, $user, $token);
         }
 
         if ($subject instanceof WorkLogInterface) {
@@ -129,6 +129,13 @@ class ResourceVoter extends Voter
         return false;
     }
 
+    private function canViewContract(Contract $contract, User $user, TokenInterface $token): bool
+    {
+        return $contract->getUser() === $user
+            || in_array($user, $contract->getUser()->getAllSupervisors())
+            || $this->decisionManager->decide($token, [User::ROLE_ADMIN]);
+    }
+
     private function canViewUser(User $subject, User $user, TokenInterface $token): bool
     {
         return $subject === $user
@@ -140,13 +147,6 @@ class ResourceVoter extends Voter
     {
         return $vacation->getUser() === $user
             || in_array($user, $vacation->getUser()->getAllSupervisors())
-            || $this->decisionManager->decide($token, [User::ROLE_ADMIN]);
-    }
-
-    private function canViewWorkHour(WorkHours $workHours, User $user, TokenInterface $token): bool
-    {
-        return $workHours->getUser() === $user
-            || in_array($user, $workHours->getUser()->getAllSupervisors())
             || $this->decisionManager->decide($token, [User::ROLE_ADMIN]);
     }
 
@@ -176,6 +176,10 @@ class ResourceVoter extends Voter
      */
     private function canEdit($subject, User $user, TokenInterface $token): bool
     {
+        if ($subject instanceof Contract) {
+            return $this->canEditContract($subject, $user, $token);
+        }
+
         if ($subject instanceof SupervisorWorkLogInterface) {
             return $this->canEditSupervisorWorkLog($subject, $user, $token);
         }
@@ -186,10 +190,6 @@ class ResourceVoter extends Voter
 
         if ($subject instanceof Vacation) {
             return $this->canEditVacation($subject, $user, $token);
-        }
-
-        if ($subject instanceof WorkHours) {
-            return $this->canEditWorkHours($subject, $user, $token);
         }
 
         if ($subject instanceof WorkLogInterface) {
@@ -207,6 +207,15 @@ class ResourceVoter extends Voter
         return false;
     }
 
+    private function canEditContract(Contract $contract, User $user, TokenInterface $token): bool
+    {
+        try {
+            return $contract->getUser() === $user || $this->decisionManager->decide($token, [User::ROLE_ADMIN]);
+        } catch (\TypeError $e) {
+            return true;
+        }
+    }
+
     private function canEditSupervisorWorkLog(SupervisorWorkLogInterface $workLog, User $user, TokenInterface $token): bool
     {
         try {
@@ -222,22 +231,13 @@ class ResourceVoter extends Voter
 
     private function canEditUser(User $subject, User $user, TokenInterface $token): bool
     {
-        return $this->decisionManager->decide($token, [User::ROLE_ADMIN]);
+        return $subject->getId() === $user->getId() || $this->decisionManager->decide($token, [User::ROLE_ADMIN]);
     }
 
     private function canEditVacation(Vacation $vacation, User $user, TokenInterface $token): bool
     {
         try {
             return $vacation->getUser() === $user || $this->decisionManager->decide($token, [User::ROLE_ADMIN]);
-        } catch (\TypeError $e) {
-            return true;
-        }
-    }
-
-    private function canEditWorkHours(WorkHours $workHours, User $user, TokenInterface $token): bool
-    {
-        try {
-            return $workHours->getUser() === $user || $this->decisionManager->decide($token, [User::ROLE_ADMIN]);
         } catch (\TypeError $e) {
             return true;
         }

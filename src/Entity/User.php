@@ -71,6 +71,11 @@ class User implements UserInterface
     private $supervisor;
 
     /**
+     * @var Contract[]|Collection
+     */
+    private $contracts;
+
+    /**
      * @var User[]|Collection
      */
     private $supervised;
@@ -79,11 +84,6 @@ class User implements UserInterface
      * @var Vacation[]|Collection
      */
     private $vacations;
-
-    /**
-     * @var WorkHours[]|Collection
-     */
-    private $workHours;
 
     /**
      * @var WorkMonth[]|Collection
@@ -124,9 +124,9 @@ class User implements UserInterface
         $this->firstName = '';
         $this->lastName = '';
         $this->roles = [self::ROLE_EMPLOYEE];
+        $this->contracts = new ArrayCollection();
         $this->supervised = new ArrayCollection();
         $this->vacations = new ArrayCollection();
-        $this->workHours = new ArrayCollection();
         $this->workMonths = new ArrayCollection();
         $this->yearStats = new ArrayCollection();
         $this->setNotifications(new UserNotifications());
@@ -309,6 +309,44 @@ class User implements UserInterface
     }
 
     /**
+     * @return Contract[]
+     */
+    public function getContracts()
+    {
+        if ($this->contracts instanceof Collection) {
+            return $this->contracts->toArray();
+        }
+
+        return $this->contracts;
+    }
+
+    /**
+     * @param Contract[]|Collection $contracts
+     */
+    public function setContracts($contracts): User
+    {
+        foreach ($contracts as $contract) {
+            $contract->setUser($this);
+        }
+
+        $this->contracts = $contracts;
+
+        return $this;
+    }
+
+    public function addContracts(Contract $contract): User
+    {
+        if ($this->contracts instanceof Collection) {
+            $contract->setUser($this);
+            $this->contracts->add($contract);
+        } else {
+            $this->contracts[] = $contract;
+        }
+
+        return $this;
+    }
+
+    /**
      * @return User[]
      */
     public function getSupervised(): array
@@ -366,44 +404,6 @@ class User implements UserInterface
         }
 
         $this->vacations = $vacations;
-
-        return $this;
-    }
-
-    /**
-     * @return WorkHours[]
-     */
-    public function getWorkHours()
-    {
-        if ($this->workHours instanceof Collection) {
-            return $this->workHours->toArray();
-        }
-
-        return $this->workHours;
-    }
-
-    /**
-     * @param WorkHours[]|Collection $workHours
-     */
-    public function setWorkHours($workHours): User
-    {
-        foreach ($workHours as $workHour) {
-            $workHour->setUser($this);
-        }
-
-        $this->workHours = $workHours;
-
-        return $this;
-    }
-
-    public function addWorkHours(WorkHours $workHours): User
-    {
-        if ($this->workHours instanceof Collection) {
-            $workHours->setUser($this);
-            $this->workHours->add($workHours);
-        } else {
-            $this->workHours[] = $workHours;
-        }
 
         return $this;
     }
