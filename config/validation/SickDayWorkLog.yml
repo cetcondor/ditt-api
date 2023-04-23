@@ -1,7 +1,7 @@
 App\Entity\SickDayWorkLog:
     constraints:
         - App\Validator\Constraints\SickDayWorkLogValid: ~
-
+        - App\Validator\Constraints\WorkLogWithinValidContract: ~
     properties:
         date:
             - NotBlank: ~

@@ -1,6 +1,7 @@
 App\Entity\WorkLog:
     constraints:
         - App\Validator\Constraints\TimeIntervalNotOverlaps: ~
+        - App\Validator\Constraints\WorkLogWithinValidContract: ~
 
     properties:
         startTime:

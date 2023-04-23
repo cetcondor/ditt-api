@@ -1,4 +1,6 @@
 App\Entity\BusinessTripWorkLog:
+    constraints:
+        -   App\Validator\Constraints\WorkLogWithinValidContract: ~
     properties:
         date:
             - NotBlank: ~

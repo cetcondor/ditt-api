@@ -1,4 +1,6 @@
 App\Entity\ParentalLeaveWorkLog:
+    constraints:
+        -   App\Validator\Constraints\WorkLogWithinValidContract: ~
     properties:
         date:
             - NotBlank: ~

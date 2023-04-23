@@ -1,4 +1,6 @@
 App\Entity\HomeOfficeWorkLog:
+    constraints:
+        -   App\Validator\Constraints\WorkLogWithinValidContract: ~
     properties:
         date:
             - NotBlank: ~
