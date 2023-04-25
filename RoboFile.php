@@ -136,7 +136,7 @@ class RoboFile extends Tasks
             ->run();
     }
 
-    private function build()
+    public function build()
     {
         $this->taskComposerInstall()
             ->optimizeAutoloader()
