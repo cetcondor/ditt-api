@@ -23,16 +23,12 @@ class WorkLogWithinValidContractValidator extends ConstraintValidator
 
     public function validate($value, Constraint $constraint): void
     {
-        dump($value);
         $date = null;
         if ($value instanceof WorkLog) {
             $date = $value->getStartTime();
-            dump('a');
         } else if ($value instanceof WorkLogInterface) {
             $date = $value->getDate();
-            dump('b');
         } else {
-            dump('c');
             return;
         }
 
