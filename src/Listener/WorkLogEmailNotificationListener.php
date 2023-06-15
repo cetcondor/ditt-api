@@ -50,12 +50,17 @@ use App\Event\VacationWorkLogCanceledEvent;
 use App\Event\VacationWorkLogRejectedEvent;
 use App\Exception\EmailNotSentException;
 use App\Repository\UserRepository;
+use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 
 class WorkLogEmailNotificationListener
 {
+    /**
+     * @var ContainerBagInterface
+     */
+    private $containerBag;
     /**
      * @var UserRepository
      */
@@ -80,11 +85,13 @@ class WorkLogEmailNotificationListener
      * @param string $mailSenderAddress
      */
     public function __construct(
+        ContainerBagInterface $containerBag,
         UserRepository $userRepository,
         \Swift_Mailer $mailer,
         $mailSenderAddress,
         \Twig\Environment $templating
     ) {
+        $this->containerBag = $containerBag;
         $this->userRepository = $userRepository;
         $this->mailer = $mailer;
         $this->mailSenderAddress = $mailSenderAddress;
@@ -357,6 +364,10 @@ class WorkLogEmailNotificationListener
      */
     public function onMultipleSickDayWorkLogCreated(MultipleSickDayWorkLogCreatedEvent $event): void
     {
+        if ($this->containerBag->get('feature_flags')['notifications']['multiple_sick_day_work_log_created'] !== '1') {
+            return;
+        }
+
         $workLogs = $event->getWorkLogs();
         $startDate = $workLogs[0]->getDate();
         $endDate = $workLogs[0]->getDate();
@@ -642,6 +653,10 @@ class WorkLogEmailNotificationListener
      */
     public function onSickDayWorkLogCreated(SickDayWorkLogCreatedEvent $event): void
     {
+        if ($this->containerBag->get('feature_flags')['notifications']['sick_day_work_log_created'] !== '1') {
+            return;
+        }
+
         $this->sendWorkLogMail(
             $event->getSupervisor(),
             $event->getWorkLog(),

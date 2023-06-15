@@ -5,6 +5,10 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: 'en'
+    feature_flags:
+        notifications:
+            sick_day_work_log_created: '%env(FF_NOTIFICATIONS_SICK_DAY_WORK_LOG_CREATED)%'
+            multiple_sick_day_work_log_created: '%env(FF_NOTIFICATIONS_SICK_DAY_WORK_LOG_CREATED)%'
 
 services:
     # default configuration for services in *this* file
