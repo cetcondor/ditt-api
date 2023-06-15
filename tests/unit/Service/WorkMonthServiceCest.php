@@ -1172,7 +1172,7 @@ class WorkMonthServiceCest
 
         $service = $this->getWorkMonthService($prophet, [], $businessTripWorkLogs, [], [], [], [], [], [], [], [], [], $contracts);
 
-        $I->assertEquals(0, $service->calculateWorkedHours($workMonth));
+        $I->assertEquals(21600, $service->calculateWorkedHours($workMonth));
     }
 
     /**
