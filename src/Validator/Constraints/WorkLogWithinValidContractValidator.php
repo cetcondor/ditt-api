@@ -26,7 +26,7 @@ class WorkLogWithinValidContractValidator extends ConstraintValidator
         $date = null;
         if ($value instanceof WorkLog) {
             $date = $value->getStartTime();
-        } else if ($value instanceof WorkLogInterface) {
+        } elseif ($value instanceof WorkLogInterface) {
             $date = $value->getDate();
         } else {
             return;

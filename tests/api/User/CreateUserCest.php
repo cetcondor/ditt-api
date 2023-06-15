@@ -6,7 +6,6 @@ use App\Entity\Contract;
 use App\Entity\User;
 use App\Entity\UserYearStats;
 use App\Entity\WorkMonth;
-use App\Repository\ContractRepository;
 use Doctrine\ORM\NoResultException;
 use Symfony\Component\HttpFoundation\Response;
 
