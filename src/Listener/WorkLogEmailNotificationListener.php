@@ -368,7 +368,7 @@ class WorkLogEmailNotificationListener
         $this->sendWorkLogsMail(
             $event->getSupervisor(),
             $workLogs,
-            'Antrag auf mehrtägigen Krankentag erstellt – %s bis %s',
+            'Krankmeldung – %s bis %s',
             $startDate,
             $endDate,
             'notifications/multiple_sick_day_work_log_created.html.twig'
@@ -645,7 +645,7 @@ class WorkLogEmailNotificationListener
         $this->sendWorkLogMail(
             $event->getSupervisor(),
             $event->getWorkLog(),
-            'Antrag auf Krankentag erstellt – %s',
+            'Krankmeldung – %s',
             $event->getWorkLog()->getDate(),
             'notifications/sick_day_work_log_created.html.twig'
         );
