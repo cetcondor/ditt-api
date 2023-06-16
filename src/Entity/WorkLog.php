@@ -20,6 +20,11 @@ class WorkLog implements WorkLogInterface
     private $endTime;
 
     /**
+     * @var bool
+     */
+    private $isHomeOffice;
+
+    /**
      * @var WorkMonth
      */
     private $workMonth;
@@ -28,6 +33,7 @@ class WorkLog implements WorkLogInterface
     {
         $this->startTime = new \DateTimeImmutable();
         $this->endTime = new \DateTimeImmutable();
+        $this->isHomeOffice = false;
     }
 
     public function getId(): ?int
@@ -62,6 +68,18 @@ class WorkLog implements WorkLogInterface
     public function setEndTime(\DateTimeImmutable $endTime): WorkLog
     {
         $this->endTime = $endTime;
+
+        return $this;
+    }
+
+    public function getIsHomeOffice(): bool
+    {
+        return $this->isHomeOffice;
+    }
+
+    public function setIsHomeOffice(bool $isHomeOffice): WorkLog
+    {
+        $this->isHomeOffice = $isHomeOffice;
 
         return $this;
     }

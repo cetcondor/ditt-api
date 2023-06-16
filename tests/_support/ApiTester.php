@@ -294,6 +294,7 @@ class ApiTester extends \Codeception\Actor
     public function createWorkLog(array $params = [])
     {
         $workLog = $this->populateEntity(new \App\Entity\WorkLog(), [
+            'isHomeOffice' => false,
             'workMonth' => function () {
                 return $this->createWorkMonth();
             },

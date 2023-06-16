@@ -11,6 +11,8 @@ App\Entity\WorkLog:
             type: datetime_immutable
         endTime:
             type: datetime_immutable
+        isHomeOffice:
+            type: boolean
 
     manyToOne:
         workMonth:

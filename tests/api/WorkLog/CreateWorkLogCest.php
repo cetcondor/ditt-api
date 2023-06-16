@@ -35,6 +35,7 @@ class CreateWorkLogCest
 
         $I->haveHttpHeader('Content-Type', 'application/json');
         $I->sendPOST('/work_logs.json', [
+            'isHomeOffice' => true,
             'startTime' => $startTime->format(\DateTime::RFC3339),
             'endTime' => $endTime->format(\DateTime::RFC3339),
         ]);
@@ -42,10 +43,12 @@ class CreateWorkLogCest
         $I->seeHttpHeader('Content-Type', 'application/json; charset=utf-8');
         $I->seeResponseCodeIs(Response::HTTP_CREATED);
         $I->seeResponseContainsJson([
+            'isHomeOffice' => true,
             'startTime' => $startTime->format(\DateTime::RFC3339),
             'endTime' => $endTime->format(\DateTime::RFC3339),
         ]);
         $I->grabEntityFromRepository(WorkLog::class, [
+            'isHomeOffice' => true,
             'startTime' => $startTime,
             'endTime' => $endTime,
         ]);
@@ -67,6 +70,7 @@ class CreateWorkLogCest
 
         $I->haveHttpHeader('Content-Type', 'application/json');
         $I->sendPOST('/work_logs.json', [
+            'isHomeOffice' => false,
             'startTime' => $startTime->format(\DateTime::RFC3339),
             'endTime' => $endTime->format(\DateTime::RFC3339),
         ]);
@@ -99,6 +103,7 @@ class CreateWorkLogCest
 
         $I->haveHttpHeader('Content-Type', 'application/json');
         $I->sendPOST('/work_logs.json', [
+            'isHomeOffice' => false,
             'startTime' => $endTime->format(\DateTime::RFC3339),
             'endTime' => $startTime->format(\DateTime::RFC3339),
         ]);
