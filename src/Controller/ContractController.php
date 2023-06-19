@@ -70,13 +70,6 @@ class ContractController extends AbstractController
             );
         }
 
-        if ($dateTime && (new \DateTimeImmutable()) > $dateTime->setTime(23, 59, 59)) {
-            return JsonResponse::create(
-                ['detail' => 'Unable to terminate contract. Date time is in the past.'],
-                JsonResponse::HTTP_BAD_REQUEST
-            );
-        }
-
         if (
             $dateTime < $contract->getStartDateTime()->setTime(0, 0, 0, 0)
             || ($contract->getEndDateTime() && $dateTime > $contract->getEndDateTime()->setTime(23, 59, 59))
@@ -96,7 +89,7 @@ class ContractController extends AbstractController
         if (count($filteredContracts) > 0) {
             return JsonResponse::create(
                 [
-                    'detail' => 'Unable to terminate contract. There are opened work months after entered date.',
+                    'detail' => 'Unable to terminate contract. There are some work months after entered date that are not opened.',
                     'openedWorkMonths' => $this->normalizer->normalize(
                         $filteredContracts,
                         WorkMonth::class,
