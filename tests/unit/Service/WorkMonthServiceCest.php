@@ -2820,7 +2820,7 @@ class WorkMonthServiceCest
 
         $service = $this->getWorkMonthService($prophet, [], [], [], [], [], $sickDayWorkLogs, [], [], [], [], $workLogs, $contracts);
 
-        $I->assertEquals(14400, $service->calculateWorkedHours($workMonth));
+        $I->assertEquals(21600, $service->calculateWorkedHours($workMonth));
     }
 
     /**

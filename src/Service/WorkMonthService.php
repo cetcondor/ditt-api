@@ -474,8 +474,8 @@ class WorkMonthService
             }
 
             if (
-                (count($standardWorkLogs) === 0 && ($containsBusinessDay || $containsSickDay))
-                || $containsMaternityProtection || $containsSpecialLeaveDay || $containsVacationDay
+                (count($standardWorkLogs) === 0 && $containsBusinessDay)
+                || $containsMaternityProtection || $containsSickDay || $containsSpecialLeaveDay || $containsVacationDay
             ) {
                 $workTime = $workingHours[$day];
             } elseif ($containsSickDay && count($standardWorkLogs) > 0) {
