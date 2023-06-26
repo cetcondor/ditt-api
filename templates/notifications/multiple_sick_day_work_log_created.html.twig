@@ -18,9 +18,6 @@
                 {% endfor %}
             </ul>
             <strong>Betrifft: </strong>{{ workLogs[0].workMonth.user.firstName }} {{ workLogs[0].workMonth.user.lastName }}<br>
-            {% if supervisor is not null %}
-                <strong>Gewährt durch: </strong>{{ supervisor.firstName }} {{ supervisor.lastName }}<br>
-            {% endif %}
         <strong>Variante: </strong>
         {% if workLogs[0].variant == 'SICK_CHILD' %}Kind krank{% endif %}
         {% if workLogs[0].variant == 'WITH_NOTE' %}Mit Krankenschein{% endif %}
