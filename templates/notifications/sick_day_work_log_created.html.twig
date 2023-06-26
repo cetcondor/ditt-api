@@ -13,9 +13,6 @@
         <p>
             <strong>Datum: </strong>{{ workLog.date | date('d.m.Y') }}<br>
             <strong>Betrifft: </strong>{{ workLog.workMonth.user.firstName }} {{ workLog.workMonth.user.lastName }}<br>
-            {% if supervisor is not null %}
-                <strong>Gewährt durch: </strong>{{ supervisor.firstName }} {{ supervisor.lastName }}<br>
-            {% endif %}
             <strong>Variante: </strong>
             {% if workLog.variant == 'SICK_CHILD' %}Kind krank{% endif %}
             {% if workLog.variant == 'WITH_NOTE' %}Mit Krankenschein{% endif %}
